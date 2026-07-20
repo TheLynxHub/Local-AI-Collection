@@ -99,7 +99,8 @@ const audio: DataSection = {
         },
         {
           name: 'AUDIO_STT_MISTRAL_USE_CHAT_COMPLETIONS',
-          description: 'Enables using Mistral chat completions endpoint for Speech-to-Text instead of the dedicated STT endpoint.',
+          description:
+            'Enables using Mistral chat completions endpoint for Speech-to-Text instead of the dedicated STT endpoint.',
           type: 'CheckBox',
           defaultValue: false,
         },
@@ -233,7 +234,8 @@ const audio: DataSection = {
       items: [
         {
           name: 'ELEVENLABS_API_BASE_URL',
-          description: 'Configures custom ElevenLabs API endpoints, enabling support for EU residency API requirements and other regional deployments.',
+          description:
+            'Configures custom ElevenLabs API endpoints, enabling support for EU residency API requirements and other regional deployments.',
           type: 'Input',
           defaultValue: 'https://api.elevenlabs.io',
         },
@@ -244,7 +246,8 @@ const audio: DataSection = {
       items: [
         {
           name: 'VOICE_MODE_PROMPT_TEMPLATE',
-          description: 'Sets the prompt template for voice mode interactions. This template is used to format voice input before sending to the model.',
+          description:
+            'Sets the prompt template for voice mode interactions. This template is used to format voice input before sending to the model.',
           type: 'Input',
         },
       ],

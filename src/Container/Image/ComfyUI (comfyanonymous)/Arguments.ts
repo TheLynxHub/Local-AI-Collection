@@ -410,8 +410,7 @@ const comfyuiArguments: ArgumentsData = [
       },
       {
         name: 'MIOPEN_ENABLE_LOGGING',
-        description:
-          'Prints basic layer-by-layer MIOpen API call information with parameters and configurations.',
+        description: 'Prints basic layer-by-layer MIOpen API call information with parameters and configurations.',
         type: 'DropDown',
         values: ['0', '1'],
         defaultValue: '0',
