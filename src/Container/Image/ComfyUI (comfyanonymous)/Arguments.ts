@@ -57,6 +57,18 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {name: '--enable-compress-response-body', description: 'Enable compressing response body.', type: 'CheckBox'},
+          {
+            name: '--comfy-api-base',
+            description: 'Set the base URL for the ComfyUI API.',
+            type: 'Input',
+            defaultValue: 'https://api.comfy.org',
+          },
+          {
+            name: '--front-end-version',
+            description: 'Specifies the version of the frontend to be used (format: [repoOwner]/[repoName]@[version]).',
+            type: 'Input',
+            defaultValue: 'comfyanonymous/ComfyUI@latest',
+          },
         ],
       },
       {
@@ -92,6 +104,17 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--user-directory',
             description: 'Set the ComfyUI user directory with an absolute path. Overrides --base-directory.',
+            type: 'Directory',
+          },
+          {
+            name: '--models-directory',
+            description: 'Set the ComfyUI models directory. Overrides the models folder in --base-directory.',
+            type: 'Directory',
+          },
+          {
+            name: '--front-end-root',
+            description:
+              'The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.',
             type: 'Directory',
           },
         ],
@@ -156,6 +179,11 @@ const comfyuiArguments: ArgumentsData = [
           {name: '--fp16-text-enc', description: 'Store text encoder weights in fp16.', type: 'CheckBox'},
           {name: '--fp32-text-enc', description: 'Store text encoder weights in fp32.', type: 'CheckBox'},
           {name: '--bf16-text-enc', description: 'Store text encoder weights in bf16.', type: 'CheckBox'},
+          {
+            name: '--fp16-intermediates',
+            description: 'Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.',
+            type: 'CheckBox',
+          },
         ],
       },
       {
@@ -170,6 +198,18 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--disable-ipex-optimize',
             description: 'Disables ipex.optimize default when loading models with Intel',
+            type: 'CheckBox',
+          },
+          {
+            name: '--enable-triton-backend',
+            description:
+              'ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-triton-backend',
+            description:
+              'Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.',
             type: 'CheckBox',
           },
           {
@@ -203,6 +243,12 @@ const comfyuiArguments: ArgumentsData = [
               'Use RAM pressure caching with the specified headroom threshold. If available RAM drops below the threhold the cache remove large items to free RAM. Default 4GB',
             type: 'Input',
             defaultValue: 0,
+          },
+          {
+            name: '--high-ram',
+            description:
+              'Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.',
+            type: 'CheckBox',
           },
           {
             name: '--use-split-cross-attention',
@@ -278,8 +324,17 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {name: '--mmap-torch-files', description: 'Use mmap when loading ckpt/pt files.', type: 'CheckBox'},
-          {name: '--disable-mmap', description: 'Don', type: 'CheckBox'},
-          {name: '--dont-print-server', description: 'Don', type: 'CheckBox'},
+          {
+            name: '--disable-mmap',
+            description: "Don't use mmap when loading safetensors.",
+            type: 'CheckBox',
+          },
+          {name: '--dont-print-server', description: "Don't print server output.", type: 'CheckBox'},
+          {
+            name: '--debug-hang',
+            description: 'Enable stack trace dumps on Ctrl-C for debugging hangs.',
+            type: 'CheckBox',
+          },
           {name: '--quick-test-for-ci', description: 'Quick test for CI.', type: 'CheckBox'},
           {
             name: '--windows-standalone-build',
@@ -313,6 +368,26 @@ const comfyuiArguments: ArgumentsData = [
             description: 'Disable asset scanning on startup for database synchronization.',
             type: 'CheckBox',
           },
+          {
+            name: '--enable-assets',
+            description: 'Enable the assets system (API routes, database synchronization, and background scanning).',
+            type: 'CheckBox',
+          },
+          {
+            name: '--enable-asset-hashing',
+            description: 'Compute blake3 content hashes when scanning assets.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--feature-flag',
+            description: 'Set a server feature flag (e.g. KEY=VALUE or bare KEY).',
+            type: 'Input',
+          },
+          {
+            name: '--list-feature-flags',
+            description: 'Print the registry of known CLI-settable feature flags as JSON and exit.',
+            type: 'CheckBox',
+          },
         ],
       },
 
@@ -336,13 +411,19 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {name: '--lowvram', description: 'Split the unet in parts to use less vram.', type: 'CheckBox'},
-          {name: '--novram', description: 'When lowvram isn', type: 'CheckBox'},
+          {name: '--novram', description: "When lowvram isn't enough.", type: 'CheckBox'},
           {name: '--cpu', description: 'To use the CPU for everything (slow).', type: 'CheckBox'},
           {
             name: '--reserve-vram',
             description:
               'Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.',
             type: 'Input',
+          },
+          {
+            name: '--vram-headroom',
+            description: 'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default.',
+            type: 'Input',
+            defaultValue: 0,
           },
           {
             name: '--async-offload',
@@ -352,6 +433,22 @@ const comfyuiArguments: ArgumentsData = [
           },
           {name: '--disable-async-offload', description: 'Disable async weight offloading.', type: 'CheckBox'},
           {
+            name: '--disable-dynamic-vram',
+            description: 'Disable dynamic VRAM and use estimate based model loading.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--enable-dynamic-vram',
+            description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+            type: 'CheckBox',
+          },
+          {
+            name: '--fast-disk',
+            description:
+              'Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.',
+            type: 'CheckBox',
+          },
+          {
             name: '--disable-smart-memory',
             description:
               'Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.',
@@ -360,7 +457,7 @@ const comfyuiArguments: ArgumentsData = [
           {name: '--disable-pinned-memory', description: 'Disable pinned memory use.', type: 'CheckBox'},
           {
             name: '--database-url',
-            description: 'Specify the database URL, e.g. for an in-memory database you can use',
+            description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
             type: 'Input',
             defaultValue: 'f"sqlite:///{database_default_path}',
           },
