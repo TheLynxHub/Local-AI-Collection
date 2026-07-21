@@ -31,7 +31,8 @@ const comfyuiArguments: ArgumentsData = [
           },
           {
             name: '--enable-cors-header',
-            description: 'Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default',
+            description:
+              "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
             type: 'Input',
           },
           {
@@ -130,7 +131,8 @@ const comfyuiArguments: ArgumentsData = [
           {name: '--disable-auto-launch', description: 'Disable auto launching the browser.', type: 'CheckBox'},
           {
             name: '--cuda-device',
-            description: 'Set the id of the cuda device this instance will use. All other devices will not be visible.',
+            description:
+              "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
             type: 'Input',
           },
           {
@@ -197,7 +199,7 @@ const comfyuiArguments: ArgumentsData = [
           {name: '--directml', description: 'Use torch-directml.', type: 'Input'},
           {
             name: '--disable-ipex-optimize',
-            description: 'Disables ipex.optimize default when loading models with Intel',
+            description: 'Disables ipex.optimize default when loading models with Intel GPUs.',
             type: 'CheckBox',
           },
           {
@@ -240,7 +242,7 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--cache-ram',
             description:
-              'Use RAM pressure caching with the specified headroom threshold. If available RAM drops below the threhold the cache remove large items to free RAM. Default 4GB',
+              'Use RAM pressure caching with the specified headroom thresholds. The first value sets the active-cache threshold; the optional second value sets the inactive-cache threshold.',
             type: 'Input',
             defaultValue: 0,
           },
@@ -257,7 +259,7 @@ const comfyuiArguments: ArgumentsData = [
           },
           {
             name: '--use-quad-cross-attention',
-            description: 'Use the sub-quadratic cross attention optimization . Ignored when xformers is used.',
+            description: 'Use the sub-quadratic cross attention optimization. Ignored when xformers is used.',
             type: 'CheckBox',
           },
           {
@@ -287,9 +289,9 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--fast',
             description:
-              'Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}',
+              'Enable some untested and potentially quality deteriorating optimizations. Current valid optimizations: fp16_accumulation, fp8_matrix_mult, cublas_ops, autotune.',
             type: 'DropDown',
-            values: ['', 'fp16_accumulation', 'fp8_matrix_mult', 'cublas_ops', 'autotune', 'dynamic_vram'],
+            values: ['', 'fp16_accumulation', 'fp8_matrix_mult', 'cublas_ops', 'autotune'],
             defaultValue: '',
           },
         ],
@@ -306,7 +308,7 @@ const comfyuiArguments: ArgumentsData = [
           },
           {
             name: '--enable-manager-legacy-ui',
-            description: 'Enables the legacy UI of ComfyUI-Manager',
+            description: 'Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.',
             type: 'CheckBox',
           },
           {
@@ -348,7 +350,6 @@ const comfyuiArguments: ArgumentsData = [
             name: '--whitelist-custom-nodes',
             description: 'Specify custom node folders to load even when --disable-all-custom-nodes is enabled.',
             type: 'Input',
-            defaultValue: '[]',
           },
           {name: '--multi-user', description: 'Enables per-user storage.', type: 'CheckBox'},
           {
@@ -406,11 +407,11 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {
-            name: '--normalvram',
-            description: 'Used to force normal vram use if lowvram gets automatically enabled.',
+            name: '--lowvram',
+            description:
+              "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
             type: 'CheckBox',
           },
-          {name: '--lowvram', description: 'Split the unet in parts to use less vram.', type: 'CheckBox'},
           {name: '--novram', description: "When lowvram isn't enough.", type: 'CheckBox'},
           {name: '--cpu', description: 'To use the CPU for everything (slow).', type: 'CheckBox'},
           {
@@ -459,7 +460,6 @@ const comfyuiArguments: ArgumentsData = [
             name: '--database-url',
             description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
             type: 'Input',
-            defaultValue: 'f"sqlite:///{database_default_path}',
           },
         ],
       },
