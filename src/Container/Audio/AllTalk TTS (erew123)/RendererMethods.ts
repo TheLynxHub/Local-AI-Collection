@@ -84,6 +84,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
 }
 
 function catchAddress(input: string): string | undefined {
+  // eslint-disable-next-line no-control-regex
   const gradioDarkPattern = /Gradio Dark.*?:\s*.*?(https?:\/\/.*?)(?=\s|\u001b|$)/i;
 
   const match: RegExpMatchArray | null = input.match(gradioDarkPattern);

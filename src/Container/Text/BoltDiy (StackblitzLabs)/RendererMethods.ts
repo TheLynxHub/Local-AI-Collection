@@ -81,7 +81,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
 
 function catchAddress(line: string): string | undefined {
   const addressRegex =
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len, no-control-regex
     /https?:\/\/(?:localhost|\[?[\da-fA-F:]+]?)(?:\s*\x1b\[[0-9;]*m\s*)*(:?\s*(?:\x1b\[[0-9;]*m\s*)*\d+\s*(?:\x1b\[[0-9;]*m\s*)*)?\/?/;
 
   const match = line.match(addressRegex);
@@ -93,6 +93,7 @@ function catchAddress(line: string): string | undefined {
       address = address.slice(0, -1);
     }
 
+    // eslint-disable-next-line no-control-regex
     address = address.replace(/\x1b\[[0-9;]*m/g, '');
     address = address.replace(/\s/g, '');
 

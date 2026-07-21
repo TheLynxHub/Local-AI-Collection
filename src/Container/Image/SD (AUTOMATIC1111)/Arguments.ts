@@ -890,7 +890,9 @@ const linEV: DataSection = {
           description: 'Install command for torch',
           name: 'TORCH_COMMAND',
           type: 'Input',
-          defaultValue: `${getPythonCommandByOs().pip} install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113`,
+          defaultValue:
+            `${getPythonCommandByOs().pip} install torch==1.12.1+cu113 ` +
+            '--extra-index-url https://download.pytorch.org/whl/cu113',
         },
         {
           description: 'Requirements file to use for stable-diffusion-webui',

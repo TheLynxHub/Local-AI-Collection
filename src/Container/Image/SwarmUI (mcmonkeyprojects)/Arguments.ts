@@ -124,7 +124,8 @@ const mcMonkeyArguments: ArgumentsData = [
       {
         name: '--no_persist',
         description:
-          'If enabled, tells most systems in Swarm to avoid saving data (eg session handler will not save session data). ' +
+          'If enabled, tells most systems in Swarm to avoid saving data ' +
+          '(eg session handler will not save session data). ' +
           'Useful for instances with overlapping data storage especially.',
         type: 'CheckBox',
       },

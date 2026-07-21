@@ -79,6 +79,6 @@ export async function uninstallNpmPackage(packageName: string): Promise<void> {
   try {
     await execAsync(`npm -g rm ${packageName}`);
   } catch (error: any) {
-    throw new Error(`Error uninstalling ${packageName}. ${error.message}`);
+    throw new Error(`Error uninstalling ${packageName}. ${error.message}`, {cause: error});
   }
 }
