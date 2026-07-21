@@ -21,12 +21,24 @@ const INSTALL_COMMAND = isWin
 
 export async function fetchLatestUnslothTag(): Promise<string | undefined> {
   try {
+    const response = await fetch('https://api.github.com/repos/unslothai/unsloth/releases');
+    if (response.ok) {
+      const data = (await response.json()) as {tag_name: string}[];
+      if (Array.isArray(data) && data.length > 0 && data[0].tag_name) {
+        return data[0].tag_name;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to fetch Unsloth releases:', e);
+  }
+
+  try {
     const response = await fetch('https://api.github.com/repos/unslothai/unsloth/tags');
-    if (!response.ok) return undefined;
-    const data = (await response.json()) as {name: string}[];
-    console.log(data);
-    if (Array.isArray(data) && data.length > 0) {
-      return data[0].name;
+    if (response.ok) {
+      const data = (await response.json()) as {name: string}[];
+      if (Array.isArray(data) && data.length > 0) {
+        return data[0].name;
+      }
     }
   } catch (e) {
     console.error('Failed to fetch Unsloth tags:', e);

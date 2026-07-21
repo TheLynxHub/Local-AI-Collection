@@ -50,6 +50,15 @@ export async function readArgs(configDir?: string) {
 
 async function fetchLatestTag(): Promise<string | undefined> {
   try {
+    const response = await axios.get('https://api.github.com/repos/unslothai/unsloth/releases');
+    if (response.data && Array.isArray(response.data) && response.data.length > 0 && response.data[0].tag_name) {
+      return response.data[0].tag_name;
+    }
+  } catch (e) {
+    console.error('Failed to fetch Unsloth releases in main process:', e);
+  }
+
+  try {
     const response = await axios.get('https://api.github.com/repos/unslothai/unsloth/tags');
     if (response.data && Array.isArray(response.data) && response.data.length > 0) {
       return response.data[0].name;
