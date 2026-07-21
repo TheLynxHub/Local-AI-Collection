@@ -1,5 +1,12 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {AITOOLKIT_ID, KOHYA_ID, LORA_MANAGER_ID, ONETRAINER_ID, SMARTGALLERY_ID} from '../../Constants';
+import {
+  AITOOLKIT_ID,
+  KOHYA_ID,
+  LORA_MANAGER_ID,
+  ONETRAINER_ID,
+  SMARTGALLERY_ID,
+  UNSLOTH_STUDIO_ID,
+} from '../../Constants';
 import aiToolkitArguments from './AI Toolkit (ostris)/Arguments';
 import AITOOLKIT_RM from './AI Toolkit (ostris)/RendererMethods';
 import loraManagerArguments from './ComfyUI-Lora-Manager (willmiao)/Arguments';
@@ -9,6 +16,8 @@ import KOHYA_GUI_RM from './Kohyas GUI (bmaltais)/RendererMethods';
 import ONETRAINER_RM from './OneTrainer (Nerogar)/RendererMethods';
 import smartGalleryArguments from './SmartGallery (biagiomaf)/Arguments';
 import SMARTGALLERY_RM from './SmartGallery (biagiomaf)/RendererMethods';
+import unslothStudioArguments from './Unsloth Studio/Arguments';
+import UNSLOTH_STUDIO_RM from './Unsloth Studio/RendererMethods';
 
 /* eslint max-len: 0 */
 
@@ -78,6 +87,19 @@ const toolsPage: PagesData = {
       arguments: loraManagerArguments,
       methods: LORA_MANAGER_RM,
       installationType: 'git',
+    },
+    {
+      id: UNSLOTH_STUDIO_ID,
+      title: 'Unsloth Studio',
+      description:
+        'Unsloth Studio is an open-source, no-code web UI designed for training, running, and exporting AI models locally. ' +
+        'Train 500+ models up to 2x faster with 70% less VRAM on NVIDIA and AMD GPUs across Windows, Linux, and macOS.',
+      repoUrl: 'https://github.com/unslothai/unsloth',
+      type: 'text',
+      supportCustomArguments: true,
+      arguments: unslothStudioArguments,
+      methods: UNSLOTH_STUDIO_RM,
+      installationType: 'others',
     },
   ],
 };

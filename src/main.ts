@@ -28,6 +28,7 @@ import {
   SWARM_ID,
   TG_ID,
   TTS_ID,
+  UNSLOTH_STUDIO_ID,
 } from './Constants';
 import ClaudeCode_MM from './Container/Agent/Claude Code/MainMethods';
 import Flow_MM from './Container/Agent/Flowise (FlowiseAI)/MainMethods';
@@ -54,6 +55,7 @@ import LoraManager_MM from './Container/Tools/ComfyUI-Lora-Manager (willmiao)/Ma
 import Bmaltais_MM from './Container/Tools/Kohyas GUI (bmaltais)/MainMethods';
 import Nerogar_MM from './Container/Tools/OneTrainer (Nerogar)/MainMethods';
 import SmartGallery_MM from './Container/Tools/SmartGallery (biagiomaf)/MainMethods';
+import Unsloth_MM from './Container/Tools/Unsloth Studio/MainMethods';
 
 export default async function initialModule(utils: MainModuleUtils): Promise<MainModules[]> {
   return [
@@ -88,5 +90,6 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: GeminiCli_ID, methods: () => GeminiCli_MM(utils)},
     {id: CLAUDE_CODE_ID, methods: () => ClaudeCode_MM(utils)},
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
+    {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
   ];
 }

@@ -15,6 +15,7 @@ export const ALLTALK_ID = 'Erew123_SD';
 export const AITOOLKIT_ID = 'Ostris_AI_Toolkit';
 export const SMARTGALLERY_ID = 'Biagiomaf_SmartGallery';
 export const LORA_MANAGER_ID = 'Willmiao_LoraManager';
+export const UNSLOTH_STUDIO_ID = 'Unsloth_Studio';
 
 // Text Generation
 export const TG_ID = 'Oobabooga_TG';
