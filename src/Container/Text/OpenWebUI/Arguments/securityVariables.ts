@@ -13,6 +13,71 @@ const securityVariables: DataItem = {
       defaultValue: false,
     },
     {
+      name: 'FORWARD_USER_INFO_HEADER_USER_NAME',
+      description: 'Custom HTTP header name for forwarding user display name.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-User-Name',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_USER_ID',
+      description: 'Custom HTTP header name for forwarding user ID.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-User-Id',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_USER_EMAIL',
+      description: 'Custom HTTP header name for forwarding user email.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-User-Email',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_USER_ROLE',
+      description: 'Custom HTTP header name for forwarding user role.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-User-Role',
+    },
+    {
+      name: 'FORWARD_SESSION_INFO_HEADER_CHAT_ID',
+      description: 'Custom HTTP header name for forwarding chat session ID.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-Chat-Id',
+    },
+    {
+      name: 'FORWARD_SESSION_INFO_HEADER_MESSAGE_ID',
+      description: 'Custom HTTP header name for forwarding chat message ID.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-Message-Id',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_JWT_SECRET',
+      description: 'Secret key used to sign forwarded user info JWT header.',
+      type: 'Input',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_JWT',
+      description: 'Custom HTTP header name for forwarding signed user info JWT.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-Jwt',
+    },
+    {
+      name: 'FORWARD_USER_INFO_HEADER_JWT_EXPIRES_SECONDS',
+      description: 'Expiration time in seconds for forwarded user info JWT.',
+      type: 'Input',
+      defaultValue: 3600,
+    },
+    {
+      name: 'CUSTOM_API_KEY_HEADER',
+      description: 'Specifies a custom HTTP header name for API key authentication.',
+      type: 'Input',
+      defaultValue: 'X-OpenWebUI-Key',
+    },
+    {
+      name: 'ENABLE_VALVE_ENCRYPTION',
+      description: 'Encrypts tool and function valves stored in the database.',
+      type: 'CheckBox',
+      defaultValue: true,
+    },
+    {
       name: 'ENABLE_WEB_LOADER_SSL_VERIFICATION',
       description: 'Bypass SSL Verification for RAG on Websites.',
       type: 'CheckBox',
@@ -24,6 +89,11 @@ const securityVariables: DataItem = {
         'Enables password complexity validation for user accounts. When enabled, passwords must meet the complexity requirements defined by `PASSWORD_VALIDATION_REGEX_PATTERN` during signup, password updates, and user creation operations. This helps enforce stronger password policies across the application.',
       type: 'CheckBox',
       defaultValue: false,
+    },
+    {
+      name: 'PASSWORD_VALIDATION_HINT',
+      description: 'Custom hint message displayed when password policy validation fails.',
+      type: 'Input',
     },
     {
       name: 'PASSWORD_VALIDATION_REGEX_PATTERN',

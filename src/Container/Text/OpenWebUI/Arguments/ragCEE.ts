@@ -9,7 +9,24 @@ const ragCEE: DataItem = {
       name: 'CONTENT_EXTRACTION_ENGINE',
       description: 'Sets the content extraction engine to use for document ingestion.',
       type: 'DropDown',
-      values: ['', 'external', 'tika', 'docling', 'document_intelligence', 'mistral_ocr', 'mineru'],
+      values: ['', 'external', 'tika', 'docling', 'document_intelligence', 'mistral_ocr', 'mineru', 'paddleocr_vl'],
+    },
+    {
+      name: 'ENABLE_PYODIDE_FILE_PERSISTENCE',
+      description: 'Persists files created inside the Pyodide code execution sandbox.',
+      type: 'CheckBox',
+      defaultValue: true,
+    },
+    {
+      name: 'TERMINAL_SERVER_CONNECTIONS',
+      description: 'JSON object specifying Open Terminal server connections.',
+      type: 'Input',
+    },
+    {
+      name: 'TERMINAL_PROXY_HEADERS',
+      description: 'Forwards authentication headers to Open Terminal instances.',
+      type: 'CheckBox',
+      defaultValue: false,
     },
     {
       name: 'MISTRAL_OCR_API_KEY',

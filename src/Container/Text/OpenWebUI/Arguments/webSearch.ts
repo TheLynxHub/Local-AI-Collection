@@ -53,6 +53,52 @@ const webSearch: DataSection = {
           defaultValue: 10,
         },
         {
+          name: 'WEB_FETCH_MAX_CONTENT_LENGTH',
+          description: 'Maximum content length in bytes permitted when fetching web pages.',
+          type: 'Input',
+          defaultValue: 10485760,
+        },
+        {
+          name: 'USER_AGENT',
+          description: 'Custom User-Agent HTTP header sent when fetching web page content.',
+          type: 'Input',
+        },
+        {
+          name: 'AIOHTTP_CLIENT_TIMEOUT_TOOL_SERVER',
+          description: 'Timeout in seconds for HTTP requests to external tool servers.',
+          type: 'Input',
+          defaultValue: 300,
+        },
+        {
+          name: 'AIOHTTP_CLIENT_SSL_CERT_FILE',
+          description: 'Path to custom CA certificate file for SSL verification during web requests.',
+          type: 'Input',
+        },
+        {
+          name: 'AIOHTTP_CLIENT_ALLOW_REDIRECTS',
+          description: 'Allows HTTP redirects when fetching web page content.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'AIOHTTP_POOL_CONNECTIONS',
+          description: 'Total connection pool capacity for async HTTP requests.',
+          type: 'Input',
+          defaultValue: 100,
+        },
+        {
+          name: 'AIOHTTP_POOL_CONNECTIONS_PER_HOST',
+          description: 'Connection pool limit per host for async HTTP requests.',
+          type: 'Input',
+          defaultValue: 100,
+        },
+        {
+          name: 'AIOHTTP_POOL_DNS_TTL',
+          description: 'DNS cache TTL in seconds for connection pool.',
+          type: 'Input',
+          defaultValue: 10,
+        },
+        {
           name: 'WEB_SEARCH_ENGINE',
           description: 'Specifies the search engine to use.',
           type: 'DropDown',
@@ -139,6 +185,12 @@ const webSearch: DataSection = {
           name: 'BRAVE_SEARCH_API_KEY',
           description: 'Sets the API key for the Brave Search API.',
           type: 'Input',
+        },
+        {
+          name: 'BRAVE_SEARCH_CONTEXT_TOKENS',
+          description: 'Maximum context tokens requested from Brave Search API.',
+          type: 'Input',
+          defaultValue: 500,
         },
         {
           name: 'KAGI_SEARCH_API_KEY',

@@ -47,11 +47,32 @@ const appBackend: DataSection = {
           type: 'CheckBox',
         },
         {
+          name: 'ENABLE_API_OUTLET_FILTERS',
+          description:
+            'When enabled, outlet filter functions also run for completions requested directly through the API, not only for chats made from the Open WebUI interface.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
           name: 'ENABLE_LOGIN_FORM',
           description:
             'Toggles email, password, sign-in and "or" (only when ENABLE_OAUTH_SIGNUP is set to True) elements.',
           type: 'CheckBox',
           defaultValue: true,
+        },
+        {
+          name: 'ENABLE_PASSWORD_CHANGE_FORM',
+          description:
+            'Controls visibility of the password change UI in Settings > Account. Set to false for SSO-focused deployments.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'PASSWORD_HASH_ALGORITHM',
+          description: 'Selects the algorithm used to hash new user passwords.',
+          type: 'DropDown',
+          values: ['bcrypt', 'argon2'],
+          defaultValue: 'bcrypt',
         },
         {
           name: 'DEFAULT_LOCALE',
@@ -71,9 +92,29 @@ const appBackend: DataSection = {
           type: 'Input',
         },
         {
+          name: 'DEFAULT_MODEL_METADATA',
+          description: 'Sets global default metadata (JSON object string) for all models.',
+          type: 'Input',
+          defaultValue: '{}',
+        },
+        {
+          name: 'DEFAULT_MODEL_PARAMS',
+          description:
+            'Sets global default parameters (temperature, top_p, max_tokens, etc.) for all models as a JSON object.',
+          type: 'Input',
+          defaultValue: '{}',
+        },
+        {
           name: 'DEFAULT_GROUP_ID',
           description: 'Sets the default group ID to assign to new users upon registration.',
           type: 'Input',
+        },
+        {
+          name: 'DEFAULT_GROUP_SHARE_PERMISSION',
+          description: 'Controls the default "Who can share to this group" setting for newly created groups.',
+          type: 'DropDown',
+          values: ['members', 'true', 'false'],
+          defaultValue: 'members',
         },
         {
           name: 'DEFAULT_USER_ROLE',
@@ -86,6 +127,53 @@ const appBackend: DataSection = {
           name: 'PENDING_USER_OVERLAY_TITLE',
           description: 'Sets a custom title for the pending user overlay.',
           type: 'Input',
+        },
+        {
+          name: 'PENDING_USER_OVERLAY_CONTENT',
+          description: 'Sets a custom text content for the pending user overlay.',
+          type: 'Input',
+        },
+        {
+          name: 'ENABLE_CALENDAR',
+          description: 'Enables or disables the Calendar feature for managing events and scheduled automations.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'ENABLE_AUTOMATIONS',
+          description: 'Enables or disables the Automations feature globally.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'AUTOMATION_MAX_COUNT',
+          description: 'Sets the maximum number of automations a non-admin user can create (empty for unlimited).',
+          type: 'Input',
+        },
+        {
+          name: 'AUTOMATION_MIN_INTERVAL',
+          description:
+            'Sets the minimum allowed interval in seconds between automation recurrences for non-admin users.',
+          type: 'Input',
+        },
+        {
+          name: 'AUTOMATION_AUTH_TOKEN_EXPIRES_IN',
+          description: 'Lifetime of the short-lived auth token an automation uses to call back into Open WebUI.',
+          type: 'Input',
+          defaultValue: '1h',
+        },
+        {
+          name: 'SCHEDULER_POLL_INTERVAL',
+          description:
+            'Sets the interval in seconds between unified scheduler ticks for automations and calendar alerts.',
+          type: 'Input',
+          defaultValue: 10,
+        },
+        {
+          name: 'CALENDAR_ALERT_LOOKAHEAD_MINUTES',
+          description: 'Default lookahead window in minutes for calendar event alerts.',
+          type: 'Input',
+          defaultValue: 10,
         },
         {
           name: 'PENDING_USER_OVERLAY_CONTENT',
@@ -126,6 +214,12 @@ const appBackend: DataSection = {
           defaultValue: true,
         },
         {
+          name: 'ENABLE_MEMORY_SYSTEM_CONTEXT',
+          description: "Controls whether stored memories are injected into the model's system context.",
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
           name: 'WEBHOOK_URL',
           description: 'Sets a webhook for integration with Discord/Slack/Microsoft Teams.',
           type: 'Input',
@@ -141,6 +235,13 @@ const appBackend: DataSection = {
           name: 'ENABLE_ADMIN_CHAT_ACCESS',
           description:
             "Enables admin users to directly access the chats of other users. When disabled, admins can no longer accesss user's chats in the admin panel. If you disable this, consider disabling `ENABLE_ADMIN_EXPORT` too, if you are using SQLite, as the exports also contain user chats.",
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'ENABLE_ADMIN_ANALYTICS',
+          description:
+            'Controls whether the admin-panel Analytics tab is visible and the analytics API router is mounted.',
           type: 'CheckBox',
           defaultValue: true,
         },
@@ -170,6 +271,11 @@ const appBackend: DataSection = {
           type: 'Input',
         },
         {
+          name: 'IFRAME_CSP',
+          description: 'Sets a Content-Security-Policy applied to all srcdoc iframes rendered in the UI.',
+          type: 'Input',
+        },
+        {
           name: 'THREAD_POOL_SIZE',
           description:
             'Sets the thread pool size for FastAPI/AnyIO blocking calls. By default (when set to `0`) FastAPI/AnyIO use `40` threads. In case of large instances and many concurrent users, it may be needed to increase `THREAD_POOL_SIZE` to prevent blocking.',
@@ -196,6 +302,48 @@ const appBackend: DataSection = {
             'Globally enables or disables user status functionality. When disabled, the status UI (including blinking active/away indicators and status messages) is hidden across the application, and user status API endpoints are restricted.',
           type: 'CheckBox',
           defaultValue: true,
+        },
+        {
+          name: 'ENABLE_EASTER_EGGS',
+          description: 'Enables or disables easter egg features in the UI.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'ENABLE_IMAGE_CONTENT_TYPE_EXTENSION_FALLBACK',
+          description: 'Enables fallback extension-to-MIME resolution for images on minimal containers.',
+          type: 'CheckBox',
+          defaultValue: false,
+        },
+        {
+          name: 'ENABLE_PROFILE_IMAGE_URL_FORWARDING',
+          description: 'Controls whether profile image endpoints redirect to external http(s) profile URLs.',
+          type: 'CheckBox',
+          defaultValue: true,
+        },
+        {
+          name: 'PROFILE_IMAGE_ALLOWED_MIME_TYPES',
+          description: 'Allowlist of comma-separated MIME types accepted when serving data URI profile images.',
+          type: 'Input',
+          defaultValue: 'image/png,image/jpeg,image/gif,image/webp',
+        },
+        {
+          name: 'PROFILE_IMAGE_MAX_DATA_URI_SIZE',
+          description: 'Maximum size in bytes allowed for base64 data URI profile images (default 2MB).',
+          type: 'Input',
+          defaultValue: 2097152,
+        },
+        {
+          name: 'CHAT_RESPONSE_MAX_TOOL_CALL_ITERATIONS',
+          description: 'Maximum number of tool call iterations permitted in a single chat completion turn.',
+          type: 'Input',
+          defaultValue: 15,
+        },
+        {
+          name: 'ENABLE_RESPONSES_API_STATEFUL',
+          description: 'Enables stateful completions via the OpenAI-compatible Responses API endpoint.',
+          type: 'CheckBox',
+          defaultValue: false,
         },
         {
           name: 'ENABLE_BASE_MODELS_CACHE',
