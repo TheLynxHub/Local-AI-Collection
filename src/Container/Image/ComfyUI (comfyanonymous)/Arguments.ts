@@ -198,11 +198,6 @@ const comfyuiArguments: ArgumentsData = [
           },
           {name: '--directml', description: 'Use torch-directml.', type: 'Input'},
           {
-            name: '--disable-ipex-optimize',
-            description: 'Disables ipex.optimize default when loading models with Intel GPUs.',
-            type: 'CheckBox',
-          },
-          {
             name: '--enable-triton-backend',
             description:
               'ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.',
@@ -219,7 +214,7 @@ const comfyuiArguments: ArgumentsData = [
             description: 'Default preview method for sampler nodes.',
             type: 'DropDown',
             values: ['none', 'auto', 'latent2rgb', 'taesd'],
-            defaultValue: 'auto',
+            defaultValue: 'none',
           },
           {
             name: '--preview-size',
@@ -242,9 +237,8 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--cache-ram',
             description:
-              'Use RAM pressure caching with the specified headroom thresholds. The first value sets the active-cache threshold; the optional second value sets the inactive-cache threshold.',
+              'Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).',
             type: 'Input',
-            defaultValue: 0,
           },
           {
             name: '--high-ram',
@@ -289,7 +283,7 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--fast',
             description:
-              'Enable some untested and potentially quality deteriorating optimizations. Current valid optimizations: fp16_accumulation, fp8_matrix_mult, cublas_ops, autotune.',
+              'Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: fp16_accumulation fp8_matrix_mult cublas_ops autotune',
             type: 'DropDown',
             values: ['', 'fp16_accumulation', 'fp8_matrix_mult', 'cublas_ops', 'autotune'],
             defaultValue: '',
@@ -365,23 +359,20 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {
-            name: '--disable-assets-autoscan',
-            description: 'Disable asset scanning on startup for database synchronization.',
-            type: 'CheckBox',
-          },
-          {
             name: '--enable-assets',
             description: 'Enable the assets system (API routes, database synchronization, and background scanning).',
             type: 'CheckBox',
           },
           {
             name: '--enable-asset-hashing',
-            description: 'Compute blake3 content hashes when scanning assets.',
+            description:
+              'Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.',
             type: 'CheckBox',
           },
           {
             name: '--feature-flag',
-            description: 'Set a server feature flag (e.g. KEY=VALUE or bare KEY).',
+            description:
+              'Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted. Examples: --feature-flag show_signin_button=true or --feature-flag show_signin_button',
             type: 'Input',
           },
           {
@@ -422,7 +413,8 @@ const comfyuiArguments: ArgumentsData = [
           },
           {
             name: '--vram-headroom',
-            description: 'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default.',
+            description:
+              'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.',
             type: 'Input',
             defaultValue: 0,
           },
