@@ -14,7 +14,7 @@ const textPage: PagesData = {
   cards: [
     {
       id: TG_ID,
-      title: 'Text Generation',
+      title: 'TextGen',
       description: 'A Gradio web UI for Large Language Models.',
       repoUrl: 'https://github.com/oobabooga/textgen',
       type: 'text',

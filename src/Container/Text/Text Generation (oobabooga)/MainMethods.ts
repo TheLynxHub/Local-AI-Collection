@@ -31,7 +31,7 @@ const Ooba_MM: CardMainMethodsInitial = utils => {
     readArgs: () => readArgs(installDir),
     saveArgs: args => saveArgs(args, installDir),
     isInstalled: () =>
-      isGitTypeInstalled(installDir, 'https://github.com/oobabooga/text-generation-webui', [
+      isGitTypeInstalled(installDir, 'https://github.com/oobabooga/textgen', [
         isWin ? 'start_windows.bat' : isMac ? 'start_macos.sh' : 'start_linux.sh',
       ]),
   };

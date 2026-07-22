@@ -12,7 +12,7 @@ const audioPage: PagesData = {
   cards: [
     {
       id: TTS_ID,
-      title: 'Text to Speech',
+      title: 'TTS WebUI',
       description:
         'TTS Generation Web UI (Bark, MusicGen + AudioGen, Tortoise, RVC, Vocos,' +
         ' Demucs, SeamlessM4T, MAGNet, StyleTTS2, MMS)',
