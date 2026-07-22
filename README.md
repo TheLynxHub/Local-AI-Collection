@@ -42,7 +42,7 @@ A collection of local AI tools with **full support** for **arguments**, **config
 | Developer                                                                                    | Project                                         | Developer                                                                                        | Project                                                   |
 | -------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
 | <img height='20' src="https://avatars.githubusercontent.com/u/128289781?s=20&v=4"> FlowiseAI | [Flowise](https://github.com/FlowiseAI/Flowise) | <img height='20' src="https://avatars.githubusercontent.com/u/161781182?s=20&v=4"> google-gemini | [gemini-cli](https://github.com/google-gemini/gemini-cli) |
-| <img height='20' src="https://avatars.githubusercontent.com/u/45487711?s=20&v=4"> n8n-io     | [n8n](https://github.com/n8n-io/n8n)            |                                                                                                  |                                                           |
+| <img height='20' src="https://avatars.githubusercontent.com/u/45487711?s=20&v=4"> n8n-io     | [n8n](https://github.com/n8n-io/n8n)            | <img height='20' src="https://avatars.githubusercontent.com/u/242056456?s=20&v=4"> google-antigravity | [Antigravity CLI](https://github.com/google-antigravity/antigravity-cli) |
 
 ### 🛠️ Tools
 

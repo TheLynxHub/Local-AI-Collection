@@ -28,6 +28,7 @@ export const LoLLMS_ID = 'LoLLMS_TG';
 export const N8N_ID = 'N8N_TG';
 export const GeminiCli_ID = 'GeminiCli_TG';
 export const CLAUDE_CODE_ID = 'ClaudeCode_TG';
+export const ANTIGRAVITY_CLI_ID = 'AntigravityCli_TG';
 
 // Audio Generation
 export const TTS_ID = 'Rsxdalv_AG';

@@ -1,5 +1,7 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {CLAUDE_CODE_ID, FLOWISEAI_ID, GeminiCli_ID, N8N_ID} from '../../Constants';
+import {ANTIGRAVITY_CLI_ID, CLAUDE_CODE_ID, FLOWISEAI_ID, GeminiCli_ID, N8N_ID} from '../../Constants';
+import antigravityCliArguments from './Antigravity CLI/Arguments';
+import AntigravityCli_RM from './Antigravity CLI/RendererMethods';
 import claudeCodeArguments from './Claude Code/Arguments';
 import ClaudeCode_RM from './Claude Code/RendererMethods';
 import flowiseArguments from './Flowise (FlowiseAI)/Arguments';
@@ -41,6 +43,18 @@ const agentsPage: PagesData = {
       type: 'text',
       arguments: claudeCodeArguments,
       methods: ClaudeCode_RM,
+      installationType: 'others',
+    },
+    {
+      id: ANTIGRAVITY_CLI_ID,
+      title: 'Antigravity CLI',
+      description:
+        'Google terminal AI agent bringing multi-step reasoning, ' +
+        'multi-file editing, and tool calling to your terminal.',
+      repoUrl: 'https://github.com/google-antigravity/antigravity-cli',
+      type: 'text',
+      arguments: antigravityCliArguments,
+      methods: AntigravityCli_RM,
       installationType: 'others',
     },
     {
