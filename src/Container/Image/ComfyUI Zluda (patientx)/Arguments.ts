@@ -50,6 +50,24 @@ const comfyuizludaArguments: ArgumentsData = [
         type: 'Input',
         defaultValue: '1',
       },
+      {
+        name: 'PYTORCH_TUNABLEOP_ENABLED',
+        description: 'Enable PyTorch TunableOp optimization.',
+        type: 'Input',
+        defaultValue: '1',
+      },
+      {
+        name: 'PYTORCH_TUNABLEOP_VERBOSE',
+        description: 'Enable verbose logging for PyTorch TunableOp.',
+        type: 'Input',
+        defaultValue: '1',
+      },
+      {
+        name: 'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED',
+        description: 'Enable hipBLASLt in PyTorch TunableOp.',
+        type: 'Input',
+        defaultValue: '0',
+      },
     ],
   },
   {
@@ -85,7 +103,8 @@ const comfyuizludaArguments: ArgumentsData = [
           },
           {
             name: '--enable-cors-header',
-            description: 'Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default',
+            description:
+              "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
             type: 'Input',
           },
           {
@@ -114,6 +133,12 @@ const comfyuizludaArguments: ArgumentsData = [
             name: '--enable-compress-response-body',
             description: 'Enable compressing response body.',
             type: 'CheckBox',
+          },
+          {
+            name: '--comfy-api-base',
+            description: 'Set the base URL for the ComfyUI API. (default: https://api.comfy.org)',
+            type: 'Input',
+            defaultValue: 'https://api.comfy.org',
           },
         ],
       },
@@ -152,6 +177,17 @@ const comfyuizludaArguments: ArgumentsData = [
             description: 'Set the ComfyUI user directory with an absolute path. Overrides --base-directory.',
             type: 'Directory',
           },
+          {
+            name: '--models-directory',
+            description: 'Set the ComfyUI models directory. Overrides the models folder in --base-directory.',
+            type: 'Directory',
+          },
+          {
+            name: '--front-end-root',
+            description:
+              'The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.',
+            type: 'Directory',
+          },
         ],
       },
       {
@@ -169,7 +205,8 @@ const comfyuizludaArguments: ArgumentsData = [
           },
           {
             name: '--cuda-device',
-            description: 'Set the id of the cuda device this instance will use. All other devices will not be visible.',
+            description:
+              "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
             type: 'Input',
           },
           {
@@ -282,6 +319,11 @@ const comfyuizludaArguments: ArgumentsData = [
             description: 'Store text encoder weights in bf16.',
             type: 'CheckBox',
           },
+          {
+            name: '--fp16-intermediates',
+            description: 'Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.',
+            type: 'CheckBox',
+          },
         ],
       },
       {
@@ -298,8 +340,15 @@ const comfyuizludaArguments: ArgumentsData = [
             type: 'Input',
           },
           {
-            name: '--disable-ipex-optimize',
-            description: 'Disables ipex.optimize default when loading models with Intel',
+            name: '--enable-triton-backend',
+            description:
+              'ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-triton-backend',
+            description:
+              'Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.',
             type: 'CheckBox',
           },
           {
@@ -334,7 +383,7 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--cache-ram',
             description:
-              'Use RAM pressure caching with the specified headroom threshold. If available RAM drops below the threhold the cache remove large items to free RAM. Default 4GB',
+              'Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).',
             type: 'Input',
             defaultValue: 0,
           },
@@ -389,7 +438,102 @@ const comfyuizludaArguments: ArgumentsData = [
             description:
               'Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}',
             type: 'DropDown',
-            values: ['', 'fp16_accumulation', 'fp8_matrix_mult', 'cublas_ops', 'autotune', 'dynamic_vram'],
+            values: ['', 'fp16_accumulation', 'fp8_matrix_mult', 'cublas_ops', 'autotune'],
+            defaultValue: '',
+          },
+        ],
+      },
+      {
+        section: 'Memory Management',
+        items: [
+          {
+            name: '--gpu-only',
+            description: 'Store and run everything (text encoders/CLIP models, etc... on the GPU).',
+            type: 'CheckBox',
+          },
+          {
+            name: '--highvram',
+            description:
+              'By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--lowvram',
+            description:
+              "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+            type: 'CheckBox',
+          },
+          {
+            name: '--novram',
+            description: "When lowvram isn't enough.",
+            type: 'CheckBox',
+          },
+          {
+            name: '--cpu',
+            description: 'To use the CPU for everything (slow).',
+            type: 'CheckBox',
+          },
+          {
+            name: '--enable-dynamic-vram',
+            description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-dynamic-vram',
+            description: 'Disable dynamic VRAM and use estimate based model loading.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--vram-headroom',
+            description:
+              'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.',
+            type: 'Input',
+            defaultValue: 0,
+          },
+          {
+            name: '--fast-disk',
+            description:
+              'Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--high-ram',
+            description:
+              'Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--reserve-vram',
+            description:
+              'Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.',
+            type: 'Input',
+          },
+          {
+            name: '--async-offload',
+            description:
+              'Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.',
+            type: 'Input',
+          },
+          {
+            name: '--disable-async-offload',
+            description: 'Disable async weight offloading.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-smart-memory',
+            description:
+              'Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-pinned-memory',
+            description: 'Disable pinned memory use.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--database-url',
+            description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
+            type: 'Input',
             defaultValue: '',
           },
         ],
@@ -410,8 +554,41 @@ const comfyuizludaArguments: ArgumentsData = [
           },
           {
             name: '--enable-manager-legacy-ui',
-            description: 'Enables the legacy UI of ComfyUI-Manager',
+            description: 'Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.',
             type: 'CheckBox',
+          },
+          {
+            name: '--enable-assets',
+            description: 'Enable the assets system (API routes, database synchronization, and background scanning).',
+            type: 'CheckBox',
+          },
+          {
+            name: '--enable-asset-hashing',
+            description:
+              'Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--feature-flag',
+            description:
+              'Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted.',
+            type: 'Input',
+          },
+          {
+            name: '--list-feature-flags',
+            description: 'Print the registry of known CLI-settable feature flags as JSON and exit.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--debug-hang',
+            description: 'Enable stack trace dumps on Ctrl-C for debugging hangs.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--front-end-version',
+            description: 'Specifies the version of the frontend to be used. (default: comfyanonymous/ComfyUI@latest)',
+            type: 'Input',
+            defaultValue: 'comfyanonymous/ComfyUI@latest',
           },
           {
             name: '--default-hashing-function',
@@ -434,12 +611,12 @@ const comfyuizludaArguments: ArgumentsData = [
           },
           {
             name: '--disable-mmap',
-            description: 'Don',
+            description: "Don't use mmap when loading safetensors.",
             type: 'CheckBox',
           },
           {
             name: '--dont-print-server',
-            description: 'Don',
+            description: "Don't print server output.",
             type: 'CheckBox',
           },
           {
@@ -485,81 +662,6 @@ const comfyuizludaArguments: ArgumentsData = [
             name: '--log-stdout',
             description: 'Send normal process output to stdout instead of stderr (default).',
             type: 'CheckBox',
-          },
-          {
-            name: '--disable-assets-autoscan',
-            description: 'Disable asset scanning on startup for database synchronization.',
-            type: 'CheckBox',
-          },
-        ],
-      },
-      {
-        section: 'Memory Management',
-        items: [
-          {
-            name: '--gpu-only',
-            description: 'Store and run everything (text encoders/CLIP models, etc... on the GPU).',
-            type: 'CheckBox',
-          },
-          {
-            name: '--highvram',
-            description:
-              'By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--normalvram',
-            description: 'Used to force normal vram use if lowvram gets automatically enabled.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--lowvram',
-            description: 'Split the unet in parts to use less vram.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--novram',
-            description: 'When lowvram isn',
-            type: 'CheckBox',
-          },
-          {
-            name: '--cpu',
-            description: 'To use the CPU for everything (slow).',
-            type: 'CheckBox',
-          },
-          {
-            name: '--reserve-vram',
-            description:
-              'Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.',
-            type: 'Input',
-          },
-          {
-            name: '--async-offload',
-            description:
-              'Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.',
-            type: 'Input',
-          },
-          {
-            name: '--disable-async-offload',
-            description: 'Disable async weight offloading.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--disable-smart-memory',
-            description:
-              'Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--disable-pinned-memory',
-            description: 'Disable pinned memory use.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--database-url',
-            description: 'Specify the database URL, e.g. for an in-memory database you can use',
-            type: 'Input',
-            defaultValue: 'f"sqlite:///{database_default_path}',
           },
         ],
       },

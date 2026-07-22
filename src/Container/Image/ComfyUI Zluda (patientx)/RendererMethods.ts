@@ -34,7 +34,10 @@ export function parseArgsToString(args: ChosenArgument[]): string {
         arg.name === 'MIOPEN_FIND_MODE' ||
         arg.name === 'MIOPEN_LOG_LEVEL' ||
         arg.name === 'ZLUDA_COMGR_LOG_LEVEL' ||
-        arg.name === 'TRITON_OVERRIDE_ARCH'
+        arg.name === 'TRITON_OVERRIDE_ARCH' ||
+        arg.name === 'PYTORCH_TUNABLEOP_ENABLED' ||
+        arg.name === 'PYTORCH_TUNABLEOP_VERBOSE' ||
+        arg.name === 'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED'
       ) {
         envVars[arg.name] = arg.value;
         return;
@@ -86,6 +89,16 @@ export function parseArgsToString(args: ChosenArgument[]): string {
     result += `set "ZLUDA_COMGR_LOG_LEVEL=${envVars.ZLUDA_COMGR_LOG_LEVEL}"\n\n`;
   }
 
+  if (envVars.PYTORCH_TUNABLEOP_ENABLED !== undefined) {
+    result += `set "PYTORCH_TUNABLEOP_ENABLED=${envVars.PYTORCH_TUNABLEOP_ENABLED}"\n`;
+  }
+  if (envVars.PYTORCH_TUNABLEOP_VERBOSE !== undefined) {
+    result += `set "PYTORCH_TUNABLEOP_VERBOSE=${envVars.PYTORCH_TUNABLEOP_VERBOSE}"\n`;
+  }
+  if (envVars.PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED !== undefined) {
+    result += `set "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED=${envVars.PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED}"\n\n`;
+  }
+
   if (lines) result += lines + '\n';
 
   return result;
@@ -99,7 +112,18 @@ export function parseStringToArgs(args: string): ChosenArgument[] {
     if (line.startsWith('set')) {
       const argName = line.split('=')[0].split(' ')[1].trim();
       const argValue = line.split('=')[1].trim();
-      if (argName === 'PYTHON' || argName === 'VENV_DIR' || argName === 'ZLUDA_COMGR_LOG_LEVEL') {
+      if (
+        argName === 'PYTHON' ||
+        argName === 'GIT' ||
+        argName === 'VENV_DIR' ||
+        argName === 'MIOPEN_FIND_MODE' ||
+        argName === 'MIOPEN_LOG_LEVEL' ||
+        argName === 'ZLUDA_COMGR_LOG_LEVEL' ||
+        argName === 'TRITON_OVERRIDE_ARCH' ||
+        argName === 'PYTORCH_TUNABLEOP_ENABLED' ||
+        argName === 'PYTORCH_TUNABLEOP_VERBOSE' ||
+        argName === 'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED'
+      ) {
         argResult.push({name: argName, value: argValue});
       }
     } else if (line.includes('%PYTHON% main.py')) {

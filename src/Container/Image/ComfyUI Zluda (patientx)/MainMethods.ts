@@ -53,7 +53,10 @@ async function saveArgs(args: ChosenArgument[], dir?: string) {
       arg.name === 'MIOPEN_FIND_MODE' ||
       arg.name === 'MIOPEN_LOG_LEVEL' ||
       arg.name === 'ZLUDA_COMGR_LOG_LEVEL' ||
-      arg.name === 'TRITON_OVERRIDE_ARCH'
+      arg.name === 'TRITON_OVERRIDE_ARCH' ||
+      arg.name === 'PYTORCH_TUNABLEOP_ENABLED' ||
+      arg.name === 'PYTORCH_TUNABLEOP_VERBOSE' ||
+      arg.name === 'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED'
     ) {
       envVars[arg.name] = arg.value;
       return;
@@ -120,6 +123,9 @@ async function saveArgs(args: ChosenArgument[], dir?: string) {
       'MIOPEN_LOG_LEVEL',
       'ZLUDA_COMGR_LOG_LEVEL',
       'TRITON_OVERRIDE_ARCH',
+      'PYTORCH_TUNABLEOP_ENABLED',
+      'PYTORCH_TUNABLEOP_VERBOSE',
+      'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED',
     ];
 
     for (const envName of envVarNames) {
@@ -246,7 +252,10 @@ export async function readArgs(dir?: string) {
           cleanEnvName === 'MIOPEN_FIND_MODE' ||
           cleanEnvName === 'MIOPEN_LOG_LEVEL' ||
           cleanEnvName === 'ZLUDA_COMGR_LOG_LEVEL' ||
-          cleanEnvName === 'TRITON_OVERRIDE_ARCH'
+          cleanEnvName === 'TRITON_OVERRIDE_ARCH' ||
+          cleanEnvName === 'PYTORCH_TUNABLEOP_ENABLED' ||
+          cleanEnvName === 'PYTORCH_TUNABLEOP_VERBOSE' ||
+          cleanEnvName === 'PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED'
         ) {
           argResult.push({name: cleanEnvName, value: cleanEnvValue});
         } else if (cleanEnvName === 'COMMANDLINE_ARGS') {
