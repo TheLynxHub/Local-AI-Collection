@@ -95,36 +95,17 @@ function startInstall(stepper: InstallationStepper) {
   const installReqs = (dir: string) => {
     stepper.executeTerminalCommands(`${pipCommand} install -r requirements.txt`, dir).then(() => {
       stepper.nextStep().then(() => {
-        stepper
-          .executeTerminalCommands(['cd ui', 'npm install'], dir)
-          .then(() => {
-            stepper.setInstalled(dir);
-            stepper.showFinalStep(
-              'success',
-              'AI Toolkit installation complete!',
-              'All installation steps completed successfully. Your AI Toolkit environment is now ready for use. ',
-            );
-          })
-          .catch(() => {
-            stepper.showFinalStep(
-              'error',
-              'Installation failed',
-              'Failed to install UI dependencies. Please check the logs and try again.',
-            );
-          });
+        stepper.setInstalled(dir);
+        stepper.showFinalStep(
+          'success',
+          'AI Toolkit installation complete!',
+          'All installation steps completed successfully. Your AI Toolkit environment is now ready for use. ',
+        );
       });
     });
   };
 
-  stepper.initialSteps([
-    'AI Toolkit',
-    'Checking NodeJS',
-    'Clone',
-    'Install PyTorch',
-    'Install Dependencies',
-    'UI Setup',
-    'Finish',
-  ]);
+  stepper.initialSteps(['AI Toolkit', 'Checking NodeJS', 'Clone', 'Install PyTorch', 'Install Dependencies', 'Finish']);
 
   stepper.starterStep().then(({targetDirectory, chosen}) => {
     if (chosen === 'install') {
