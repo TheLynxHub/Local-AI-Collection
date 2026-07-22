@@ -12,7 +12,7 @@ import {getPythonCommandByOs, isWin, parseCustomArg} from '../../../Utils/CrossU
 import {CardInfo, catchAddress, getArgumentType, isValidArg, removeEscapes} from '../../../Utils/RendererUtils';
 import comfyArguments from './Arguments';
 
-const COMFYUI_URL = 'https://github.com/comfyanonymous/ComfyUI';
+const COMFYUI_URL = 'https://github.com/comfy-org/comfyui';
 
 function isEnvironmentVariable(name: string): boolean {
   for (const arg of comfyArguments) {
