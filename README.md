@@ -37,6 +37,7 @@ A collection of local AI tools with **full support** for **arguments**, **config
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | <img height='20' src="https://avatars.githubusercontent.com/u/6757283?s=20&v=4"> Rsxdalv  | [Text to Speech](https://github.com/rsxdalv/tts-generation-webui) | <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | [Audio Generation](https://github.com/gitmylo/audio-webui) |
 | <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123 | [AllTalk TTS](https://github.com/erew123/alltalk_tts)             | <img height='20' src="https://avatars.githubusercontent.com/IAHispano?s=20"> IAHispano    | [Applio](https://github.com/IAHispano/Applio)              |
+| <img height='20' src="https://avatars.githubusercontent.com/2noise?s=20"> 2noise          | [ChatTTS](https://github.com/2noise/ChatTTS)                      |                                                                                           |                                                            |
 
 ### 🤖 Agents
 

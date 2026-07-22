@@ -37,3 +37,4 @@ export const LANGFLOW_ID = 'Langflow_AI';
 export const TTS_ID = 'Rsxdalv_AG';
 export const AG_ID = 'Gitmylo_AG';
 export const APPLIO_ID = 'IAHispano_Applio';
+export const CHAT_TTS_ID = 'ChatTTS_2Noise';

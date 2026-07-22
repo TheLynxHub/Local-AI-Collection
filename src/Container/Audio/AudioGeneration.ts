@@ -1,9 +1,10 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {AG_ID, ALLTALK_ID, APPLIO_ID, TTS_ID} from '../../Constants';
+import {AG_ID, ALLTALK_ID, APPLIO_ID, CHAT_TTS_ID, TTS_ID} from '../../Constants';
 import ALLTALK_RM from './AllTalk TTS (erew123)/RendererMethods';
 import APPLIO_RM from './Applio/RendererMethods';
 import gitmyloArguments from './Audio Generation (gitmylo)/Arguments';
 import AG_RM from './Audio Generation (gitmylo)/RendererMethods';
+import CHAT_TTS_RM from './ChatTTS (2noise)/RendererMethods';
 import TTS_RM from './Text to Speech (rsxdalv)/RendererMethods';
 
 const audioPage: PagesData = {
@@ -53,6 +54,17 @@ const audioPage: PagesData = {
       repoUrl: 'https://github.com/IAHispano/Applio',
       type: 'audio',
       methods: APPLIO_RM,
+      installationType: 'git',
+    },
+    {
+      id: CHAT_TTS_ID,
+      title: 'ChatTTS',
+      description:
+        'A generative speech model for daily dialogue scenarios such as LLM assistants, ' +
+        'supporting conversational TTS with fine-grained prosodic control.',
+      repoUrl: 'https://github.com/2noise/ChatTTS',
+      type: 'audio',
+      methods: CHAT_TTS_RM,
       installationType: 'git',
     },
   ],

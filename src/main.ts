@@ -7,6 +7,7 @@ import {
   ANTIGRAVITY_CLI_ID,
   APPLIO_ID,
   BOLT_DIY_ID,
+  CHAT_TTS_ID,
   CLAUDE_CODE_ID,
   COMFYUI_ID,
   COMFYUI_ROCM_ID,
@@ -45,6 +46,7 @@ import N8N_MM from './Container/Agent/N8N/MainMethods';
 import Rrew123_MM from './Container/Audio/AllTalk TTS (erew123)/MainMethods';
 import Applio_MM from './Container/Audio/Applio/MainMethods';
 import Gitmylo_MM from './Container/Audio/Audio Generation (gitmylo)/MainMethods';
+import ChatTTS_MM from './Container/Audio/ChatTTS (2noise)/MainMethods';
 import Rsx_MM from './Container/Audio/Text to Speech (rsxdalv)/MainMethods';
 import Comfy_MM from './Container/Image/ComfyUI (comfyanonymous)/MainMethods';
 import ComfyRocm_MM from './Container/Image/ComfyUI ROCm (patientx)/MainMethods';
@@ -105,6 +107,7 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: ANTIGRAVITY_CLI_ID, methods: () => AntigravityCli_MM(utils)},
     {id: HERMES_AGENT_ID, methods: () => HermesAgent_MM(utils)},
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
+    {id: CHAT_TTS_ID, methods: () => ChatTTS_MM(utils)},
     {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
     {id: LLAMA_FACTORY_ID, methods: () => LlamaFactory_MM(utils)},
   ];
