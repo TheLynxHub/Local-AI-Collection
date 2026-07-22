@@ -30,6 +30,7 @@ export const GeminiCli_ID = 'GeminiCli_TG';
 export const CLAUDE_CODE_ID = 'ClaudeCode_TG';
 export const ANTIGRAVITY_CLI_ID = 'AntigravityCli_TG';
 export const HERMES_AGENT_ID = 'HermesAgent_TG';
+export const LANGFLOW_ID = 'Langflow_AI';
 
 // Audio Generation
 export const TTS_ID = 'Rsxdalv_AG';

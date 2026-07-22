@@ -16,6 +16,7 @@ import {
   HERMES_AGENT_ID,
   INVOKE_ID,
   KOHYA_ID,
+  LANGFLOW_ID,
   LoLLMS_ID,
   LORA_MANAGER_ID,
   N8N_ID,
@@ -38,6 +39,7 @@ import ClaudeCode_MM from './Container/Agent/Claude Code/MainMethods';
 import Flow_MM from './Container/Agent/Flowise (FlowiseAI)/MainMethods';
 import GeminiCli_MM from './Container/Agent/Gemini CLI/MainMethods';
 import HermesAgent_MM from './Container/Agent/Hermes Agent (NousResearch)/MainMethods';
+import Langflow_MM from './Container/Agent/Langflow (langflow-ai)/MainMethods';
 import N8N_MM from './Container/Agent/N8N/MainMethods';
 import Rrew123_MM from './Container/Audio/AllTalk TTS (erew123)/MainMethods';
 import Applio_MM from './Container/Audio/Applio/MainMethods';
@@ -91,6 +93,8 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: ALLTALK_ID, methods: () => Rrew123_MM(utils)},
     {id: OPEN_WEBUI_ID, methods: () => OpenWebUI_MM(utils)},
     {id: FLOWISEAI_ID, methods: () => Flow_MM(utils)},
+    {id: LANGFLOW_ID, methods: () => Langflow_MM(utils)},
+
     {id: LoLLMS_ID, methods: () => LoLLM_MM(utils)},
     {id: BOLT_DIY_ID, methods: () => BOLT_DIY_MM(utils)},
     {id: N8N_ID, methods: () => N8N_MM(utils)},

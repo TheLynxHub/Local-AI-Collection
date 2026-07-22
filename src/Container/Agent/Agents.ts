@@ -1,5 +1,13 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {ANTIGRAVITY_CLI_ID, CLAUDE_CODE_ID, FLOWISEAI_ID, GeminiCli_ID, HERMES_AGENT_ID, N8N_ID} from '../../Constants';
+import {
+  ANTIGRAVITY_CLI_ID,
+  CLAUDE_CODE_ID,
+  FLOWISEAI_ID,
+  GeminiCli_ID,
+  HERMES_AGENT_ID,
+  LANGFLOW_ID,
+  N8N_ID,
+} from '../../Constants';
 import antigravityCliArguments from './Antigravity CLI/Arguments';
 import AntigravityCli_RM from './Antigravity CLI/RendererMethods';
 import claudeCodeArguments from './Claude Code/Arguments';
@@ -10,6 +18,8 @@ import geminiCliArguments from './Gemini CLI/Arguments';
 import GeminiCli_RM from './Gemini CLI/RendererMethods';
 import hermesAgentArguments from './Hermes Agent (NousResearch)/Arguments';
 import HermesAgent_RM from './Hermes Agent (NousResearch)/RendererMethods';
+import langflowArguments from './Langflow (langflow-ai)/Arguments';
+import Langflow_RM from './Langflow (langflow-ai)/RendererMethods';
 import n8nArguments from './N8N/Arguments';
 import N8N_RM from './N8N/RendererMethods';
 
@@ -25,6 +35,18 @@ const agentsPage: PagesData = {
       supportCustomArguments: true,
       methods: Flow_RM,
       arguments: flowiseArguments,
+      installationType: 'others',
+    },
+    {
+      id: LANGFLOW_ID,
+      title: 'Langflow',
+      description:
+        'Visual framework for building and deploying AI-powered agents and workflows with multi-agent orchestration.',
+      repoUrl: 'https://github.com/langflow-ai/langflow',
+      type: 'text',
+      supportCustomArguments: true,
+      methods: Langflow_RM,
+      arguments: langflowArguments,
       installationType: 'others',
     },
     {
