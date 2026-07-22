@@ -15,6 +15,12 @@ export async function fetchExtensionList(): Promise<ExtensionData[]> {
       stars: 224,
     },
     {
+      url: 'https://github.com/mistbyte-ai/time-injector-mistbyte',
+      title: 'Time Injector (MistByte)',
+      description: 'Injects the current date/time into every prompt.',
+      stars: 0,
+    },
+    {
       url: 'https://github.com/mistbyte-ai/websearch-mistbyte',
       title: 'WebSearch API (MistByte)',
       description: 'Local, explicit web search integration without hallucinations.',

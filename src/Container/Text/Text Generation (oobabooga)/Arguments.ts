@@ -10,6 +10,11 @@ const oobaboogaArguments: ArgumentsData = [
         section: 'Basic settings',
         items: [
           {
+            name: '--user-data-dir',
+            description: 'Path to the user data directory. Default: auto-detected.',
+            type: 'Directory',
+          },
+          {
             name: '--multi-user',
             description:
               'Multi-user mode. Chat histories are not saved or automatically loaded.' +
@@ -36,13 +41,13 @@ const oobaboogaArguments: ArgumentsData = [
             name: '--model-dir',
             description: 'Path to directory with all the models.',
             type: 'Directory',
-            defaultValue: 'models/',
+            defaultValue: 'user_data/models',
           },
           {
             name: '--lora-dir',
             description: 'Path to directory with all the loras.',
             type: 'Directory',
-            defaultValue: 'loras/',
+            defaultValue: 'user_data/loras',
           },
           {
             name: '--model-menu',
@@ -80,15 +85,59 @@ const oobaboogaArguments: ArgumentsData = [
         ],
       },
       {
+        section: 'Image model',
+        items: [
+          {
+            name: '--image-model',
+            description: 'Name of the image model to select on startup (overrides saved setting).',
+            type: 'Input',
+          },
+          {
+            name: '--image-model-dir',
+            description: 'Path to directory with all the image models.',
+            type: 'Directory',
+            defaultValue: 'user_data/image_models',
+          },
+          {
+            name: '--image-dtype',
+            description: 'Data type for image model.',
+            type: 'DropDown',
+            values: ['bfloat16', 'float16'],
+          },
+          {
+            name: '--image-attn-backend',
+            description: 'Attention backend for image model.',
+            type: 'DropDown',
+            values: ['flash_attention_2', 'sdpa'],
+          },
+          {
+            name: '--image-cpu-offload',
+            description: 'Enable CPU offloading for image model.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--image-compile',
+            description: 'Compile the image model for faster inference.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--image-quant',
+            description: 'Quantization method for image model.',
+            type: 'DropDown',
+            values: ['none', 'bnb-8bit', 'bnb-4bit', 'torchao-int8wo', 'torchao-fp4', 'torchao-float8wo'],
+          },
+        ],
+      },
+      {
         section: 'Model loader',
         items: [
           {
             name: '--loader',
             description:
               'Choose the model loader manually, otherwise, it will get autodetected. Valid options:' +
-              ' Transformers, llama.cpp, ExLlamav3_HF, ExLlamav2_HF, ExLlamav2, TensorRT-LLM.',
+              ' Transformers, llama.cpp, ExLlamav3_HF, ExLlamav3, TensorRT-LLM.',
             type: 'DropDown',
-            values: ['Transformers', 'llama.cpp', 'ExLlamav3_HF', 'ExLlamav2_HF', 'ExLlamav2', 'TensorRT-LLM'],
+            values: ['Transformers', 'llama.cpp', 'ExLlamav3_HF', 'ExLlamav3', 'TensorRT-LLM'],
           },
         ],
       },
@@ -97,14 +146,15 @@ const oobaboogaArguments: ArgumentsData = [
         items: [
           {
             name: '--ctx-size',
-            description: 'Context size in tokens.',
+            description:
+              'Context size in tokens. 0 = auto for llama.cpp (requires gpu-layers=-1), 8192 for other loaders.',
             type: 'Input',
-            defaultValue: '8192',
+            defaultValue: '0',
           },
           {
             name: '--cache-type',
             description:
-              'KV cache type; valid options: llama.cpp - fp16, q8_0, q4_0; ExLlamaV2 - fp16, fp8, q8, q6, q4;' +
+              'KV cache type; valid options: llama.cpp - fp16, q8_0, q4_0;' +
               ' ExLlamaV3 - fp16, q2 to q8 (can specify k_bits and v_bits separately, e.g. q4_q8).',
             type: 'Input',
             defaultValue: 'fp16',
@@ -123,7 +173,7 @@ const oobaboogaArguments: ArgumentsData = [
             name: '--draft-max',
             description: 'Number of tokens to draft for speculative decoding.',
             type: 'Input',
-            defaultValue: '4',
+            defaultValue: '3',
           },
           {
             name: '--gpu-layers-draft',
@@ -141,6 +191,140 @@ const oobaboogaArguments: ArgumentsData = [
             description: 'Size of the prompt context for the draft model. If 0, uses the same as the main model.',
             type: 'Input',
             defaultValue: '0',
+          },
+          {
+            name: '--spec-type',
+            description:
+              'Speculative decoding type. Recommended: draft-mtp if the main model is an MTP build, otherwise ngram-mod.',
+            type: 'DropDown',
+            values: ['none', 'draft-mtp', 'ngram-mod', 'ngram-simple', 'ngram-map-k', 'ngram-map-k4v'],
+            defaultValue: 'none',
+          },
+          {
+            name: '--spec-ngram-size-n',
+            description: 'N-gram lookup size for ngram speculative decoding.',
+            type: 'Input',
+            defaultValue: '24',
+          },
+          {
+            name: '--spec-ngram-size-m',
+            description: 'Draft n-gram size for ngram speculative decoding.',
+            type: 'Input',
+            defaultValue: '48',
+          },
+          {
+            name: '--spec-ngram-min-hits',
+            description: 'Minimum n-gram hits for ngram-map speculative decoding.',
+            type: 'Input',
+            defaultValue: '1',
+          },
+        ],
+      },
+      {
+        section: 'llama.cpp',
+        items: [
+          {
+            name: '--gpu-layers',
+            description: 'Number of layers to offload to the GPU. -1 = auto.',
+            type: 'Input',
+            defaultValue: '-1',
+          },
+          {
+            name: '--cpu-moe',
+            description: 'Move the experts to the CPU (for MoE models).',
+            type: 'CheckBox',
+          },
+          {
+            name: '--mmproj',
+            description: 'Path to the mmproj file for vision models.',
+            type: 'File',
+          },
+          {
+            name: '--streaming-llm',
+            description:
+              'Activate StreamingLLM to avoid re-evaluating the entire prompt when old messages are removed.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--tensor-split',
+            description: 'Split the model across multiple GPUs. Comma-separated list of proportions. Example: 60,40.',
+            type: 'Input',
+          },
+          {
+            name: '--split-mode',
+            description:
+              'How to split the model across multiple GPUs. "tensor" can make multi-GPU significantly faster.',
+            type: 'DropDown',
+            values: ['layer', 'row', 'tensor', 'none'],
+            defaultValue: 'layer',
+          },
+          {
+            name: '--no-mmap',
+            description: 'Prevent mmap from being used.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--mlock',
+            description: 'Force the system to keep the model in RAM.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--no-kv-offload',
+            description: 'Do not offload the K, Q, V to the GPU. This saves VRAM but reduces performance.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--batch-size',
+            description:
+              'Maximum number of prompt tokens to batch together when calling llama-server (application level batch size).',
+            type: 'Input',
+            defaultValue: '1024',
+          },
+          {
+            name: '--ubatch-size',
+            description:
+              'Maximum number of prompt tokens to batch together when calling llama-server (device level physical batch size).',
+            type: 'Input',
+            defaultValue: '1024',
+          },
+          {
+            name: '--threads',
+            description: 'Number of threads to use.',
+            type: 'Input',
+            defaultValue: '0',
+          },
+          {
+            name: '--threads-batch',
+            description: 'Number of threads to use for batches/prompt processing.',
+            type: 'Input',
+            defaultValue: '0',
+          },
+          {
+            name: '--numa',
+            description: 'Activate NUMA task allocation for llama.cpp.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--parallel',
+            description: 'Number of parallel request slots. The context size is divided equally among slots.',
+            type: 'Input',
+            defaultValue: '1',
+          },
+          {
+            name: '--fit-target',
+            description: 'Target VRAM margin per device for auto GPU layers, comma-separated list of values in MiB.',
+            type: 'Input',
+            defaultValue: '512',
+          },
+          {
+            name: '--extra-flags',
+            description: 'Extra flags to pass to llama-server. Example: "--jinja --rpc 192.168.1.100:50052".',
+            type: 'Input',
+          },
+          {
+            name: '--ik',
+            description: 'Use ik_llama.cpp instead of upstream llama.cpp. Requires ik_llama_cpp_binaries package.',
+            type: 'CheckBox',
           },
         ],
       },
@@ -165,7 +349,7 @@ const oobaboogaArguments: ArgumentsData = [
           },
           {
             name: '--disk-cache-dir',
-            description: 'Directory to save the disk cache to. Defaults to "user_data/cache".',
+            description: 'Directory to save the disk cache to.',
             type: 'Directory',
             defaultValue: 'user_data/cache',
           },
@@ -242,83 +426,14 @@ const oobaboogaArguments: ArgumentsData = [
         ],
       },
       {
-        section: 'llama.cpp',
-        items: [
-          {
-            name: '--gpu-layers',
-            description: 'Number of layers to offload to the GPU.',
-            type: 'Input',
-            defaultValue: '0',
-          },
-          {
-            name: '--mmproj',
-            description: 'Path to the mmproj file for vision models.',
-            type: 'File',
-          },
-          {
-            name: '--streaming-llm',
-            description:
-              'Activate StreamingLLM to avoid re-evaluating the entire prompt when old messages are removed.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--tensor-split',
-            description: 'Split the model across multiple GPUs. Comma-separated list of proportions. Example: 60,40.',
-            type: 'Input',
-          },
-          {
-            name: '--row-split',
-            description: 'Split the model by rows across GPUs. This may improve multi-gpu performance.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--no-mmap',
-            description: 'Prevent mmap from being used.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--mlock',
-            description: 'Force the system to keep the model in RAM.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--no-kv-offload',
-            description: 'Do not offload the K, Q, V to the GPU. This saves VRAM but reduces the performance.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--batch-size',
-            description: 'Maximum number of prompt tokens to batch together when calling llama_eval.',
-            type: 'Input',
-            defaultValue: '512',
-          },
-          {
-            name: '--threads',
-            description: 'Number of threads to use.',
-            type: 'Input',
-            defaultValue: '0',
-          },
-          {
-            name: '--threads-batch',
-            description: 'Number of threads to use for batches/prompt processing.',
-            type: 'Input',
-            defaultValue: '0',
-          },
-          {
-            name: '--numa',
-            description: 'Activate NUMA task allocation for llama.cpp.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--extra-flags',
-            description: 'Extra flags to pass to llama-server. Format: "flag1=value1,flag2,flag3=value3".',
-            type: 'Input',
-          },
-        ],
-      },
-      {
         section: 'ExLlamaV3',
         items: [
+          {
+            name: '--gpu-split',
+            description:
+              'Comma-separated list of VRAM (in GB) to use per GPU device for model layers. Example: 20,7,7.',
+            type: 'Input',
+          },
           {
             name: '--enable-tp',
             description: 'Enable Tensor Parallelism (TP) to split the model across GPUs.',
@@ -331,112 +446,10 @@ const oobaboogaArguments: ArgumentsData = [
             values: ['native', 'nccl'],
             defaultValue: 'native',
           },
-        ],
-      },
-      {
-        section: 'ExLlamaV2',
-        items: [
-          {
-            name: '--gpu-split',
-            description:
-              'Comma-separated list of VRAM (in GB) to use per GPU device for model layers. Example: 20,7,7.',
-            type: 'Input',
-          },
-          {
-            name: '--autosplit',
-            description:
-              'Autosplit the model tensors across the available GPUs. This causes --gpu-split to be ignored.',
-            type: 'CheckBox',
-          },
           {
             name: '--cfg-cache',
-            description:
-              'ExLlamav2_HF: Create an additional cache for CFG negative prompts. Necessary ' +
-              'to use CFG with that loader.',
+            description: 'Create an additional cache for CFG negative prompts. Necessary to use CFG with that loader.',
             type: 'CheckBox',
-          },
-          {
-            name: '--no_flash_attn',
-            description: 'Force flash-attention to not be used.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--no_xformers',
-            description: 'Force xformers to not be used.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--no_sdpa',
-            description: 'Force Torch SDPA to not be used.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--num_experts_per_token',
-            description: 'Number of experts to use for generation. Applies to MoE models like Mixtral.',
-            type: 'Input',
-            defaultValue: '2',
-          },
-        ],
-      },
-
-      {
-        section: 'TensorRT-LLM',
-        items: [
-          {
-            name: '--cpp-runner',
-            description:
-              "Use the ModelRunnerCpp runner, which is faster than the default ModelRunner but doesn't support streaming yet.",
-            type: 'CheckBox',
-          },
-        ],
-      },
-
-      {
-        section: 'DeepSpeed',
-        items: [
-          {
-            name: '--deepspeed',
-            description: 'Enable the use of DeepSpeed ZeRO-3 for inference via the Transformers integration.',
-            type: 'CheckBox',
-          },
-          {
-            name: '--nvme-offload-dir',
-            description: 'DeepSpeed: Directory to use for ZeRO-3 NVME offloading.',
-            type: 'Directory',
-          },
-          {
-            name: '--local_rank',
-            description: 'DeepSpeed: Optional argument for distributed setups.',
-            type: 'Input',
-            defaultValue: '0',
-          },
-        ],
-      },
-      {
-        section: 'RoPE',
-        items: [
-          {
-            name: '--alpha_value',
-            description:
-              'Positional embeddings alpha factor for NTK RoPE scaling. Use either this or compress_pos_emb, not both.',
-            type: 'Input',
-            defaultValue: '1',
-          },
-          {
-            name: '--rope_freq_base',
-            description:
-              'If greater than 0, will be used instead of alpha_value. Those two are related by' +
-              ' rope_freq_base = 10000 * alpha_value ^ (64 / 63).',
-            type: 'Input',
-            defaultValue: '0',
-          },
-          {
-            name: '--compress_pos_emb',
-            description:
-              'Positional embeddings compression factor. Should be set to (context length) / ' +
-              "(model's original context length). Equal to 1/rope_freq_scale.",
-            type: 'Input',
-            defaultValue: '1',
           },
         ],
       },
@@ -514,12 +527,12 @@ const oobaboogaArguments: ArgumentsData = [
         items: [
           {
             name: '--api',
-            description: 'Enable the API extension.',
+            description: 'Enable the API server.',
             type: 'CheckBox',
           },
           {
             name: '--public-api',
-            description: 'Create a public URL for the API using Cloudfare.',
+            description: 'Create a public URL for the API using Cloudflare.',
             type: 'CheckBox',
           },
           {
@@ -558,6 +571,235 @@ const oobaboogaArguments: ArgumentsData = [
           {
             name: '--api-disable-ipv4',
             description: 'Disable IPv4 for the API',
+            type: 'CheckBox',
+          },
+        ],
+      },
+      {
+        section: 'API generation defaults',
+        items: [
+          {
+            name: '--temperature',
+            description: 'Temperature sampling default override.',
+            type: 'Input',
+          },
+          {
+            name: '--dynatemp-low',
+            description: 'Dynamic temperature low bound.',
+            type: 'Input',
+          },
+          {
+            name: '--dynatemp-high',
+            description: 'Dynamic temperature high bound.',
+            type: 'Input',
+          },
+          {
+            name: '--dynatemp-exponent',
+            description: 'Dynamic temperature exponent.',
+            type: 'Input',
+          },
+          {
+            name: '--smoothing-factor',
+            description: 'Smoothing factor for samplers.',
+            type: 'Input',
+          },
+          {
+            name: '--smoothing-curve',
+            description: 'Smoothing curve for samplers.',
+            type: 'Input',
+          },
+          {
+            name: '--top-p',
+            description: 'Top P sampling cutoff.',
+            type: 'Input',
+            defaultValue: '0.95',
+          },
+          {
+            name: '--top-k',
+            description: 'Top K sampling cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--min-p',
+            description: 'Min P sampling cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--top-n-sigma',
+            description: 'Top N Sigma cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--typical-p',
+            description: 'Typical P sampling cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--xtc-threshold',
+            description: 'XTC threshold.',
+            type: 'Input',
+          },
+          {
+            name: '--xtc-probability',
+            description: 'XTC probability.',
+            type: 'Input',
+          },
+          {
+            name: '--epsilon-cutoff',
+            description: 'Epsilon cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--eta-cutoff',
+            description: 'Eta cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--tfs',
+            description: 'TFS sampling value.',
+            type: 'Input',
+          },
+          {
+            name: '--top-a',
+            description: 'Top A sampling cutoff.',
+            type: 'Input',
+          },
+          {
+            name: '--adaptive-target',
+            description: 'Adaptive target value.',
+            type: 'Input',
+          },
+          {
+            name: '--adaptive-decay',
+            description: 'Adaptive decay value.',
+            type: 'Input',
+          },
+          {
+            name: '--dry-multiplier',
+            description: 'DRY multiplier.',
+            type: 'Input',
+          },
+          {
+            name: '--dry-allowed-length',
+            description: 'DRY allowed length.',
+            type: 'Input',
+          },
+          {
+            name: '--dry-base',
+            description: 'DRY base.',
+            type: 'Input',
+          },
+          {
+            name: '--repetition-penalty',
+            description: 'Repetition penalty.',
+            type: 'Input',
+          },
+          {
+            name: '--frequency-penalty',
+            description: 'Frequency penalty.',
+            type: 'Input',
+          },
+          {
+            name: '--presence-penalty',
+            description: 'Presence penalty.',
+            type: 'Input',
+          },
+          {
+            name: '--encoder-repetition-penalty',
+            description: 'Encoder repetition penalty.',
+            type: 'Input',
+          },
+          {
+            name: '--no-repeat-ngram-size',
+            description: 'No repeat ngram size.',
+            type: 'Input',
+          },
+          {
+            name: '--repetition-penalty-range',
+            description: 'Repetition penalty range.',
+            type: 'Input',
+          },
+          {
+            name: '--penalty-alpha',
+            description: 'Penalty alpha.',
+            type: 'Input',
+          },
+          {
+            name: '--guidance-scale',
+            description: 'Guidance scale.',
+            type: 'Input',
+          },
+          {
+            name: '--mirostat-mode',
+            description: 'Mirostat mode.',
+            type: 'Input',
+          },
+          {
+            name: '--mirostat-tau',
+            description: 'Mirostat tau.',
+            type: 'Input',
+          },
+          {
+            name: '--mirostat-eta',
+            description: 'Mirostat eta.',
+            type: 'Input',
+          },
+          {
+            name: '--do-sample',
+            description: 'Do sample during generation.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--dynamic-temperature',
+            description: 'Enable dynamic temperature.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--temperature-last',
+            description: 'Apply temperature sampler last.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--sampler-priority',
+            description: 'Sampler priority order string.',
+            type: 'Input',
+          },
+          {
+            name: '--dry-sequence-breakers',
+            description: 'DRY sequence breakers string.',
+            type: 'Input',
+          },
+          {
+            name: '--enable-thinking',
+            description: 'Enable thinking/reasoning output blocks.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--reasoning-effort',
+            description: 'Reasoning effort level.',
+            type: 'DropDown',
+            values: ['low', 'medium', 'high'],
+            defaultValue: 'medium',
+          },
+          {
+            name: '--preserve-thinking',
+            description: 'Preserve thinking blocks from prior turns in the chat template.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--chat-template-file',
+            description:
+              'Path to a chat template file (.jinja, .jinja2, or .yaml) to use as default instruction template.',
+            type: 'File',
+          },
+        ],
+      },
+      {
+        section: 'Electron',
+        items: [
+          {
+            name: '--no-electron',
+            description: 'In portable builds, skip the Electron desktop window and use browser instead.',
             type: 'CheckBox',
           },
         ],
