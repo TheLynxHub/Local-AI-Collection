@@ -98,6 +98,23 @@ async function readArgs(configDir?: string) {
   return parseFilesToArgs(scriptData, settingsContent);
 }
 
+function parseVersionAndDate(raw: string): string {
+  if (!raw || raw === 'unknown') return 'unknown';
+  const fullMatch = raw.match(/(v?\d+\.\d+\.\d+\s*\(\d{4}\.\d+\.\d+\))/i);
+  if (fullMatch) {
+    return fullMatch[1];
+  }
+  const verMatch = raw.match(/(v?\d+\.\d+\.\d+)/i);
+  if (verMatch) {
+    return verMatch[1];
+  }
+  const dateMatch = raw.match(/(v?\d{4}\.\d+\.\d+)/i);
+  if (dateMatch) {
+    return dateMatch[1];
+  }
+  return raw.trim();
+}
+
 function getHermesAgentVersion(): Promise<string> {
   return new Promise(resolve => {
     exec('hermes --version', (error, stdout) => {
@@ -105,8 +122,8 @@ function getHermesAgentVersion(): Promise<string> {
         resolve('unknown');
         return;
       }
-      const version = stdout.trim();
-      resolve(version || 'unknown');
+      const parsed = parseVersionAndDate(stdout);
+      resolve(parsed || 'unknown');
     });
   });
 }
@@ -125,9 +142,16 @@ async function fetchLatestHermesVersion(): Promise<string | undefined> {
     });
     if (!res.ok) return undefined;
     const data = (await res.json()) as {tag_name?: string; name?: string};
-    const rawTag = data.tag_name || data.name || '';
-    const match = rawTag.match(/\d+\.\d+\.\d+/);
-    return match ? match[0] : rawTag.replace(/^v/, '');
+
+    if (data.name) {
+      const parsedName = parseVersionAndDate(data.name);
+      if (parsedName && parsedName !== 'unknown') return parsedName;
+    }
+    if (data.tag_name) {
+      const parsedTag = parseVersionAndDate(data.tag_name);
+      if (parsedTag && parsedTag !== 'unknown') return parsedTag;
+    }
+    return undefined;
   } catch (e) {
     console.error('Failed to fetch Hermes Agent release info:', e);
     return undefined;
@@ -136,17 +160,14 @@ async function fetchLatestHermesVersion(): Promise<string | undefined> {
 
 async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
   try {
-    const currentRaw = await getHermesAgentVersion();
+    const currentVersion = await getHermesAgentVersion();
     const latestVersion = await fetchLatestHermesVersion();
 
     if (latestVersion) {
       utils.storage.set('update-available-version-hermesAgent', latestVersion);
     }
 
-    if (currentRaw && latestVersion && currentRaw !== 'unknown') {
-      const match = currentRaw.match(/\d+\.\d+\.\d+/);
-      const currentVersion = match ? match[0] : currentRaw;
-
+    if (currentVersion && latestVersion && currentVersion !== 'unknown') {
       if (currentVersion !== latestVersion) {
         return true;
       }
