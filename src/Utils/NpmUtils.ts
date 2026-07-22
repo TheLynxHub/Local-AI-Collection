@@ -82,3 +82,23 @@ export async function uninstallNpmPackage(packageName: string): Promise<void> {
     throw new Error(`Error uninstalling ${packageName}. ${error.message}`, {cause: error});
   }
 }
+
+export async function getNpmVersion(): Promise<string> {
+  try {
+    const {stdout} = await execAsync('npm -v');
+    return stdout.trim();
+  } catch {
+    return '';
+  }
+}
+
+export async function getNpmMajorVersion(): Promise<number> {
+  const version = await getNpmVersion();
+  const match = version.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+export async function isNpmVersionAbove12(): Promise<boolean> {
+  const major = await getNpmMajorVersion();
+  return major >= 12;
+}

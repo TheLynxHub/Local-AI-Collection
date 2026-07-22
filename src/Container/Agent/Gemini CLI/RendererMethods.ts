@@ -282,15 +282,18 @@ function startInstall(stepper: InstallationStepper) {
                 );
               } else {
                 stepper.nextStep().then(() => {
-                  stepper.executeTerminalCommands('npm i -g @google/gemini-cli').then(() => {
-                    stepper.setInstalled();
-                    const currentDate = new Date();
-                    stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
-                    stepper.showFinalStep(
-                      'success',
-                      'Installation Complete!',
-                      'Your Gemini Cli environment is ready. Enjoy!',
-                    );
+                  stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+                    const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
+                    stepper.executeTerminalCommands(`npm i -g @google/gemini-cli${flags}`).then(() => {
+                      stepper.setInstalled();
+                      const currentDate = new Date();
+                      stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
+                      stepper.showFinalStep(
+                        'success',
+                        'Installation Complete!',
+                        'Your Gemini Cli environment is ready. Enjoy!',
+                      );
+                    });
                   });
                 });
               }

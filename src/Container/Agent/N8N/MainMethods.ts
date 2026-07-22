@@ -2,11 +2,19 @@ import path from 'node:path';
 
 import {CardMainMethodsInitial, ChosenArgument, MainModuleUtils} from '../../../../../src/common/types/plugins/modules';
 import {getCdCommand, isWin} from '../../../Utils/CrossUtils';
-import {ensureScriptExecutable, initBatchFile, LINE_ENDING, utilReadArgs, utilSaveArgs} from '../../../Utils/MainUtils';
+import {
+  checkWhich,
+  ensureScriptExecutable,
+  initBatchFile,
+  LINE_ENDING,
+  utilReadArgs,
+  utilSaveArgs,
+} from '../../../Utils/MainUtils';
 import {
   checkNpmPackageUpdate,
   getNpmPackageVersion,
   isNpmPackageInstalled,
+  isNpmVersionAbove12,
   uninstallNpmPackage,
 } from '../../../Utils/NpmUtils';
 import {parseArgsToString, parseStringToArgs} from './RendererMethods';
@@ -51,6 +59,8 @@ async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
 function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('is_n8n_installed', () => isNpmPackageInstalled(PACKAGE_NAME));
   utils.ipc.handle('current_n8n_version', () => getNpmPackageVersion(PACKAGE_NAME));
+  utils.ipc.handle('is_npm_available', () => checkWhich('npm'));
+  utils.ipc.handle('is_npm_version_above_12', () => isNpmVersionAbove12());
 }
 
 const isInstalled = () => isNpmPackageInstalled(PACKAGE_NAME);

@@ -114,11 +114,18 @@ function startInstall(stepper: InstallationStepper) {
                 stepper.showFinalStep('success', "You're All Set!", "N8N is already installed. You're good to go!");
               } else {
                 stepper.nextStep().then(() => {
-                  stepper.executeTerminalCommands('npm i -g n8n').then(() => {
-                    stepper.setInstalled();
-                    const currentDate = new Date();
-                    stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
-                    stepper.showFinalStep('success', 'Installation Complete!', 'Your N8N environment is ready. Enjoy!');
+                  stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+                    const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
+                    stepper.executeTerminalCommands(`npm i -g n8n${flags}`).then(() => {
+                      stepper.setInstalled();
+                      const currentDate = new Date();
+                      stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
+                      stepper.showFinalStep(
+                        'success',
+                        'Installation Complete!',
+                        'Your N8N environment is ready. Enjoy!',
+                      );
+                    });
                   });
                 });
               }

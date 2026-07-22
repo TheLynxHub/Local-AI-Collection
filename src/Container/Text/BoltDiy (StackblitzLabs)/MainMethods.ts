@@ -1,6 +1,7 @@
 import {CardMainMethodsInitial, MainModuleUtils} from '../../../../../src/common/types/plugins/modules';
 import {BOLT_DIY_ID} from '../../../Constants';
 import {checkWhich, isGitTypeInstalled, LINE_ENDING} from '../../../Utils/MainUtils';
+import {isNpmVersionAbove12} from '../../../Utils/NpmUtils';
 
 async function getRunCommands(): Promise<string | string[]> {
   return `npm run dev ${LINE_ENDING}`;
@@ -8,6 +9,7 @@ async function getRunCommands(): Promise<string | string[]> {
 
 function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('is_nodejs_installed', () => checkWhich('node'));
+  utils.ipc.handle('is_npm_version_above_12', () => isNpmVersionAbove12());
 }
 
 async function updateAvailable(utils: MainModuleUtils, dir?: string) {

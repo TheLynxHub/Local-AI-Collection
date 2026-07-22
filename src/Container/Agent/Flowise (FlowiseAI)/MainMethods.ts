@@ -14,6 +14,7 @@ import {
   checkNpmPackageUpdate,
   getNpmPackageVersion,
   isNpmPackageInstalled,
+  isNpmVersionAbove12,
   uninstallNpmPackage,
 } from '../../../Utils/NpmUtils';
 import {parseArgsToString, parseStringToArgs} from './RendererMethods';
@@ -59,6 +60,7 @@ function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('is_flowise_installed', () => isNpmPackageInstalled(PACKAGE_NAME));
   utils.ipc.handle('current_flowise_version', () => getNpmPackageVersion(PACKAGE_NAME));
   utils.ipc.handle('is_npm_available', () => checkWhich('npm'));
+  utils.ipc.handle('is_npm_version_above_12', () => isNpmVersionAbove12());
 }
 
 const isInstalled = () => isNpmPackageInstalled(PACKAGE_NAME);

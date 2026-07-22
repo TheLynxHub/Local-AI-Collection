@@ -15,7 +15,11 @@ function startInstall(stepper: InstallationStepper) {
   const progress = (message: string) => stepper.progressBar(true, message);
 
   const checkNode = (): Promise<boolean> => stepper.ipc.invoke('is_nodejs_installed');
-  const installPackages = (dir: string) => stepper.executeTerminalCommands('npm i', dir);
+  const installPackages = (dir: string) =>
+    stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+      const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
+      return stepper.executeTerminalCommands(`npm i${flags}`, dir);
+    });
   const installBolt = () => {
     stepper.cloneRepository(REPO_URL).then(dir => {
       next().then(() => {
