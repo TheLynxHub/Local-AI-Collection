@@ -3,6 +3,7 @@ import {
   A1_ID,
   AITOOLKIT_ID,
   COMFYUI_ID,
+  COMFYUI_ROCM_ID,
   COMFYUI_ZLUDA_ID,
   INVOKE_ID,
   KOHYA_ID,
@@ -28,6 +29,8 @@ import smartGalleryArguments from '../Tools/SmartGallery (biagiomaf)/Arguments';
 import SMARTGALLERY_RM from '../Tools/SmartGallery (biagiomaf)/RendererMethods';
 import comfyArguments from './ComfyUI (comfyanonymous)/Arguments';
 import COMFYUI_RM from './ComfyUI (comfyanonymous)/RendererMethods';
+import comfyRocmArguments from './ComfyUI ROCm (patientx)/Arguments';
+import COMFYUI_ROCM_RM from './ComfyUI ROCm (patientx)/RendererMethods';
 import comfyZludaArguments from './ComfyUI Zluda (patientx)/Arguments';
 import COMFYUI_ZLUDA_RM from './ComfyUI Zluda (patientx)/RendererMethods';
 import invokeArguments from './InvokeAI/Arguments';
@@ -126,6 +129,20 @@ const imagePage: PagesData = {
       supportCustomArguments: true,
       arguments: comfyZludaArguments,
       methods: COMFYUI_ZLUDA_RM,
+      installationType: 'git',
+    },
+    {
+      id: COMFYUI_ROCM_ID,
+      title: 'ComfyUI ROCm',
+      description:
+        'The most powerful and modular stable diffusion GUI, api and backend with a graph/nodes interface.' +
+        ' Enhanced with ROCm support for AMD GPUs.',
+      repoUrl: 'https://github.com/patientx-cfz/comfyui-rocm',
+      extensionsDir: '/custom_nodes',
+      type: 'image',
+      supportCustomArguments: true,
+      arguments: comfyRocmArguments,
+      methods: COMFYUI_ROCM_RM,
       installationType: 'git',
     },
     {

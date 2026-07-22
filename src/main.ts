@@ -8,6 +8,7 @@ import {
   BOLT_DIY_ID,
   CLAUDE_CODE_ID,
   COMFYUI_ID,
+  COMFYUI_ROCM_ID,
   COMFYUI_ZLUDA_ID,
   FLOWISEAI_ID,
   GeminiCli_ID,
@@ -39,6 +40,7 @@ import Applio_MM from './Container/Audio/Applio/MainMethods';
 import Gitmylo_MM from './Container/Audio/Audio Generation (gitmylo)/MainMethods';
 import Rsx_MM from './Container/Audio/Text to Speech (rsxdalv)/MainMethods';
 import Comfy_MM from './Container/Image/ComfyUI (comfyanonymous)/MainMethods';
+import ComfyRocm_MM from './Container/Image/ComfyUI ROCm (patientx)/MainMethods';
 import ComfyZluda_MM from './Container/Image/ComfyUI Zluda (patientx)/MainMethods';
 import Invoke_MM from './Container/Image/InvokeAI/MainMethods';
 import A1_MM from './Container/Image/SD (AUTOMATIC1111)/MainMethods';
@@ -79,6 +81,7 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: SMARTGALLERY_ID, methods: () => SmartGallery_MM(utils)},
     {id: LORA_MANAGER_ID, methods: () => LoraManager_MM(utils)},
     {id: COMFYUI_ZLUDA_ID, methods: () => ComfyZluda_MM(utils)},
+    {id: COMFYUI_ROCM_ID, methods: () => ComfyRocm_MM(utils)},
     {id: ONETRAINER_ID, methods: () => Nerogar_MM(utils)},
     {id: INVOKE_ID, methods: () => Invoke_MM(utils)},
     {id: ALLTALK_ID, methods: () => Rrew123_MM(utils)},

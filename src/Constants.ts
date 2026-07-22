@@ -5,6 +5,7 @@ export const SD_FORGE_AMD_ID = 'LSHQQYTIGER_Forge_SD';
 export const SD_FORGE_ID = 'Lllyasviel_SD';
 export const COMFYUI_ID = 'ComfyUI_SD';
 export const COMFYUI_ZLUDA_ID = 'ComfyUI_Zluda_ID';
+export const COMFYUI_ROCM_ID = 'ComfyUI_ROCm_ID';
 export const SD_NEXT_ID = 'VLADMANDIC_SD';
 export const SWARM_ID = 'McMonkeyProjects_SD';
 export const KOHYA_ID = 'Bmaltais_SD';
