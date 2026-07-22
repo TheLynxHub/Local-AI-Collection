@@ -90,15 +90,20 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
   scriptString += executeCommand;
 
   cliArgs.forEach(arg => {
-    const info = getArgumentInfo(arg.name.split(' ')[0]);
+    const info = getArgumentInfo(arg.name.split(' ')[0]) || getArgumentInfo(arg.name);
     if (!info) return;
 
     const flagName = info.name.split(' ')[0];
     if (info.type === 'CheckBox') {
-      if (arg.value === 'true') {
+      if (
+        arg.value !== 'false' &&
+        (arg.value as any) !== false &&
+        (arg.value as any) !== 0 &&
+        String(arg.value) !== '0'
+      ) {
         scriptString += ` ${flagName}`;
       }
-    } else if (!isEmpty(arg.value)) {
+    } else if (arg.value !== undefined && arg.value !== null && String(arg.value).trim() !== '') {
       scriptString += ` ${flagName} "${arg.value}"`;
     }
   });
@@ -130,11 +135,16 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
         });
 
         let value: any = arg.value;
-        if (value === 'true') {
+        if (String(value) === 'true') {
           value = true;
-        } else if (value === 'false') {
+        } else if (String(value) === 'false') {
           value = false;
-        } else if (!isNaN(Number(value)) && value.trim() !== '' && !isNaN(parseFloat(value))) {
+        } else if (
+          typeof value === 'string' &&
+          !isNaN(Number(value)) &&
+          value.trim() !== '' &&
+          !isNaN(parseFloat(value))
+        ) {
           value = Number(value);
         } else if (
           typeof value === 'string' &&
