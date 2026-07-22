@@ -136,7 +136,10 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
         } else if (!isNaN(Number(value)) && value.trim() !== '' && !isNaN(parseFloat(value))) {
           value = Number(value);
         } else if (
-          ['enabledPlugins', 'extraKnownMarketplaces', 'allowedMcpServers', 'deniedMcpServers'].includes(keys[0])
+          typeof value === 'string' &&
+          (value.trim().startsWith('[') ||
+            value.trim().startsWith('{') ||
+            ['enabledPlugins', 'extraKnownMarketplaces', 'allowedMcpServers', 'deniedMcpServers'].includes(keys[0]))
         ) {
           try {
             value = JSON.parse(value);

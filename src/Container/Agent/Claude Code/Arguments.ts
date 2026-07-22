@@ -25,6 +25,16 @@ const claudeCodeArguments: ArgumentsData = [
             description: 'Your Anthropic API key used by Claude Code.',
             type: 'Input',
           },
+          {
+            name: 'ANTHROPIC_AUTH_TOKEN',
+            description: 'Custom value for the Authorization header (prefixed with Bearer).',
+            type: 'Input',
+          },
+          {
+            name: 'ANTHROPIC_BASE_URL',
+            description: 'Override the API endpoint to route requests through a proxy or gateway.',
+            type: 'Input',
+          },
         ],
       },
       {
@@ -33,6 +43,11 @@ const claudeCodeArguments: ArgumentsData = [
           {
             name: 'CLAUDE_CODE_ENABLE_TELEMETRY',
             description: 'Enable Claude Code telemetry collection when set to 1.',
+            type: 'Input',
+          },
+          {
+            name: 'DISABLE_TELEMETRY',
+            description: 'Set to 1 to disable telemetry collection.',
             type: 'Input',
           },
           {
@@ -73,11 +88,11 @@ const claudeCodeArguments: ArgumentsData = [
         ],
       },
       {
-        section: 'Vertex AI',
+        section: 'Vertex AI & Agent Platform',
         items: [
           {
             name: 'CLAUDE_CODE_USE_VERTEX',
-            description: 'Set to 1 to enable Google Vertex AI integration.',
+            description: 'Set to 1 to enable Google Vertex AI / Agent Platform integration.',
             type: 'Input',
           },
           {
@@ -87,7 +102,7 @@ const claudeCodeArguments: ArgumentsData = [
           },
           {
             name: 'ANTHROPIC_VERTEX_PROJECT_ID',
-            description: 'Google Cloud project id used for Vertex AI.',
+            description: 'Google Cloud project ID used for Vertex AI.',
             type: 'Input',
           },
           {
@@ -136,6 +151,11 @@ const claudeCodeArguments: ArgumentsData = [
             type: 'Input',
           },
           {
+            name: 'API_TIMEOUT_MS',
+            description: 'Timeout for API requests in milliseconds (default: 600000).',
+            type: 'Input',
+          },
+          {
             name: 'CLAUDE_CODE_GIT_BASH_PATH',
             description: 'Custom path to bash.exe when using portable Git on Windows.',
             type: 'Input',
@@ -172,7 +192,7 @@ const claudeCodeArguments: ArgumentsData = [
         items: [
           {
             name: '--model <model_name>',
-            description: 'Claude model to use for this session (for example opus, sonnet, or a full model name).',
+            description: 'Claude model to use for this session (e.g. opus, sonnet, haiku, or a full model name).',
             type: 'Input',
           },
           {
@@ -182,17 +202,47 @@ const claudeCodeArguments: ArgumentsData = [
           },
           {
             name: '--resume <session_id>',
-            description: 'Resume a previous Claude Code session by id.',
+            description: 'Resume a previous Claude Code session by ID or name.',
             type: 'Input',
           },
           {
             name: '--continue',
-            description: 'Continue the most recent session without providing a new prompt.',
+            description: 'Continue the most recent session in current directory without prompt.',
             type: 'CheckBox',
           },
           {
             name: '--output-format <format>',
-            description: 'Output format for headless usage, e.g. text or json.',
+            description: 'Output format for print mode (text, json, stream-json).',
+            type: 'Input',
+          },
+          {
+            name: '--effort <level>',
+            description: 'Set effort level for session (low, medium, high, xhigh, max, ultracode).',
+            type: 'Input',
+          },
+          {
+            name: '--fallback-model <models>',
+            description: 'Automatic fallback model(s) when primary model is overloaded (comma-separated).',
+            type: 'Input',
+          },
+          {
+            name: '--bg',
+            description: 'Start session as a background agent and return immediately.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--bare',
+            description: 'Minimal mode: skip auto-discovery of hooks, skills, plugins, MCP servers.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--safe-mode',
+            description: 'Start with all customizations disabled to troubleshoot broken configurations.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--worktree <name>',
+            description: 'Start Claude in an isolated git worktree at .claude/worktrees/<name>.',
             type: 'Input',
           },
         ],
@@ -202,7 +252,7 @@ const claudeCodeArguments: ArgumentsData = [
         items: [
           {
             name: '--permission-mode <mode>',
-            description: 'Permission mode, e.g. plan or active, controlling how edits are applied.',
+            description: 'Permission mode (default, acceptEdits, plan, auto, dontAsk, bypassPermissions, manual).',
             type: 'Input',
           },
           {
@@ -212,7 +262,12 @@ const claudeCodeArguments: ArgumentsData = [
           },
           {
             name: '--dangerously-skip-permissions',
-            description: 'Skip permission prompts. Use only in trusted automated environments.',
+            description: 'Skip permission prompts. Equivalent to bypassPermissions mode.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--allow-dangerously-skip-permissions',
+            description: 'Add bypassPermissions to Shift+Tab mode cycle without starting in it.',
             type: 'CheckBox',
           },
         ],
@@ -220,6 +275,11 @@ const claudeCodeArguments: ArgumentsData = [
       {
         section: 'Tools and Directories',
         items: [
+          {
+            name: '--tools <tools>',
+            description: 'Restrict which built-in tools Claude can use (e.g. "Bash,Edit,Read").',
+            type: 'Input',
+          },
           {
             name: '--allowedTools <tools>',
             description: 'Comma or space separated list of tools Claude may use without extra confirmation.',
@@ -236,8 +296,38 @@ const claudeCodeArguments: ArgumentsData = [
             type: 'Directory',
           },
           {
+            name: '--system-prompt <prompt>',
+            description: 'Replace the entire system prompt with custom text string.',
+            type: 'Input',
+          },
+          {
             name: '--system-prompt-file <file>',
-            description: 'File path containing a custom system prompt used in print mode.',
+            description: 'File path containing a custom system prompt replacing the default prompt.',
+            type: 'File',
+          },
+          {
+            name: '--append-system-prompt <prompt>',
+            description: 'Append custom text to the end of default system prompt.',
+            type: 'Input',
+          },
+          {
+            name: '--append-system-prompt-file <file>',
+            description: 'File path containing text to append to the default system prompt.',
+            type: 'File',
+          },
+          {
+            name: '--mcp-config <file>',
+            description: 'Load MCP servers from JSON files or strings (space-separated).',
+            type: 'File',
+          },
+          {
+            name: '--strict-mcp-config',
+            description: 'Only use MCP servers from --mcp-config, ignoring all other MCP configurations.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--settings <file>',
+            description: 'Path to a settings JSON file or inline JSON overriding settings.json.',
             type: 'File',
           },
         ],
@@ -258,7 +348,32 @@ const claudeCodeArguments: ArgumentsData = [
           },
           {
             name: 'model',
-            description: 'Default Claude model in settings.json. This is used when CLI --model is not provided.',
+            description: 'Default Claude model in settings.json. Used when CLI --model is not provided.',
+            type: 'Input',
+          },
+          {
+            name: 'effortLevel',
+            description: 'Persist default effort level across sessions (low, medium, high, xhigh).',
+            type: 'Input',
+          },
+          {
+            name: 'fallbackModel',
+            description: 'Fallback model chain array (e.g. ["sonnet", "haiku"]) when primary is overloaded.',
+            type: 'Input',
+          },
+          {
+            name: 'fastMode',
+            description: 'Turn fast mode on for sessions where available.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'editorMode',
+            description: 'Key binding mode for the input prompt (normal, vim).',
+            type: 'Input',
+          },
+          {
+            name: 'autoUpdatesChannel',
+            description: 'Release channel to follow for updates (latest, stable).',
             type: 'Input',
           },
         ],
