@@ -130,12 +130,12 @@ function startInstall(stepper: InstallationStepper) {
   const selectOptions = [
     'NONE',
     'NVIDIA CU130',
-    'NVIDIA CU130 Nightly',
+    'NVIDIA CU132 Nightly',
     'AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)',
     'AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)',
     'AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)',
-    'AMD GPUs (Linux only) ROCm 6.4',
-    'AMD GPUs (Linux only) ROCm 7.1 Nightly',
+    'AMD GPUs (Linux only) ROCm 7.2',
+    'AMD GPUs (Linux only) ROCm 7.2 Nightly',
     'Mac Apple silicon',
     'Mac Apple silicon (Conda)',
     'Mac x86 (Conda)',
@@ -155,12 +155,12 @@ function startInstall(stepper: InstallationStepper) {
       case 'Mac x86 (Conda)':
         return 'conda install pytorch torchvision torchaudio -c pytorch-nightly';
 
-      case 'AMD GPUs (Linux only) ROCm 7.1':
-        return 'pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.1';
-      case 'AMD GPUs (Linux only) ROCm 7.1 Nightly':
+      case 'AMD GPUs (Linux only) ROCm 7.2':
+        return 'pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.2';
+      case 'AMD GPUs (Linux only) ROCm 7.2 Nightly':
         return (
           'pip install --pre torch torchvision torchaudio --index-url ' +
-          'https://download.pytorch.org/whl/nightly/rocm7.1'
+          'https://download.pytorch.org/whl/nightly/rocm7.2'
         );
 
       case 'AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)':
@@ -188,10 +188,10 @@ function startInstall(stepper: InstallationStepper) {
       default:
       case 'NVIDIA CU130':
         return 'pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130';
-      case 'NVIDIA CU130 Nightly':
+      case 'NVIDIA CU132 Nightly':
         return (
           'pip install --pre torch torchvision torchaudio --index-url ' +
-          'https://download.pytorch.org/whl/nightly/cu130'
+          'https://download.pytorch.org/whl/nightly/cu132'
         );
     }
   };
