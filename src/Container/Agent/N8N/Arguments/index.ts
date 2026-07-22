@@ -13,6 +13,7 @@ import externalStorage from './externalStorage';
 import insights from './insights';
 import license from './license';
 import logs from './logs';
+import mcp from './mcp';
 import nodes from './nodes';
 import queueMode from './queueMode';
 import runners from './runners';
@@ -44,6 +45,7 @@ const n8nArguments: ArgumentsData = [
   binaryData,
   externalStorage,
   endpoints,
+  mcp,
 ];
 
 export default n8nArguments;

@@ -59,6 +59,7 @@ const executions: DataItem = {
     {
       name: 'EXECUTIONS_DATA_PRUNE',
       type: 'CheckBox',
+      defaultValue: true,
       description: 'Whether to delete data of past executions on a rolling basis.',
     },
     {
@@ -93,6 +94,13 @@ const executions: DataItem = {
       description: 'How often (minutes) execution data should be soft-deleted.',
     },
     {
+      name: 'EXECUTIONS_DATA_MAX_DISPLAY_SIZE',
+      type: 'Input',
+      defaultValue: 104857600,
+      description:
+        'Max byte size of execution run data to load for display. Executions whose data exceeds this are returned without run data. 0 disables.',
+    },
+    {
       name: 'N8N_CONCURRENCY_PRODUCTION_LIMIT',
       type: 'Input',
       defaultValue: -1,
@@ -100,8 +108,40 @@ const executions: DataItem = {
         'Max production executions allowed to run concurrently, in both regular and scaling modes. -1 to disable in regular mode.',
     },
     {
+      name: 'N8N_CONCURRENCY_EVALUATION_LIMIT',
+      type: 'Input',
+      defaultValue: -1,
+      description: 'Max evaluation executions allowed to run concurrently. -1 means unlimited.',
+    },
+    {
+      name: 'N8N_EXECUTIONS_QUEUE_RECOVERY_INTERVAL',
+      type: 'Input',
+      defaultValue: 180,
+      description: 'How often (in minutes) to check for queue recovery.',
+    },
+    {
+      name: 'N8N_EXECUTIONS_QUEUE_RECOVERY_BATCH',
+      type: 'Input',
+      defaultValue: 100,
+      description: 'Size of batch of executions to check for queue recovery.',
+    },
+    {
+      name: 'N8N_EXECUTIONS_QUEUE_KEEP_LAST_COMPLETED',
+      type: 'Input',
+      defaultValue: 0,
+      description:
+        'How many completed Bull jobs to keep in Redis. 0 removes completed jobs immediately; n keeps the last n.',
+    },
+    {
+      name: 'N8N_EXECUTIONS_QUEUE_KEEP_LAST_FAILED',
+      type: 'Input',
+      defaultValue: 0,
+      description: 'How many failed Bull jobs to keep in Redis. 0 removes failed jobs immediately; n keeps the last n.',
+    },
+    {
       name: 'N8N_WORKFLOW_AUTODEACTIVATION_ENABLED',
       type: 'CheckBox',
+      defaultValue: false,
       description: 'Whether workflows are automatically unpublished after repeated crashed executions.',
     },
     {

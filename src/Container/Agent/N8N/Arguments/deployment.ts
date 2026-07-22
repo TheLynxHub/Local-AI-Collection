@@ -36,6 +36,17 @@ const deployment: DataItem = {
         'Public URL where users can access the editor. Also used for emails sent from n8n and the redirect URL for SAML based authentication.',
     },
     {
+      name: 'N8N_WEBHOOK_URL',
+      type: 'Input',
+      description: 'Public base URL for both test and production webhooks. Successor to the deprecated `WEBHOOK_URL`.',
+    },
+    {
+      name: 'N8N_CANVAS_ONLY',
+      type: 'CheckBox',
+      defaultValue: false,
+      description: 'Whether to enable canvas-only mode, hiding the chrome UI.',
+    },
+    {
       name: 'N8N_CONFIG_FILES',
       type: 'Input',
       description: 'Use to provide the path to any JSON configuration file.',

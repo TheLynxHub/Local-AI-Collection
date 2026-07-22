@@ -8,8 +8,22 @@ const nodes: DataItem = {
     {
       name: 'N8N_COMMUNITY_PACKAGES_ENABLED',
       type: 'CheckBox',
+      defaultValue: true,
       description:
         'Enables (true) or disables (false) the functionality to install and load community nodes. If set to false, neither verified nor unverified community packages will be available, regardless of their individual settings.',
+    },
+    {
+      name: 'N8N_COMMUNITY_PACKAGES_MANAGED_BY_ENV',
+      type: 'CheckBox',
+      defaultValue: false,
+      description:
+        'Set to `true` to manage installed community packages from environment variables. Reconciles installed packages against N8N_COMMUNITY_PACKAGES on startup.',
+    },
+    {
+      name: 'N8N_COMMUNITY_PACKAGES',
+      type: 'Input',
+      description:
+        'JSON array of community packages to install. Each entry is an object with a `name` (required) and optional `version` and `checksum` fields.',
     },
     {
       name: 'N8N_COMMUNITY_PACKAGES_PREVENT_LOADING',

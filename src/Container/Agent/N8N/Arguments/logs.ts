@@ -9,7 +9,7 @@ const logs: DataItem = {
       name: 'N8N_LOG_LEVEL',
       type: 'DropDown',
       defaultValue: 'info',
-      values: ['info', 'warn', 'error', 'debug'],
+      values: ['info', 'warn', 'error', 'debug', 'silent'],
       description: 'Log output level. Refer to Log levels for details.',
     },
     {
@@ -26,6 +26,24 @@ const logs: DataItem = {
       values: ['text', 'json'],
       description:
         'The log format to use. `text` prints human readable messages. `json` prints one JSON object per line containing the message, level, timestamp, and all metadata. This is useful for production monitoring as well as debugging.',
+    },
+    {
+      name: 'N8N_LOG_SCOPES',
+      type: 'Input',
+      description:
+        'Comma-separated list of scopes to filter logs by (e.g., `license`, `scaling`, `mcp`, `pubsub`, `redis`).',
+    },
+    {
+      name: 'N8N_LOG_STREAMING_MANAGED_BY_ENV',
+      type: 'CheckBox',
+      defaultValue: false,
+      description:
+        'Set to `true` to manage log streaming destinations from environment variables. When `true`, n8n applies log streaming variables on startup and locks UI controls.',
+    },
+    {
+      name: 'N8N_LOG_STREAMING_DESTINATIONS',
+      type: 'Input',
+      description: 'JSON array of log streaming destinations (webhook, syslog, or sentry configuration objects).',
     },
     {
       name: 'N8N_LOG_CRON_ACTIVE_INTERVAL',
