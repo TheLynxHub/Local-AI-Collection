@@ -116,13 +116,40 @@ function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('current_hermes_agent_version', () => getHermesAgentVersion());
 }
 
+async function fetchLatestHermesVersion(): Promise<string | undefined> {
+  try {
+    const res = await fetch('https://api.github.com/repos/NousResearch/hermes-agent/releases/latest', {
+      headers: {
+        'User-Agent': 'LynxHub-App',
+      },
+    });
+    if (!res.ok) return undefined;
+    const data = (await res.json()) as {tag_name?: string; name?: string};
+    const rawTag = data.tag_name || data.name || '';
+    const match = rawTag.match(/\d+\.\d+\.\d+/);
+    return match ? match[0] : rawTag.replace(/^v/, '');
+  } catch (e) {
+    console.error('Failed to fetch Hermes Agent release info:', e);
+    return undefined;
+  }
+}
+
 async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
   try {
     const currentRaw = await getHermesAgentVersion();
-    if (currentRaw && currentRaw !== 'unknown') {
+    const latestVersion = await fetchLatestHermesVersion();
+
+    if (latestVersion) {
+      utils.storage.set('update-available-version-hermesAgent', latestVersion);
+    }
+
+    if (currentRaw && latestVersion && currentRaw !== 'unknown') {
       const match = currentRaw.match(/\d+\.\d+\.\d+/);
       const currentVersion = match ? match[0] : currentRaw;
-      utils.storage.set('update-available-version-hermesAgent', currentVersion);
+
+      if (currentVersion !== latestVersion) {
+        return true;
+      }
     }
   } catch (e) {
     console.error('Error checking update for Hermes Agent:', e);
