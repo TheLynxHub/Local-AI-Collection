@@ -8,8 +8,8 @@ async function getRunCommands(): Promise<string | string[]> {
 }
 
 function mainIpc(utils: MainModuleUtils) {
-  utils.ipc.handle('is_nodejs_installed', () => checkWhich('node'));
-  utils.ipc.handle('is_npm_version_above_12', () => isNpmVersionAbove12());
+  utils.ipc.handle('is_boltdiy_nodejs_installed', () => checkWhich('node'));
+  utils.ipc.handle('is_boltdiy_npm_version_above_12', () => isNpmVersionAbove12());
 }
 
 async function updateAvailable(utils: MainModuleUtils, dir?: string) {

@@ -102,7 +102,7 @@ function startInstall(stepper: InstallationStepper) {
   stepper.starterStep({disableSelectDir: true}).then(() => {
     stepper.nextStep().then(() => {
       stepper.progressBar(true, 'Checking if NPM is installed...');
-      stepper.ipc.invoke('is_npm_available').then((isNpmInstalled: boolean) => {
+      stepper.ipc.invoke('is_n8n_npm_available').then((isNpmInstalled: boolean) => {
         if (isNpmInstalled) {
           stepper.nextStep().then(() => {
             stepper.progressBar(true, 'Checking for existing N8N installation...');
@@ -114,7 +114,7 @@ function startInstall(stepper: InstallationStepper) {
                 stepper.showFinalStep('success', "You're All Set!", "N8N is already installed. You're good to go!");
               } else {
                 stepper.nextStep().then(() => {
-                  stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+                  stepper.ipc.invoke('is_n8n_npm_version_above_12').then((isAbove12: boolean) => {
                     const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
                     stepper.executeTerminalCommands(`npm i -g n8n${flags}`).then(() => {
                       stepper.setInstalled();

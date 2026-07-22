@@ -14,9 +14,9 @@ function startInstall(stepper: InstallationStepper) {
   const next = () => stepper.nextStep();
   const progress = (message: string) => stepper.progressBar(true, message);
 
-  const checkNode = (): Promise<boolean> => stepper.ipc.invoke('is_nodejs_installed');
+  const checkNode = (): Promise<boolean> => stepper.ipc.invoke('is_boltdiy_nodejs_installed');
   const installPackages = (dir: string) =>
-    stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+    stepper.ipc.invoke('is_boltdiy_npm_version_above_12').then((isAbove12: boolean) => {
       const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
       return stepper.executeTerminalCommands(`npm i${flags}`, dir);
     });

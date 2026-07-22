@@ -59,8 +59,8 @@ async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
 function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('is_flowise_installed', () => isNpmPackageInstalled(PACKAGE_NAME));
   utils.ipc.handle('current_flowise_version', () => getNpmPackageVersion(PACKAGE_NAME));
-  utils.ipc.handle('is_npm_available', () => checkWhich('npm'));
-  utils.ipc.handle('is_npm_version_above_12', () => isNpmVersionAbove12());
+  utils.ipc.handle('is_flowise_npm_available', () => checkWhich('npm'));
+  utils.ipc.handle('is_flowise_npm_version_above_12', () => isNpmVersionAbove12());
 }
 
 const isInstalled = () => isNpmPackageInstalled(PACKAGE_NAME);

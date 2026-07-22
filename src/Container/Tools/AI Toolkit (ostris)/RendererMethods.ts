@@ -111,7 +111,7 @@ function startInstall(stepper: InstallationStepper) {
     if (chosen === 'install') {
       stepper.nextStep().then(() => {
         stepper.progressBar(true, 'Checking if NPM is installed...');
-        stepper.ipc.invoke('is_npm_available_at').then((isNpmInstalled: boolean) => {
+        stepper.ipc.invoke('is_aitoolkit_npm_available').then((isNpmInstalled: boolean) => {
           if (isNpmInstalled) {
             stepper.nextStep().then(() => {
               stepper.cloneRepository(AITOOLKIT_URL).then(dir => {

@@ -35,7 +35,7 @@ export async function isInstalled(dir?: string): Promise<boolean> {
 }
 
 function mainIpc(utils: MainModuleUtils) {
-  utils.ipc.handle('is_npm_available_at', () => checkWhich('npm'));
+  utils.ipc.handle('is_aitoolkit_npm_available', () => checkWhich('npm'));
 }
 
 const AIToolkit_MM: CardMainMethodsInitial = utils => {

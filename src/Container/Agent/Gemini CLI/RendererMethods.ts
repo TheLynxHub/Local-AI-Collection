@@ -266,7 +266,7 @@ function startInstall(stepper: InstallationStepper) {
   stepper.starterStep({disableSelectDir: true}).then(() => {
     stepper.nextStep().then(() => {
       stepper.progressBar(true, 'Checking if NPM is installed...');
-      stepper.ipc.invoke('is_npm_available').then((isNpmInstalled: boolean) => {
+      stepper.ipc.invoke('is_gemini_npm_available').then((isNpmInstalled: boolean) => {
         if (isNpmInstalled) {
           stepper.nextStep().then(() => {
             stepper.progressBar(true, 'Checking for existing Gemini Cli installation...');
@@ -282,7 +282,7 @@ function startInstall(stepper: InstallationStepper) {
                 );
               } else {
                 stepper.nextStep().then(() => {
-                  stepper.ipc.invoke('is_npm_version_above_12').then((isAbove12: boolean) => {
+                  stepper.ipc.invoke('is_gemini_npm_version_above_12').then((isAbove12: boolean) => {
                     const flags = isAbove12 ? ' --allow-remote=all --dangerously-allow-all-scripts' : '';
                     stepper.executeTerminalCommands(`npm i -g @google/gemini-cli${flags}`).then(() => {
                       stepper.setInstalled();
