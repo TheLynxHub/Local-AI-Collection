@@ -58,3 +58,10 @@ A collection of local AI tools with **full support** for **arguments**, **config
 | <img height='20' src="https://avatars.githubusercontent.com/u/7474674?s=20&v=4"> Bmaltais  | [Kohya's GUI](https://github.com/bmaltais/kohya_ss)                      | <img height='20' src="https://avatars.githubusercontent.com/unslothai?s=20"> unslothai       | [Unsloth Studio](https://github.com/unslothai/unsloth)                         |
 | <img height='20' src="https://avatars.githubusercontent.com/hiyouga?s=20"> hiyouga        | [LLaMA Factory](https://github.com/hiyouga/LlamaFactory)                 |                                                                                              |                                                                                |
 
+---
+
+## 💡 Request a Module
+
+If you need or want a specific AI tool, model, interface, or agent that is not currently available, please [open an issue](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container/issues/new). Specify what you need, and I will add it as soon as possible!
+
+
