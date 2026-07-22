@@ -98,8 +98,51 @@ async function readArgs(configDir?: string) {
   return parseFilesToArgs(scriptData, settingsContent);
 }
 
+function getManifestPlatform(): string {
+  const platform = process.platform;
+  const arch = process.arch;
+
+  if (platform === 'win32') {
+    return arch === 'arm64' ? 'windows_arm64' : 'windows_amd64';
+  }
+  if (platform === 'darwin') {
+    return arch === 'arm64' ? 'darwin_arm64' : 'darwin_amd64';
+  }
+  return arch === 'arm64' ? 'linux_arm64' : 'linux_amd64';
+}
+
+async function fetchLatestManifestVersion(): Promise<string | undefined> {
+  try {
+    const platform = getManifestPlatform();
+    const url = `https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/${platform}.json`;
+    const res = await fetch(url);
+    if (!res.ok) return undefined;
+    const data = (await res.json()) as {version?: string};
+    return data.version;
+  } catch (e) {
+    console.error('Failed to fetch Antigravity CLI release manifest:', e);
+    return undefined;
+  }
+}
+
 async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
-  void utils;
+  try {
+    const currentRaw = await getAntigravityCliVersion();
+    const latestVersion = await fetchLatestManifestVersion();
+    if (latestVersion) {
+      utils.storage.set('update-available-version-antigravityCli', latestVersion);
+    }
+    if (currentRaw && latestVersion && currentRaw !== 'unknown') {
+      const match = currentRaw.match(/\d+\.\d+\.\d+/);
+      const currentVersion = match ? match[0] : currentRaw;
+      if (currentVersion !== latestVersion) {
+        return true;
+      }
+    }
+  } catch (e) {
+    console.error('Error checking update for Antigravity CLI:', e);
+  }
+
   return false;
 }
 
