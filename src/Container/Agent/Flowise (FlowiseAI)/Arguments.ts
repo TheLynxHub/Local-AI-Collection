@@ -14,8 +14,25 @@ const flowiseArguments: ArgumentsData = [
             defaultValue: 3000,
           },
           {
+            name: '--APP_URL',
+            description: 'Public application URL',
+            type: 'Input',
+            defaultValue: 'http://localhost:3000',
+          },
+          {
             name: '--CORS_ORIGINS',
             description: 'The allowed origins for all cross-origin HTTP calls',
+            type: 'Input',
+          },
+          {
+            name: '--CORS_ALLOW_CREDENTIALS',
+            description: 'Allow credentials for cross-origin HTTP requests',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: '--MCP_CORS_ORIGINS',
+            description: 'The allowed origins for MCP server cross-origin HTTP calls',
             type: 'Input',
           },
           {
@@ -41,8 +58,9 @@ const flowiseArguments: ArgumentsData = [
           },
           {
             name: '--NUMBER_OF_PROXIES',
-            description: 'Rate Limit Proxy',
+            description: 'Rate Limit Proxy count',
             type: 'Input',
+            defaultValue: 1,
           },
         ],
       },
@@ -64,7 +82,7 @@ const flowiseArguments: ArgumentsData = [
             name: '--LOG_LEVEL',
             description: 'Different levels of logs',
             type: 'DropDown',
-            values: ['error', 'info', 'verbose', 'debug'],
+            values: ['error', 'warn', 'info', 'verbose', 'debug'],
             defaultValue: 'info',
           },
           {
@@ -72,6 +90,21 @@ const flowiseArguments: ArgumentsData = [
             description: 'Spaces to beautify JSON logs',
             type: 'Input',
             defaultValue: 2,
+          },
+          {
+            name: '--LOG_SANITIZE_BODY_FIELDS',
+            description: 'Comma-separated list of request body fields to sanitize in logs',
+            type: 'Input',
+            defaultValue:
+              'password,pwd,pass,secret,token,apikey,api_key,accesstoken,access_token,refreshtoken,' +
+              'refresh_token,clientsecret,client_secret,privatekey,private_key,secretkey,secret_key,' +
+              'auth,authorization,credential,credentials',
+          },
+          {
+            name: '--LOG_SANITIZE_HEADER_FIELDS',
+            description: 'Comma-separated list of HTTP header fields to sanitize in logs',
+            type: 'Input',
+            defaultValue: 'authorization,x-api-key,x-auth-token,cookie',
           },
         ],
       },
@@ -109,7 +142,7 @@ const flowiseArguments: ArgumentsData = [
             name: '--DATABASE_TYPE',
             description: 'Type of database to store the flowise data',
             type: 'DropDown',
-            values: ['sqlite', 'mysql', 'postgres'],
+            values: ['sqlite', 'mysql', 'postgres', 'mariadb'],
             defaultValue: 'sqlite',
           },
           {
@@ -133,7 +166,7 @@ const flowiseArguments: ArgumentsData = [
             name: '--DATABASE_TYPE',
             description: 'Type of database to store the flowise data',
             type: 'DropDown',
-            values: ['sqlite', 'mysql', 'postgres'],
+            values: ['sqlite', 'mysql', 'postgres', 'mariadb'],
             defaultValue: 'sqlite',
           },
           {
@@ -164,7 +197,13 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--DATABASE_SSL_KEY_BASE64',
             description: 'Database SSL client cert in base64 (takes priority over DATABASE_SSL)',
+            type: 'Input',
+          },
+          {
+            name: '--DATABASE_REJECT_UNAUTHORIZED',
+            description: 'Reject unauthorized SSL certificates for database connection',
             type: 'CheckBox',
+            defaultValue: true,
           },
         ],
       },
@@ -173,7 +212,7 @@ const flowiseArguments: ArgumentsData = [
         items: [
           {
             name: '--DATABASE_SSL',
-            description: 'Database connection overssl (When DATABASE_TYPE is postgre)',
+            description: 'Database connection over SSL (When DATABASE_TYPE is postgres)',
             type: 'CheckBox',
           },
         ],
@@ -183,6 +222,7 @@ const flowiseArguments: ArgumentsData = [
 
   {
     category: 'Encryption',
+    condition: 'SECRETKEY_STORAGE_TYPE === "local"',
     sections: [
       {
         section: 'Encryption Key Storage',
@@ -211,6 +251,7 @@ const flowiseArguments: ArgumentsData = [
   },
   {
     category: 'Encryption',
+    condition: 'SECRETKEY_STORAGE_TYPE === "aws"',
     sections: [
       {
         section: 'Encryption Key Storage',
@@ -238,6 +279,18 @@ const flowiseArguments: ArgumentsData = [
             type: 'Input',
           },
           {
+            name: '--SECRETKEY_AWS_NAME',
+            description: 'Secret name in AWS Secrets Manager',
+            type: 'Input',
+            defaultValue: 'FlowiseEncryptionKey',
+          },
+          {
+            name: '--SECRETKEY_AWS_AUTH_PREFIX',
+            description: 'Prefix for auth secret names in AWS Secrets Manager',
+            type: 'Input',
+            defaultValue: 'Flowise',
+          },
+          {
             name: '--FLOWISE_SECRETKEY_OVERWRITE',
             description: 'Encryption key to be used instead of the existing key',
             type: 'Input',
@@ -247,31 +300,58 @@ const flowiseArguments: ArgumentsData = [
     ],
   },
   {
-    category: 'Telemetry',
+    category: 'Authentication',
     sections: [
       {
-        section: 'Telemetry',
+        section: 'Auth Parameters & Tokens',
         items: [
           {
-            name: '--DISABLE_FLOWISE_TELEMETRY',
-            description: 'Turn off telemetry',
-            type: 'CheckBox',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: 'Models',
-    sections: [
-      {
-        section: 'Model Configuration',
-        items: [
-          {
-            name: '--MODEL_LIST_CONFIG_JSON',
-            description: 'File path to load list of models from your local config file',
+            name: '--JWT_ISSUER',
+            description: 'JWT token issuer name',
             type: 'Input',
-            defaultValue: '/your_model_list_config_file_path',
+            defaultValue: 'Flowise',
+          },
+          {
+            name: '--JWT_AUDIENCE',
+            description: 'JWT token audience name',
+            type: 'Input',
+            defaultValue: 'Flowise',
+          },
+          {
+            name: '--JWT_TOKEN_EXPIRY_IN_MINUTES',
+            description: 'JWT access token expiry time in minutes',
+            type: 'Input',
+            defaultValue: 360,
+          },
+          {
+            name: '--JWT_REFRESH_TOKEN_EXPIRY_IN_MINUTES',
+            description: 'JWT refresh token expiry time in minutes',
+            type: 'Input',
+            defaultValue: 43200,
+          },
+          {
+            name: '--EXPIRE_AUTH_TOKENS_ON_RESTART',
+            description: 'Expire all authentication tokens on app restart',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: '--INVITE_TOKEN_EXPIRY_IN_HOURS',
+            description: 'Workspace invite token expiry time in hours',
+            type: 'Input',
+            defaultValue: 24,
+          },
+          {
+            name: '--PASSWORD_RESET_TOKEN_EXPIRY_IN_MINS',
+            description: 'Password reset token expiry time in minutes',
+            type: 'Input',
+            defaultValue: 15,
+          },
+          {
+            name: '--PASSWORD_SALT_HASH_ROUNDS',
+            description: 'Salt hash rounds for password hashing',
+            type: 'Input',
+            defaultValue: 10,
           },
         ],
       },
@@ -287,7 +367,7 @@ const flowiseArguments: ArgumentsData = [
             name: '--STORAGE_TYPE',
             description: 'Type of storage for uploaded files. default is `local`',
             type: 'DropDown',
-            values: ['s3', 'local', 'gcs'],
+            values: ['local', 's3', 'gcs', 'azure'],
             defaultValue: 'local',
           },
         ],
@@ -364,9 +444,99 @@ const flowiseArguments: ArgumentsData = [
           },
         ],
       },
+      {
+        section: 'Azure Storage',
+        items: [
+          {
+            name: '--AZURE_BLOB_STORAGE_CONNECTION_STRING',
+            description: 'Azure Blob Storage connection string when `STORAGE_TYPE` is `azure`',
+            type: 'Input',
+          },
+          {
+            name: '--AZURE_BLOB_STORAGE_ACCOUNT_NAME',
+            description: 'Azure Blob Storage account name when `STORAGE_TYPE` is `azure`',
+            type: 'Input',
+          },
+          {
+            name: '--AZURE_BLOB_STORAGE_ACCOUNT_KEY',
+            description: 'Azure Blob Storage account key when `STORAGE_TYPE` is `azure`',
+            type: 'Input',
+          },
+          {
+            name: '--AZURE_BLOB_STORAGE_CONTAINER_NAME',
+            description: 'Azure Blob Storage container name when `STORAGE_TYPE` is `azure`',
+            type: 'Input',
+          },
+        ],
+      },
     ],
   },
-
+  {
+    category: 'Queue',
+    sections: [
+      {
+        section: 'Queue Configuration',
+        items: [
+          {
+            name: '--MODE',
+            description: 'Flowise execution mode (main or queue)',
+            type: 'DropDown',
+            values: ['main', 'queue'],
+            defaultValue: 'main',
+          },
+          {
+            name: '--QUEUE_NAME',
+            description: 'Name of the Redis BullMQ queue',
+            type: 'Input',
+            defaultValue: 'flowise-queue',
+          },
+          {
+            name: '--REDIS_HOST',
+            description: 'Redis server hostname',
+            type: 'Input',
+            defaultValue: 'localhost',
+          },
+          {
+            name: '--REDIS_PORT',
+            description: 'Redis server port',
+            type: 'Input',
+            defaultValue: 6379,
+          },
+          {
+            name: '--REDIS_URL',
+            description: 'Full connection URL for Redis',
+            type: 'Input',
+          },
+          {
+            name: '--REDIS_USERNAME',
+            description: 'Redis server username',
+            type: 'Input',
+          },
+          {
+            name: '--REDIS_PASSWORD',
+            description: 'Redis server password',
+            type: 'Input',
+          },
+          {
+            name: '--REDIS_TLS',
+            description: 'Enable TLS connection for Redis',
+            type: 'CheckBox',
+          },
+          {
+            name: '--WORKER_CONCURRENCY',
+            description: 'Worker concurrency for background queue tasks',
+            type: 'Input',
+            defaultValue: 100000,
+          },
+          {
+            name: '--ENABLE_BULLMQ_DASHBOARD',
+            description: 'Enable BullMQ dashboard monitoring',
+            type: 'CheckBox',
+          },
+        ],
+      },
+    ],
+  },
   {
     category: 'Nodes',
     sections: [
@@ -399,6 +569,18 @@ const flowiseArguments: ArgumentsData = [
             type: 'Input',
           },
           {
+            name: '--HTTP_SECURITY_CHECK',
+            description: 'Enables default security check for dangerous HTTP domains',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: '--PATH_TRAVERSAL_SAFETY',
+            description: 'Enables checks on paths to prevent path traversal attacks',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
             name: '--CUSTOM_MCP_SECURITY_CHECK',
             description: 'Enables comprehensive security validation for Custom MCP configurations',
             type: 'CheckBox',
@@ -410,6 +592,153 @@ const flowiseArguments: ArgumentsData = [
             type: 'DropDown',
             values: ['stdio', 'sse'],
             defaultValue: 'stdio',
+          },
+          {
+            name: '--CUSTOM_MCP_TOOLS_MAX_BYTES',
+            description: 'Maximum payload size in bytes for Custom MCP tools',
+            type: 'Input',
+            defaultValue: 524288,
+          },
+          {
+            name: '--CUSTOM_MCP_AUTHORIZE_TIMEOUT_MS',
+            description: 'Authorization timeout in milliseconds for Custom MCP tools',
+            type: 'Input',
+            defaultValue: 15000,
+          },
+          {
+            name: '--CUSTOM_MCP_ALLOWED_ENV_VARS',
+            description: 'Comma-separated list of env var names a Custom MCP stdio config may set',
+            type: 'Input',
+          },
+          {
+            name: '--CUSTOM_MCP_ALLOWED_COMMANDS',
+            description: 'Comma-separated list of commands a Custom MCP stdio config may run',
+            type: 'Input',
+          },
+          {
+            name: '--TRUST_PROXY',
+            description: 'Express trust proxy setting',
+            type: 'Input',
+          },
+          {
+            name: '--OAUTH2_SECURITY_CHECK',
+            description: 'Enables security validation for OAuth2 tokens',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: '--OAUTH2_ALLOWED_TOKEN_DOMAINS',
+            description: 'Comma-separated list of additional OAuth2 provider domains to allow',
+            type: 'Input',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Telemetry & Metrics',
+    sections: [
+      {
+        section: 'Telemetry',
+        items: [
+          {
+            name: '--DISABLE_FLOWISE_TELEMETRY',
+            description: 'Turn off telemetry',
+            type: 'CheckBox',
+          },
+          {
+            name: '--POSTHOG_PUBLIC_API_KEY',
+            description: 'PostHog public API key for metrics collection',
+            type: 'Input',
+          },
+        ],
+      },
+      {
+        section: 'Metrics Configuration',
+        items: [
+          {
+            name: '--ENABLE_METRICS',
+            description: 'Enable Prometheus/OpenTelemetry metrics collection',
+            type: 'CheckBox',
+          },
+          {
+            name: '--METRICS_PROVIDER',
+            description: 'Metrics collection provider',
+            type: 'DropDown',
+            values: ['prometheus', 'open_telemetry'],
+            defaultValue: 'prometheus',
+          },
+          {
+            name: '--METRICS_INCLUDE_NODE_METRICS',
+            description: 'Include Node.js runtime metrics in collection',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: '--METRICS_SERVICE_NAME',
+            description: 'Service name reported to metrics provider',
+            type: 'Input',
+            defaultValue: 'FlowiseAI',
+          },
+          {
+            name: '--METRICS_OPEN_TELEMETRY_METRIC_ENDPOINT',
+            description: 'Endpoint for OpenTelemetry metrics export',
+            type: 'Input',
+            defaultValue: 'http://localhost:4318/v1/metrics',
+          },
+          {
+            name: '--METRICS_OPEN_TELEMETRY_PROTOCOL',
+            description: 'Protocol used for OpenTelemetry metrics export',
+            type: 'DropDown',
+            values: ['http', 'grpc', 'proto'],
+            defaultValue: 'http',
+          },
+          {
+            name: '--METRICS_OPEN_TELEMETRY_DEBUG',
+            description: 'Enable debug logging for OpenTelemetry export',
+            type: 'CheckBox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Models',
+    sections: [
+      {
+        section: 'Model Configuration',
+        items: [
+          {
+            name: '--MODEL_LIST_CONFIG_JSON',
+            description: 'File path to load list of models from your local config file',
+            type: 'Input',
+            defaultValue: '/your_model_list_config_file_path',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Execution & Tools',
+    sections: [
+      {
+        section: 'Document Loaders & Automation',
+        items: [
+          {
+            name: '--PUPPETEER_EXECUTABLE_FILE_PATH',
+            description: 'Executable path for Chrome/Chromium used by Puppeteer document loaders',
+            type: 'Input',
+          },
+          {
+            name: '--PLAYWRIGHT_EXECUTABLE_FILE_PATH',
+            description: 'Executable path for Chrome/Chromium used by Playwright document loaders',
+            type: 'Input',
+          },
+          {
+            name: '--MIN_SCHEDULE_INTERVAL_SECONDS',
+            description: 'Minimum allowed interval in seconds for scheduled tasks',
+            type: 'Input',
+            defaultValue: 60,
           },
         ],
       },
