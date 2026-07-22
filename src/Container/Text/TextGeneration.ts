@@ -16,7 +16,7 @@ const textPage: PagesData = {
       id: TG_ID,
       title: 'Text Generation',
       description: 'A Gradio web UI for Large Language Models.',
-      repoUrl: 'https://github.com/oobabooga/text-generation-webui',
+      repoUrl: 'https://github.com/oobabooga/textgen',
       type: 'text',
       extensionsDir: '/extensions',
       supportCustomArguments: true,
