@@ -5,15 +5,19 @@ const sillyArguments: ArgumentsData = [
     category: 'Command Line Arguments',
     items: [
       {name: '--version', description: 'Show version number', type: 'CheckBox'},
-      {name: '--global', description: 'Forces the use of system-wide paths for application data', type: 'CheckBox'},
+      {
+        name: '--global',
+        description: 'Use global data and config paths instead of the server directory',
+        type: 'CheckBox',
+      },
       {
         name: '--configPath',
-        description: 'Overrides the path to the config.yaml file (standalone mode only)',
+        description: 'Path to the config file (only for standalone mode)',
         type: 'File',
       },
       {
         name: '--dataRoot',
-        description: 'Sets the root directory for data storage (standalone mode only)',
+        description: 'Root directory for data storage (only for standalone mode)',
         type: 'Directory',
       },
       {
@@ -42,6 +46,7 @@ const sillyArguments: ArgumentsData = [
       {name: '--ssl', description: 'Enables SSL', type: 'CheckBox'},
       {name: '--certPath', description: 'Path to your certificate file.', type: 'File'},
       {name: '--keyPath', description: 'Path to your private key file.', type: 'File'},
+      {name: '--keyPassphrase', description: 'Passphrase for the SSL private key', type: 'Input'},
       {
         name: '--browserLaunchEnabled',
         description: 'Automatically launches SillyTavern in the browser.',
@@ -67,6 +72,12 @@ const sillyArguments: ArgumentsData = [
         type: 'Input',
       },
       {name: '--disableCsrf', description: 'Disables CSRF protection', type: 'CheckBox'},
+      {name: '--enableKeepAlive', description: 'Enable HTTP/HTTPS keep-alive globally', type: 'CheckBox'},
+      {
+        name: '--heartbeatInterval',
+        description: 'Interval in seconds to write a heartbeat file. 0 to disable.',
+        type: 'Input',
+      },
     ],
   },
   {
@@ -92,6 +103,12 @@ const sillyArguments: ArgumentsData = [
             description: 'Enable on-demand tokenizer downloads',
             type: 'CheckBox',
             defaultValue: true,
+          },
+          {
+            name: 'whitelistImportDomains',
+            description: 'List of trusted domains for importing web-hosted character cards and assets',
+            type: 'Input',
+            defaultValue: '["localhost", "cdn.discordapp.com", "files.catbox.moe", "raw.githubusercontent.com"]',
           },
         ],
       },
@@ -123,6 +140,18 @@ const sillyArguments: ArgumentsData = [
             defaultValue: false,
           },
           {name: 'port', description: 'Server listening port', type: 'Input', defaultValue: 8000},
+          {
+            name: 'heartbeatInterval',
+            description: 'Interval in seconds to write a heartbeat file for Docker healthchecks. Set to 0 to disable',
+            type: 'Input',
+            defaultValue: 0,
+          },
+          {
+            name: 'enableKeepAlive',
+            description: 'Enable HTTP/HTTPS keep-alive globally',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
           {
             name: 'protocol.ipv4',
             description: 'Enable listening on IPv4 protocol',
@@ -201,6 +230,64 @@ const sillyArguments: ArgumentsData = [
         ],
       },
       {
+        section: 'Security Configuration - Forwarded Headers',
+        items: [
+          {
+            name: 'forwardedHeaders.xRealIp',
+            description: 'Use the X-Real-IP header for client IP detection',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: 'forwardedHeaders.xForwardedFor',
+            description: 'Use the X-Forwarded-For header for client IP detection',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: 'forwardedHeaders.cfConnectingIp',
+            description: 'Use the CF-Connecting-IP header for client IP detection',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+        ],
+      },
+      {
+        section: 'Security Configuration - Private Address Whitelisting',
+        items: [
+          {
+            name: 'privateAddressWhitelist.enabled',
+            description: 'Enable private address whitelisting to block requests to private IP ranges',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'privateAddressWhitelist.allowUnresolvedHosts',
+            description: 'Allow requests to hosts that cannot be resolved',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'privateAddressWhitelist.log.blockedRequests',
+            description: 'Log blocked requests that resolve to private IP addresses',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: 'privateAddressWhitelist.log.allowedRequests',
+            description: 'Log allowed requests that resolve to private IP addresses',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'privateAddressWhitelist.allowedRanges',
+            description: 'List of allowed private IP addresses and CIDR ranges',
+            type: 'Input',
+            defaultValue: '["127.0.0.0/8", "::1/128"]',
+          },
+        ],
+      },
+      {
         section: 'Security Configuration - Host Whitelisting',
         items: [
           {
@@ -247,9 +334,51 @@ const sillyArguments: ArgumentsData = [
         ],
       },
       {
-        section: 'CORS Proxy Configuration',
+        section: 'CORS Proxy & CORS Configuration',
         items: [
           {name: 'enableCorsProxy', description: 'Enable CORS proxy middleware', type: 'CheckBox', defaultValue: false},
+          {
+            name: 'cors.enabled',
+            description: 'Enable or disable CORS middleware',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: 'cors.origin',
+            description: 'Allowed CORS origins. "null" matches default browser file origin',
+            type: 'Input',
+            defaultValue: '["null"]',
+          },
+          {
+            name: 'cors.methods',
+            description: 'Allowed HTTP methods',
+            type: 'Input',
+            defaultValue: '["OPTIONS"]',
+          },
+          {
+            name: 'cors.allowedHeaders',
+            description: 'Allowed request headers',
+            type: 'Input',
+            defaultValue: '[]',
+          },
+          {
+            name: 'cors.exposedHeaders',
+            description: 'Exposed response headers',
+            type: 'Input',
+            defaultValue: '[]',
+          },
+          {
+            name: 'cors.credentials',
+            description: 'Allow credentials (cookies, authorization headers)',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'cors.maxAge',
+            description: 'Preflight cache max age in seconds',
+            type: 'Input',
+            defaultValue: '',
+          },
         ],
       },
       {
@@ -278,6 +407,12 @@ const sillyArguments: ArgumentsData = [
         section: 'SSO Auto-Login',
         items: [
           {
+            name: 'sso.trustedProxies',
+            description: 'List of trusted proxy IPs for SSO authentication',
+            type: 'Input',
+            defaultValue: '["127.0.0.1", "::1"]',
+          },
+          {
             name: 'sso.autheliaAuth',
             description: 'Enable Authelia-based auto-login',
             type: 'CheckBox',
@@ -296,9 +431,33 @@ const sillyArguments: ArgumentsData = [
         items: [
           {
             name: 'rateLimiting.preferRealIpHeader',
-            description: 'Use X-Real-IP header instead of socket IP for rate limiting',
+            description: 'Use IP from forwarded headers instead of socket IP for rate limiting',
             type: 'CheckBox',
             defaultValue: false,
+          },
+          {
+            name: 'rateLimiting.accountsLoginMaxAttempts',
+            description: 'Maximum account login attempts before temporary lockout (0 to disable)',
+            type: 'Input',
+            defaultValue: 5,
+          },
+          {
+            name: 'rateLimiting.accountsRecoverMaxAttempts',
+            description: 'Maximum account recovery attempts before temporary lockout (0 to disable)',
+            type: 'Input',
+            defaultValue: 5,
+          },
+          {
+            name: 'rateLimiting.basicAuthMaxAttempts',
+            description: 'Maximum basic auth attempts before temporary lockout (0 to disable)',
+            type: 'Input',
+            defaultValue: 5,
+          },
+          {
+            name: 'rateLimiting.accountsResetMaxAttempts',
+            description: 'Maximum account reset attempts before temporary lockout (0 to disable)',
+            type: 'Input',
+            defaultValue: 5,
           },
         ],
       },
@@ -311,12 +470,23 @@ const sillyArguments: ArgumentsData = [
             type: 'CheckBox',
             defaultValue: false,
           },
-          {name: 'requestProxy.url', description: 'Proxy server URL', type: 'Input'},
+          {
+            name: 'requestProxy.url',
+            description: 'Proxy server URL',
+            type: 'Input',
+            defaultValue: 'socks5://username:password@example.com:1080',
+          },
           {
             name: 'requestProxy.bypass',
             description: 'Hosts to bypass proxy',
             type: 'Input',
             defaultValue: '["localhost", "127.0.0.1"]',
+          },
+          {
+            name: 'requestOverrides',
+            description: 'API request overrides for KoboldAI and Text Completion APIs',
+            type: 'Input',
+            defaultValue: '[]',
           },
         ],
       },
@@ -363,7 +533,7 @@ const sillyArguments: ArgumentsData = [
             name: 'performance.lazyLoadCharacters',
             description: 'Lazy-load character data',
             type: 'CheckBox',
-            defaultValue: true,
+            defaultValue: false,
           },
           {
             name: 'performance.useDiskCache',
@@ -376,6 +546,30 @@ const sillyArguments: ArgumentsData = [
             description: 'Maximum memory cache capacity',
             type: 'Input',
             defaultValue: '100mb',
+          },
+          {
+            name: 'performance.requestCompression.enabled',
+            description: 'Enable gzip compression for client requests with large payloads',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'performance.requestCompression.minPayloadSize',
+            description: 'Minimum payload size to trigger compression (0 to compress all)',
+            type: 'Input',
+            defaultValue: '256kb',
+          },
+          {
+            name: 'performance.requestCompression.maxPayloadSize',
+            description: 'Hard upper payload size limit for compression (0 for any size)',
+            type: 'Input',
+            defaultValue: '8mb',
+          },
+          {
+            name: 'performance.requestCompression.timeout',
+            description: 'Timeout for request compression in milliseconds',
+            type: 'Input',
+            defaultValue: 4000,
           },
         ],
       },
@@ -436,6 +630,12 @@ const sillyArguments: ArgumentsData = [
       {
         section: 'Backup Configuration',
         items: [
+          {
+            name: 'backups.allowFullDataBackup',
+            description: 'Allow users to create a full backup archive of their data',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
           {
             name: 'backups.chat.enabled',
             description: 'Enable automatic chat backups',
@@ -517,6 +717,18 @@ const sillyArguments: ArgumentsData = [
         ],
       },
       {
+        section: 'Git Configuration',
+        items: [
+          {
+            name: 'git.backend',
+            description: 'Git backend for plugin/extension repository operations',
+            type: 'DropDown',
+            defaultValue: 'auto',
+            values: ['auto', 'system', 'builtin'],
+          },
+        ],
+      },
+      {
         section: 'Server Plugins',
         items: [
           {
@@ -591,11 +803,23 @@ const sillyArguments: ArgumentsData = [
             defaultValue: false,
           },
           {
+            name: 'claude.enableAdaptiveThinking',
+            description: 'Enables adaptive thinking for supported models (Opus 4.6+)',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
             name: 'gemini.apiVersion',
             description: 'API endpoint version (AI Studio only)',
             type: 'DropDown',
             defaultValue: 'v1beta',
             values: ['v1beta', 'v1alpha'],
+          },
+          {
+            name: 'gemini.thoughtSignatures',
+            description: 'Adds thought signatures to requests (Gemini 3 and above)',
+            type: 'CheckBox',
+            defaultValue: true,
           },
           {
             name: 'gemini.enableSystemPromptCache',
