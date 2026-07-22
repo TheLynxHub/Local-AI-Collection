@@ -84,6 +84,53 @@ const bmaltaisArguments: ArgumentsData = [
         description: '`root_path` for Gradio to enable reverse proxy support. e.g. /kohya_ss',
         type: 'Input',
       },
+      {
+        name: '--requirements',
+        description: 'Requirements file to use for validation.',
+        type: 'File',
+      },
+      {
+        name: '--noverify',
+        description: 'Disable requirements verification.',
+        type: 'CheckBox',
+      },
+    ],
+  },
+  {
+    category: 'Environment Variables',
+    items: [
+      {
+        name: 'TF_ENABLE_ONEDNN_OPTS',
+        description: 'Enable or disable TensorFlow C++ oneDNN optimizations (default: 0).',
+        type: 'Input',
+        defaultValue: '0',
+      },
+      {
+        name: 'TF_CPP_MIN_LOG_LEVEL',
+        description: 'Set TensorFlow C++ logging level (0=all, 1=no INFO, 2=no WARNING, 3=no ERROR).',
+        type: 'Input',
+        defaultValue: '2',
+      },
+      {
+        name: 'TENSORBOARD_PORT',
+        description: 'Specify custom port for TensorBoard server instance.',
+        type: 'Input',
+      },
+      {
+        name: 'TENSORBOARD_HOST',
+        description: 'Specify custom host IP address for TensorBoard.',
+        type: 'Input',
+      },
+      {
+        name: 'HF_HOME',
+        description: 'Custom cache and home directory for HuggingFace assets and models.',
+        type: 'Directory',
+      },
+      {
+        name: 'LOG_LEVEL',
+        description: 'Logging level for setup and environment validation (e.g. INFO, DEBUG, WARNING).',
+        type: 'Input',
+      },
     ],
   },
 ];
