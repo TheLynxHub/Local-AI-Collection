@@ -1,5 +1,5 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {ANTIGRAVITY_CLI_ID, CLAUDE_CODE_ID, FLOWISEAI_ID, GeminiCli_ID, N8N_ID} from '../../Constants';
+import {ANTIGRAVITY_CLI_ID, CLAUDE_CODE_ID, FLOWISEAI_ID, GeminiCli_ID, HERMES_AGENT_ID, N8N_ID} from '../../Constants';
 import antigravityCliArguments from './Antigravity CLI/Arguments';
 import AntigravityCli_RM from './Antigravity CLI/RendererMethods';
 import claudeCodeArguments from './Claude Code/Arguments';
@@ -8,6 +8,8 @@ import flowiseArguments from './Flowise (FlowiseAI)/Arguments';
 import Flow_RM from './Flowise (FlowiseAI)/RendererMethods';
 import geminiCliArguments from './Gemini CLI/Arguments';
 import GeminiCli_RM from './Gemini CLI/RendererMethods';
+import hermesAgentArguments from './Hermes Agent (NousResearch)/Arguments';
+import HermesAgent_RM from './Hermes Agent (NousResearch)/RendererMethods';
 import n8nArguments from './N8N/Arguments';
 import N8N_RM from './N8N/RendererMethods';
 
@@ -55,6 +57,19 @@ const agentsPage: PagesData = {
       type: 'text',
       arguments: antigravityCliArguments,
       methods: AntigravityCli_RM,
+      installationType: 'others',
+    },
+    {
+      id: HERMES_AGENT_ID,
+      title: 'Hermes Agent',
+      description:
+        'The self-improving AI agent built by Nous Research with built-in learning loop ' +
+        'and cross-platform continuity.',
+      repoUrl: 'https://github.com/nousresearch/hermes-agent',
+      type: 'text',
+      supportCustomArguments: true,
+      methods: HermesAgent_RM,
+      arguments: hermesAgentArguments,
       installationType: 'others',
     },
     {

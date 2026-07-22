@@ -13,6 +13,7 @@ import {
   COMFYUI_ZLUDA_ID,
   FLOWISEAI_ID,
   GeminiCli_ID,
+  HERMES_AGENT_ID,
   INVOKE_ID,
   KOHYA_ID,
   LoLLMS_ID,
@@ -36,6 +37,7 @@ import AntigravityCli_MM from './Container/Agent/Antigravity CLI/MainMethods';
 import ClaudeCode_MM from './Container/Agent/Claude Code/MainMethods';
 import Flow_MM from './Container/Agent/Flowise (FlowiseAI)/MainMethods';
 import GeminiCli_MM from './Container/Agent/Gemini CLI/MainMethods';
+import HermesAgent_MM from './Container/Agent/Hermes Agent (NousResearch)/MainMethods';
 import N8N_MM from './Container/Agent/N8N/MainMethods';
 import Rrew123_MM from './Container/Audio/AllTalk TTS (erew123)/MainMethods';
 import Applio_MM from './Container/Audio/Applio/MainMethods';
@@ -95,6 +97,7 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: GeminiCli_ID, methods: () => GeminiCli_MM(utils)},
     {id: CLAUDE_CODE_ID, methods: () => ClaudeCode_MM(utils)},
     {id: ANTIGRAVITY_CLI_ID, methods: () => AntigravityCli_MM(utils)},
+    {id: HERMES_AGENT_ID, methods: () => HermesAgent_MM(utils)},
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
     {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
   ];
