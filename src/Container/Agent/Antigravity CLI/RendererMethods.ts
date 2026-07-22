@@ -13,6 +13,7 @@ import antigravityCliArguments from './Arguments';
 
 const INSTALL_TIME_KEY = 'install-time-antigravityCli';
 const UPDATE_TIME_KEY = 'update-time-antigravityCli';
+const UPDATE_AVAILABLE_KEY = 'update-available-version-antigravityCli';
 
 function checkEnvLine(line: string): 'set' | 'export' | 'var' | undefined {
   if (isWin && line.startsWith('set ')) return 'set';
@@ -323,6 +324,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
           {label: 'Install Date', result: 'loading'},
           {label: 'Update Date', result: 'loading'},
           {label: 'Current Version', result: 'loading'},
+          {label: 'Latest Version', result: 'loading'},
         ],
       },
     ],
@@ -337,6 +339,9 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
   });
   api.ipc.invoke('current_antigravity_cli_version').then(result => {
     descManager.updateItem(0, 2, result);
+  });
+  api.storage.get(UPDATE_AVAILABLE_KEY).then(result => {
+    descManager.updateItem(0, 3, result);
   });
 }
 
