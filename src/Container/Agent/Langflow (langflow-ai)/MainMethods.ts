@@ -103,7 +103,10 @@ async function uninstall(utils: MainModuleUtils): Promise<void> {
       }
     });
 
+    utils.getExtensions_TerminalPreCommands(LANGFLOW_ID).forEach(command => ptyProcess.write(command));
+
     ptyProcess.write(`pip uninstall -y langflow${LINE_ENDING}`);
+    ptyProcess.write(`exit${LINE_ENDING}`);
   });
 }
 
