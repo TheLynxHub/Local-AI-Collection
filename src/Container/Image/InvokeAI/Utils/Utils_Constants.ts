@@ -15,8 +15,12 @@ export const Invoke_Command_InstallUV = isWin
 export const getTorchBackendForVersion = (version: string): {cuda: string; rocm: string} => {
   const [major, minor] = version.split('.').map(Number);
 
+  // v6.0 and later
+  if (major >= 6) {
+    return {cuda: 'cu128', rocm: 'rocm7.1'};
+  }
   // v5.12 and later
-  if (major > 5 || (major === 5 && minor >= 12)) {
+  if (major === 5 && minor >= 12) {
     return {cuda: 'cu128', rocm: 'rocm6.3'};
   }
   // v5.10 to v5.11
@@ -33,7 +37,7 @@ export const getTorchBackendForVersion = (version: string): {cuda: string; rocm:
   }
 
   // Default to latest for unknown versions
-  return {cuda: 'cu128', rocm: 'rocm6.3'};
+  return {cuda: 'cu128', rocm: 'rocm7.1'};
 };
 
 export const Invoke_PyPI = {

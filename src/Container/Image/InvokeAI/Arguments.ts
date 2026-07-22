@@ -51,6 +51,32 @@ const invokeArguments: ArgumentsData = [
             description: 'SSL key file for HTTPS. See https://www.uvicorn.org/settings/#https.',
             type: 'File',
           },
+          {
+            name: 'base_url',
+            description: 'Public base path when running behind a reverse proxy under a sub-path, e.g. /invoke.',
+            type: 'Input',
+          },
+          {
+            name: 'forwarded_allow_ips',
+            description: 'Comma-separated list of IPs (or *) allowed to set X-Forwarded-* headers.',
+            type: 'Input',
+            defaultValue: '127.0.0.1',
+          },
+        ],
+      },
+      {
+        section: 'Multiuser',
+        items: [
+          {
+            name: 'multiuser',
+            description: 'Enable multiuser support. Requires user authentication and authorization.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'strict_password_checking',
+            description: 'Enforce strict password requirements in multi-user mode.',
+            type: 'CheckBox',
+          },
         ],
       },
       {
@@ -93,6 +119,13 @@ const invokeArguments: ArgumentsData = [
             description: 'Path to directory for outputs.',
             type: 'Directory',
             defaultValue: 'outputs',
+          },
+          {
+            name: 'image_subfolder_strategy',
+            description: 'Strategy for organizing images into subfolders.',
+            type: 'DropDown',
+            defaultValue: 'flat',
+            values: ['flat', 'date', 'type', 'hash'],
           },
           {
             name: 'custom_nodes_dir',
@@ -322,6 +355,18 @@ const invokeArguments: ArgumentsData = [
             defaultValue: '10000',
           },
           {
+            name: 'session_queue_mode',
+            description: "Session queue mode. Use 'FIFO' or 'round_robin'.",
+            type: 'DropDown',
+            defaultValue: 'round_robin',
+            values: ['FIFO', 'round_robin'],
+          },
+          {
+            name: 'max_queue_history',
+            description: 'Keep the last N completed, failed, and canceled queue items on startup. 0 prunes all.',
+            type: 'Input',
+          },
+          {
             name: 'clear_queue_on_startup',
             description: 'Empties session queue on startup.',
             type: 'CheckBox',
@@ -396,6 +441,51 @@ const invokeArguments: ArgumentsData = [
               ' unknown in the database with no metadata. If disabled, unknown models' +
               ' will be rejected during installation.',
             type: 'CheckBox',
+          },
+        ],
+      },
+      {
+        section: 'External Providers',
+        items: [
+          {
+            name: 'external_gemini_api_key',
+            description: 'API key for Gemini image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_gemini_base_url',
+            description: 'Base URL override for Gemini image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_openai_api_key',
+            description: 'API key for OpenAI image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_openai_base_url',
+            description: 'Base URL override for OpenAI image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_alibabacloud_api_key',
+            description: 'API key for Alibaba Cloud DashScope image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_alibabacloud_base_url',
+            description: 'Base URL override for Alibaba Cloud DashScope image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_seedream_api_key',
+            description: 'API key for Seedream image generation.',
+            type: 'Input',
+          },
+          {
+            name: 'external_seedream_base_url',
+            description: 'Base URL override for Seedream image generation.',
+            type: 'Input',
           },
         ],
       },
