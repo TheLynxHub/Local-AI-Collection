@@ -300,10 +300,7 @@ function startInstall(stepper: InstallationStepper) {
 
 function startUpdate(stepper: InstallationStepper) {
   stepper.initialSteps(['Update Antigravity CLI', 'Complete Update']);
-  const installCommand = isWin
-    ? 'irm https://antigravity.google/cli/install.ps1 | iex'
-    : 'curl -fsSL https://antigravity.google/cli/install.sh | bash';
-  stepper.executeTerminalCommands(installCommand).then(() => {
+  stepper.executeTerminalCommands('agy update').then(() => {
     const currentDate = new Date();
     stepper.storage.set(UPDATE_TIME_KEY, currentDate.toLocaleString());
     stepper.setUpdated();
