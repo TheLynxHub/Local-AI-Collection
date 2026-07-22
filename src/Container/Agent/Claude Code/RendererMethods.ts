@@ -5,7 +5,6 @@ import {
   CardInfoCallback,
   CardRendererMethods,
   ChosenArgument,
-  DataSection,
   InstallationStepper,
 } from '../../../../../src/common/types/plugins/modules';
 import {DescriptionManager, isWin} from '../../../Utils/CrossUtils';
@@ -20,12 +19,14 @@ function checkEnvLine(line: string): 'set' | 'export' | 'var' | undefined {
 
   if (line.startsWith('export ')) return 'export';
 
+  const varName = line.split('=')[0].trim();
   for (const arg of claudeCodeArguments) {
-    if (arg.category === 'Environment Variables') {
-      if ((arg as DataSection).sections[0].items.find(item => item.name === line.split('=')[0])) {
-        return 'var';
+    if (arg.category === 'Environment Variables' && 'sections' in arg) {
+      for (const section of arg.sections) {
+        if (section.items.some(item => item.name === varName)) {
+          return 'var';
+        }
       }
-      return undefined;
     }
   }
 
@@ -233,15 +234,19 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
     if (line.startsWith('#')) return;
 
     if (line.startsWith('claude')) {
-      const clArg: string = line.split('claude ')[1];
+      const clArg: string = line.substring(6).trim();
       if (!clArg) return;
 
-      const regex = /(-{1,2}[^\s]+)(?:\s+"([^"]*)"|\s+([^\s]+))?/g;
-      let match: RegExpExecArray | null;
+      const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
+      const tokens: string[] = [];
+      let tokenMatch: RegExpExecArray | null;
+      while ((tokenMatch = tokenRegex.exec(clArg)) !== null) {
+        tokens.push(tokenMatch[1] ?? tokenMatch[2] ?? tokenMatch[3]);
+      }
 
-      while ((match = regex.exec(clArg)) !== null) {
-        const flag = match[1];
-        const value = match[2] || match[3] || '';
+      for (let i = 0; i < tokens.length; i++) {
+        const flag = tokens[i];
+        if (!flag.startsWith('-')) continue;
 
         const info = getArgumentInfo(flag);
         if (!info) continue;
@@ -250,7 +255,13 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
         if (type === 'CheckBox') {
           argResult.push({name: info.name, value: 'true'});
         } else {
-          argResult.push({name: info.name, value: value.replace(/"/g, '')});
+          const nextToken = tokens[i + 1];
+          if (nextToken && !nextToken.startsWith('-')) {
+            argResult.push({name: info.name, value: nextToken.replace(/"/g, '')});
+            i++;
+          } else {
+            argResult.push({name: info.name, value: ''});
+          }
         }
       }
     }
