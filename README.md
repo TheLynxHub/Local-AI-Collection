@@ -6,7 +6,7 @@
 
 A collection of local AI tools with **full support** for **arguments**, **configurations**, and **extensions**.
 
-<img src="resources/screenshot.jpg">
+<img src="resources/screenshot.png">
 
 </div>
 
