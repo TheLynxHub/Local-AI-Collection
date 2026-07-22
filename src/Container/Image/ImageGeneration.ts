@@ -59,7 +59,7 @@ const imagePage: PagesData = {
       description:
         'This ui will let you design and execute advanced stable diffusion pipelines' +
         ' using a graph/nodes/flowchart based interface.',
-      repoUrl: 'https://github.com/comfyanonymous/ComfyUI',
+      repoUrl: 'https://github.com/Comfy-Org/ComfyUI',
       type: 'image',
       supportCustomArguments: true,
       arguments: comfyArguments,
