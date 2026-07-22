@@ -8,7 +8,8 @@ const antigravityCliArguments: ArgumentsData = [
     items: [
       {
         name: 'Settings File Location',
-        description: 'Optional path to a settings file. If set, LynxHub writes custom configuration here.',
+        description:
+          'Optional path to a settings.json file. If set, LynxHub writes JSON here from the Settings section.',
         type: 'File',
       },
     ],
@@ -71,7 +72,7 @@ const antigravityCliArguments: ArgumentsData = [
           },
           {
             name: '--continue',
-            description: 'Continue the most recent session in the current directory.',
+            description: 'Continue the most recent session in current directory without prompt.',
             type: 'CheckBox',
           },
           {
@@ -81,13 +82,106 @@ const antigravityCliArguments: ArgumentsData = [
           },
           {
             name: '--bg',
-            description: 'Run as a background agent process.',
+            description: 'Start session as a background agent process.',
             type: 'CheckBox',
           },
           {
             name: '--safe-mode',
             description: 'Start with custom hooks and integrations disabled for troubleshooting.',
             type: 'CheckBox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Settings',
+    sections: [
+      {
+        section: 'General & Appearance',
+        items: [
+          {
+            name: 'colorScheme',
+            description:
+              'Color theme: "light", "solarized light", "colorblind-friendly light", "dark", "solarized dark", "colorblind-friendly dark", "tokyo night", or "terminal".',
+            type: 'Input',
+          },
+          {
+            name: 'altScreenMode',
+            description: 'Screen buffer usage: "default", "always", or "never".',
+            type: 'Input',
+          },
+          {
+            name: 'verbosity',
+            description:
+              'Visual verbosity level: "high" (full thoughts and tool outputs) or "low" (minimal indicator).',
+            type: 'Input',
+          },
+          {
+            name: 'runningLightSpeed',
+            description: 'Progress animation speed: "fast", "medium", "slow", or "off".',
+            type: 'Input',
+          },
+          {
+            name: 'showTips',
+            description: 'Display helpful agentic tips above the prompt panel during generation turns.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'showFeedbackSurvey',
+            description: 'Display periodic quality feedback surveys upon task completions.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'notifications',
+            description: 'Emit system desktop and terminal bell notifications upon task completion.',
+            type: 'CheckBox',
+          },
+        ],
+      },
+      {
+        section: 'Security & Permissions',
+        items: [
+          {
+            name: 'toolPermission',
+            description:
+              'Global safety presets: "request-review", "proceed-in-sandbox", "always-proceed", or "strict".',
+            type: 'Input',
+          },
+          {
+            name: 'artifactReviewPolicy',
+            description: 'Code review policy: "asks-for-review", "agent-decides", or "always-proceed".',
+            type: 'Input',
+          },
+          {
+            name: 'enableTerminalSandbox',
+            description: 'Restrict all local execution commands launched by agents to OS containment rings.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'allowNonWorkspaceAccess',
+            description: 'Permit file read/write tools to navigate outside recognized workspace roots.',
+            type: 'CheckBox',
+          },
+        ],
+      },
+      {
+        section: 'Account & Telemetry',
+        items: [
+          {
+            name: 'useG1Credits',
+            description: 'Use personal AI credits for model calls once plan quotas are exhausted.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'enableTelemetry',
+            description: 'Permit metric collection and crash log streaming to improve tool reliability.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'editor',
+            description: 'Target text editor utility ("auto", "vim", "emacs").',
+            type: 'Input',
           },
         ],
       },
