@@ -26,16 +26,21 @@ const langflowArguments: ArgumentsData = [
             defaultValue: true,
           },
           {
+            name: '--open-browser',
+            description: 'Open the browser automatically after starting the server',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
             name: '--backend-only',
             description: 'Run only the backend server without serving frontend assets',
             type: 'CheckBox',
             defaultValue: false,
           },
           {
-            name: '--frontend-only',
-            description: 'Run only the frontend server',
-            type: 'CheckBox',
-            defaultValue: false,
+            name: '--frontend-path',
+            description: 'Path to custom frontend directory containing build files',
+            type: 'Directory',
           },
         ],
       },
@@ -58,6 +63,47 @@ const langflowArguments: ArgumentsData = [
             name: 'LANGFLOW_COMPONENTS_PATH',
             description: 'Path to custom components directory',
             type: 'Directory',
+          },
+          {
+            name: '--log-file',
+            description: 'Path to the log file',
+            type: 'File',
+          },
+          {
+            name: '--log-rotation',
+            description: 'Log rotation rule (Time/Size)',
+            type: 'Input',
+          },
+          {
+            name: 'DO_NOT_TRACK',
+            description: 'Opt out of anonymous telemetry usage data collection',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+        ],
+      },
+      {
+        section: 'Performance & SSL',
+        items: [
+          {
+            name: '--workers',
+            description: 'Number of worker processes',
+            type: 'Input',
+          },
+          {
+            name: '--worker-timeout',
+            description: 'Worker process timeout in seconds',
+            type: 'Input',
+          },
+          {
+            name: '--ssl-cert-file-path',
+            description: 'Defines the SSL certificate file path',
+            type: 'File',
+          },
+          {
+            name: '--ssl-key-file-path',
+            description: 'Defines the SSL key file path',
+            type: 'File',
           },
         ],
       },
