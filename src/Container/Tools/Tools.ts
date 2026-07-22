@@ -2,6 +2,7 @@ import {PagesData} from '../../../../src/common/types/plugins/modules';
 import {
   AITOOLKIT_ID,
   KOHYA_ID,
+  LLAMA_FACTORY_ID,
   LORA_MANAGER_ID,
   ONETRAINER_ID,
   SMARTGALLERY_ID,
@@ -13,6 +14,8 @@ import loraManagerArguments from './ComfyUI-Lora-Manager (willmiao)/Arguments';
 import LORA_MANAGER_RM from './ComfyUI-Lora-Manager (willmiao)/RendererMethods';
 import bmaltaisArguments from './Kohyas GUI (bmaltais)/Arguments';
 import KOHYA_GUI_RM from './Kohyas GUI (bmaltais)/RendererMethods';
+import llamaFactoryArguments from './LlamaFactory (hiyouga)/Arguments';
+import LLAMA_FACTORY_RM from './LlamaFactory (hiyouga)/RendererMethods';
 import ONETRAINER_RM from './OneTrainer (Nerogar)/RendererMethods';
 import smartGalleryArguments from './SmartGallery (biagiomaf)/Arguments';
 import SMARTGALLERY_RM from './SmartGallery (biagiomaf)/RendererMethods';
@@ -100,6 +103,18 @@ const toolsPage: PagesData = {
       arguments: unslothStudioArguments,
       methods: UNSLOTH_STUDIO_RM,
       installationType: 'others',
+    },
+    {
+      id: LLAMA_FACTORY_ID,
+      title: 'LLaMA Factory',
+      description:
+        'Unified Efficient Fine-Tuning of 100+ Large Language Models with zero-code CLI and Gradio Web UI (LLaMA Board).',
+      repoUrl: 'https://github.com/hiyouga/LlamaFactory',
+      type: 'text',
+      supportCustomArguments: true,
+      arguments: llamaFactoryArguments,
+      methods: LLAMA_FACTORY_RM,
+      installationType: 'git',
     },
   ],
 };

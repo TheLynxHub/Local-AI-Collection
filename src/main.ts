@@ -17,6 +17,7 @@ import {
   INVOKE_ID,
   KOHYA_ID,
   LANGFLOW_ID,
+  LLAMA_FACTORY_ID,
   LoLLMS_ID,
   LORA_MANAGER_ID,
   N8N_ID,
@@ -61,6 +62,7 @@ import Ooba_MM from './Container/Text/Text Generation (oobabooga)/MainMethods';
 import AIToolkit_MM from './Container/Tools/AI Toolkit (ostris)/MainMethods';
 import LoraManager_MM from './Container/Tools/ComfyUI-Lora-Manager (willmiao)/MainMethods';
 import Bmaltais_MM from './Container/Tools/Kohyas GUI (bmaltais)/MainMethods';
+import LlamaFactory_MM from './Container/Tools/LlamaFactory (hiyouga)/MainMethods';
 import Nerogar_MM from './Container/Tools/OneTrainer (Nerogar)/MainMethods';
 import SmartGallery_MM from './Container/Tools/SmartGallery (biagiomaf)/MainMethods';
 import Unsloth_MM from './Container/Tools/Unsloth Studio/MainMethods';
@@ -104,5 +106,6 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: HERMES_AGENT_ID, methods: () => HermesAgent_MM(utils)},
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
     {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
+    {id: LLAMA_FACTORY_ID, methods: () => LlamaFactory_MM(utils)},
   ];
 }
