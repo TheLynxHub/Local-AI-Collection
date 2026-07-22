@@ -53,42 +53,57 @@ const antigravityCliArguments: ArgumentsData = [
     category: 'Command Line Arguments',
     sections: [
       {
-        section: 'Execution Options',
+        section: 'Core Execution Options',
         items: [
           {
-            name: '-p <prompt>',
-            description: 'Run in print mode, executing the given prompt and outputting to standard output.',
-            type: 'Input',
-          },
-          {
             name: '--model <model_name>',
-            description: 'Model to use for this session.',
+            description: 'Model for the current CLI session.',
             type: 'Input',
           },
           {
-            name: '--resume <session_id>',
-            description: 'Resume a previous session by ID.',
+            name: '-p <prompt>',
+            description: 'Run a single prompt non-interactively and print the response.',
+            type: 'Input',
+          },
+          {
+            name: '--prompt-interactive <prompt>',
+            description: 'Run an initial prompt interactively and continue the session.',
             type: 'Input',
           },
           {
             name: '--continue',
-            description: 'Continue the most recent session in current directory without prompt.',
+            description: 'Continue the most recent conversation.',
             type: 'CheckBox',
           },
           {
-            name: '--approval-mode <mode>',
-            description: 'Approval mode for tool execution and code edits (e.g. auto, manual).',
+            name: '--conversation <session_id>',
+            description: 'Resume a previous conversation by ID.',
             type: 'Input',
           },
           {
-            name: '--bg',
-            description: 'Start session as a background agent process.',
+            name: '--add-dir <directory_path>',
+            description: 'Add a directory to the workspace (repeatable).',
+            type: 'Directory',
+          },
+          {
+            name: '--dangerously-skip-permissions',
+            description: 'Auto-approve all tool permission requests without prompting.',
             type: 'CheckBox',
           },
           {
-            name: '--safe-mode',
-            description: 'Start with custom hooks and integrations disabled for troubleshooting.',
+            name: '--sandbox',
+            description: 'Run in a sandbox with terminal restrictions enabled.',
             type: 'CheckBox',
+          },
+          {
+            name: '--log-file <file_path>',
+            description: 'Override CLI log file path.',
+            type: 'File',
+          },
+          {
+            name: '--print-timeout <duration>',
+            description: 'Timeout for print mode wait (default 5m0s).',
+            type: 'Input',
           },
         ],
       },
