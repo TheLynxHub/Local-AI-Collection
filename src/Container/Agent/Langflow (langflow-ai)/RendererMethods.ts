@@ -6,7 +6,7 @@ import {
   DataSection,
   InstallationStepper,
 } from '../../../../../src/common/types/plugins/modules';
-import {DescriptionManager, isWin, parseCustomArg} from '../../../Utils/CrossUtils';
+import {DescriptionManager, getPythonCommandByOs, isWin, parseCustomArg} from '../../../Utils/CrossUtils';
 import {getArgumentType, isValidArg, removeEscapes, replaceAddress} from '../../../Utils/RendererUtils';
 import langflowArguments from './Arguments';
 
@@ -129,6 +129,7 @@ export function parseStringToArgs(args: string): ChosenArgument[] {
 }
 
 function startInstall(stepper: InstallationStepper) {
+  const pipCommand = getPythonCommandByOs().pip;
   stepper.initialSteps(['Getting Started', 'Detect Existing', 'Install Langflow', 'All Done!']);
   stepper.starterStep({disableSelectDir: true}).then(() => {
     stepper.nextStep().then(() => {
@@ -141,7 +142,7 @@ function startInstall(stepper: InstallationStepper) {
           stepper.showFinalStep('success', "You're All Set!", "Langflow is already installed. You're good to go!");
         } else {
           stepper.nextStep().then(() => {
-            stepper.executeTerminalCommands(['pip install uv', 'uv pip install langflow']).then(() => {
+            stepper.executeTerminalCommands([`${pipCommand} install uv`, 'uv pip install langflow']).then(() => {
               stepper.setInstalled();
               const currentDate = new Date();
               stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
