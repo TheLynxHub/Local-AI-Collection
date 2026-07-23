@@ -1,4 +1,4 @@
-import { $t as ONETRAINER_ID, B as fetchExtensionList, Bt as ALLTALK_ID, Ct as GitInstaller, Dt as isValidArg, Et as isPagesFixed, F as vladmandicArguments, Ft as parseCustomArg, Gt as COMFYUI_ZLUDA_ID, H as parseStringToArgs$1, Ht as BOLT_DIY_ID, I as SD_AMD_RM, Jt as INVOKE_ID, Kt as FLOWISEAI_ID, Lt as A1_ID, M as SD_NEXT_RM, O as SWARM_RM, Ot as cloneDeep, Pt as isWin, Qt as N8N_ID, Rt as AG_ID, St as CardInfo, T as OPEN_WEBUI_RM, Tt as getArgumentType, U as automatic1111Arguments, Ut as CLAUDE_CODE_ID, V as parseArgsToString$1, Vt as APPLIO_ID, W as INVOKE_RM, Wt as COMFYUI_ID, X as comfyuizludaArguments, Xt as LORA_MANAGER_ID, Yt as KOHYA_ID, Z as COMFYUI_RM, Zt as LoLLMS_ID, _ as TG_RM, _t as flowiseArguments, a as KOHYA_GUI_RM, an as SD_UIUX_ID, at as N8N_RM, b as oobaboogaArguments, c as bmaltaisArguments, cn as SWARM_ID, ct as n8nArguments, en as OPEN_WEBUI_ID, et as comfyuiArguments, f as loraManagerArguments, ft as geminiCliArguments, g as aiToolkitArguments, i as smartGalleryArguments, in as SD_NEXT_ID, it as gitmyloArguments, j as mcMonkeyArguments, l as LORA_MANAGER_RM, ln as TG_ID, lt as GeminiCli_RM, mt as Flow_RM, nn as SD_FORGE_AMD_ID, on as SILLYTAVERN_ID, p as AITOOLKIT_RM, pt as openArguments, qt as GeminiCli_ID, rn as SD_FORGE_ID, sn as SMARTGALLERY_ID, t as SMARTGALLERY_RM, tn as SD_AMD_ID, tt as AG_RM, un as TTS_ID, vt as ClaudeCode_RM, w as sillyArguments, wt as catchAddress$3, x as SILLYTAVERN_RM, xt as claudeCodeArguments, z as lshqqytigerArguments, zt as AITOOLKIT_ID } from "./RendererMethods_CuzlbY.mjs";
+import { $ as INVOKE_RM, $t as getPythonCommandByOs, A as SILLYTAVERN_RM, An as SD_FORGE_AMD_ID, At as geminiCliArguments, B as mcMonkeyArguments, Bt as AntigravityCli_RM, Cn as LLAMA_FACTORY_ID, Ct as HermesAgent_RM, Dn as ONETRAINER_ID, Dt as GeminiCli_RM, E as TG_RM, En as N8N_ID, Et as hermesAgentArguments, Fn as SMARTGALLERY_ID, Ft as flowiseArguments, G as SD_AMD_RM, Gt as GitInstaller, In as SWARM_ID, It as ClaudeCode_RM, J as lshqqytigerArguments, Jt as isPagesFixed, Kt as catchAddress$3, L as SWARM_RM, Ln as TG_ID, Mn as SD_NEXT_ID, Mt as Flow_RM, N as sillyArguments, Nn as SD_UIUX_ID, On as OPEN_WEBUI_ID, P as OPEN_WEBUI_RM, Pn as SILLYTAVERN_ID, Q as automatic1111Arguments, Rn as TTS_ID, S as AITOOLKIT_RM, Sn as LANGFLOW_ID, St as langflowArguments, T as aiToolkitArguments, Tn as LoLLMS_ID, Ut as antigravityCliArguments, V as SD_NEXT_RM, W as vladmandicArguments, Wt as CardInfo, X as parseArgsToString$2, Xt as cloneDeep, Y as fetchExtensionList, Yt as isValidArg, Z as parseStringToArgs$2, _ as bmaltaisArguments, _n as FLOWISEAI_ID, a as unslothStudioArguments, an as A1_ID, at as comfyuizludaArguments, bn as INVOKE_ID, cn as ALLTALK_ID, dn as BOLT_DIY_ID, dt as AG_RM, fn as CHAT_TTS_ID, gn as COMFYUI_ZLUDA_ID, hn as COMFYUI_ROCM_ID, ht as N8N_RM, jn as SD_FORGE_ID, jt as openArguments, k as oobaboogaArguments, kn as SD_AMD_ID, l as smartGalleryArguments, ln as ANTIGRAVITY_CLI_ID, m as KOHYA_GUI_RM, mn as COMFYUI_ID, mt as gitmyloArguments, n as UNSLOTH_STUDIO_RM, nn as isWin, o as SMARTGALLERY_RM, on as AG_ID, ot as comfyRocmArguments, p as llamaFactoryArguments, pn as CLAUDE_CODE_ID, qt as getArgumentType, rn as parseCustomArg, sn as AITOOLKIT_ID, st as COMFYUI_RM, u as LLAMA_FACTORY_RM, un as APPLIO_ID, ut as comfyuiArguments, v as LORA_MANAGER_RM, vn as GeminiCli_ID, vt as n8nArguments, wn as LORA_MANAGER_ID, x as loraManagerArguments, xn as KOHYA_ID, yn as HERMES_AGENT_ID, yt as Langflow_RM, zn as UNSLOTH_STUDIO_ID, zt as claudeCodeArguments } from "./RendererMethods_CeNZh3.mjs";
 //#region module/src/Container/Agent/Agents.ts
 const agentsPage = {
 	routePath: "agents_page",
@@ -12,6 +12,17 @@ const agentsPage = {
 			supportCustomArguments: true,
 			methods: Flow_RM,
 			arguments: flowiseArguments,
+			installationType: "others"
+		},
+		{
+			id: LANGFLOW_ID,
+			title: "Langflow",
+			description: "Visual framework for building and deploying AI-powered agents and workflows.",
+			repoUrl: "https://github.com/langflow-ai/langflow",
+			type: "text",
+			supportCustomArguments: true,
+			methods: Langflow_RM,
+			arguments: langflowArguments,
 			installationType: "others"
 		},
 		{
@@ -35,9 +46,30 @@ const agentsPage = {
 			installationType: "others"
 		},
 		{
+			id: ANTIGRAVITY_CLI_ID,
+			title: "Antigravity CLI",
+			description: "Google terminal AI agent bringing multi-step reasoning, multi-file editing, and tool calling.",
+			repoUrl: "https://github.com/google-antigravity/antigravity-cli",
+			type: "text",
+			arguments: antigravityCliArguments,
+			methods: AntigravityCli_RM,
+			installationType: "others"
+		},
+		{
+			id: HERMES_AGENT_ID,
+			title: "Hermes Agent",
+			description: "Self-improving AI agent built by Nous Research with a built-in learning loop.",
+			repoUrl: "https://github.com/nousresearch/hermes-agent",
+			type: "text",
+			supportCustomArguments: true,
+			methods: HermesAgent_RM,
+			arguments: hermesAgentArguments,
+			installationType: "others"
+		},
+		{
 			id: N8N_ID,
 			title: "N8N",
-			description: "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
+			description: "Fair-code workflow automation platform with native AI capabilities and 400+ integrations.",
 			repoUrl: "https://github.com/n8n-io/n8n",
 			type: "text",
 			supportCustomArguments: true,
@@ -49,8 +81,8 @@ const agentsPage = {
 };
 //#endregion
 //#region module/src/Container/Audio/AllTalk TTS (erew123)/RendererMethods.ts
-const URL$4 = "https://github.com/erew123/alltalk_tts";
-function startInstall$10(stepper) {
+const URL$5 = "https://github.com/erew123/alltalk_tts";
+function startInstall$12(stepper) {
 	stepper.initialSteps([
 		"AllTalk TTS",
 		"Clone",
@@ -59,7 +91,7 @@ function startInstall$10(stepper) {
 	]);
 	stepper.starterStep().then(({ targetDirectory, chosen }) => {
 		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(URL$4).then((dir) => {
+			stepper.cloneRepository(URL$5).then((dir) => {
 				stepper.nextStep().then(() => {
 					stepper.runTerminalScript(dir, isWin ? "atsetup.bat" : "atsetup.sh").then(() => {
 						stepper.setInstalled(dir);
@@ -68,7 +100,7 @@ function startInstall$10(stepper) {
 				});
 			});
 		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$4).then((isValid) => {
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$5).then((isValid) => {
 			if (isValid) {
 				stepper.setInstalled(targetDirectory);
 				stepper.showFinalStep("success", "AllTalk TTS located successfully!", "Pre-installed AllTalk TTS detected. Installation skipped as your existing setup is ready to use.");
@@ -97,18 +129,18 @@ function startUpdate$2(stepper, dir) {
 	});
 	else stepper.showFinalStep("error", "Unable to update AllTalk TTS");
 }
-async function cardInfo$10(api, callback) {
-	return CardInfo(URL$4, void 0, api, callback);
+async function cardInfo$12(api, callback) {
+	return CardInfo(URL$5, void 0, api, callback);
 }
 function catchAddress$2(input) {
 	const match = input.match(/Gradio Dark.*?:\s*.*?(https?:\/\/.*?)(?=\s|\u001b|$)/i);
 	if (match) return match[1];
 }
 const ALLTALK_RM = {
-	cardInfo: cardInfo$10,
+	cardInfo: cardInfo$12,
 	catchAddress: catchAddress$2,
 	manager: {
-		startInstall: startInstall$10,
+		startInstall: startInstall$12,
 		updater: {
 			updateType: "stepper",
 			startUpdate: startUpdate$2
@@ -117,8 +149,8 @@ const ALLTALK_RM = {
 };
 //#endregion
 //#region module/src/Container/Audio/Applio/RendererMethods.ts
-const URL$3 = "https://github.com/IAHispano/Applio";
-function startInstall$9(stepper) {
+const URL$4 = "https://github.com/IAHispano/Applio";
+function startInstall$11(stepper) {
 	stepper.initialSteps([
 		"Applio",
 		"Clone",
@@ -127,7 +159,7 @@ function startInstall$9(stepper) {
 	]);
 	stepper.starterStep().then(({ targetDirectory, chosen }) => {
 		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(URL$3).then((dir) => {
+			stepper.cloneRepository(URL$4).then((dir) => {
 				stepper.nextStep().then(() => {
 					const installCmd = isWin ? ".\\run-install.bat" : "sh run-install.sh";
 					stepper.executeTerminalCommands(installCmd, dir).then(() => {
@@ -137,7 +169,7 @@ function startInstall$9(stepper) {
 				});
 			});
 		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$3).then((isValid) => {
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$4).then((isValid) => {
 			if (isValid) {
 				stepper.setInstalled(targetDirectory);
 				stepper.showFinalStep("success", "Applio Found!", "Existing Applio installation located.");
@@ -150,29 +182,75 @@ function startInstall$9(stepper) {
 		});
 	});
 }
-async function cardInfo$9(api, callback) {
-	return CardInfo(URL$3, void 0, api, callback);
+async function cardInfo$11(api, callback) {
+	return CardInfo(URL$4, void 0, api, callback);
 }
 const APPLIO_RM = {
 	catchAddress: catchAddress$3,
-	cardInfo: cardInfo$9,
+	cardInfo: cardInfo$11,
 	manager: {
-		startInstall: startInstall$9,
+		startInstall: startInstall$11,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/Container/Audio/ChatTTS (2noise)/RendererMethods.ts
+const CHAT_TTS_URL = "https://github.com/2noise/ChatTTS";
+function startInstall$10(stepper) {
+	const pipCommand = getPythonCommandByOs().pip;
+	const installReqs = (dir) => {
+		stepper.executeTerminalCommands(`${pipCommand} install -r requirements.txt`, dir).then(() => {
+			stepper.nextStep().then(() => {
+				stepper.setInstalled(dir);
+				stepper.showFinalStep("success", "ChatTTS Installation Complete!", "ChatTTS has been successfully installed. You can now launch the WebUI to start generating speech.");
+			});
+		});
+	};
+	stepper.initialSteps([
+		"ChatTTS",
+		"Clone",
+		"Install Dependencies",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.cloneRepository(CHAT_TTS_URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					installReqs(dir);
+				});
+			});
+		});
+		else if (targetDirectory) stepper.utils.verifyFilesExist(targetDirectory, ["examples/web/webui.py", "requirements.txt"]).then((filesExist) => {
+			if (filesExist) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "ChatTTS located successfully!", "Pre-installed ChatTTS detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.showFinalStep("error", "Unable to locate ChatTTS!", "Please ensure you have selected the correct folder containing the ChatTTS repository.");
+		});
+	});
+}
+async function cardInfo$10(api, callback) {
+	return CardInfo(CHAT_TTS_URL, void 0, api, callback);
+}
+const CHAT_TTS_RM = {
+	catchAddress: catchAddress$3,
+	cardInfo: cardInfo$10,
+	manager: {
+		startInstall: startInstall$10,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
 //#region module/src/Container/Audio/Text to Speech (rsxdalv)/RendererMethods.ts
-const URL$2 = "https://github.com/rsxdalv/TTS-WebUI";
+const URL$3 = "https://github.com/rsxdalv/TTS-WebUI";
 function catchAddress$1(input) {
 	if (input.toLowerCase().includes("Installed Packages".toLowerCase())) return "http://127.0.0.1:7770";
 	else return;
 }
-function startInstall$8(stepper) {
-	GitInstaller("Text to Speech", URL$2, stepper, [isWin ? "start_tts_webui.bat" : "start_tts_webui.sh"]);
+function startInstall$9(stepper) {
+	GitInstaller("Text to Speech", URL$3, stepper, [isWin ? "start_tts_webui.bat" : "start_tts_webui.sh"]);
 }
-async function cardInfo$8(api, callback) {
-	return CardInfo(URL$2, "/extensions", api, callback);
+async function cardInfo$9(api, callback) {
+	return CardInfo(URL$3, "/extensions", api, callback);
 }
 //#endregion
 //#region module/src/Container/Audio/AudioGeneration.ts
@@ -181,16 +259,16 @@ const audioPage = {
 	cards: [
 		{
 			id: TTS_ID,
-			title: "Text to Speech",
-			description: "TTS Generation Web UI (Bark, MusicGen + AudioGen, Tortoise, RVC, Vocos, Demucs, SeamlessM4T, MAGNet, StyleTTS2, MMS)",
+			title: "TTS WebUI",
+			description: "A unified WebUI for speech synthesis, voice conversion, audio generation, and music models.",
 			repoUrl: "https://github.com/rsxdalv/TTS-WebUI",
 			type: "audio",
 			extensionsDir: "/extensions",
 			methods: {
 				catchAddress: catchAddress$1,
-				cardInfo: cardInfo$8,
+				cardInfo: cardInfo$9,
 				manager: {
-					startInstall: startInstall$8,
+					startInstall: startInstall$9,
 					updater: { updateType: "git" }
 				}
 			},
@@ -211,7 +289,7 @@ const audioPage = {
 		{
 			id: ALLTALK_ID,
 			title: "AllTalk TTS",
-			description: "AllTalk is based on the Coqui TTS engine, similar to the Coqui_tts extension for Text generation webUI, however supports a variety of advanced features, such as a settings page, low VRAM support, DeepSpeed, narrator, model finetuning, custom models, wav file maintenance. It can also be used with 3rd Party software via JSON calls.",
+			description: "Advanced text-to-speech engine based on Coqui TTS with low VRAM support and voice cloning.",
 			repoUrl: "https://github.com/erew123/alltalk_tts",
 			type: "audio",
 			methods: ALLTALK_RM,
@@ -225,13 +303,22 @@ const audioPage = {
 			type: "audio",
 			methods: APPLIO_RM,
 			installationType: "git"
+		},
+		{
+			id: CHAT_TTS_ID,
+			title: "ChatTTS",
+			description: "Generative speech model for daily dialogue scenarios supporting conversational TTS.",
+			repoUrl: "https://github.com/2noise/ChatTTS",
+			type: "audio",
+			methods: CHAT_TTS_RM,
+			installationType: "git"
 		}
 	]
 };
 //#endregion
 //#region module/src/Container/Tools/OneTrainer (Nerogar)/RendererMethods.ts
-const URL$1 = "https://github.com/Nerogar/OneTrainer";
-function startInstall$7(stepper) {
+const URL$2 = "https://github.com/Nerogar/OneTrainer";
+function startInstall$8(stepper) {
 	stepper.initialSteps([
 		"OneTrainer",
 		"Clone",
@@ -240,7 +327,7 @@ function startInstall$7(stepper) {
 	]);
 	stepper.starterStep().then(({ targetDirectory, chosen }) => {
 		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(URL$1).then((dir) => {
+			stepper.cloneRepository(URL$2).then((dir) => {
 				stepper.nextStep().then(() => {
 					stepper.runTerminalScript(dir, isWin ? "install.bat" : "install.sh").then(() => {
 						stepper.setInstalled(dir);
@@ -249,7 +336,7 @@ function startInstall$7(stepper) {
 				});
 			});
 		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$1).then((isValid) => {
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$2).then((isValid) => {
 			if (isValid) {
 				stepper.setInstalled(targetDirectory);
 				stepper.showFinalStep("success", "OneTrainer located successfully!", "Pre-installed OneTrainer detected. Installation skipped as your existing setup is ready to use.");
@@ -270,17 +357,176 @@ function startUpdate$1(stepper, dir) {
 	});
 	else stepper.showFinalStep("error", "Unable to update OneTrainer");
 }
-async function cardInfo$7(api, callback) {
-	return CardInfo(URL$1, void 0, api, callback);
+async function cardInfo$8(api, callback) {
+	return CardInfo(URL$2, void 0, api, callback);
 }
 const ONETRAINER_RM = {
-	cardInfo: cardInfo$7,
+	cardInfo: cardInfo$8,
 	manager: {
-		startInstall: startInstall$7,
+		startInstall: startInstall$8,
 		updater: {
 			updateType: "stepper",
 			startUpdate: startUpdate$1
 		}
+	}
+};
+//#endregion
+//#region module/src/Container/Image/ComfyUI ROCm (patientx)/RendererMethods.ts
+const URL$1 = "https://github.com/patientx-cfz/comfyui-rocm";
+function parseArgsToString$1(args) {
+	let result = "";
+	let lines = "";
+	let argResult = "";
+	const envVars = {};
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const parsed = parseCustomArg(arg);
+			if (!parsed) return;
+			if (parsed.line) lines += parsed.line + "\n";
+			if (parsed.commandArg) argResult += parsed.commandArg + " ";
+		} else {
+			if (arg.name === "PYTHON" || arg.name === "GIT" || arg.name === "VENV_DIR" || arg.name === "MIOPEN_FIND_MODE" || arg.name === "MIOPEN_LOG_LEVEL" || arg.name === "TRITON_OVERRIDE_ARCH" || arg.name === "COMFYUI_ENABLE_MIOPEN" || arg.name === "FLASH_ATTENTION_TRITON_AMD_ENABLE" || arg.name === "PYTORCH_TUNABLEOP_ENABLED" || arg.name === "PYTORCH_TUNABLEOP_VERBOSE" || arg.name === "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED") {
+				envVars[arg.name] = arg.value;
+				return;
+			}
+			const argType = getArgumentType(arg.name, comfyRocmArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (envVars.MIOPEN_FIND_MODE !== void 0) result += `set "MIOPEN_FIND_MODE=${envVars.MIOPEN_FIND_MODE}"\n`;
+	if (envVars.MIOPEN_LOG_LEVEL !== void 0) result += `set "MIOPEN_LOG_LEVEL=${envVars.MIOPEN_LOG_LEVEL}"\n`;
+	if (Object.keys(envVars).some((k) => k === "MIOPEN_FIND_MODE" || k === "MIOPEN_LOG_LEVEL")) result += "\n";
+	if (envVars.PYTHON !== void 0) result += `set "PYTHON=${envVars.PYTHON}"\n`;
+	if (envVars.GIT !== void 0) result += `set "GIT=${envVars.GIT}"\n`;
+	if (envVars.VENV_DIR !== void 0) result += `set "VENV_DIR=${envVars.VENV_DIR}"\n`;
+	if (Object.keys(envVars).some((k) => k === "PYTHON" || k === "GIT" || k === "VENV_DIR")) result += "\n";
+	result += `set "COMMANDLINE_ARGS=${argResult.trim()}"\n\n`;
+	if (envVars.TRITON_OVERRIDE_ARCH !== void 0) result += `set "TRITON_OVERRIDE_ARCH=${envVars.TRITON_OVERRIDE_ARCH}"\n\n`;
+	if (lines) result += lines + "\n";
+	return result;
+}
+function parseStringToArgs$1(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("set")) {
+			const parts = line.split("=");
+			if (parts.length >= 2) {
+				const argName = parts[0].split(" ")[1]?.trim();
+				const argValue = parts[1]?.trim();
+				if (argName === "PYTHON" || argName === "GIT" || argName === "VENV_DIR" || argName === "MIOPEN_FIND_MODE" || argName === "MIOPEN_LOG_LEVEL" || argName === "TRITON_OVERRIDE_ARCH" || argName === "COMFYUI_ENABLE_MIOPEN" || argName === "FLASH_ATTENTION_TRITON_AMD_ENABLE" || argName === "PYTORCH_TUNABLEOP_ENABLED" || argName === "PYTORCH_TUNABLEOP_VERBOSE" || argName === "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED") argResult.push({
+					name: argName,
+					value: argValue
+				});
+			}
+		} else if (line.includes("python.exe main.py")) {
+			const clArgs = line.split("python.exe main.py ")[1];
+			if (!clArgs) return;
+			clArgs.split("--").filter(Boolean).map((arg) => {
+				const [id, ...value] = arg.trim().split(" ");
+				return {
+					name: `--${id}`,
+					value: value.join(" ").replace(/"/g, "")
+				};
+			}).forEach((value) => {
+				if (isValidArg(value.name, comfyRocmArguments)) if (getArgumentType(value.name, comfyRocmArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			});
+		}
+	});
+	return argResult;
+}
+const customArguments$1 = [
+	{
+		name: "PYTHON",
+		value: "%~dp0python_env\\python.exe"
+	},
+	{
+		name: "VENV_DIR",
+		value: "./python_env"
+	},
+	{
+		name: "--disable-auto-launch",
+		value: ""
+	},
+	{
+		name: "--use-quad-cross-attention",
+		value: ""
+	},
+	{
+		name: "--disable-triton-backend",
+		value: ""
+	},
+	{
+		name: "--enable-manager",
+		value: ""
+	},
+	{
+		name: "--enable-manager-legacy-ui",
+		value: ""
+	}
+];
+function startInstall$7(stepper) {
+	stepper.initialSteps([
+		"ComfyUI ROCm",
+		"Clone",
+		"Install",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.cloneRepository(URL$1).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.runTerminalScript(dir, "install.bat").then(() => {
+						stepper.setInstalled(dir);
+						stepper.postInstall.config({ customArguments: {
+							presetName: "ROCm Config",
+							customArguments: customArguments$1
+						} });
+						stepper.showFinalStep("success", "ComfyUI-ROCm installation complete!", "All installation steps completed successfully. Your ComfyUI-ROCm environment is now ready for use.");
+					});
+				});
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$1).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.postInstall.config({ customArguments: {
+					presetName: "ROCm Config",
+					customArguments: customArguments$1
+				} });
+				stepper.showFinalStep("success", "ComfyUI-ROCm located successfully!", "Pre-installed ComfyUI-ROCm detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, ["comfyui-rocm.bat", "comfyui-user.bat"]).then((filesExist) => {
+				if (filesExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.postInstall.config({ customArguments: {
+						presetName: "ROCm Config",
+						customArguments: customArguments$1
+					} });
+					stepper.showFinalStep("success", "ComfyUI-ROCm located successfully!", "Pre-installed ComfyUI-ROCm detected. Installation skipped as your existing setup is ready to use. Note: Git repository not detected - updating may not work as expected.");
+				} else stepper.showFinalStep("error", "Unable to locate ComfyUI-ROCm!", "Please ensure you have selected the correct folder containing the ComfyUI-ROCm repository.");
+			});
+		});
+	});
+}
+async function cardInfo$7(api, callback) {
+	return CardInfo(URL$1, "/custom_nodes", api, callback);
+}
+const COMFYUI_ROCM_RM = {
+	catchAddress: catchAddress$3,
+	parseArgsToString: parseArgsToString$1,
+	parseStringToArgs: parseStringToArgs$1,
+	cardInfo: cardInfo$7,
+	manager: {
+		startInstall: startInstall$7,
+		updater: { updateType: "git" }
 	}
 };
 //#endregion
@@ -298,7 +544,7 @@ function parseArgsToString(args) {
 			if (result.line) lines += result.line + "\n";
 			if (result.commandArg) argResult += result.commandArg + " ";
 		} else {
-			if (arg.name === "PYTHON" || arg.name === "GIT" || arg.name === "VENV_DIR" || arg.name === "MIOPEN_FIND_MODE" || arg.name === "MIOPEN_LOG_LEVEL" || arg.name === "ZLUDA_COMGR_LOG_LEVEL" || arg.name === "TRITON_OVERRIDE_ARCH") {
+			if (arg.name === "PYTHON" || arg.name === "GIT" || arg.name === "VENV_DIR" || arg.name === "MIOPEN_FIND_MODE" || arg.name === "MIOPEN_LOG_LEVEL" || arg.name === "ZLUDA_COMGR_LOG_LEVEL" || arg.name === "TRITON_OVERRIDE_ARCH" || arg.name === "PYTORCH_TUNABLEOP_ENABLED" || arg.name === "PYTORCH_TUNABLEOP_VERBOSE" || arg.name === "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED") {
 				envVars[arg.name] = arg.value;
 				return;
 			}
@@ -318,6 +564,9 @@ function parseArgsToString(args) {
 	result += `set "COMMANDLINE_ARGS=${argResult.trim()}"\n\n`;
 	if (envVars.TRITON_OVERRIDE_ARCH !== void 0) result += `set "TRITON_OVERRIDE_ARCH=${envVars.TRITON_OVERRIDE_ARCH}"\n\n`;
 	if (envVars.ZLUDA_COMGR_LOG_LEVEL !== void 0) result += `set "ZLUDA_COMGR_LOG_LEVEL=${envVars.ZLUDA_COMGR_LOG_LEVEL}"\n\n`;
+	if (envVars.PYTORCH_TUNABLEOP_ENABLED !== void 0) result += `set "PYTORCH_TUNABLEOP_ENABLED=${envVars.PYTORCH_TUNABLEOP_ENABLED}"\n`;
+	if (envVars.PYTORCH_TUNABLEOP_VERBOSE !== void 0) result += `set "PYTORCH_TUNABLEOP_VERBOSE=${envVars.PYTORCH_TUNABLEOP_VERBOSE}"\n`;
+	if (envVars.PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED !== void 0) result += `set "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED=${envVars.PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED}"\n\n`;
 	if (lines) result += lines + "\n";
 	return result;
 }
@@ -327,7 +576,7 @@ function parseStringToArgs(args) {
 		if (line.startsWith("set")) {
 			const argName = line.split("=")[0].split(" ")[1].trim();
 			const argValue = line.split("=")[1].trim();
-			if (argName === "PYTHON" || argName === "VENV_DIR" || argName === "ZLUDA_COMGR_LOG_LEVEL") argResult.push({
+			if (argName === "PYTHON" || argName === "GIT" || argName === "VENV_DIR" || argName === "MIOPEN_FIND_MODE" || argName === "MIOPEN_LOG_LEVEL" || argName === "ZLUDA_COMGR_LOG_LEVEL" || argName === "TRITON_OVERRIDE_ARCH" || argName === "PYTORCH_TUNABLEOP_ENABLED" || argName === "PYTORCH_TUNABLEOP_VERBOSE" || argName === "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED") argResult.push({
 				name: argName,
 				value: argValue
 			});
@@ -492,8 +741,31 @@ const invokeArguments = [{
 					name: "ssl_keyfile",
 					description: "SSL key file for HTTPS. See https://www.uvicorn.org/settings/#https.",
 					type: "File"
+				},
+				{
+					name: "base_url",
+					description: "Public base path when running behind a reverse proxy under a sub-path, e.g. /invoke.",
+					type: "Input"
+				},
+				{
+					name: "forwarded_allow_ips",
+					description: "Comma-separated list of IPs (or *) allowed to set X-Forwarded-* headers.",
+					type: "Input",
+					defaultValue: "127.0.0.1"
 				}
 			]
+		},
+		{
+			section: "Multiuser",
+			items: [{
+				name: "multiuser",
+				description: "Enable multiuser support. Requires user authentication and authorization.",
+				type: "CheckBox"
+			}, {
+				name: "strict_password_checking",
+				description: "Enforce strict password requirements in multi-user mode.",
+				type: "CheckBox"
+			}]
 		},
 		{
 			section: "Directories",
@@ -533,6 +805,18 @@ const invokeArguments = [{
 					description: "Path to directory for outputs.",
 					type: "Directory",
 					defaultValue: "outputs"
+				},
+				{
+					name: "image_subfolder_strategy",
+					description: "Strategy for organizing images into subfolders.",
+					type: "DropDown",
+					defaultValue: "flat",
+					values: [
+						"flat",
+						"date",
+						"type",
+						"hash"
+					]
 				},
 				{
 					name: "custom_nodes_dir",
@@ -777,6 +1061,18 @@ const invokeArguments = [{
 					defaultValue: "10000"
 				},
 				{
+					name: "session_queue_mode",
+					description: "Session queue mode. Use 'FIFO' or 'round_robin'.",
+					type: "DropDown",
+					defaultValue: "round_robin",
+					values: ["FIFO", "round_robin"]
+				},
+				{
+					name: "max_queue_history",
+					description: "Keep the last N completed, failed, and canceled queue items on startup. 0 prunes all.",
+					type: "Input"
+				},
+				{
 					name: "clear_queue_on_startup",
 					description: "Empties session queue on startup.",
 					type: "CheckBox"
@@ -843,6 +1139,51 @@ const invokeArguments = [{
 					type: "CheckBox"
 				}
 			]
+		},
+		{
+			section: "External Providers",
+			items: [
+				{
+					name: "external_gemini_api_key",
+					description: "API key for Gemini image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_gemini_base_url",
+					description: "Base URL override for Gemini image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_openai_api_key",
+					description: "API key for OpenAI image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_openai_base_url",
+					description: "Base URL override for OpenAI image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_alibabacloud_api_key",
+					description: "API key for Alibaba Cloud DashScope image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_alibabacloud_base_url",
+					description: "Base URL override for Alibaba Cloud DashScope image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_seedream_api_key",
+					description: "API key for Seedream image generation.",
+					type: "Input"
+				},
+				{
+					name: "external_seedream_base_url",
+					description: "Base URL override for Seedream image generation.",
+					type: "Input"
+				}
+			]
 		}
 	]
 }];
@@ -858,8 +1199,8 @@ async function cardInfo$5(api, callback) {
 const A1_RM = {
 	catchAddress: catchAddress$3,
 	fetchExtensionList,
-	parseArgsToString: parseArgsToString$1,
-	parseStringToArgs: parseStringToArgs$1,
+	parseArgsToString: parseArgsToString$2,
+	parseStringToArgs: parseStringToArgs$2,
 	cardInfo: cardInfo$5,
 	manager: {
 		startInstall: startInstall$5,
@@ -878,8 +1219,8 @@ async function cardInfo$4(api, callback) {
 const SD_FORGE_RM = {
 	catchAddress: catchAddress$3,
 	fetchExtensionList,
-	parseArgsToString: parseArgsToString$1,
-	parseStringToArgs: parseStringToArgs$1,
+	parseArgsToString: parseArgsToString$2,
+	parseStringToArgs: parseStringToArgs$2,
 	cardInfo: cardInfo$4,
 	manager: {
 		startInstall: startInstall$4,
@@ -928,8 +1269,8 @@ async function cardInfo$3(api, callback) {
 const SD_FORGE_AMD_RM = {
 	catchAddress: catchAddress$3,
 	fetchExtensionList,
-	parseArgsToString: parseArgsToString$1,
-	parseStringToArgs: parseStringToArgs$1,
+	parseArgsToString: parseArgsToString$2,
+	parseStringToArgs: parseStringToArgs$2,
 	cardInfo: cardInfo$3,
 	manager: {
 		startInstall: startInstall$3,
@@ -953,8 +1294,8 @@ const imagePage = {
 		{
 			id: COMFYUI_ID,
 			title: "ComfyUI",
-			description: "This ui will let you design and execute advanced stable diffusion pipelines using a graph/nodes/flowchart based interface.",
-			repoUrl: "https://github.com/comfyanonymous/ComfyUI",
+			description: "The most powerful and modular diffusion model GUI and backend with a node interface.",
+			repoUrl: "https://github.com/Comfy-Org/ComfyUI",
 			type: "image",
 			supportCustomArguments: true,
 			arguments: comfyuiArguments,
@@ -964,7 +1305,7 @@ const imagePage = {
 		{
 			id: SD_FORGE_ID,
 			title: "SD Forge",
-			description: "Stable Diffusion WebUI Forge is a platform on top of Stable Diffusion WebUI (based on Gradio) to make development easier, optimize resource management, speed up inference, and study experimental features.The name \"Forge\" is inspired from \"Minecraft Forge\". This project is aimed at becoming SD WebUI's Forge.",
+			description: "Platform built on Stable Diffusion WebUI optimizing resource management and speeding up inference.",
 			repoUrl: "https://github.com/lllyasviel/stable-diffusion-webui-forge",
 			type: "image",
 			supportCustomArguments: true,
@@ -975,7 +1316,7 @@ const imagePage = {
 		{
 			id: INVOKE_ID,
 			title: "InvokeAI",
-			description: "Invoke is a leading creative engine built to empower professionals and enthusiasts alike. Generate and create stunning visual media using the latest AI-driven technologies. Invoke offers an industry leading web-based UI, and serves as the foundation for multiple commercial products.",
+			description: "Leading creative engine empowering professionals and enthusiasts to generate visual media with AI.",
 			repoUrl: "https://github.com/invoke-ai/InvokeAI",
 			type: "image",
 			methods: INVOKE_RM,
@@ -1009,13 +1350,25 @@ const imagePage = {
 		{
 			id: COMFYUI_ZLUDA_ID,
 			title: "ComfyUI Zluda",
-			description: "The most powerful and modular stable diffusion GUI, api and backend with a graph/nodes interface. Now ZLUDA enhanced  for better AMD GPU performance.",
+			description: "Modular stable diffusion GUI with a graph interface, enhanced with ZLUDA for AMD GPUs.",
 			repoUrl: "https://github.com/patientx/ComfyUI-Zluda",
 			extensionsDir: "/custom_nodes",
 			type: "image",
 			supportCustomArguments: true,
 			arguments: comfyuizludaArguments,
 			methods: COMFYUI_ZLUDA_RM,
+			installationType: "git"
+		},
+		{
+			id: COMFYUI_ROCM_ID,
+			title: "ComfyUI ROCm",
+			description: "Modular stable diffusion GUI with a graph interface, enhanced with ROCm for AMD GPUs.",
+			repoUrl: "https://github.com/patientx-cfz/comfyui-rocm",
+			extensionsDir: "/custom_nodes",
+			type: "image",
+			supportCustomArguments: true,
+			arguments: comfyRocmArguments,
+			methods: COMFYUI_ROCM_RM,
 			installationType: "git"
 		},
 		{
@@ -1033,7 +1386,7 @@ const imagePage = {
 		{
 			id: SD_FORGE_AMD_ID,
 			title: "SD Forge AMDGPU",
-			description: "Stable Diffusion WebUI Forge is a platform on top of Stable Diffusion WebUI (based on Gradio) to make development easier, optimize resource management, speed up inference, and study experimental features.The name \"Forge\" is inspired from \"Minecraft Forge\". This project is aimed at becoming SD WebUI's Forge.",
+			description: "Platform built on Stable Diffusion WebUI optimizing resource management and speeding up inference.",
 			repoUrl: "https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu-forge",
 			extensionsDir: "/extensions",
 			type: "image",
@@ -1045,7 +1398,7 @@ const imagePage = {
 		{
 			id: SWARM_ID,
 			title: "SwarmUI",
-			description: "A Modular AI Image Generation Web-User-Interface, with an emphasis on making powertools easily accessible, high performance, and extensibility. Supports Stable Diffusion, Flux, etc. AI image models, with plans to support AI video, audio, and more in the future.",
+			description: "Modular AI image generation WebUI emphasizing accessible powertools, high performance, and extensibility.",
 			repoUrl: "https://github.com/mcmonkeyprojects/SwarmUI",
 			type: "image",
 			extensionsDir: "/src/Extensions",
@@ -1057,7 +1410,7 @@ const imagePage = {
 		{
 			id: SD_UIUX_ID,
 			title: "SD UI-UX",
-			description: "A bespoke, highly adaptable user interface for the Stable Diffusion, utilizing the powerful Gradio library. This cutting-edge browser interface offer an unparalleled level of customization and optimization for users, setting it apart from other web interfaces.",
+			description: "A bespoke, highly adaptable, blazing fast user interface for Stable Diffusion.",
 			repoUrl: "https://github.com/anapnoe/stable-diffusion-webui-ux",
 			type: "image",
 			extensionsDir: "/extensions",
@@ -1066,8 +1419,8 @@ const imagePage = {
 			methods: {
 				catchAddress: catchAddress$3,
 				fetchExtensionList,
-				parseArgsToString: parseArgsToString$1,
-				parseStringToArgs: parseStringToArgs$1,
+				parseArgsToString: parseArgsToString$2,
+				parseStringToArgs: parseStringToArgs$2,
 				cardInfo: cardInfo$2,
 				manager: {
 					startInstall: startInstall$2,
@@ -1090,7 +1443,7 @@ if (!isPagesFixed) imagePage.cards.push({
 }, {
 	id: KOHYA_ID,
 	title: "Kohya's GUI",
-	description: "This repository primarily provides a Gradio GUI for Kohya's Stable Diffusion trainers.The GUI allows you to set the training parameters and generate and run the required CLI commands to train the model.",
+	description: "User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.",
 	repoUrl: "https://github.com/bmaltais/kohya_ss",
 	type: "image",
 	arguments: bmaltaisArguments,
@@ -1099,7 +1452,7 @@ if (!isPagesFixed) imagePage.cards.push({
 }, {
 	id: AITOOLKIT_ID,
 	title: "AI Toolkit",
-	description: "AI Toolkit is an all-in-one training suite for diffusion models. Supports training LoRA models for FLUX.1, Stable Diffusion, and other diffusion models on consumer-grade hardware. Features a web-based UI for easy configuration and monitoring of training jobs.",
+	description: "The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.",
 	repoUrl: "https://github.com/ostris/ai-toolkit",
 	type: "image",
 	supportCustomArguments: true,
@@ -1109,7 +1462,7 @@ if (!isPagesFixed) imagePage.cards.push({
 }, {
 	id: SMARTGALLERY_ID,
 	title: "SmartGallery",
-	description: "A fast, offline-capable gallery for ComfyUI outputs with workflow extraction. Browse and manage your generated images and videos with automatic thumbnail generation, workflow metadata extraction, and advanced filtering. Works independently of ComfyUI.",
+	description: "A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.",
 	repoUrl: "https://github.com/biagiomaf/smart-comfyui-gallery",
 	type: "image",
 	arguments: smartGalleryArguments,
@@ -1119,7 +1472,7 @@ if (!isPagesFixed) imagePage.cards.push({
 }, {
 	id: LORA_MANAGER_ID,
 	title: "ComfyUI LoRA Manager",
-	description: "A comprehensive toolset that streamlines organizing, downloading, and applying LoRA models in ComfyUI. Features recipe management, checkpoint organization, one-click workflow integration, and a browser extension for Civitai. Access the interface at http://localhost:8188/loras",
+	description: "Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.",
 	repoUrl: "https://github.com/willmiao/ComfyUI-Lora-Manager",
 	type: "image",
 	supportCustomArguments: true,
@@ -1140,8 +1493,11 @@ const StarterSteps = [
 function startInstall$1(stepper) {
 	const next = () => stepper.nextStep();
 	const progress = (message) => stepper.progressBar(true, message);
-	const checkNode = () => stepper.ipc.invoke("is_nodejs_installed");
-	const installPackages = (dir) => stepper.executeTerminalCommands("npm i", dir);
+	const checkNode = () => stepper.ipc.invoke("is_boltdiy_nodejs_installed");
+	const installPackages = (dir) => stepper.ipc.invoke("is_boltdiy_npm_version_above_12").then((isAbove12) => {
+		const flags = isAbove12 ? " --allow-remote=all --dangerously-allow-all-scripts" : "";
+		return stepper.executeTerminalCommands(`npm i${flags}`, dir);
+	});
 	const installBolt = () => {
 		stepper.cloneRepository(REPO_URL).then((dir) => {
 			next().then(() => {
@@ -1258,9 +1614,9 @@ const textPage = {
 	cards: [
 		{
 			id: TG_ID,
-			title: "Text Generation",
+			title: "TextGen",
 			description: "A Gradio web UI for Large Language Models.",
-			repoUrl: "https://github.com/oobabooga/text-generation-webui",
+			repoUrl: "https://github.com/oobabooga/textgen",
 			type: "text",
 			extensionsDir: "/extensions",
 			supportCustomArguments: true,
@@ -1271,7 +1627,7 @@ const textPage = {
 		{
 			id: OPEN_WEBUI_ID,
 			title: "Open WebUI",
-			description: "Open WebUI is an extensible, feature-rich, and user-friendly self-hosted WebUI designed to operate entirely offline. It supports various LLM runners, including Ollama and OpenAI-compatible APIs. ",
+			description: "User-friendly, feature-rich self-hosted WebUI for LLMs supporting Ollama and OpenAI APIs.",
 			repoUrl: "https://github.com/open-webui/open-webui",
 			type: "text",
 			methods: OPEN_WEBUI_RM,
@@ -1293,7 +1649,7 @@ const textPage = {
 		{
 			id: SILLYTAVERN_ID,
 			title: "SillyTavern",
-			description: "SillyTavern provides a single unified interface for many LLM APIs, a mobile-friendly layout, Visual Novel Mode, customizable UI, auto-translate, more prompt options than you ever want or need, and endless growth potential via third-party extensions.",
+			description: "LLM frontend for power users with unified API interface, extensions, and customizable UI.",
 			repoUrl: "https://github.com/SillyTavern/SillyTavern",
 			type: "text",
 			supportCustomArguments: true,
@@ -1337,7 +1693,7 @@ const toolsPage = {
 		{
 			id: KOHYA_ID,
 			title: "Kohya's GUI",
-			description: "This repository primarily provides a Gradio GUI for Kohya's Stable Diffusion trainers.The GUI allows you to set the training parameters and generate and run the required CLI commands to train the model.",
+			description: "User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.",
 			repoUrl: "https://github.com/bmaltais/kohya_ss",
 			type: "image",
 			arguments: bmaltaisArguments,
@@ -1347,7 +1703,7 @@ const toolsPage = {
 		{
 			id: AITOOLKIT_ID,
 			title: "AI Toolkit",
-			description: "AI Toolkit is an all-in-one training suite for diffusion models. Supports training LoRA models for FLUX.1, Stable Diffusion, and other diffusion models on consumer-grade hardware. Features a web-based UI for easy configuration and monitoring of training jobs.",
+			description: "The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.",
 			repoUrl: "https://github.com/ostris/ai-toolkit",
 			type: "image",
 			supportCustomArguments: true,
@@ -1358,7 +1714,7 @@ const toolsPage = {
 		{
 			id: SMARTGALLERY_ID,
 			title: "SmartGallery",
-			description: "A fast, offline-capable gallery for ComfyUI outputs with workflow extraction. Browse and manage your generated images and videos with automatic thumbnail generation, workflow metadata extraction, and advanced filtering. Works independently of ComfyUI.",
+			description: "A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.",
 			repoUrl: "https://github.com/biagiomaf/smart-comfyui-gallery",
 			type: "image",
 			arguments: smartGalleryArguments,
@@ -1369,12 +1725,34 @@ const toolsPage = {
 		{
 			id: LORA_MANAGER_ID,
 			title: "ComfyUI LoRA Manager",
-			description: "A comprehensive toolset that streamlines organizing, downloading, and applying LoRA models in ComfyUI. Features recipe management, checkpoint organization, one-click workflow integration, and a browser extension for Civitai. Access the interface at http://localhost:8188/loras",
+			description: "Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.",
 			repoUrl: "https://github.com/willmiao/ComfyUI-Lora-Manager",
 			type: "image",
 			supportCustomArguments: true,
 			arguments: loraManagerArguments,
 			methods: LORA_MANAGER_RM,
+			installationType: "git"
+		},
+		{
+			id: UNSLOTH_STUDIO_ID,
+			title: "Unsloth Studio",
+			description: "An open-source, no-code web UI for training and running LLMs locally.",
+			repoUrl: "https://github.com/unslothai/unsloth",
+			type: "text",
+			supportCustomArguments: true,
+			arguments: unslothStudioArguments,
+			methods: UNSLOTH_STUDIO_RM,
+			installationType: "others"
+		},
+		{
+			id: LLAMA_FACTORY_ID,
+			title: "LLaMA Factory",
+			description: "Unified efficient fine-tuning of 100+ Large Language Models with CLI and Web UI.",
+			repoUrl: "https://github.com/hiyouga/LlamaFactory",
+			type: "text",
+			supportCustomArguments: true,
+			arguments: llamaFactoryArguments,
+			methods: LLAMA_FACTORY_RM,
 			installationType: "git"
 		}
 	]
