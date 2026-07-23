@@ -141,7 +141,7 @@ function startInstall(stepper: InstallationStepper) {
           stepper.showFinalStep('success', "You're All Set!", "Langflow is already installed. You're good to go!");
         } else {
           stepper.nextStep().then(() => {
-            stepper.executeTerminalCommands('pip install langflow').then(() => {
+            stepper.executeTerminalCommands(['pip install uv', 'uv pip install langflow']).then(() => {
               stepper.setInstalled();
               const currentDate = new Date();
               stepper.storage.set(INSTALL_TIME_KEY, currentDate.toLocaleString());
