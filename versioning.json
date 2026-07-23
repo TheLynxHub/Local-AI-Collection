@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "15.0.0",
+      "commit": "9aa9c0f",
+      "engines": {
+        "moduleApi": "^2.1.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "14.2.1",
       "commit": "4085897",
       "engines": {
@@ -83,6 +92,46 @@
     }
   ],
   "changes": [
+    {
+      "version": "15.0.0",
+      "date": "2026-07-23",
+      "items": [
+        {
+          "✨ New": [
+            "Added Unsloth Studio.",
+            "Added ComfyUI ROCm.",
+            "Added Antigravity CLI.",
+            "Added Hermes Agent.",
+            "Added Langflow AI.",
+            "Added LLaMA Factory.",
+            "Added ChatTTS."
+          ]
+        },
+        {
+          "⚡ Improvements": [
+            "Expanded N8N configuration arguments, added MCP settings, and reorganized into modular argument handlers.",
+            "Added new CLI options and environment variables for Flowise (authentication, storage, metrics, and security).",
+            "Enhanced Claude Code argument parsing, tokenization logic, and added new CLI options and settings configuration.",
+            "Updated InvokeAI with new CLI options, multi-user support, expanded image organization strategies, and external provider settings.",
+            "Updated ComfyUI & ComfyUI Zluda with PyTorch TunableOp env vars, updated GPU compatibility options, PyTorch installation URLs, and memory/asset options.",
+            "Added new environment variables and configuration options for OpenWebUI.",
+            "Streamlined AI Toolkit installation process and bumped PyTorch dependencies to 2.9.1.",
+            "Added new CLI flags and environment variable options for Kohya's GUI and SmartGallery.",
+            "Synchronized Antigravity CLI arguments with official docs, added settings.json support, and implemented update detection.",
+            "Enhanced NPM installation check to verify npm version (> 12) and append permission flags.",
+            "Trimmed item descriptions across modules."
+          ]
+        },
+        {
+          "🪲 Bug Fixes": [
+            "Fixed IPC channel name collisions by prefixing module IPC channels."
+          ]
+        },
+        {
+          "📌 Minor Changes": ["Updated repository URLs and project names across modules to official naming formats."]
+        }
+      ]
+    },
     {
       "version": "14.2.1",
       "date": "2026-06-28",
