@@ -201,6 +201,20 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
 }
 
 function catchAddress(input: string): string | undefined {
+  // eslint-disable-next-line no-control-regex
+  const cleanInput = input.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '');
+  if (cleanInput.toLowerCase().includes('[OK] Open Langflow'.toLowerCase())) return undefined;
+  if (cleanInput.toLowerCase().includes('Uvicorn running on'.toLowerCase())) {
+    const match = cleanInput.match(/Uvicorn running on\s+([^\s)]+)/i);
+    if (match) {
+      let url = match[1].replace(/[.,;:)]+$/, '');
+      if (!/^https?:\/\//i.test(url)) {
+        url = `http://${url}`;
+      }
+      return replaceAddress(url);
+    }
+  }
+
   const localhostPatterns = [
     /https?:\/\/localhost(?::\d+)?/i,
     /https?:\/\/127\.0\.0\.1(?::\d+)?/i,
@@ -210,14 +224,9 @@ function catchAddress(input: string): string | undefined {
   ];
 
   for (const pattern of localhostPatterns) {
-    const match = input.match(pattern);
+    const match = cleanInput.match(pattern);
     if (match) {
       return replaceAddress(match[0]);
-    } else if (
-      input.toLowerCase().includes('welcome to langflow') ||
-      input.toLowerCase().includes('langflow server running')
-    ) {
-      return 'http://localhost:7860';
     }
   }
 
