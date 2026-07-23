@@ -56,9 +56,7 @@ const imagePage: PagesData = {
     {
       id: COMFYUI_ID,
       title: 'ComfyUI',
-      description:
-        'This ui will let you design and execute advanced stable diffusion pipelines' +
-        ' using a graph/nodes/flowchart based interface.',
+      description: 'The most powerful and modular diffusion model GUI and backend with a node interface.',
       repoUrl: 'https://github.com/Comfy-Org/ComfyUI',
       type: 'image',
       supportCustomArguments: true,
@@ -69,10 +67,7 @@ const imagePage: PagesData = {
     {
       id: SD_FORGE_ID,
       title: 'SD Forge',
-      description:
-        'Stable Diffusion WebUI Forge is a platform on top of Stable Diffusion WebUI (based on Gradio)' +
-        ' to make development easier, optimize resource management, speed up inference, and study experimental features.' +
-        'The name "Forge" is inspired from "Minecraft Forge". This project is aimed at becoming SD WebUI\'s Forge.',
+      description: 'Platform built on Stable Diffusion WebUI optimizing resource management and speeding up inference.',
       repoUrl: 'https://github.com/lllyasviel/stable-diffusion-webui-forge',
       type: 'image',
       supportCustomArguments: true,
@@ -83,10 +78,7 @@ const imagePage: PagesData = {
     {
       id: INVOKE_ID,
       title: 'InvokeAI',
-      description:
-        'Invoke is a leading creative engine built to empower professionals and enthusiasts alike. Generate and create' +
-        ' stunning visual media using the latest AI-driven technologies. Invoke offers an industry leading web-based UI,' +
-        ' and serves as the foundation for multiple commercial products.',
+      description: 'Leading creative engine empowering professionals and enthusiasts to generate visual media with AI.',
       repoUrl: 'https://github.com/invoke-ai/InvokeAI',
       type: 'image',
       methods: INVOKE_RM,
@@ -120,9 +112,7 @@ const imagePage: PagesData = {
     {
       id: COMFYUI_ZLUDA_ID,
       title: 'ComfyUI Zluda',
-      description:
-        'The most powerful and modular stable diffusion GUI, api and backend with a graph/nodes interface.' +
-        ' Now ZLUDA enhanced  for better AMD GPU performance.',
+      description: 'Modular stable diffusion GUI with a graph interface, enhanced with ZLUDA for AMD GPUs.',
       repoUrl: 'https://github.com/patientx/ComfyUI-Zluda',
       extensionsDir: '/custom_nodes',
       type: 'image',
@@ -134,9 +124,7 @@ const imagePage: PagesData = {
     {
       id: COMFYUI_ROCM_ID,
       title: 'ComfyUI ROCm',
-      description:
-        'The most powerful and modular stable diffusion GUI, api and backend with a graph/nodes interface.' +
-        ' Enhanced with ROCm support for AMD GPUs.',
+      description: 'Modular stable diffusion GUI with a graph interface, enhanced with ROCm for AMD GPUs.',
       repoUrl: 'https://github.com/patientx-cfz/comfyui-rocm',
       extensionsDir: '/custom_nodes',
       type: 'image',
@@ -160,10 +148,7 @@ const imagePage: PagesData = {
     {
       id: SD_FORGE_AMD_ID,
       title: 'SD Forge AMDGPU',
-      description:
-        'Stable Diffusion WebUI Forge is a platform on top of Stable Diffusion WebUI (based on Gradio)' +
-        ' to make development easier, optimize resource management, speed up inference, and study experimental features.' +
-        'The name "Forge" is inspired from "Minecraft Forge". This project is aimed at becoming SD WebUI\'s Forge.',
+      description: 'Platform built on Stable Diffusion WebUI optimizing resource management and speeding up inference.',
       repoUrl: 'https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu-forge',
       extensionsDir: '/extensions',
       type: 'image',
@@ -176,9 +161,7 @@ const imagePage: PagesData = {
       id: SWARM_ID,
       title: 'SwarmUI',
       description:
-        'A Modular AI Image Generation Web-User-Interface, with an emphasis on making powertools ' +
-        'easily accessible, high performance, and extensibility. Supports Stable Diffusion, Flux, ' +
-        'etc. AI image models, with plans to support AI video, audio, and more in the future.',
+        'Modular AI image generation WebUI emphasizing accessible powertools, high performance, and extensibility.',
       repoUrl: 'https://github.com/mcmonkeyprojects/SwarmUI',
       type: 'image',
       extensionsDir: '/src/Extensions',
@@ -190,10 +173,7 @@ const imagePage: PagesData = {
     {
       id: SD_UIUX_ID,
       title: 'SD UI-UX',
-      description:
-        'A bespoke, highly adaptable user interface for the Stable Diffusion, utilizing the powerful Gradio library.' +
-        ' This cutting-edge browser interface offer an unparalleled level of customization and optimization for users,' +
-        ' setting it apart from other web interfaces.',
+      description: 'A bespoke, highly adaptable, blazing fast user interface for Stable Diffusion.',
       repoUrl: 'https://github.com/anapnoe/stable-diffusion-webui-ux',
       type: 'image',
       extensionsDir: '/extensions',
@@ -220,9 +200,7 @@ if (!isPagesFixed) {
     {
       id: KOHYA_ID,
       title: "Kohya's GUI",
-      description:
-        "This repository primarily provides a Gradio GUI for Kohya's Stable Diffusion trainers." +
-        'The GUI allows you to set the training parameters and generate and run the required CLI commands to train the model.',
+      description: 'User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.',
       repoUrl: 'https://github.com/bmaltais/kohya_ss',
       type: 'image',
       arguments: bmaltaisArguments,
@@ -232,10 +210,7 @@ if (!isPagesFixed) {
     {
       id: AITOOLKIT_ID,
       title: 'AI Toolkit',
-      description:
-        'AI Toolkit is an all-in-one training suite for diffusion models. Supports training LoRA models for FLUX.1, ' +
-        'Stable Diffusion, and other diffusion models on consumer-grade hardware. Features a web-based UI for easy ' +
-        'configuration and monitoring of training jobs.',
+      description: 'The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.',
       repoUrl: 'https://github.com/ostris/ai-toolkit',
       type: 'image',
       supportCustomArguments: true,
@@ -246,10 +221,7 @@ if (!isPagesFixed) {
     {
       id: SMARTGALLERY_ID,
       title: 'SmartGallery',
-      description:
-        'A fast, offline-capable gallery for ComfyUI outputs with workflow extraction. Browse and manage your ' +
-        'generated images and videos with automatic thumbnail generation, workflow metadata extraction, and ' +
-        'advanced filtering. Works independently of ComfyUI.',
+      description: 'A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.',
       repoUrl: 'https://github.com/biagiomaf/smart-comfyui-gallery',
       type: 'image',
       arguments: smartGalleryArguments,
@@ -261,9 +233,7 @@ if (!isPagesFixed) {
       id: LORA_MANAGER_ID,
       title: 'ComfyUI LoRA Manager',
       description:
-        'A comprehensive toolset that streamlines organizing, downloading, and applying LoRA models in ComfyUI. ' +
-        'Features recipe management, checkpoint organization, one-click workflow integration, and a browser extension ' +
-        'for Civitai. Access the interface at http://localhost:8188/loras',
+        'Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.',
       repoUrl: 'https://github.com/willmiao/ComfyUI-Lora-Manager',
       type: 'image',
       supportCustomArguments: true,

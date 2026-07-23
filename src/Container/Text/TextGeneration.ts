@@ -27,10 +27,7 @@ const textPage: PagesData = {
     {
       id: OPEN_WEBUI_ID,
       title: 'Open WebUI',
-      description:
-        'Open WebUI is an extensible, feature-rich, and user-friendly self-hosted ' +
-        'WebUI designed to operate entirely offline. It supports various LLM runners,' +
-        ' including Ollama and OpenAI-compatible APIs. ',
+      description: 'User-friendly, feature-rich self-hosted WebUI for LLMs supporting Ollama and OpenAI APIs.',
       repoUrl: 'https://github.com/open-webui/open-webui',
       type: 'text',
       methods: OPEN_WEBUI_RM,
@@ -52,10 +49,7 @@ const textPage: PagesData = {
     {
       id: SILLYTAVERN_ID,
       title: 'SillyTavern',
-      description:
-        'SillyTavern provides a single unified interface for many LLM APIs, a mobile-friendly layout,' +
-        ' Visual Novel Mode, customizable UI, auto-translate, more prompt options than you' +
-        ' ever want or need, and endless growth potential via third-party extensions.',
+      description: 'LLM frontend for power users with unified API interface, extensions, and customizable UI.',
       repoUrl: 'https://github.com/SillyTavern/SillyTavern',
       type: 'text',
       supportCustomArguments: true,

@@ -40,9 +40,7 @@ const toolsPage: PagesData = {
     {
       id: KOHYA_ID,
       title: "Kohya's GUI",
-      description:
-        "This repository primarily provides a Gradio GUI for Kohya's Stable Diffusion trainers." +
-        'The GUI allows you to set the training parameters and generate and run the required CLI commands to train the model.',
+      description: 'User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.',
       repoUrl: 'https://github.com/bmaltais/kohya_ss',
       type: 'image',
       arguments: bmaltaisArguments,
@@ -52,10 +50,7 @@ const toolsPage: PagesData = {
     {
       id: AITOOLKIT_ID,
       title: 'AI Toolkit',
-      description:
-        'AI Toolkit is an all-in-one training suite for diffusion models. Supports training LoRA models for FLUX.1, ' +
-        'Stable Diffusion, and other diffusion models on consumer-grade hardware. Features a web-based UI for easy ' +
-        'configuration and monitoring of training jobs.',
+      description: 'The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.',
       repoUrl: 'https://github.com/ostris/ai-toolkit',
       type: 'image',
       supportCustomArguments: true,
@@ -66,10 +61,7 @@ const toolsPage: PagesData = {
     {
       id: SMARTGALLERY_ID,
       title: 'SmartGallery',
-      description:
-        'A fast, offline-capable gallery for ComfyUI outputs with workflow extraction. Browse and manage your ' +
-        'generated images and videos with automatic thumbnail generation, workflow metadata extraction, and ' +
-        'advanced filtering. Works independently of ComfyUI.',
+      description: 'A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.',
       repoUrl: 'https://github.com/biagiomaf/smart-comfyui-gallery',
       type: 'image',
       arguments: smartGalleryArguments,
@@ -81,9 +73,7 @@ const toolsPage: PagesData = {
       id: LORA_MANAGER_ID,
       title: 'ComfyUI LoRA Manager',
       description:
-        'A comprehensive toolset that streamlines organizing, downloading, and applying LoRA models in ComfyUI. ' +
-        'Features recipe management, checkpoint organization, one-click workflow integration, and a browser extension ' +
-        'for Civitai. Access the interface at http://localhost:8188/loras',
+        'Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.',
       repoUrl: 'https://github.com/willmiao/ComfyUI-Lora-Manager',
       type: 'image',
       supportCustomArguments: true,
@@ -94,9 +84,7 @@ const toolsPage: PagesData = {
     {
       id: UNSLOTH_STUDIO_ID,
       title: 'Unsloth Studio',
-      description:
-        'Unsloth Studio is an open-source, no-code web UI designed for training, running, and exporting AI models locally. ' +
-        'Train 500+ models up to 2x faster with 70% less VRAM on NVIDIA and AMD GPUs across Windows, Linux, and macOS.',
+      description: 'An open-source, no-code web UI for training and running LLMs locally.',
       repoUrl: 'https://github.com/unslothai/unsloth',
       type: 'text',
       supportCustomArguments: true,
@@ -107,8 +95,7 @@ const toolsPage: PagesData = {
     {
       id: LLAMA_FACTORY_ID,
       title: 'LLaMA Factory',
-      description:
-        'Unified Efficient Fine-Tuning of 100+ Large Language Models with zero-code CLI and Gradio Web UI (LLaMA Board).',
+      description: 'Unified efficient fine-tuning of 100+ Large Language Models with CLI and Web UI.',
       repoUrl: 'https://github.com/hiyouga/LlamaFactory',
       type: 'text',
       supportCustomArguments: true,

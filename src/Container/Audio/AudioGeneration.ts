@@ -13,9 +13,7 @@ const audioPage: PagesData = {
     {
       id: TTS_ID,
       title: 'TTS WebUI',
-      description:
-        'TTS Generation Web UI (Bark, MusicGen + AudioGen, Tortoise, RVC, Vocos,' +
-        ' Demucs, SeamlessM4T, MAGNet, StyleTTS2, MMS)',
+      description: 'A unified WebUI for speech synthesis, voice conversion, audio generation, and music models.',
       repoUrl: 'https://github.com/rsxdalv/TTS-WebUI',
       type: 'audio',
       extensionsDir: '/extensions',
@@ -37,11 +35,7 @@ const audioPage: PagesData = {
     {
       id: ALLTALK_ID,
       title: 'AllTalk TTS',
-      description:
-        'AllTalk is based on the Coqui TTS engine, similar to the Coqui_tts extension for Text generation webUI, ' +
-        'however supports a variety of advanced features, such as a settings page, low VRAM support, DeepSpeed, ' +
-        'narrator, model finetuning, custom models, wav file maintenance. It can also be used with 3rd Party ' +
-        'software via JSON calls.',
+      description: 'Advanced text-to-speech engine based on Coqui TTS with low VRAM support and voice cloning.',
       repoUrl: 'https://github.com/erew123/alltalk_tts',
       type: 'audio',
       methods: ALLTALK_RM,
@@ -59,9 +53,7 @@ const audioPage: PagesData = {
     {
       id: CHAT_TTS_ID,
       title: 'ChatTTS',
-      description:
-        'A generative speech model for daily dialogue scenarios such as LLM assistants, ' +
-        'supporting conversational TTS with fine-grained prosodic control.',
+      description: 'Generative speech model for daily dialogue scenarios supporting conversational TTS.',
       repoUrl: 'https://github.com/2noise/ChatTTS',
       type: 'audio',
       methods: CHAT_TTS_RM,

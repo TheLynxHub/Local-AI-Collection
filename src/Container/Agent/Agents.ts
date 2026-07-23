@@ -40,8 +40,7 @@ const agentsPage: PagesData = {
     {
       id: LANGFLOW_ID,
       title: 'Langflow',
-      description:
-        'Visual framework for building and deploying AI-powered agents and workflows with multi-agent orchestration.',
+      description: 'Visual framework for building and deploying AI-powered agents and workflows.',
       repoUrl: 'https://github.com/langflow-ai/langflow',
       type: 'text',
       supportCustomArguments: true,
@@ -72,9 +71,7 @@ const agentsPage: PagesData = {
     {
       id: ANTIGRAVITY_CLI_ID,
       title: 'Antigravity CLI',
-      description:
-        'Google terminal AI agent bringing multi-step reasoning, ' +
-        'multi-file editing, and tool calling to your terminal.',
+      description: 'Google terminal AI agent bringing multi-step reasoning, multi-file editing, and tool calling.',
       repoUrl: 'https://github.com/google-antigravity/antigravity-cli',
       type: 'text',
       arguments: antigravityCliArguments,
@@ -84,9 +81,7 @@ const agentsPage: PagesData = {
     {
       id: HERMES_AGENT_ID,
       title: 'Hermes Agent',
-      description:
-        'The self-improving AI agent built by Nous Research with built-in learning loop ' +
-        'and cross-platform continuity.',
+      description: 'Self-improving AI agent built by Nous Research with a built-in learning loop.',
       repoUrl: 'https://github.com/nousresearch/hermes-agent',
       type: 'text',
       supportCustomArguments: true,
@@ -97,9 +92,7 @@ const agentsPage: PagesData = {
     {
       id: N8N_ID,
       title: 'N8N',
-      description:
-        'Fair-code workflow automation platform with native AI capabilities. ' +
-        'Combine visual building with custom code, self-host or cloud, 400+ integrations.',
+      description: 'Fair-code workflow automation platform with native AI capabilities and 400+ integrations.',
       repoUrl: 'https://github.com/n8n-io/n8n',
       type: 'text',
       supportCustomArguments: true,
