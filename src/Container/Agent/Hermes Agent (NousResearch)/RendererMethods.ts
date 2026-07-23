@@ -280,7 +280,7 @@ function startInstall(stepper: InstallationStepper) {
         } else {
           stepper.nextStep().then(() => {
             const installCommand = isWin
-              ? 'powershell -Command "iex (irm https://hermes-agent.nousresearch.com/install.ps1)"'
+              ? 'iex (irm https://hermes-agent.nousresearch.com/install.ps1)'
               : 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash';
             stepper.executeTerminalCommands(installCommand).then(() => {
               stepper.setInstalled();
