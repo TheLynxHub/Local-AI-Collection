@@ -1,8 +1,8 @@
 <div align="center">
 
-<img height="110" src="https://raw.githubusercontent.com/KindaBrazy/LynxHub/refs/heads/master/resources/icon.png">
+<img height="110" src="https://raw.githubusercontent.com/TheLynxHub/LynxHub/refs/heads/master/resources/icon.png">
 
-# [LynxHub](https://github.com/KindaBrazy/LynxHub) Local AI Collection
+# [LynxHub](https://github.com/TheLynxHub/LynxHub) Local AI Collection
 
 A collection of local AI tools with **full support** for **arguments**, **configurations**, and **extensions**.
 
@@ -61,4 +61,4 @@ A collection of local AI tools with **full support** for **arguments**, **config
 
 ## 💡 Request a Module
 
-If you need or want a specific AI tool, model, interface, or agent that is not currently available, please [open an issue](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container/issues/new). Specify what you need, and I will add it as soon as possible!
+If you need or want a specific AI tool, model, interface, or agent that is not currently available, please [open an issue](https://github.com/TheLynxHub/Local-AI-Collection/issues/new). Specify what you need, and I will add it as soon as possible!
