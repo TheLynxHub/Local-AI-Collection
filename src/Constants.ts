@@ -38,3 +38,4 @@ export const TTS_ID = 'Rsxdalv_AG';
 export const AG_ID = 'Gitmylo_AG';
 export const APPLIO_ID = 'IAHispano_Applio';
 export const CHAT_TTS_ID = 'ChatTTS_2Noise';
+export const VOICE_STUDIO_ID = 'Debpalash_VoiceStudio';

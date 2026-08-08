@@ -1,11 +1,13 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {AG_ID, ALLTALK_ID, APPLIO_ID, CHAT_TTS_ID, TTS_ID} from '../../Constants';
+import {AG_ID, ALLTALK_ID, APPLIO_ID, CHAT_TTS_ID, TTS_ID, VOICE_STUDIO_ID} from '../../Constants';
 import ALLTALK_RM from './AllTalk TTS (erew123)/RendererMethods';
 import APPLIO_RM from './Applio/RendererMethods';
 import gitmyloArguments from './Audio Generation (gitmylo)/Arguments';
 import AG_RM from './Audio Generation (gitmylo)/RendererMethods';
 import CHAT_TTS_RM from './ChatTTS (2noise)/RendererMethods';
 import TTS_RM from './Text to Speech (rsxdalv)/RendererMethods';
+import voiceStudioArguments from './VoiceStudio (debpalash)/Arguments';
+import VOICE_STUDIO_RM from './VoiceStudio (debpalash)/RendererMethods';
 
 const audioPage: PagesData = {
   routePath: 'audioGen_page',
@@ -57,6 +59,20 @@ const audioPage: PagesData = {
       repoUrl: 'https://github.com/2noise/ChatTTS',
       type: 'audio',
       methods: CHAT_TTS_RM,
+      installationType: 'git',
+    },
+    {
+      id: VOICE_STUDIO_ID,
+      title: 'VoiceStudio',
+      description:
+        'The open-source ElevenLabs alternative AI Voice Clone, Dub, Dictate, Transcribe, Audiobook creator ' +
+        'and Voice workflow studio.',
+
+      repoUrl: 'https://github.com/debpalash/VoiceStudio',
+      type: 'audio',
+      supportCustomArguments: true,
+      arguments: voiceStudioArguments,
+      methods: VOICE_STUDIO_RM,
       installationType: 'git',
     },
   ],

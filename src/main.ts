@@ -35,6 +35,7 @@ import {
   TG_ID,
   TTS_ID,
   UNSLOTH_STUDIO_ID,
+  VOICE_STUDIO_ID,
 } from './Constants';
 import AntigravityCli_MM from './Container/Agent/Antigravity CLI/MainMethods';
 import ClaudeCode_MM from './Container/Agent/Claude Code/MainMethods';
@@ -48,6 +49,7 @@ import Applio_MM from './Container/Audio/Applio/MainMethods';
 import Gitmylo_MM from './Container/Audio/Audio Generation (gitmylo)/MainMethods';
 import ChatTTS_MM from './Container/Audio/ChatTTS (2noise)/MainMethods';
 import Rsx_MM from './Container/Audio/Text to Speech (rsxdalv)/MainMethods';
+import VoiceStudio_MM from './Container/Audio/VoiceStudio (debpalash)/MainMethods';
 import Comfy_MM from './Container/Image/ComfyUI (comfyanonymous)/MainMethods';
 import ComfyRocm_MM from './Container/Image/ComfyUI ROCm (patientx)/MainMethods';
 import ComfyZluda_MM from './Container/Image/ComfyUI Zluda (patientx)/MainMethods';
@@ -108,6 +110,7 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: HERMES_AGENT_ID, methods: () => HermesAgent_MM(utils)},
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
     {id: CHAT_TTS_ID, methods: () => ChatTTS_MM(utils)},
+    {id: VOICE_STUDIO_ID, methods: () => VoiceStudio_MM(utils)},
     {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
     {id: LLAMA_FACTORY_ID, methods: () => LlamaFactory_MM(utils)},
   ];
