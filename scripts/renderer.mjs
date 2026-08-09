@@ -1,4 +1,4 @@
-import { $ as INVOKE_RM, $t as getPythonCommandByOs, A as SILLYTAVERN_RM, An as SD_FORGE_AMD_ID, At as geminiCliArguments, B as mcMonkeyArguments, Bt as AntigravityCli_RM, Cn as LLAMA_FACTORY_ID, Ct as HermesAgent_RM, Dn as ONETRAINER_ID, Dt as GeminiCli_RM, E as TG_RM, En as N8N_ID, Et as hermesAgentArguments, Fn as SMARTGALLERY_ID, Ft as flowiseArguments, G as SD_AMD_RM, Gt as GitInstaller, In as SWARM_ID, It as ClaudeCode_RM, J as lshqqytigerArguments, Jt as isPagesFixed, Kt as catchAddress$3, L as SWARM_RM, Ln as TG_ID, Mn as SD_NEXT_ID, Mt as Flow_RM, N as sillyArguments, Nn as SD_UIUX_ID, On as OPEN_WEBUI_ID, P as OPEN_WEBUI_RM, Pn as SILLYTAVERN_ID, Q as automatic1111Arguments, Rn as TTS_ID, S as AITOOLKIT_RM, Sn as LANGFLOW_ID, St as langflowArguments, T as aiToolkitArguments, Tn as LoLLMS_ID, Ut as antigravityCliArguments, V as SD_NEXT_RM, W as vladmandicArguments, Wt as CardInfo, X as parseArgsToString$2, Xt as cloneDeep, Y as fetchExtensionList, Yt as isValidArg, Z as parseStringToArgs$2, _ as bmaltaisArguments, _n as FLOWISEAI_ID, a as unslothStudioArguments, an as A1_ID, at as comfyuizludaArguments, bn as INVOKE_ID, cn as ALLTALK_ID, dn as BOLT_DIY_ID, dt as AG_RM, fn as CHAT_TTS_ID, gn as COMFYUI_ZLUDA_ID, hn as COMFYUI_ROCM_ID, ht as N8N_RM, jn as SD_FORGE_ID, jt as openArguments, k as oobaboogaArguments, kn as SD_AMD_ID, l as smartGalleryArguments, ln as ANTIGRAVITY_CLI_ID, m as KOHYA_GUI_RM, mn as COMFYUI_ID, mt as gitmyloArguments, n as UNSLOTH_STUDIO_RM, nn as isWin, o as SMARTGALLERY_RM, on as AG_ID, ot as comfyRocmArguments, p as llamaFactoryArguments, pn as CLAUDE_CODE_ID, qt as getArgumentType, rn as parseCustomArg, sn as AITOOLKIT_ID, st as COMFYUI_RM, u as LLAMA_FACTORY_RM, un as APPLIO_ID, ut as comfyuiArguments, v as LORA_MANAGER_RM, vn as GeminiCli_ID, vt as n8nArguments, wn as LORA_MANAGER_ID, x as loraManagerArguments, xn as KOHYA_ID, yn as HERMES_AGENT_ID, yt as Langflow_RM, zn as UNSLOTH_STUDIO_ID, zt as claudeCodeArguments } from "./RendererMethods_CeNZh3.mjs";
+import { $ as INVOKE_RM, $t as isValidArg, A as SILLYTAVERN_RM, An as N8N_ID, At as hermesAgentArguments, B as mcMonkeyArguments, Bn as SWARM_ID, Bt as ClaudeCode_RM, Cn as HERMES_AGENT_ID, Ct as Langflow_RM, Dn as LLAMA_FACTORY_ID, Dt as HermesAgent_RM, E as TG_RM, En as LANGFLOW_ID, Et as langflowArguments, Fn as SD_FORGE_ID, Ft as openArguments, G as SD_AMD_RM, Hn as TTS_ID, In as SD_NEXT_ID, It as Flow_RM, J as lshqqytigerArguments, Jt as CardInfo, L as SWARM_RM, Ln as SD_UIUX_ID, Mn as OPEN_WEBUI_ID, N as sillyArguments, Nn as SD_AMD_ID, On as LORA_MANAGER_ID, P as OPEN_WEBUI_RM, Pn as SD_FORGE_AMD_ID, Pt as geminiCliArguments, Q as automatic1111Arguments, Qt as isPagesFixed, Rn as SILLYTAVERN_ID, S as AITOOLKIT_RM, Sn as GeminiCli_ID, St as n8nArguments, T as aiToolkitArguments, Tn as KOHYA_ID, Un as UNSLOTH_STUDIO_ID, Ut as claudeCodeArguments, V as SD_NEXT_RM, Vn as TG_ID, W as vladmandicArguments, Wn as VOICE_STUDIO_ID, Wt as AntigravityCli_RM, X as parseArgsToString$2, Xt as catchAddress$3, Y as fetchExtensionList, Yt as GitInstaller, Z as parseStringToArgs$2, Zt as getArgumentType, _ as bmaltaisArguments, _n as CLAUDE_CODE_ID, a as unslothStudioArguments, at as comfyuizludaArguments, bn as COMFYUI_ZLUDA_ID, dn as AITOOLKIT_ID, dt as VOICE_STUDIO_RM, en as cloneDeep, fn as ALLTALK_ID, gn as CHAT_TTS_ID, hn as BOLT_DIY_ID, ht as AG_RM, jn as ONETRAINER_ID, jt as GeminiCli_RM, k as oobaboogaArguments, kn as LoLLMS_ID, l as smartGalleryArguments, ln as A1_ID, m as KOHYA_GUI_RM, mn as APPLIO_ID, mt as voiceStudioArguments, n as UNSLOTH_STUDIO_RM, o as SMARTGALLERY_RM, on as isWin, ot as comfyRocmArguments, p as llamaFactoryArguments, pn as ANTIGRAVITY_CLI_ID, qt as antigravityCliArguments, rn as getPythonCommandByOs, sn as parseCustomArg, st as COMFYUI_RM, u as LLAMA_FACTORY_RM, un as AG_ID, ut as comfyuiArguments, v as LORA_MANAGER_RM, vn as COMFYUI_ID, vt as gitmyloArguments, wn as INVOKE_ID, x as loraManagerArguments, xn as FLOWISEAI_ID, yn as COMFYUI_ROCM_ID, yt as N8N_RM, zn as SMARTGALLERY_ID, zt as flowiseArguments } from "./RendererMethods_Bnfi7l.mjs";
 //#region module/src/Container/Agent/Agents.ts
 const agentsPage = {
 	routePath: "agents_page",
@@ -312,6 +312,17 @@ const audioPage = {
 			type: "audio",
 			methods: CHAT_TTS_RM,
 			installationType: "git"
+		},
+		{
+			id: VOICE_STUDIO_ID,
+			title: "VoiceStudio",
+			description: "The open-source ElevenLabs alternative AI Voice Clone, Dub, Dictate, Transcribe, Audiobook creator and Voice workflow studio.",
+			repoUrl: "https://github.com/debpalash/VoiceStudio",
+			type: "audio",
+			supportCustomArguments: true,
+			arguments: voiceStudioArguments,
+			methods: VOICE_STUDIO_RM,
+			installationType: "git"
 		}
 	]
 };
@@ -430,14 +441,16 @@ function parseStringToArgs$1(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, comfyRocmArguments)) if (getArgumentType(value.name, comfyRocmArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, comfyRocmArguments)) {
+					if (getArgumentType(value.name, comfyRocmArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		}
 	});
@@ -590,14 +603,16 @@ function parseStringToArgs(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, comfyuizludaArguments)) if (getArgumentType(value.name, comfyuizludaArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, comfyuizludaArguments)) {
+					if (getArgumentType(value.name, comfyuizludaArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		}
 	});

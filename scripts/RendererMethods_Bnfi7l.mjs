@@ -34,6 +34,7 @@ const TTS_ID = "Rsxdalv_AG";
 const AG_ID = "Gitmylo_AG";
 const APPLIO_ID = "IAHispano_Applio";
 const CHAT_TTS_ID = "ChatTTS_2Noise";
+const VOICE_STUDIO_ID = "Debpalash_VoiceStudio";
 //#endregion
 //#region module/src/Utils/CrossUtils.ts
 function detectIsWin() {
@@ -61,9 +62,9 @@ function getPythonCommandByOs() {
 }
 function formatSize(size) {
 	if (!size) return "0KB";
-	if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
-	else if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-	else return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+	if (size < 1048576) return `${(size / 1024).toFixed(2)} KB`;
+	else if (size < 1073741824) return `${(size / 1048576).toFixed(2)} MB`;
+	else return `${(size / 1073741824).toFixed(2)} GB`;
 }
 var DescriptionManager = class {
 	description;
@@ -172,8 +173,10 @@ function getRawTag(value) {
 		var unmasked = true;
 	} catch (e) {}
 	var result = nativeObjectToString$1.call(value);
-	if (unmasked) if (isOwn) value[symToStringTag$1] = tag;
-	else delete value[symToStringTag$1];
+	if (unmasked) {
+		if (isOwn) value[symToStringTag$1] = tag;
+		else delete value[symToStringTag$1];
+	}
 	return result;
 }
 //#endregion
@@ -2516,10 +2519,7 @@ function parseArgsToFiles$4(args) {
 			case "Command Line Arguments":
 				cliArgs.push(arg);
 				break;
-			case "Settings":
-				settingsArgs.push(arg);
-				break;
-			default: break;
+			case "Settings": settingsArgs.push(arg);
 		}
 	});
 	let scriptString = "";
@@ -2561,7 +2561,7 @@ function parseArgsToFiles$4(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$22(args) {
+function parseArgsToString$23(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$4(args);
 	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
 	if (!isEmpty(scriptData)) scriptPreview += scriptData;
@@ -2572,7 +2572,7 @@ function parseArgsToString$22(args) {
 	return `${scriptPreview}${settingsPreview}`;
 }
 function parseFilesToArgs$4(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$22(scriptContent);
+	const scriptArgs = parseStringToArgs$23(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -2605,7 +2605,7 @@ function parseFilesToArgs$4(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$22(data) {
+function parseStringToArgs$23(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -2661,7 +2661,7 @@ function parseStringToArgs$22(data) {
 	});
 	return argResult;
 }
-function startInstall$21(stepper) {
+function startInstall$22(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Detect Existing",
@@ -2690,7 +2690,7 @@ function startInstall$21(stepper) {
 		});
 	});
 }
-function startUpdate$9(stepper) {
+function startUpdate$10(stepper) {
 	stepper.initialSteps(["Update Antigravity CLI", "Complete Update"]);
 	stepper.executeTerminalCommands("agy update").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -2699,7 +2699,7 @@ function startUpdate$9(stepper) {
 		stepper.showFinalStep("success", "Antigravity CLI Updated Successfully!", "Antigravity CLI has been updated to the latest available version.");
 	});
 }
-async function cardInfo$21(api, callback) {
+async function cardInfo$22(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -2736,14 +2736,14 @@ async function cardInfo$21(api, callback) {
 	});
 }
 const AntigravityCli_RM = {
-	cardInfo: cardInfo$21,
-	parseStringToArgs: parseStringToArgs$22,
-	parseArgsToString: parseArgsToString$22,
+	cardInfo: cardInfo$22,
+	parseStringToArgs: parseStringToArgs$23,
+	parseArgsToString: parseArgsToString$23,
 	manager: {
-		startInstall: startInstall$21,
+		startInstall: startInstall$22,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$9
+			startUpdate: startUpdate$10
 		}
 	}
 };
@@ -3261,10 +3261,7 @@ function parseArgsToFiles$3(args) {
 			case "Command Line Arguments":
 				cliArgs.push(arg);
 				break;
-			case "Settings":
-				settingsArgs.push(arg);
-				break;
-			default: break;
+			case "Settings": settingsArgs.push(arg);
 		}
 		else if (arg.name === "Settings File Location") {}
 	});
@@ -3324,7 +3321,7 @@ function parseArgsToFiles$3(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$21(args) {
+function parseArgsToString$22(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$3(args);
 	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
 	if (!isEmpty(scriptData)) scriptPreview += scriptData;
@@ -3335,7 +3332,7 @@ function parseArgsToString$21(args) {
 	return `${scriptPreview}${settingsPreview}`;
 }
 function parseFilesToArgs$3(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$21(scriptContent);
+	const scriptArgs = parseStringToArgs$22(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -3368,7 +3365,7 @@ function parseFilesToArgs$3(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$21(data) {
+function parseStringToArgs$22(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -3424,7 +3421,7 @@ function parseStringToArgs$21(data) {
 	});
 	return argResult;
 }
-function startInstall$20(stepper) {
+function startInstall$21(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Detect Existing",
@@ -3453,7 +3450,7 @@ function startInstall$20(stepper) {
 		});
 	});
 }
-function startUpdate$8(stepper) {
+function startUpdate$9(stepper) {
 	stepper.initialSteps(["Update Claude Code", "Complete Update"]);
 	const installCommand = isWin ? "irm https://claude.ai/install.ps1 | iex" : "curl -fsSL https://claude.ai/install.sh | bash";
 	stepper.executeTerminalCommands(installCommand).then(() => {
@@ -3463,7 +3460,7 @@ function startUpdate$8(stepper) {
 		stepper.showFinalStep("success", "Claude Code Updated Successfully!", "Claude Code has been updated to the latest available version.");
 	});
 }
-async function cardInfo$20(api, callback) {
+async function cardInfo$21(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -3493,14 +3490,14 @@ async function cardInfo$20(api, callback) {
 	});
 }
 const ClaudeCode_RM = {
-	cardInfo: cardInfo$20,
-	parseStringToArgs: parseStringToArgs$21,
-	parseArgsToString: parseArgsToString$21,
+	cardInfo: cardInfo$21,
+	parseStringToArgs: parseStringToArgs$22,
+	parseArgsToString: parseArgsToString$22,
 	manager: {
-		startInstall: startInstall$20,
+		startInstall: startInstall$21,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$8
+			startUpdate: startUpdate$9
 		}
 	}
 };
@@ -4236,7 +4233,7 @@ const INSTALL_TIME_KEY$6 = "install-time-flowise";
 const UPDATE_TIME_KEY$6 = "update-time-flowise";
 const UPDATE_AVAILABLE_KEY$5 = "update-available-version-flowise";
 const shellCommand$6 = "npx flowise start";
-function parseArgsToString$20(args) {
+function parseArgsToString$21(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let argResult = "";
@@ -4257,7 +4254,7 @@ function parseArgsToString$20(args) {
 	result += isEmpty(argResult) ? shellCommand$6 : `${shellCommand$6} ${argResult}`;
 	return result;
 }
-function parseStringToArgs$20(args) {
+function parseStringToArgs$21(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (!line.startsWith(shellCommand$6)) return;
@@ -4270,19 +4267,21 @@ function parseStringToArgs$20(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, flowiseArguments)) if (getArgumentType(value.name, flowiseArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, flowiseArguments)) {
+				if (getArgumentType(value.name, flowiseArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
 }
-function startInstall$19(stepper) {
+function startInstall$20(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Checking NodeJS",
@@ -4320,7 +4319,7 @@ function startInstall$19(stepper) {
 		});
 	});
 }
-function startUpdate$7(stepper) {
+function startUpdate$8(stepper) {
 	stepper.initialSteps(["Update Flowise", "Complete Update"]);
 	stepper.executeTerminalCommands("npm -g update flowise").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -4329,7 +4328,7 @@ function startUpdate$7(stepper) {
 		stepper.showFinalStep("success", "Flowise Updated Successfully!", `Flowise has been updated to the latest version. You can now enjoy the new features and improvements.`);
 	});
 }
-async function cardInfo$19(api, callback) {
+async function cardInfo$20(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -4374,14 +4373,14 @@ function catchAddress$4(input) {
 }
 const Flow_RM = {
 	catchAddress: catchAddress$4,
-	parseArgsToString: parseArgsToString$20,
-	parseStringToArgs: parseStringToArgs$20,
-	cardInfo: cardInfo$19,
+	parseArgsToString: parseArgsToString$21,
+	parseStringToArgs: parseStringToArgs$21,
+	cardInfo: cardInfo$20,
 	manager: {
-		startInstall: startInstall$19,
+		startInstall: startInstall$20,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$7
+			startUpdate: startUpdate$8
 		}
 	}
 };
@@ -9652,8 +9651,10 @@ const UPDATE_AVAILABLE_KEY$4 = "update-available-version-geminiCli";
 function checkLinuxArgLine$5(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
-	for (const arg of geminiCliArguments) if (arg.category === "Environment") if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	else return;
+	for (const arg of geminiCliArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
 }
 /**
 * Finds the category and type of a given argument name.
@@ -9682,9 +9683,7 @@ function parseArgsToFiles$2(args) {
 			case "Command Line Arguments":
 				cliArgs.push(arg);
 				break;
-			case "Settings":
-				settingsArgs.push(arg);
-				break;
+			case "Settings": settingsArgs.push(arg);
 		}
 	});
 	let scriptString = "";
@@ -9724,7 +9723,7 @@ function parseArgsToFiles$2(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$19(args) {
+function parseArgsToString$20(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$2(args);
 	let envString = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
 	if (!isEmpty(scriptData)) envString += scriptData;
@@ -9735,7 +9734,7 @@ function parseArgsToString$19(args) {
 	return `${envString}${settingsString}`;
 }
 function parseFilesToArgs$2(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$19(scriptContent);
+	const scriptArgs = parseStringToArgs$20(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -9765,7 +9764,7 @@ function parseFilesToArgs$2(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$19(args) {
+function parseStringToArgs$20(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -9779,14 +9778,16 @@ function parseStringToArgs$19(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, openArguments)) if (getArgumentType(value.name, openArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, openArguments)) {
+					if (getArgumentType(value.name, openArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		}
 		const lineType = checkLinuxArgLine$5(line);
@@ -9810,7 +9811,7 @@ function parseStringToArgs$19(args) {
 	});
 	return argResult;
 }
-function startInstall$18(stepper) {
+function startInstall$19(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"NodeJS",
@@ -9848,7 +9849,7 @@ function startInstall$18(stepper) {
 		});
 	});
 }
-function startUpdate$6(stepper) {
+function startUpdate$7(stepper) {
 	stepper.initialSteps(["Update Gemini Cli", "Complete Update"]);
 	stepper.executeTerminalCommands("npm -g update @google/gemini-cli").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -9857,7 +9858,7 @@ function startUpdate$6(stepper) {
 		stepper.showFinalStep("success", "Gemini Cli Updated Successfully!", `Gemini Cli has been updated to the latest version. You can now enjoy the new features and improvements.`);
 	});
 }
-async function cardInfo$18(api, callback) {
+async function cardInfo$19(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -9894,14 +9895,14 @@ async function cardInfo$18(api, callback) {
 	});
 }
 const GeminiCli_RM = {
-	cardInfo: cardInfo$18,
-	parseStringToArgs: parseStringToArgs$19,
-	parseArgsToString: parseArgsToString$19,
+	cardInfo: cardInfo$19,
+	parseStringToArgs: parseStringToArgs$20,
+	parseArgsToString: parseArgsToString$20,
 	manager: {
-		startInstall: startInstall$18,
+		startInstall: startInstall$19,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$6
+			startUpdate: startUpdate$7
 		}
 	}
 };
@@ -10543,10 +10544,7 @@ function parseArgsToFiles$1(args) {
 			case "Command Line Arguments":
 				cliArgs.push(arg);
 				break;
-			case "Settings":
-				settingsArgs.push(arg);
-				break;
-			default: break;
+			case "Settings": settingsArgs.push(arg);
 		}
 	});
 	let scriptString = "";
@@ -10588,7 +10586,7 @@ function parseArgsToFiles$1(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$18(args) {
+function parseArgsToString$19(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$1(args);
 	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
 	if (!isEmpty(scriptData)) scriptPreview += scriptData;
@@ -10599,7 +10597,7 @@ function parseArgsToString$18(args) {
 	return `${scriptPreview}${settingsPreview}`;
 }
 function parseFilesToArgs$1(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$18(scriptContent);
+	const scriptArgs = parseStringToArgs$19(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -10632,7 +10630,7 @@ function parseFilesToArgs$1(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$18(data) {
+function parseStringToArgs$19(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -10688,7 +10686,7 @@ function parseStringToArgs$18(data) {
 	});
 	return argResult;
 }
-function startInstall$17(stepper) {
+function startInstall$18(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Detect Existing",
@@ -10717,7 +10715,7 @@ function startInstall$17(stepper) {
 		});
 	});
 }
-function startUpdate$5(stepper) {
+function startUpdate$6(stepper) {
 	stepper.initialSteps(["Update Hermes Agent", "Complete Update"]);
 	stepper.executeTerminalCommands("hermes update").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -10726,7 +10724,7 @@ function startUpdate$5(stepper) {
 		stepper.showFinalStep("success", "Hermes Agent Updated Successfully!", "Hermes Agent has been updated to the latest available version.");
 	});
 }
-async function cardInfo$17(api, callback) {
+async function cardInfo$18(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -10763,14 +10761,14 @@ async function cardInfo$17(api, callback) {
 	});
 }
 const HermesAgent_RM = {
-	cardInfo: cardInfo$17,
-	parseStringToArgs: parseStringToArgs$18,
-	parseArgsToString: parseArgsToString$18,
+	cardInfo: cardInfo$18,
+	parseStringToArgs: parseStringToArgs$19,
+	parseArgsToString: parseArgsToString$19,
 	manager: {
-		startInstall: startInstall$17,
+		startInstall: startInstall$18,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$5
+			startUpdate: startUpdate$6
 		}
 	}
 };
@@ -10902,7 +10900,7 @@ function checkLinuxArgLine$4(line) {
 		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
 	}
 }
-function parseArgsToString$17(args) {
+function parseArgsToString$18(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let cmArgs = "";
@@ -10943,7 +10941,7 @@ function parseArgsToString$17(args) {
 	result += `langflow run${cmArgs ? " " + cmArgs : ""}`;
 	return result;
 }
-function parseStringToArgs$17(args) {
+function parseStringToArgs$18(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("#") || line.startsWith("REM") || line.startsWith("@echo")) return;
@@ -10954,15 +10952,16 @@ function parseStringToArgs$17(args) {
 				const [id, ...valueParts] = arg.trim().split(" ");
 				const name = `--${id}`;
 				const value = valueParts.join(" ").replace(/"/g, "");
-				if (isValidArg(name, langflowArguments)) if (getArgumentType(name, langflowArguments) === "CheckBox") argResult.push({
-					name,
-					value: ""
-				});
-				else argResult.push({
-					name,
-					value
-				});
-				else if (isValidArg(id.toUpperCase(), langflowArguments)) argResult.push({
+				if (isValidArg(name, langflowArguments)) {
+					if (getArgumentType(name, langflowArguments) === "CheckBox") argResult.push({
+						name,
+						value: ""
+					});
+					else argResult.push({
+						name,
+						value
+					});
+				} else if (isValidArg(id.toUpperCase(), langflowArguments)) argResult.push({
 					name: id.toUpperCase(),
 					value
 				});
@@ -10981,7 +10980,7 @@ function parseStringToArgs$17(args) {
 	});
 	return argResult;
 }
-function startInstall$16(stepper) {
+function startInstall$17(stepper) {
 	const pipCommand = getPythonCommandByOs().pip;
 	stepper.initialSteps([
 		"Getting Started",
@@ -11010,7 +11009,7 @@ function startInstall$16(stepper) {
 		});
 	});
 }
-function startUpdate$4(stepper) {
+function startUpdate$5(stepper) {
 	stepper.initialSteps(["Update Langflow", "Complete Update"]);
 	stepper.executeTerminalCommands("pip install --upgrade langflow").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -11019,7 +11018,7 @@ function startUpdate$4(stepper) {
 		stepper.showFinalStep("success", "Langflow Updated Successfully!", "Langflow has been updated to the latest version. You can now enjoy the new features and improvements.");
 	});
 }
-async function cardInfo$16(api, callback) {
+async function cardInfo$17(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -11079,14 +11078,14 @@ function catchAddress$3(input) {
 }
 const Langflow_RM = {
 	catchAddress: catchAddress$3,
-	cardInfo: cardInfo$16,
-	parseStringToArgs: parseStringToArgs$17,
-	parseArgsToString: parseArgsToString$17,
+	cardInfo: cardInfo$17,
+	parseStringToArgs: parseStringToArgs$18,
+	parseArgsToString: parseArgsToString$18,
 	manager: {
-		startInstall: startInstall$16,
+		startInstall: startInstall$17,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$4
+			startUpdate: startUpdate$5
 		}
 	}
 };
@@ -12877,10 +12876,12 @@ const UPDATE_AVAILABLE_KEY$1 = "update-available-version-n8n";
 function checkLinuxArgLine$3(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
-	for (const arg of n8nArguments) if (arg.category === "Environment") if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	else return;
+	for (const arg of n8nArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
 }
-function parseArgsToString$16(args) {
+function parseArgsToString$17(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let argResult = "";
@@ -12904,7 +12905,7 @@ function parseArgsToString$16(args) {
 	result += isEmpty(argResult) ? `\nn8n start` : `\nn8n start ${argResult}`;
 	return result;
 }
-function parseStringToArgs$16(args) {
+function parseStringToArgs$17(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -12929,7 +12930,7 @@ function parseStringToArgs$16(args) {
 	});
 	return argResult;
 }
-function startInstall$15(stepper) {
+function startInstall$16(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Checking NodeJS",
@@ -12967,7 +12968,7 @@ function startInstall$15(stepper) {
 		});
 	});
 }
-function startUpdate$3(stepper) {
+function startUpdate$4(stepper) {
 	stepper.initialSteps(["Update N8N", "Complete Update"]);
 	stepper.executeTerminalCommands("npm -g update n8n").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -12976,7 +12977,7 @@ function startUpdate$3(stepper) {
 		stepper.showFinalStep("success", "N8N Updated Successfully!", `N8N has been updated to the latest version. You can now enjoy the new features and improvements.`);
 	});
 }
-async function cardInfo$15(api, callback) {
+async function cardInfo$16(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -13014,14 +13015,14 @@ async function cardInfo$15(api, callback) {
 }
 const N8N_RM = {
 	catchAddress: catchAddress$5,
-	cardInfo: cardInfo$15,
-	parseStringToArgs: parseStringToArgs$16,
-	parseArgsToString: parseArgsToString$16,
+	cardInfo: cardInfo$16,
+	parseStringToArgs: parseStringToArgs$17,
+	parseArgsToString: parseArgsToString$17,
 	manager: {
-		startInstall: startInstall$15,
+		startInstall: startInstall$16,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$3
+			startUpdate: startUpdate$4
 		}
 	}
 };
@@ -13100,7 +13101,7 @@ const gitmyloArguments = [{
 //#region module/src/Container/Audio/Audio Generation (gitmylo)/RendererMethods.ts
 const shellCommand$5 = isWin ? "call run.bat" : "bash ./run.sh";
 const URL$5 = "https://github.com/gitmylo/audio-webui";
-function parseArgsToString$15(args) {
+function parseArgsToString$16(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let argResult = "";
@@ -13121,7 +13122,7 @@ function parseArgsToString$15(args) {
 	result += isEmpty(argResult) ? shellCommand$5 : `${shellCommand$5} ${argResult}`;
 	return result;
 }
-function parseStringToArgs$15(args) {
+function parseStringToArgs$16(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (!line.startsWith(shellCommand$5)) return;
@@ -13134,32 +13135,324 @@ function parseStringToArgs$15(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, gitmyloArguments)) if (getArgumentType(value.name, gitmyloArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
+			if (isValidArg(value.name, gitmyloArguments)) {
+				if (getArgumentType(value.name, gitmyloArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$15(stepper) {
+	GitInstaller("Audio Generation", URL$5, stepper, [isWin ? "run.bat" : "run.sh"]);
+}
+async function cardInfo$15(api, callback) {
+	return CardInfo(URL$5, "/extensions", api, callback);
+}
+const AG_RM = {
+	catchAddress: catchAddress$5,
+	parseArgsToString: parseArgsToString$16,
+	parseStringToArgs: parseStringToArgs$16,
+	cardInfo: cardInfo$15,
+	manager: {
+		startInstall: startInstall$15,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/Container/Audio/VoiceStudio (debpalash)/Arguments.ts
+const voiceStudioArguments = [{
+	category: "Environment Variables",
+	sections: [
+		{
+			section: "General & Server",
+			items: [
+				{
+					name: "PORT",
+					description: "Server listening port (default: 3900)",
+					type: "Input",
+					defaultValue: "3900"
+				},
+				{
+					name: "OMNIVOICE_DATA_DIR",
+					description: "Custom path for models, voices, and projects storage",
+					type: "Directory"
+				},
+				{
+					name: "OMNIVOICE_SERVER_MODE",
+					description: "Run server in headless/server mode (disables local origin restriction)",
+					type: "CheckBox"
+				},
+				{
+					name: "OMNIVOICE_PUBLIC_API_BASE",
+					description: "Public API base URL when behind a reverse proxy",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_TRUSTED_NETWORKS",
+					description: "Comma-separated trusted network CIDRs for remote access",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_LOG_LEVEL",
+					description: "Log verbosity level (INFO, DEBUG, WARNING, ERROR)",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"INFO",
+						"DEBUG",
+						"WARNING",
+						"ERROR"
+					]
+				}
+			]
+		},
+		{
+			section: "Hardware & Compute",
+			items: [
+				{
+					name: "TORCH_COMPILE_DISABLE",
+					description: "Disable torch.compile / Triton compilation (fixes Windows OOM issues)",
+					type: "CheckBox"
+				},
+				{
+					name: "OMNIVOICE_TORCH_VARIANT",
+					description: "PyTorch variant selection (cuda, rocm, cpu)",
+					type: "DropDown",
+					defaultValue: "cuda",
+					values: [
+						"cuda",
+						"rocm",
+						"cpu"
+					]
+				},
+				{
+					name: "ASR_COMPUTE_TYPE",
+					description: "Precision for ASR engines (WhisperX, Faster-Whisper)",
+					type: "DropDown",
+					defaultValue: "float16",
+					values: [
+						"float16",
+						"int8",
+						"float32"
+					]
+				},
+				{
+					name: "HSA_OVERRIDE_GFX_VERSION",
+					description: "AMD GPU architecture override for ROCm (e.g. 11.0.0 for consumer RDNA3 cards)",
+					type: "Input"
+				}
+			]
+		},
+		{
+			section: "HuggingFace & Downloads",
+			items: [
+				{
+					name: "HF_TOKEN",
+					description: "HuggingFace user access token for diarization & heavy models",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_CACHE_DIR",
+					description: "Directory path to route all HF and PyTorch model weight caches",
+					type: "Directory"
+				},
+				{
+					name: "UV_HTTP_TIMEOUT",
+					description: "HTTP timeout in seconds for uv package downloads (default: 120)",
+					type: "Input",
+					defaultValue: "120"
+				}
+			]
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [{
+		section: "Backend Flags",
+		items: [
+			{
+				name: "--host",
+				description: "Host interface to bind (e.g. 127.0.0.1 or 0.0.0.0)",
+				type: "Input",
+				defaultValue: "127.0.0.1"
+			},
+			{
+				name: "--port",
+				description: "Port number to listen on",
+				type: "Input",
+				defaultValue: "3900"
+			},
+			{
+				name: "--diagnose",
+				description: "Run self-check diagnostics on startup",
+				type: "CheckBox"
+			}
+		]
+	}]
+}];
+//#endregion
+//#region module/src/Container/Audio/VoiceStudio (debpalash)/RendererMethods.ts
+const VOICE_STUDIO_URL = "https://github.com/debpalash/VoiceStudio";
+const BUN_WIN_INSTALL = "powershell -c \"irm bun.sh/install.ps1|iex\"";
+const BUN_UNIX_INSTALL = "curl -fsSL https://bun.com/install | bash";
+function isEnvironmentVariable$2(name) {
+	for (const arg of voiceStudioArguments) if (arg.category === "Environment Variables") {
+		if ("sections" in arg) return arg.sections.some((section) => section.items.some((item) => item.name === name));
+	}
+	return false;
+}
+function parseArgsToString$15(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let argResult = "";
+	let lines = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const customRes = parseCustomArg(arg);
+			if (!customRes) return;
+			if (customRes.line) lines += customRes.line + "\n";
+			if (customRes.commandArg) argResult += customRes.commandArg + " ";
+		} else if (isEnvironmentVariable$2(arg.name)) {
+			if (getArgumentType(arg.name, voiceStudioArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=1\n` : `export ${arg.name}="1"\n`;
+			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		} else {
+			const argType = getArgumentType(arg.name, voiceStudioArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? "bun run desktop-prod:run" : `bun run desktop-prod:run ${argResult}`;
+	return result;
+}
+function parseStringToArgs$15(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		if (line.startsWith("export ") || line.startsWith("set ")) {
+			const prefix = line.startsWith("export ") ? "export " : "set ";
+			let [name, value] = line.replace(prefix, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, voiceStudioArguments) && isEnvironmentVariable$2(name)) argResult.push({
+				name,
+				value
 			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			return;
+		}
+		if (!line.includes("bun run desktop-prod:run")) return;
+		const clArgs = line.split("bun run desktop-prod:run ")[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, voiceStudioArguments)) {
+				if (getArgumentType(value.name, voiceStudioArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
 }
 function startInstall$14(stepper) {
-	GitInstaller("Audio Generation", URL$5, stepper, [isWin ? "run.bat" : "run.sh"]);
+	const cloneAndInstall = () => {
+		stepper.nextStep().then(() => {
+			stepper.cloneRepository(VOICE_STUDIO_URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.executeTerminalCommands("bun install", dir).then(() => {
+						stepper.nextStep().then(() => {
+							stepper.executeTerminalCommands("bun run desktop-prod", dir).then(() => {
+								stepper.setInstalled(dir);
+								stepper.showFinalStep("success", "VoiceStudio installation complete!", "All installation steps completed successfully. Your VoiceStudio environment is ready for use.");
+							});
+						});
+					});
+				});
+			});
+		});
+	};
+	stepper.initialSteps([
+		"VoiceStudio",
+		"Check Bun",
+		"Clone VoiceStudio",
+		"Install Dependencies",
+		"Build Studio",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking if Bun is installed...");
+			stepper.ipc.invoke("is_voicestudio_bun_available").then((isBunInstalled) => {
+				if (isBunInstalled) cloneAndInstall();
+				else {
+					stepper.progressBar(true, "Installing Bun runtime...");
+					const installCmd = isWin ? BUN_WIN_INSTALL : BUN_UNIX_INSTALL;
+					stepper.executeTerminalCommands(installCmd).then(() => {
+						stepper.showFinalStep("success", "Bun Installed Successfully!", "Bun has been installed. To use it, please restart LynxHub and start the installation again.");
+					});
+				}
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, VOICE_STUDIO_URL).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "VoiceStudio located successfully!", "Pre-installed VoiceStudio detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, ["package.json", "backend/main.py"]).then((filesExist) => {
+				if (filesExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.showFinalStep("success", "VoiceStudio located successfully!", "Detected a manual installation of VoiceStudio.");
+				} else stepper.showFinalStep("error", "Unable to locate VoiceStudio!", "Please ensure you have selected the correct folder containing the VoiceStudio installation.");
+			});
+		});
+	});
+}
+function startUpdate$3(stepper, dir) {
+	stepper.initialSteps([
+		"Fetch Changes",
+		"Install Dependencies",
+		"Build Studio",
+		"Completed"
+	]);
+	stepper.executeTerminalCommands([
+		"git pull",
+		"bun install",
+		"bun run desktop-prod"
+	], dir).then(() => {
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "VoiceStudio Updated Successfully!", "VoiceStudio has been updated to the latest version.");
+	});
 }
 async function cardInfo$14(api, callback) {
-	return CardInfo(URL$5, "/extensions", api, callback);
+	return CardInfo(VOICE_STUDIO_URL, void 0, api, callback);
 }
-const AG_RM = {
+const VOICE_STUDIO_RM = {
 	catchAddress: catchAddress$5,
 	parseArgsToString: parseArgsToString$15,
 	parseStringToArgs: parseStringToArgs$15,
 	cardInfo: cardInfo$14,
 	manager: {
 		startInstall: startInstall$14,
-		updater: { updateType: "git" }
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$3
+		}
 	}
 };
 //#endregion
@@ -13868,9 +14161,10 @@ function parseArgsToString$14(args) {
 			if (!result) return;
 			if (result.line) lines += result.line + "\n";
 			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (isEnvironmentVariable$1(arg.name)) if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
-		else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		else {
+		} else if (isEnvironmentVariable$1(arg.name)) {
+			if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
+			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		} else {
 			const argType = getArgumentType(arg.name, comfyuiArguments);
 			if (argType === "CheckBox") argResult += `${arg.name} `;
 			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
@@ -13908,14 +14202,16 @@ function parseStringToArgs$14(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, comfyuiArguments)) if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, comfyuiArguments)) {
+				if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -15279,9 +15575,7 @@ const invokeGetInputResults = (items) => {
 				torchBackendResult = "cpu";
 				break;
 			default:
-			case "Others":
-				torchBackendResult = "";
-				break;
+			case "Others": torchBackendResult = "";
 		}
 	}
 	console.log("the torchBackendResult is", torchBackendResult);
@@ -16381,8 +16675,10 @@ function parseArgsToString$12(args) {
 function checkLinuxArgLine$2(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
-	for (const arg of automatic1111Arguments) if (arg.category === "Environment") if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	else return;
+	for (const arg of automatic1111Arguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
 }
 function parseStringToArgs$12(args) {
 	const argResult = [];
@@ -16402,14 +16698,16 @@ function parseStringToArgs$12(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, automatic1111Arguments)) if (getArgumentType(value.name, automatic1111Arguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, automatic1111Arguments)) {
+					if (getArgumentType(value.name, automatic1111Arguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		} else {
 			const lineType = checkLinuxArgLine$2(line);
@@ -16527,8 +16825,10 @@ function parseArgsToString$11(args) {
 function checkLinuxArgLine$1(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
-	for (const arg of lshqqytigerArguments) if (arg.category === "Environment") if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	else return;
+	for (const arg of lshqqytigerArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
 }
 function parseStringToArgs$11(args) {
 	const argResult = [];
@@ -16548,14 +16848,16 @@ function parseStringToArgs$11(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, lshqqytigerArguments)) if (getArgumentType(value.name, lshqqytigerArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, lshqqytigerArguments)) {
+					if (getArgumentType(value.name, lshqqytigerArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		} else {
 			const lineType = checkLinuxArgLine$1(line);
@@ -16984,14 +17286,16 @@ function parseStringToArgs$10(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, vladmandicArguments)) if (getArgumentType(value.name, vladmandicArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, vladmandicArguments)) {
+				if (getArgumentType(value.name, vladmandicArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -17181,14 +17485,16 @@ function parseStringToArgs$9(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, mcMonkeyArguments)) if (getArgumentType(value.name, mcMonkeyArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, mcMonkeyArguments)) {
+				if (getArgumentType(value.name, mcMonkeyArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -17246,8 +17552,10 @@ const UPDATE_AVAILABLE_KEY = "update-available-version-openwebui";
 function checkLinuxArgLine(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
-	for (const arg of openArguments) if (arg.category === "Environment") if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	else return;
+	for (const arg of openArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
 }
 function parseArgsToString$8(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
@@ -17293,14 +17601,16 @@ function parseStringToArgs$8(args) {
 					value: value.join(" ").replace(/"/g, "")
 				};
 			}).forEach((value) => {
-				if (isValidArg(value.name, openArguments)) if (getArgumentType(value.name, openArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
+				if (isValidArg(value.name, openArguments)) {
+					if (getArgumentType(value.name, openArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
 			});
 		}
 		const lineType = checkLinuxArgLine(line);
@@ -17425,7 +17735,7 @@ const OPEN_WEBUI_RM = {
 };
 //#endregion
 //#region module/node_modules/js-yaml/dist/js-yaml.mjs
-/*! js-yaml 5.2.1 https://github.com/nodeca/js-yaml @license MIT */
+/*! js-yaml 5.2.3 https://github.com/nodeca/js-yaml @license MIT */
 var NOT_RESOLVED = Symbol("NOT_RESOLVED");
 var MERGE_KEY = Symbol("MERGE_KEY");
 function defineScalarTag(tagName, options) {
@@ -17847,6 +18157,11 @@ var binaryTag = defineScalarTag("tag:yaml.org,2002:binary", {
 });
 var YAML_DATE_REGEXP = /* @__PURE__ */ new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$");
 var YAML_TIMESTAMP_REGEXP = /* @__PURE__ */ new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");
+function makeUtcDate(year, month, day, hour = 0, minute = 0, second = 0, fraction = 0) {
+	const date = new Date(Date.UTC(year, month, day, hour, minute, second, fraction));
+	date.setUTCFullYear(year, month, day);
+	return date;
+}
 function resolveYamlTimestamp(source) {
 	let match = YAML_DATE_REGEXP.exec(source);
 	if (match === null) match = YAML_TIMESTAMP_REGEXP.exec(source);
@@ -17855,7 +18170,7 @@ function resolveYamlTimestamp(source) {
 	const month = +match[2] - 1;
 	const day = +match[3];
 	if (!match[4]) {
-		const date = new Date(Date.UTC(year, month, day));
+		const date = makeUtcDate(year, month, day);
 		if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month || date.getUTCDate() !== day) return NOT_RESOLVED;
 		return date;
 	}
@@ -17869,7 +18184,7 @@ function resolveYamlTimestamp(source) {
 		while (value.length < 3) value += "0";
 		fraction = +value;
 	}
-	const date = new Date(Date.UTC(year, month, day, hour, minute, second, fraction));
+	const date = makeUtcDate(year, month, day, hour, minute, second, fraction);
 	if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month || date.getUTCDate() !== day) return NOT_RESOLVED;
 	if (match[9]) {
 		const offsetHour = +match[10];
@@ -17967,7 +18282,11 @@ var mapTag = defineMappingTag("tag:yaml.org,2002:map", {
 		return Object.prototype.hasOwnProperty.call(container, String(key));
 	},
 	keys: (container) => Object.keys(container),
-	get: (container, key) => container[String(key)]
+	get: (container, key) => {
+		const normalizedKey = String(key);
+		if (!Object.prototype.hasOwnProperty.call(container, normalizedKey)) return null;
+		return container[normalizedKey];
+	}
 });
 var setTag = defineMappingTag("tag:yaml.org,2002:set", {
 	create: () => /* @__PURE__ */ new Set(),
@@ -17988,9 +18307,9 @@ var setTag = defineMappingTag("tag:yaml.org,2002:set", {
 });
 function createTagDefinitionMap() {
 	return {
-		scalar: {},
-		sequence: {},
-		mapping: {}
+		scalar: Object.create(null),
+		sequence: Object.create(null),
+		mapping: Object.create(null)
 	};
 }
 function createTagDefinitionListMap() {
@@ -18044,10 +18363,8 @@ var Schema = class Schema {
 					if (tag.matchByTagPrefix) prefix.sequence.push(tag);
 					else exact.sequence[tag.tagName] = tag;
 					break;
-				case "mapping":
-					if (tag.matchByTagPrefix) prefix.mapping.push(tag);
-					else exact.mapping[tag.tagName] = tag;
-					break;
+				case "mapping": if (tag.matchByTagPrefix) prefix.mapping.push(tag);
+				else exact.mapping[tag.tagName] = tag;
 			}
 		}
 		const implicitScalarAnyFirstChar = implicitScalarTags.filter((tag) => tag.implicitFirstChars === null);
@@ -18160,7 +18477,11 @@ defineMappingTag("tag:yaml.org,2002:map", {
 		return normalizedKey !== null && Object.prototype.hasOwnProperty.call(container, normalizedKey);
 	},
 	keys: (container) => Object.keys(container),
-	get: (container, key) => container[String(key)]
+	get: (container, key) => {
+		const normalizedKey = String(key);
+		if (!Object.prototype.hasOwnProperty.call(container, normalizedKey)) return null;
+		return container[normalizedKey];
+	}
 });
 var DEFAULT_SNIPPET_OPTIONS = {
 	maxLength: 79,
@@ -18466,10 +18787,10 @@ function getScalarValue(input, scalar) {
 		default: return getPlainValue(input, valueStart, valueEnd);
 	}
 }
-var DEFAULT_TAG_HANDLERS = {
+var DEFAULT_TAG_HANDLERS = Object.assign(Object.create(null), {
 	"!": "!",
 	"!!": "tag:yaml.org,2002:"
-};
+});
 function tagPercentEncode(source) {
 	return encodeURI(source).replace(/!/g, "%21");
 }
@@ -18722,6 +19043,10 @@ function constructFromEvents(events, options) {
 			}
 			case 6: {
 				const frame = state.frames.pop();
+				if (frame.kind === "mapping" && frame.hasKey) {
+					state.position = frame.keyPosition;
+					throwError$1(state, "incomplete mapping pair in event stream");
+				}
 				if (frame.kind === "document") state.documents.push(frame.value);
 				else {
 					const value = frame.tag.carrierIsResult ? frame.value : finalizeCollection(state, frame.position, frame.tag, frame.value);
@@ -18783,6 +19108,17 @@ function addMappingEvent(state, start, anchorStart, anchorEnd, tagStart, tagEnd,
 		tagStart,
 		tagEnd,
 		style
+	});
+}
+function insertFlowPairMappingEvent(state, snapshot) {
+	state.events.splice(snapshot.eventsLength, 0, {
+		type: 3,
+		start: snapshot.position,
+		anchorStart: NO_RANGE$1,
+		anchorEnd: NO_RANGE$1,
+		tagStart: NO_RANGE$1,
+		tagEnd: NO_RANGE$1,
+		style: 2
 	});
 }
 function addScalarEvent(state, valueStart, valueEnd, anchorStart, anchorEnd, tagStart, tagEnd, style, chomping = 1, indent = -1, fast = false) {
@@ -19228,12 +19564,8 @@ function readFlowCollection(state, nodeIndent, props) {
 			state.position++;
 			skipFlowSeparationSpace(state, nodeIndent);
 			if (!isMapping) {
-				restoreState(state, entryStart);
-				addMappingEvent(state, entryStart.position, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, 2);
-				if (!parseNode(state, nodeIndent, CONTEXT_FLOW_IN, false, true)) addEmptyScalarEvent(state);
-				skipFlowSeparationSpace(state, nodeIndent);
-				state.position++;
-				skipFlowSeparationSpace(state, nodeIndent);
+				insertFlowPairMappingEvent(state, entryStart);
+				if (!keyWasRead) addEmptyScalarEvent(state);
 			} else if (!keyWasRead) addEmptyScalarEvent(state);
 			if (!parseNode(state, nodeIndent, CONTEXT_FLOW_IN, false, true)) addEmptyScalarEvent(state);
 			skipFlowSeparationSpace(state, nodeIndent);
@@ -19243,9 +19575,8 @@ function readFlowCollection(state, nodeIndent, props) {
 			addEmptyScalarEvent(state);
 		} else if (isMapping) addEmptyScalarEvent(state);
 		else if (isPair) {
-			restoreState(state, entryStart);
-			addMappingEvent(state, entryStart.position, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, 2);
-			parseNode(state, nodeIndent, CONTEXT_FLOW_IN, false, true);
+			insertFlowPairMappingEvent(state, entryStart);
+			if (!keyWasRead) addEmptyScalarEvent(state);
 			addEmptyScalarEvent(state);
 			addPopEvent(state);
 		}
@@ -19385,10 +19716,6 @@ function parseNode(state, parentIndent, nodeContext, allowToSeek, allowCompact, 
 		if (state.lineIndent > parentIndent) indentStatus = 1;
 		else if (state.lineIndent === parentIndent) indentStatus = 0;
 		else indentStatus = -1;
-	}
-	if (state.position === state.lineStart && testDocumentSeparator(state)) {
-		state.depth--;
-		return false;
 	}
 	if (indentStatus === 1) while (true) {
 		const ch = state.input.charCodeAt(state.position);
@@ -19726,20 +20053,18 @@ function visitNode(node, visitor, ctx) {
 				isKey: false
 			})) return true;
 			break;
-		case "mapping":
-			for (const { key, value } of node.items) {
-				if (visitNode(key, visitor, {
-					depth,
-					parent: node,
-					isKey: true
-				})) return true;
-				if (visitNode(value, visitor, {
-					depth,
-					parent: node,
-					isKey: false
-				})) return true;
-			}
-			break;
+		case "mapping": for (const { key, value } of node.items) {
+			if (visitNode(key, visitor, {
+				depth,
+				parent: node,
+				isKey: true
+			})) return true;
+			if (visitNode(value, visitor, {
+				depth,
+				parent: node,
+				isKey: false
+			})) return true;
+		}
 	}
 	return false;
 }
@@ -19882,7 +20207,7 @@ function isNsCharOrWhitespace(c) {
 function isPlainSafe(c, prev, inblock) {
 	const cIsNsCharOrWhitespace = isNsCharOrWhitespace(c);
 	const cIsNsChar = cIsNsCharOrWhitespace && !isWhitespace(c);
-	return (inblock ? cIsNsCharOrWhitespace : cIsNsCharOrWhitespace && c !== CHAR_COMMA && c !== CHAR_LEFT_SQUARE_BRACKET && c !== CHAR_RIGHT_SQUARE_BRACKET && c !== CHAR_LEFT_CURLY_BRACKET && c !== CHAR_RIGHT_CURLY_BRACKET) && c !== CHAR_SHARP && !(prev === CHAR_COLON && !cIsNsChar) || isNsCharOrWhitespace(prev) && !isWhitespace(prev) && c === CHAR_SHARP || prev === CHAR_COLON && cIsNsChar;
+	return (inblock ? cIsNsCharOrWhitespace : cIsNsCharOrWhitespace && c !== CHAR_COMMA && c !== CHAR_LEFT_SQUARE_BRACKET && c !== CHAR_RIGHT_SQUARE_BRACKET && c !== CHAR_LEFT_CURLY_BRACKET && c !== CHAR_RIGHT_CURLY_BRACKET) && c !== CHAR_SHARP && !(prev === CHAR_COLON && !cIsNsChar) || isNsCharOrWhitespace(prev) && !isWhitespace(prev) && c === CHAR_SHARP || prev === CHAR_COLON && cIsNsChar && (inblock || c !== CHAR_COMMA && c !== CHAR_LEFT_SQUARE_BRACKET && c !== CHAR_RIGHT_SQUARE_BRACKET && c !== CHAR_LEFT_CURLY_BRACKET && c !== CHAR_RIGHT_CURLY_BRACKET);
 }
 function isPlainSafeFirst(c) {
 	return isPrintable(c) && c !== CHAR_BOM && !isWhitespace(c) && c !== CHAR_MINUS && c !== CHAR_QUESTION && c !== CHAR_COLON && c !== CHAR_COMMA && c !== CHAR_LEFT_SQUARE_BRACKET && c !== CHAR_RIGHT_SQUARE_BRACKET && c !== CHAR_LEFT_CURLY_BRACKET && c !== CHAR_RIGHT_CURLY_BRACKET && c !== CHAR_SHARP && c !== CHAR_AMPERSAND && c !== CHAR_ASTERISK && c !== CHAR_EXCLAMATION && c !== CHAR_VERTICAL_LINE && c !== CHAR_EQUALS && c !== CHAR_GREATER_THAN && c !== CHAR_SINGLE_QUOTE && c !== CHAR_DOUBLE_QUOTE && c !== CHAR_PERCENT && c !== CHAR_COMMERCIAL_AT && c !== CHAR_GRAVE_ACCENT;
@@ -19938,14 +20263,14 @@ function chooseScalarStyle(state, string, layout, singleLineOnly, forceQuote, in
 			if (char === CHAR_LINE_FEED) {
 				hasLineBreak = true;
 				if (shouldTrackWidth) {
-					hasFoldableLine = hasFoldableLine || i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
+					hasFoldableLine = hasFoldableLine || i - previousLineBreak - 1 > lineWidth && !isMoreIndented(string[previousLineBreak + 1]);
 					previousLineBreak = i;
 				}
 			} else if (!isPrintable(char)) return STYLE_DOUBLE;
 			plain = plain && isPlainSafe(char, prevChar, inblock);
 			prevChar = char;
 		}
-		hasFoldableLine = hasFoldableLine || shouldTrackWidth && i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
+		hasFoldableLine = hasFoldableLine || shouldTrackWidth && i - previousLineBreak - 1 > lineWidth && !isMoreIndented(string[previousLineBreak + 1]);
 	}
 	if (!hasLineBreak && !hasFoldableLine) {
 		if (plain && !forceQuote) return STYLE_PLAIN;
@@ -20004,27 +20329,30 @@ function encodeFlowBreaks(string, indent) {
 function dropEndingNewline(string) {
 	return string[string.length - 1] === "\n" ? string.slice(0, -1) : string;
 }
+function isMoreIndented(char) {
+	return char === " " || char === "	";
+}
 function foldBlockScalar(string, width) {
 	const lineRe = /(\n+)([^\n]*)/g;
 	let nextLF = string.indexOf("\n");
 	if (nextLF === -1) nextLF = string.length;
 	lineRe.lastIndex = nextLF;
 	let result = foldLine(string.slice(0, nextLF), width);
-	let prevMoreIndented = string[0] === "\n" || string[0] === " ";
+	let prevMoreIndented = string[0] === "\n" || isMoreIndented(string[0]);
 	let moreIndented;
 	let match;
 	while (match = lineRe.exec(string)) {
 		const prefix = match[1];
 		const line = match[2];
-		moreIndented = line[0] === " ";
+		moreIndented = line !== "" && isMoreIndented(line[0]);
 		result += prefix + (!prevMoreIndented && !moreIndented && line !== "" ? "\n" : "") + foldLine(line, width);
 		prevMoreIndented = moreIndented;
 	}
 	return result;
 }
 function foldLine(line, width) {
-	if (line === "" || line[0] === " ") return line;
-	const breakRe = / [^ ]/g;
+	if (line === "" || isMoreIndented(line[0])) return line;
+	const breakRe = / [^ \t]/g;
 	let match;
 	let start = 0;
 	let end;
@@ -21440,14 +21768,16 @@ function parseStringToArgs$7(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, sillyArguments)) if (getArgumentType(value.name, sillyArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, sillyArguments)) {
+				if (getArgumentType(value.name, sillyArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -22662,14 +22992,16 @@ function parseStringToArgs$6(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, oobaboogaArguments)) if (getArgumentType(value.name, oobaboogaArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, oobaboogaArguments)) {
+				if (getArgumentType(value.name, oobaboogaArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -22721,8 +23053,10 @@ function parseArgsToString$5(args) {
 			if (!result) return;
 			if (result.line) lines += result.line + "\n";
 			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (getArgumentType(arg.name, aiToolkitArguments) === "Input" && arg.value) if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
-		else lines += `export ${arg.name}="${arg.value}"\n`;
+		} else if (getArgumentType(arg.name, aiToolkitArguments) === "Input" && arg.value) {
+			if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
+			else lines += `export ${arg.name}="${arg.value}"\n`;
+		}
 	});
 	if (!isEmpty(lines)) result += lines + "\n";
 	if (isWin) result += "set NODE_ENV=\n\n";
@@ -22919,14 +23253,16 @@ function parseStringToArgs$4(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, loraManagerArguments)) if (getArgumentType(value.name, loraManagerArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, loraManagerArguments)) {
+				if (getArgumentType(value.name, loraManagerArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -23149,14 +23485,16 @@ function parseStringToArgs$3(args) {
 				value: value.join(" ").replace(/"/g, "")
 			};
 		}).forEach((value) => {
-			if (isValidArg(value.name, bmaltaisArguments)) if (getArgumentType(value.name, bmaltaisArguments) === "CheckBox") argResult.push({
-				name: value.name,
-				value: ""
-			});
-			else argResult.push({
-				name: value.name,
-				value: value.value
-			});
+			if (isValidArg(value.name, bmaltaisArguments)) {
+				if (getArgumentType(value.name, bmaltaisArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
 		});
 	});
 	return argResult;
@@ -23352,14 +23690,18 @@ function parseArgsToString$2(args) {
 		} else {
 			const cat = getCategoryType$1(arg.name);
 			if (cat === "env") {
-				if (arg.value !== void 0 && arg.value !== null && arg.value !== "") if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
-				else lines += `export ${arg.name}="${arg.value}"\n`;
+				if (arg.value !== void 0 && arg.value !== null && arg.value !== "") {
+					if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
+					else lines += `export ${arg.name}="${arg.value}"\n`;
+				}
 			} else if (cat === "cl") {
 				const argType = getArgumentType(arg.name, llamaFactoryArguments);
 				if (argType === "CheckBox") {
 					if (String(arg.value) === "true" || arg.value === "") clResult += `${arg.name} `;
-				} else if (arg.value !== void 0 && arg.value !== null && arg.value !== "") if (argType === "File" || argType === "Directory") clResult += `${arg.name} "${arg.value}" `;
-				else clResult += `${arg.name} ${arg.value} `;
+				} else if (arg.value !== void 0 && arg.value !== null && arg.value !== "") {
+					if (argType === "File" || argType === "Directory") clResult += `${arg.name} "${arg.value}" `;
+					else clResult += `${arg.name} ${arg.value} `;
+				}
 			}
 		}
 	});
@@ -23402,14 +23744,16 @@ function parseStringToArgs$2(args) {
 				const [id, ...valueParts] = arg.trim().split(" ");
 				const name = `--${id}`;
 				const value = valueParts.join(" ").replace(/"/g, "").trim();
-				if (isValidArg(name, llamaFactoryArguments)) if (getArgumentType(name, llamaFactoryArguments) === "CheckBox") argResult.push({
-					name,
-					value: ""
-				});
-				else argResult.push({
-					name,
-					value
-				});
+				if (isValidArg(name, llamaFactoryArguments)) {
+					if (getArgumentType(name, llamaFactoryArguments) === "CheckBox") argResult.push({
+						name,
+						value: ""
+					});
+					else argResult.push({
+						name,
+						value
+					});
+				}
 			});
 		}
 	});
@@ -23654,8 +23998,10 @@ function parseArgsToString$1(args) {
 			if (result.commandArg) commandArgs += result.commandArg + " ";
 		} else if (isEnvironmentVariable(arg.name)) {
 			if (getArgumentType(arg.name, smartGalleryArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
-			else if (arg.value !== void 0 && arg.value !== "") if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
-			else lines += `export ${arg.name}="${arg.value}"\n`;
+			else if (arg.value !== void 0 && arg.value !== "") {
+				if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
+				else lines += `export ${arg.name}="${arg.value}"\n`;
+			}
 		} else {
 			const argType = getArgumentType(arg.name, smartGalleryArguments);
 			if (argType === "CheckBox") commandArgs += `${arg.name} `;
@@ -23695,16 +24041,18 @@ function parseStringToArgs$1(args) {
 			if (clArgs) clArgs.split("--").filter(Boolean).forEach((rawArg) => {
 				const [id, ...valParts] = rawArg.trim().split(" ");
 				const argName = `--${id}`;
-				if (isValidArg(argName, smartGalleryArguments)) if (getArgumentType(argName, smartGalleryArguments) === "CheckBox") argResult.push({
-					name: argName,
-					value: ""
-				});
-				else {
-					const val = valParts.join(" ").replace(/"/g, "").trim();
-					argResult.push({
+				if (isValidArg(argName, smartGalleryArguments)) {
+					if (getArgumentType(argName, smartGalleryArguments) === "CheckBox") argResult.push({
 						name: argName,
-						value: val
+						value: ""
 					});
+					else {
+						const val = valParts.join(" ").replace(/"/g, "").trim();
+						argResult.push({
+							name: argName,
+							value: val
+						});
+					}
 				}
 			});
 		}
@@ -23940,14 +24288,18 @@ function parseArgsToString(args) {
 		} else {
 			const cat = getCategoryType(arg.name);
 			if (cat === "env") {
-				if (arg.value !== void 0 && arg.value !== null && arg.value !== "") if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
-				else lines += `export ${arg.name}="${arg.value}"\n`;
+				if (arg.value !== void 0 && arg.value !== null && arg.value !== "") {
+					if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
+					else lines += `export ${arg.name}="${arg.value}"\n`;
+				}
 			} else if (cat === "cl") {
 				const argType = getArgumentType(arg.name, unslothStudioArguments);
 				if (argType === "CheckBox") {
 					if (String(arg.value) === "true" || arg.value === "") clResult += `${arg.name} `;
-				} else if (arg.value !== void 0 && arg.value !== null && arg.value !== "") if (argType === "File" || argType === "Directory") clResult += `${arg.name} "${arg.value}" `;
-				else clResult += `${arg.name} ${arg.value} `;
+				} else if (arg.value !== void 0 && arg.value !== null && arg.value !== "") {
+					if (argType === "File" || argType === "Directory") clResult += `${arg.name} "${arg.value}" `;
+					else clResult += `${arg.name} ${arg.value} `;
+				}
 			}
 		}
 	});
@@ -23989,14 +24341,16 @@ function parseStringToArgs(args) {
 				const [id, ...valueParts] = arg.trim().split(" ");
 				const name = `--${id}`;
 				const value = valueParts.join(" ").replace(/"/g, "").trim();
-				if (isValidArg(name, unslothStudioArguments)) if (getArgumentType(name, unslothStudioArguments) === "CheckBox") argResult.push({
-					name,
-					value: ""
-				});
-				else argResult.push({
-					name,
-					value
-				});
+				if (isValidArg(name, unslothStudioArguments)) {
+					if (getArgumentType(name, unslothStudioArguments) === "CheckBox") argResult.push({
+						name,
+						value: ""
+					});
+					else argResult.push({
+						name,
+						value
+					});
+				}
 			});
 		}
 	});
@@ -24113,4 +24467,4 @@ const UNSLOTH_STUDIO_RM = {
 	}
 };
 //#endregion
-export { INVOKE_RM as $, getPythonCommandByOs as $t, SILLYTAVERN_RM as A, SD_FORGE_AMD_ID as An, geminiCliArguments as At, mcMonkeyArguments as B, AntigravityCli_RM as Bt, parseArgsToString$5 as C, LLAMA_FACTORY_ID as Cn, HermesAgent_RM as Ct, parseArgsToString$6 as D, ONETRAINER_ID as Dn, GeminiCli_RM as Dt, TG_RM as E, N8N_ID as En, hermesAgentArguments as Et, parseArgsToString$8 as F, SMARTGALLERY_ID as Fn, flowiseArguments as Ft, SD_AMD_RM as G, GitInstaller as Gt, parseArgsToString$10 as H, parseFilesToArgs$4 as Ht, parseStringToArgs$8 as I, SWARM_ID as In, ClaudeCode_RM as It, lshqqytigerArguments as J, isPagesFixed as Jt, parseArgsToString$11 as K, catchAddress$5 as Kt, SWARM_RM as L, TG_ID as Ln, parseArgsToFiles$3 as Lt, parseFilesToArgs as M, SD_NEXT_ID as Mn, Flow_RM as Mt, sillyArguments as N, SD_UIUX_ID as Nn, parseArgsToString$20 as Nt, parseStringToArgs$6 as O, OPEN_WEBUI_ID as On, parseArgsToFiles$2 as Ot, OPEN_WEBUI_RM as P, SILLYTAVERN_ID as Pn, parseStringToArgs$20 as Pt, automatic1111Arguments as Q, getCdCommand as Qt, parseArgsToString$9 as R, TTS_ID as Rn, parseFilesToArgs$3 as Rt, AITOOLKIT_RM as S, LANGFLOW_ID as Sn, langflowArguments as St, aiToolkitArguments as T, LoLLMS_ID as Tn, parseFilesToArgs$1 as Tt, parseStringToArgs$10 as U, antigravityCliArguments as Ut, SD_NEXT_RM as V, parseArgsToFiles$4 as Vt, vladmandicArguments as W, CardInfo as Wt, parseArgsToString$12 as X, cloneDeep as Xt, fetchExtensionList$2 as Y, isValidArg as Yt, parseStringToArgs$12 as Z, extractGitUrl as Zt, bmaltaisArguments as _, FLOWISEAI_ID as _n, parseStringToArgs$16 as _t, unslothStudioArguments as a, A1_ID as an, comfyuizludaArguments as at, parseStringToArgs$4 as b, INVOKE_ID as bn, parseArgsToString$17 as bt, parseStringToArgs$1 as c, ALLTALK_ID as cn, parseArgsToString$14 as ct, parseArgsToString$2 as d, BOLT_DIY_ID as dn, AG_RM as dt, getVenvPythonPath as en, parseArgsToString$13 as et, parseStringToArgs$2 as f, CHAT_TTS_ID as fn, parseArgsToString$15 as ft, parseStringToArgs$3 as g, COMFYUI_ZLUDA_ID as gn, parseArgsToString$16 as gt, parseArgsToString$3 as h, COMFYUI_ROCM_ID as hn, N8N_RM as ht, parseStringToArgs as i, removeAnsi as in, Invoke_Command_ActivateVenv as it, parseArgsToFiles as j, SD_FORGE_ID as jn, openArguments as jt, oobaboogaArguments as k, SD_AMD_ID as kn, parseFilesToArgs$2 as kt, smartGalleryArguments as l, ANTIGRAVITY_CLI_ID as ln, parseStringToArgs$14 as lt, KOHYA_GUI_RM as m, COMFYUI_ID as mn, gitmyloArguments as mt, UNSLOTH_STUDIO_RM as n, isWin as nn, INVOKEAI_INSTALL_DIR_KEY as nt, SMARTGALLERY_RM as o, AG_ID as on, comfyRocmArguments as ot, llamaFactoryArguments as p, CLAUDE_CODE_ID as pn, parseStringToArgs$15 as pt, parseStringToArgs$11 as q, getArgumentType as qt, parseArgsToString as r, parseCustomArg as rn, INVOKEAI_UPDATE_AVAILABLE_KEY as rt, parseArgsToString$1 as s, AITOOLKIT_ID as sn, COMFYUI_RM as st, TAG_KEY as t, isMac as tn, parseStringToArgs$13 as tt, LLAMA_FACTORY_RM as u, APPLIO_ID as un, comfyuiArguments as ut, LORA_MANAGER_RM as v, GeminiCli_ID as vn, n8nArguments as vt, parseStringToArgs$5 as w, LORA_MANAGER_ID as wn, parseArgsToFiles$1 as wt, loraManagerArguments as x, KOHYA_ID as xn, parseStringToArgs$17 as xt, parseArgsToString$4 as y, HERMES_AGENT_ID as yn, Langflow_RM as yt, parseStringToArgs$9 as z, UNSLOTH_STUDIO_ID as zn, claudeCodeArguments as zt };
+export { INVOKE_RM as $, isValidArg as $t, SILLYTAVERN_RM as A, N8N_ID as An, hermesAgentArguments as At, mcMonkeyArguments as B, SWARM_ID as Bn, ClaudeCode_RM as Bt, parseArgsToString$5 as C, HERMES_AGENT_ID as Cn, Langflow_RM as Ct, parseArgsToString$6 as D, LLAMA_FACTORY_ID as Dn, HermesAgent_RM as Dt, TG_RM as E, LANGFLOW_ID as En, langflowArguments as Et, parseArgsToString$8 as F, SD_FORGE_ID as Fn, openArguments as Ft, SD_AMD_RM as G, parseArgsToFiles$4 as Gt, parseArgsToString$10 as H, TTS_ID as Hn, parseFilesToArgs$3 as Ht, parseStringToArgs$8 as I, SD_NEXT_ID as In, Flow_RM as It, lshqqytigerArguments as J, CardInfo as Jt, parseArgsToString$11 as K, parseFilesToArgs$4 as Kt, SWARM_RM as L, SD_UIUX_ID as Ln, parseArgsToString$21 as Lt, parseFilesToArgs as M, OPEN_WEBUI_ID as Mn, parseArgsToFiles$2 as Mt, sillyArguments as N, SD_AMD_ID as Nn, parseFilesToArgs$2 as Nt, parseStringToArgs$6 as O, LORA_MANAGER_ID as On, parseArgsToFiles$1 as Ot, OPEN_WEBUI_RM as P, SD_FORGE_AMD_ID as Pn, geminiCliArguments as Pt, automatic1111Arguments as Q, isPagesFixed as Qt, parseArgsToString$9 as R, SILLYTAVERN_ID as Rn, parseStringToArgs$21 as Rt, AITOOLKIT_RM as S, GeminiCli_ID as Sn, n8nArguments as St, aiToolkitArguments as T, KOHYA_ID as Tn, parseStringToArgs$18 as Tt, parseStringToArgs$10 as U, UNSLOTH_STUDIO_ID as Un, claudeCodeArguments as Ut, SD_NEXT_RM as V, TG_ID as Vn, parseArgsToFiles$3 as Vt, vladmandicArguments as W, VOICE_STUDIO_ID as Wn, AntigravityCli_RM as Wt, parseArgsToString$12 as X, catchAddress$5 as Xt, fetchExtensionList$2 as Y, GitInstaller as Yt, parseStringToArgs$12 as Z, getArgumentType as Zt, bmaltaisArguments as _, CLAUDE_CODE_ID as _n, parseStringToArgs$16 as _t, unslothStudioArguments as a, isMac as an, comfyuizludaArguments as at, parseStringToArgs$4 as b, COMFYUI_ZLUDA_ID as bn, parseArgsToString$17 as bt, parseStringToArgs$1 as c, removeAnsi as cn, parseArgsToString$14 as ct, parseArgsToString$2 as d, AITOOLKIT_ID as dn, VOICE_STUDIO_RM as dt, cloneDeep as en, parseArgsToString$13 as et, parseStringToArgs$2 as f, ALLTALK_ID as fn, parseArgsToString$15 as ft, parseStringToArgs$3 as g, CHAT_TTS_ID as gn, parseArgsToString$16 as gt, parseArgsToString$3 as h, BOLT_DIY_ID as hn, AG_RM as ht, parseStringToArgs as i, getVenvPythonPath as in, Invoke_Command_ActivateVenv as it, parseArgsToFiles as j, ONETRAINER_ID as jn, GeminiCli_RM as jt, oobaboogaArguments as k, LoLLMS_ID as kn, parseFilesToArgs$1 as kt, smartGalleryArguments as l, A1_ID as ln, parseStringToArgs$14 as lt, KOHYA_GUI_RM as m, APPLIO_ID as mn, voiceStudioArguments as mt, UNSLOTH_STUDIO_RM as n, getCdCommand as nn, INVOKEAI_INSTALL_DIR_KEY as nt, SMARTGALLERY_RM as o, isWin as on, comfyRocmArguments as ot, llamaFactoryArguments as p, ANTIGRAVITY_CLI_ID as pn, parseStringToArgs$15 as pt, parseStringToArgs$11 as q, antigravityCliArguments as qt, parseArgsToString as r, getPythonCommandByOs as rn, INVOKEAI_UPDATE_AVAILABLE_KEY as rt, parseArgsToString$1 as s, parseCustomArg as sn, COMFYUI_RM as st, TAG_KEY as t, extractGitUrl as tn, parseStringToArgs$13 as tt, LLAMA_FACTORY_RM as u, AG_ID as un, comfyuiArguments as ut, LORA_MANAGER_RM as v, COMFYUI_ID as vn, gitmyloArguments as vt, parseStringToArgs$5 as w, INVOKE_ID as wn, parseArgsToString$18 as wt, loraManagerArguments as x, FLOWISEAI_ID as xn, parseStringToArgs$17 as xt, parseArgsToString$4 as y, COMFYUI_ROCM_ID as yn, N8N_RM as yt, parseStringToArgs$9 as z, SMARTGALLERY_ID as zn, flowiseArguments as zt };
