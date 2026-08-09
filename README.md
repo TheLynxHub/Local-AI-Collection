@@ -33,11 +33,12 @@ A collection of local AI tools with **full support** for **arguments**, **config
 
 ### 🎵 Audio Generation
 
-| Developer                                                                                 | Project                                               | Developer                                                                                 | Project                                                    |
-| ----------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| <img height='20' src="https://avatars.githubusercontent.com/u/6757283?s=20&v=4"> Rsxdalv  | [TTS WebUI](https://github.com/rsxdalv/TTS-WebUI)     | <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | [Audio Generation](https://github.com/gitmylo/audio-webui) |
-| <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123 | [AllTalk TTS](https://github.com/erew123/alltalk_tts) | <img height='20' src="https://avatars.githubusercontent.com/IAHispano?s=20"> IAHispano    | [Applio](https://github.com/IAHispano/Applio)              |
-| <img height='20' src="https://avatars.githubusercontent.com/2noise?s=20"> 2noise          | [ChatTTS](https://github.com/2noise/ChatTTS)          |                                                                                           |                                                            |
+| Developer                                                                                  | Project                                                 | Developer                                                                                 | Project                                                    |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| <img height='20' src="https://avatars.githubusercontent.com/u/6757283?s=20&v=4"> Rsxdalv   | [TTS WebUI](https://github.com/rsxdalv/TTS-WebUI)       | <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | [Audio Generation](https://github.com/gitmylo/audio-webui) |
+| <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123  | [AllTalk TTS](https://github.com/erew123/alltalk_tts)   | <img height='20' src="https://avatars.githubusercontent.com/IAHispano?s=20"> IAHispano    | [Applio](https://github.com/IAHispano/Applio)              |
+| <img height='20' src="https://avatars.githubusercontent.com/2noise?s=20"> 2noise           | [ChatTTS](https://github.com/2noise/ChatTTS)            |                                                                                           |                                                            |
+| <img height='20' src="https://avatars.githubusercontent.com/u/4178343?v=4?s=20"> debpalash | [VoiceStudio](https://github.com/debpalash/VoiceStudio) |                                                                                           |                                                            |
 
 ### 🤖 Agents
 
