@@ -33,7 +33,7 @@ const Comfy_MM: CardMainMethodsInitial = utils => {
     getRunCommands: () => getRunCommands(installDir),
     readArgs: () => readArgs(installDir),
     saveArgs: args => saveArgs(args, installDir),
-    isInstalled: () => isGitTypeInstalled(installDir, 'https://github.com/erew123/alltalk_tts', ['main.py', 'comfy']),
+    isInstalled: () => isGitTypeInstalled(installDir, 'https://github.com/Comfy-Org/ComfyUI', ['main.py', 'comfy']),
     mainIpc: () => mainIpc(utils.ipc),
   };
 };
