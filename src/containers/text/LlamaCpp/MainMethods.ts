@@ -104,7 +104,7 @@ async function getRunCommands(utils: MainModuleUtils): Promise<string> {
 
 async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
   try {
-    const currentVersion = await utils.storage.get<string>(LLAMA_CPP_VERSION_KEY);
+    const currentVersion = utils.storage.get<string>(LLAMA_CPP_VERSION_KEY);
     if (!currentVersion || currentVersion === 'unknown') return false;
 
     const latestTag = await getLatestLlamaCppTag();
