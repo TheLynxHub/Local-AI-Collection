@@ -119,130 +119,102 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
 function startInstall(stepper: InstallationStepper) {
   stepper.initialSteps(['llama.cpp', 'Configure Options', 'Download & Extract', 'Finish']);
 
-  stepper.starterStep().then(({targetDirectory, chosen}) => {
-    if (chosen === 'install') {
-      stepper.nextStep().then(() => {
-        stepper.progressBar(true, 'Fetching recent llama.cpp releases from GitHub...');
+  stepper.starterStep({disableSelectDir: true}).then(() => {
+    stepper.nextStep().then(() => {
+      stepper.progressBar(true, 'Fetching recent llama.cpp releases from GitHub...');
 
-        stepper.ipc.invoke('fetch_llama_cpp_releases').then((releases: GitHubRelease[]) => {
-          const recentReleases = releases.slice(0, 15);
-          const versionOptions = recentReleases.map(r => r.tag_name);
-          const defaultVersion = versionOptions[0] || 'latest';
+      stepper.ipc.invoke('fetch_llama_cpp_releases').then((releases: GitHubRelease[]) => {
+        const recentReleases = releases.slice(0, 15);
+        const versionOptions = recentReleases.map(r => r.tag_name);
+        const defaultVersion = versionOptions[0] || 'latest';
 
-          const platformLabels = LLAMA_PLATFORM_OPTIONS.map(opt => opt.label);
-          const defaultPlatformKey = detectDefaultPlatformKey();
-          const defaultPlatformOption =
-            LLAMA_PLATFORM_OPTIONS.find(opt => opt.key === defaultPlatformKey) || LLAMA_PLATFORM_OPTIONS[0];
-          const defaultPlatformLabel = defaultPlatformOption.label;
+        const platformLabels = LLAMA_PLATFORM_OPTIONS.map(opt => opt.label);
+        const defaultPlatformKey = detectDefaultPlatformKey();
+        const defaultPlatformOption =
+          LLAMA_PLATFORM_OPTIONS.find(opt => opt.key === defaultPlatformKey) || LLAMA_PLATFORM_OPTIONS[0];
+        const defaultPlatformLabel = defaultPlatformOption.label;
 
-          const inputFields: UserInputField[] = [
-            {
-              id: 'install_dir',
-              label: 'Installation Folder',
-              type: 'directory',
-              defaultValue: targetDirectory,
-              isRequired: true,
-            },
-            {
-              id: 'version',
-              label: 'Release Version',
-              type: 'select',
-              selectOptions: versionOptions.length > 0 ? versionOptions : ['latest'],
-              defaultValue: defaultVersion,
-              isRequired: true,
-            },
-            {
-              id: 'platform',
-              label: 'Architecture / Platform / Acceleration Backend',
-              type: 'select',
-              selectOptions: platformLabels,
-              defaultValue: defaultPlatformLabel,
-              isRequired: true,
-            },
-          ];
+        const inputFields: UserInputField[] = [
+          {
+            id: 'install_dir',
+            label: 'Installation Folder',
+            type: 'directory',
+            isRequired: true,
+          },
+          {
+            id: 'version',
+            label: 'Release Version',
+            type: 'select',
+            selectOptions: versionOptions.length > 0 ? versionOptions : ['latest'],
+            defaultValue: defaultVersion,
+            isRequired: true,
+          },
+          {
+            id: 'platform',
+            label: 'Architecture / Platform / Acceleration Backend',
+            type: 'select',
+            selectOptions: platformLabels,
+            defaultValue: defaultPlatformLabel,
+            isRequired: true,
+          },
+        ];
 
-          stepper.collectUserInput(inputFields, 'llama.cpp Setup Options').then(results => {
-            const installDir = (results.find(r => r.id === 'install_dir')?.result as string) || targetDirectory || '';
-            const selectedVersionTag = (results.find(r => r.id === 'version')?.result as string) || defaultVersion;
-            const selectedPlatformLabel =
-              (results.find(r => r.id === 'platform')?.result as string) || defaultPlatformLabel;
+        stepper.collectUserInput(inputFields, 'llama.cpp Setup Options').then(results => {
+          const installDir = (results.find(r => r.id === 'install_dir')?.result as string) || '';
+          const selectedVersionTag = (results.find(r => r.id === 'version')?.result as string) || defaultVersion;
+          const selectedPlatformLabel =
+            (results.find(r => r.id === 'platform')?.result as string) || defaultPlatformLabel;
 
-            const selectedPlatformOption =
-              LLAMA_PLATFORM_OPTIONS.find(opt => opt.label === selectedPlatformLabel) || defaultPlatformOption;
+          const selectedPlatformOption =
+            LLAMA_PLATFORM_OPTIONS.find(opt => opt.label === selectedPlatformLabel) || defaultPlatformOption;
 
-            const chosenRelease = recentReleases.find(r => r.tag_name === selectedVersionTag) || recentReleases[0];
-            const assetUrl = chosenRelease
-              ? findAssetUrlForPlatform(chosenRelease.assets, selectedPlatformOption.key)
-              : undefined;
+          const chosenRelease = recentReleases.find(r => r.tag_name === selectedVersionTag) || recentReleases[0];
+          const assetUrl = chosenRelease
+            ? findAssetUrlForPlatform(chosenRelease.assets, selectedPlatformOption.key)
+            : undefined;
 
-            if (!assetUrl) {
-              stepper.showFinalStep(
-                'error',
-                'Download Error',
-                'Could not find a matching release binary asset for your selection.',
-              );
-              return;
-            }
+          if (!assetUrl) {
+            stepper.showFinalStep(
+              'error',
+              'Download Error',
+              'Could not find a matching release binary asset for your selection.',
+            );
+            return;
+          }
 
-            stepper.nextStep().then(() => {
-              stepper.progressBar(true, `Downloading llama.cpp (${selectedVersionTag})...`);
-              stepper.downloadFileFromUrl(assetUrl).then(downloadedFilePath => {
-                stepper.progressBar(true, 'Decompressing archive with 7z...');
-                stepper.utils.decompressFile(downloadedFilePath).then(extractedDir => {
-                  stepper.progressBar(true, 'Finalizing installation...');
-                  stepper
-                    .executeTerminalCommands(
-                      isWin
-                        ? `xcopy /E /Y /I "${extractedDir}\\*" "${installDir}"`
-                        : `cp -rf "${extractedDir}"/* "${installDir}"`,
-                      installDir,
-                    )
-                    .then(() => {
-                      stepper.setInstalled(installDir);
-                      const now = new Date().toLocaleString();
-                      stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
-                      stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
-                      stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
-                      stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
+          stepper.nextStep().then(() => {
+            stepper.progressBar(true, `Downloading llama.cpp (${selectedVersionTag})...`);
+            stepper.downloadFileFromUrl(assetUrl).then(downloadedFilePath => {
+              stepper.progressBar(true, 'Decompressing archive with 7z...');
+              stepper.utils.decompressFile(downloadedFilePath).then(extractedDir => {
+                stepper.progressBar(true, 'Finalizing installation...');
+                stepper
+                  .executeTerminalCommands(
+                    isWin
+                      ? `xcopy /E /Y /I "${extractedDir}\\*" "${installDir}"`
+                      : `cp -rf "${extractedDir}"/* "${installDir}"`,
+                    installDir,
+                  )
+                  .then(() => {
+                    stepper.setInstalled(installDir);
+                    const now = new Date().toLocaleString();
+                    stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
+                    stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
+                    stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
+                    stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
 
-                      stepper.showFinalStep(
-                        'success',
-                        'llama.cpp Ready!',
-                        `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
-                      );
-                    });
-                });
+                    stepper.showFinalStep(
+                      'success',
+                      'llama.cpp Ready!',
+                      `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
+                    );
+                  });
               });
             });
           });
         });
       });
-    } else {
-      stepper.ipc.invoke('validate_llama_cpp_install_dir', targetDirectory).then((isValid: boolean) => {
-        if (isValid) {
-          stepper.setInstalled(targetDirectory);
-          const now = new Date().toLocaleString();
-          stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
-          stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, targetDirectory);
-
-          stepper.ipc.invoke('fetch_llama_cpp_latest_tag').then(latestTag => {
-            stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestTag || 'located');
-          });
-
-          stepper.showFinalStep(
-            'success',
-            'llama.cpp Folder Located',
-            'Successfully verified llama.cpp binaries in the selected directory.',
-          );
-        } else {
-          stepper.showFinalStep(
-            'error',
-            'Invalid Directory',
-            'Could not find llama-server or llama-cli binaries in the selected folder.',
-          );
-        }
-      });
-    }
+    });
   });
 }
 

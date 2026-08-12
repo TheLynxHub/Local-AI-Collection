@@ -41,7 +41,7 @@ function detectIsLinux(): boolean {
 
 export const isWin: boolean = detectIsWin();
 export const isMac: boolean = detectIsMac();
-export const isLinux: boolean = detectIsMac();
+export const isLinux: boolean = detectIsLinux();
 
 export const scriptCommentStr = isWin ? 'REM' : '#';
 export const scriptEnvStr = isWin ? 'set' : 'export';
