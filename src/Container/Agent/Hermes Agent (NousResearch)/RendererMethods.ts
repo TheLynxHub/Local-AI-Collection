@@ -7,13 +7,64 @@ import {
   ChosenArgument,
   InstallationStepper,
 } from '../../../../../src/common/types/plugins/modules';
-import {DescriptionManager, isWin} from '../../../Utils/CrossUtils';
+import {DescriptionManager, isWin, parseCustomArg} from '../../../Utils/CrossUtils';
 import {getArgumentType, isValidArg, removeEscapes} from '../../../Utils/RendererUtils';
 import hermesAgentArguments from './Arguments';
 
 const INSTALL_TIME_KEY = 'install-time-hermesAgent';
 const UPDATE_TIME_KEY = 'update-time-hermesAgent';
 const UPDATE_AVAILABLE_KEY = 'update-available-version-hermesAgent';
+
+const KNOWN_SUBCOMMANDS = [
+  'chat',
+  'dashboard',
+  'gateway',
+  'profile',
+  'setup',
+  'doctor',
+  'status',
+  'auth',
+  'cron',
+  'skills',
+  'memory',
+  'mcp',
+  'plugins',
+  'portal',
+  'send',
+  'kanban',
+  'project',
+  'security audit',
+  'security',
+  'logs',
+  'config',
+  'insights',
+  'version',
+  'lsp',
+  'secrets',
+  'proxy',
+  'egress',
+  'pets',
+  'computer-use',
+  'whatsapp',
+  'slack',
+  'migrate',
+  'serve',
+  'desktop',
+  'completion',
+  'uninstall',
+];
+
+const KNOWN_GATEWAY_SUBCOMMANDS = [
+  'run',
+  'start',
+  'stop',
+  'restart',
+  'status',
+  'list',
+  'install',
+  'uninstall',
+  'setup',
+];
 
 function checkEnvLine(line: string): 'set' | 'export' | 'var' | undefined {
   if (isWin && line.startsWith('set ')) return 'set';
@@ -56,8 +107,30 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
   const envArgs: ChosenArgument[] = [];
   const cliArgs: ChosenArgument[] = [];
   const settingsArgs: ChosenArgument[] = [];
+  const customLines: string[] = [];
+
+  let subcommandStr = '';
 
   args.forEach(arg => {
+    if (arg.custom) {
+      const result = parseCustomArg(arg);
+      if (result) {
+        if (result.line) customLines.push(result.line);
+        if (result.commandArg) subcommandStr += ` ${result.commandArg}`;
+      }
+      return;
+    }
+
+    if (arg.name === 'Subcommand' && arg.value && arg.value !== 'None / Default') {
+      subcommandStr += ` ${arg.value}`;
+      return;
+    }
+
+    if (arg.name === 'gateway subcommand' && arg.value && arg.value !== 'None / Default') {
+      subcommandStr += ` ${arg.value}`;
+      return;
+    }
+
     const info = getArgumentInfo(arg.name.split(' ')[0]) || getArgumentInfo(arg.name);
 
     if (info) {
@@ -77,16 +150,25 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
     }
   });
 
-  let scriptString = '';
+  let scriptString = isWin ? '@echo off\n\n' : '#!/bin/bash\n\n';
 
   if (envArgs.length > 0) {
     envArgs.forEach(arg => {
       scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
     });
-    scriptString += '\n\n';
   }
 
-  scriptString += executeCommand;
+  if (customLines.length > 0) {
+    customLines.forEach(line => {
+      scriptString += `${line}\n`;
+    });
+  }
+
+  if (envArgs.length > 0 || customLines.length > 0) {
+    scriptString += '\n';
+  }
+
+  scriptString += `${executeCommand}${subcommandStr}`;
 
   cliArgs.forEach(arg => {
     const info = getArgumentInfo(arg.name.split(' ')[0]) || getArgumentInfo(arg.name);
@@ -127,6 +209,13 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
         value = true;
       } else if (String(value) === 'false') {
         value = false;
+      } else if (
+        typeof value === 'string' &&
+        !isNaN(Number(value)) &&
+        value.trim() !== '' &&
+        !isNaN(parseFloat(value))
+      ) {
+        value = Number(value);
       }
 
       current[keys[keys.length - 1]] = value;
@@ -210,10 +299,11 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
   const lines: string[] = data.split('\n');
 
   lines.forEach((line: string): void => {
-    if (line.startsWith('#')) return;
+    const trimmedLine = line.trim();
+    if (trimmedLine.startsWith('#') || trimmedLine.startsWith('REM') || trimmedLine === '@echo off') return;
 
-    if (line.startsWith('hermes')) {
-      const clArg: string = line.substring(6).trim();
+    if (trimmedLine.startsWith('hermes')) {
+      const clArg: string = trimmedLine.substring(6).trim();
       if (!clArg) return;
 
       const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
@@ -224,23 +314,56 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
       }
 
       for (let i = 0; i < tokens.length; i++) {
-        const flag = tokens[i];
-        if (!flag.startsWith('-')) continue;
+        const token = tokens[i];
 
-        const info = getArgumentInfo(flag);
-        if (!info) continue;
+        if (KNOWN_SUBCOMMANDS.includes(token)) {
+          argResult.push({name: 'Subcommand', value: token});
+          continue;
+        }
 
-        const type = getArgumentType(info.name, hermesAgentArguments);
-        if (type === 'CheckBox') {
-          argResult.push({name: info.name, value: 'true'});
-        } else {
-          const nextToken = tokens[i + 1];
-          if (nextToken && !nextToken.startsWith('-')) {
-            argResult.push({name: info.name, value: nextToken.replace(/"/g, '')});
-            i++;
+        if (KNOWN_GATEWAY_SUBCOMMANDS.includes(token)) {
+          argResult.push({name: 'gateway subcommand', value: token});
+          continue;
+        }
+
+        if (token.startsWith('-')) {
+          const info = getArgumentInfo(token);
+          if (info) {
+            const type = getArgumentType(info.name, hermesAgentArguments);
+            if (type === 'CheckBox') {
+              argResult.push({name: info.name, value: 'true'});
+            } else {
+              const nextToken = tokens[i + 1];
+              if (nextToken && !nextToken.startsWith('-')) {
+                argResult.push({name: info.name, value: nextToken.replace(/"/g, '')});
+                i++;
+              } else {
+                argResult.push({name: info.name, value: ''});
+              }
+            }
           } else {
-            argResult.push({name: info.name, value: ''});
+            const nextToken = tokens[i + 1];
+            if (nextToken && !nextToken.startsWith('-')) {
+              argResult.push({
+                name: token,
+                value: nextToken.replace(/"/g, ''),
+                custom: {kind: 'commandLine', type: 'Input'},
+              });
+              i++;
+            } else {
+              argResult.push({
+                name: token,
+                value: 'true',
+                custom: {kind: 'commandLine', type: 'CheckBox'},
+              });
+            }
           }
+        } else {
+          argResult.push({
+            name: token,
+            value: token,
+            custom: {kind: 'commandLine', type: 'Input'},
+          });
         }
       }
     }
@@ -249,16 +372,28 @@ export function parseStringToArgs(data: string): ChosenArgument[] {
     if (lineType === 'export' || lineType === 'set') {
       let [name, value] = line.replace(`${lineType} `, '').split('=');
       name = removeEscapes(name.trim());
-      value = removeEscapes(value.trim());
+      value = removeEscapes((value || '').trim());
       if (isValidArg(name, hermesAgentArguments)) {
         argResult.push({name, value});
+      } else {
+        argResult.push({
+          name,
+          value,
+          custom: {kind: 'envVar', type: 'Input'},
+        });
       }
     } else if (checkEnvLine(line) === 'var') {
       let [name, value] = line.split('=');
       name = removeEscapes(name.trim());
-      value = removeEscapes(value.trim());
+      value = removeEscapes((value || '').trim());
       if (isValidArg(name, hermesAgentArguments)) {
         argResult.push({name, value});
+      } else {
+        argResult.push({
+          name,
+          value,
+          custom: {kind: 'envVar', type: 'Input'},
+        });
       }
     }
   });

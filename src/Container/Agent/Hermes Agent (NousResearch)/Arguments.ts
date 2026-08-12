@@ -288,6 +288,74 @@ const hermesAgentArguments: ArgumentsData = [
     category: 'Command Line Arguments',
     sections: [
       {
+        section: 'Subcommands & Execution Modes',
+        items: [
+          {
+            name: 'Subcommand',
+            description: 'Select top-level Hermes command to execute (e.g. chat, dashboard, gateway, setup, doctor).',
+            type: 'DropDown',
+            defaultValue: 'None / Default',
+            values: [
+              'None / Default',
+              'chat',
+              'dashboard',
+              'gateway',
+              'profile',
+              'setup',
+              'doctor',
+              'status',
+              'auth',
+              'cron',
+              'skills',
+              'memory',
+              'mcp',
+              'plugins',
+              'portal',
+              'send',
+              'kanban',
+              'project',
+              'security audit',
+              'logs',
+              'config',
+              'insights',
+              'version',
+              'lsp',
+              'secrets',
+              'proxy',
+              'egress',
+              'pets',
+              'computer-use',
+              'whatsapp',
+              'slack',
+              'migrate',
+              'serve',
+              'desktop',
+              'completion',
+              'uninstall',
+            ],
+          },
+          {
+            name: 'gateway subcommand',
+            description:
+              'Subcommand action when running hermes gateway (run, start, stop, restart, status, list, install).',
+            type: 'DropDown',
+            defaultValue: 'None / Default',
+            values: [
+              'None / Default',
+              'run',
+              'start',
+              'stop',
+              'restart',
+              'status',
+              'list',
+              'install',
+              'uninstall',
+              'setup',
+            ],
+          },
+        ],
+      },
+      {
         section: 'Core Execution Options',
         items: [
           {
@@ -314,6 +382,16 @@ const hermesAgentArguments: ArgumentsData = [
             name: '-z <prompt>',
             description: 'Scripted one-shot mode (single prompt in, plain response text out, no banner/spinner).',
             type: 'Input',
+          },
+          {
+            name: '--image <path>',
+            description: 'Attach a local image file to a single query.',
+            type: 'File',
+          },
+          {
+            name: '--usage-file <path>',
+            description: 'Write a JSON usage report after a scripted one-shot run.',
+            type: 'File',
           },
           {
             name: '--yolo',
@@ -344,6 +422,11 @@ const hermesAgentArguments: ArgumentsData = [
             name: '--continue [name]',
             description: 'Resume the most recent session, or session matching title.',
             type: 'Input',
+          },
+          {
+            name: '--in <dir>',
+            description: 'Change into directory before starting or resuming.',
+            type: 'Directory',
           },
           {
             name: '--worktree',
@@ -399,6 +482,34 @@ const hermesAgentArguments: ArgumentsData = [
             name: '--profile <profile_name>',
             description: 'Select which Hermes profile to use for this invocation.',
             type: 'Input',
+          },
+        ],
+      },
+      {
+        section: 'Subcommand Specific Flags',
+        items: [
+          {
+            name: '--all',
+            description: 'Act on all profiles for gateway, status, or list commands.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--json',
+            description: 'Emit machine-readable JSON output instead of plain text.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--deep',
+            description: 'Run deeper diagnostic and status checks.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--fail-on <level>',
+            description:
+              'Exit non-zero when security audit finds vulnerabilities at or above severity (low, moderate, high, critical).',
+            type: 'DropDown',
+            defaultValue: 'critical',
+            values: ['low', 'moderate', 'high', 'critical'],
           },
         ],
       },
