@@ -65,13 +65,7 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string} {
 
 export function parseArgsToString(args: ChosenArgument[]): ParsedPreview {
   const {scriptData} = parseArgsToFiles(args);
-  const scriptTitle = `Script File Preview (${isWin ? '.bat' : '.sh'})`;
-
-  if (isMultiFilePreviewSupported) {
-    return [{title: scriptTitle, data: scriptData}];
-  }
-
-  return `------------- ${scriptTitle} -------------\n${scriptData}`;
+  return scriptData;
 }
 
 export function parseStringToArgs(data: string): ChosenArgument[] {
