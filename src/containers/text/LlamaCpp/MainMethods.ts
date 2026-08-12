@@ -5,13 +5,23 @@ import fs from 'graceful-fs';
 import {CardMainMethodsInitial, ChosenArgument, MainModuleUtils} from '../../../../../src/common/types/plugins/modules';
 import {LLAMA_CPP_ID} from '../../../constants';
 import {isWin} from '../../../utils/crossUtils';
-import {fetchLlamaCppReleases, getLatestLlamaCppTag} from './utils/github';
+import {
+  fetchLlamaCppReleases,
+  getLatestLlamaCppTag,
+  LLAMA_CPP_INSTALL_DIR_KEY,
+  LLAMA_CPP_INSTALL_TIME_KEY,
+  LLAMA_CPP_PLATFORM_KEY,
+  LLAMA_CPP_UPDATE_TIME_KEY,
+  LLAMA_CPP_VERSION_KEY,
+} from './utils/github';
 
-export const LLAMA_CPP_INSTALL_TIME_KEY = 'install-time-llamaCpp';
-export const LLAMA_CPP_INSTALL_DIR_KEY = 'install-dir-llamaCpp';
-export const LLAMA_CPP_UPDATE_TIME_KEY = 'update-time-llamaCpp';
-export const LLAMA_CPP_VERSION_KEY = 'version-llamaCpp';
-export const LLAMA_CPP_PLATFORM_KEY = 'platform-llamaCpp';
+export {
+  LLAMA_CPP_INSTALL_DIR_KEY,
+  LLAMA_CPP_INSTALL_TIME_KEY,
+  LLAMA_CPP_PLATFORM_KEY,
+  LLAMA_CPP_UPDATE_TIME_KEY,
+  LLAMA_CPP_VERSION_KEY,
+};
 
 export function getLlamaExecutablePath(dir?: string): string | undefined {
   if (!dir || !fs.existsSync(dir)) return undefined;

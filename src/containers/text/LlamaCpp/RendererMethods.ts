@@ -12,13 +12,15 @@ import {DescriptionManager, isWin} from '../../../utils/crossUtils';
 import {isMultiFilePreviewSupported} from '../../../utils/rendererUtils';
 import llamaCppArguments from './Arguments';
 import {
+  detectDefaultPlatformKey,
+  findAssetUrlForPlatform,
   LLAMA_CPP_INSTALL_DIR_KEY,
   LLAMA_CPP_INSTALL_TIME_KEY,
   LLAMA_CPP_PLATFORM_KEY,
   LLAMA_CPP_UPDATE_TIME_KEY,
   LLAMA_CPP_VERSION_KEY,
-} from './MainMethods';
-import {detectDefaultPlatformKey, findAssetUrlForPlatform, LLAMA_PLATFORM_OPTIONS} from './utils/github';
+  LLAMA_PLATFORM_OPTIONS,
+} from './utils/github';
 
 function getArgumentInfo(argName: string): {category: string; type: string; name: string} | undefined {
   for (const data of llamaCppArguments) {
