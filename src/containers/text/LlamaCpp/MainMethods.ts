@@ -95,7 +95,7 @@ async function getRunCommands(utils: MainModuleUtils): Promise<string> {
   }
 
   const savedArgs = await readArgs(dir);
-  let command = `"${exePath}"`;
+  let command = isWin ? `& "${exePath}"` : `"${exePath}"`;
 
   if (savedArgs.length > 0) {
     savedArgs.forEach(arg => {

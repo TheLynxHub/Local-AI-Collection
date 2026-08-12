@@ -9,7 +9,6 @@ import {
   UserInputField,
 } from '../../../../../src/common/types/plugins/modules';
 import {DescriptionManager, isWin} from '../../../utils/crossUtils';
-import {isMultiFilePreviewSupported} from '../../../utils/rendererUtils';
 import llamaCppArguments from './Arguments';
 import {
   detectDefaultPlatformKey,
