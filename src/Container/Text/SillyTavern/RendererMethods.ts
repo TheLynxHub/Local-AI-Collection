@@ -8,9 +8,17 @@ import {
   CardRendererMethods,
   ChosenArgument,
   InstallationStepper,
+  ParsedPreview,
 } from '../../../../../src/common/types/plugins/modules';
 import {isWin, parseCustomArg} from '../../../Utils/CrossUtils';
-import {CardInfo, catchAddress, getArgumentType, GitInstaller, isValidArg} from '../../../Utils/RendererUtils';
+import {
+  CardInfo,
+  catchAddress,
+  getArgumentType,
+  GitInstaller,
+  isMultiFilePreviewSupported,
+  isValidArg,
+} from '../../../Utils/RendererUtils';
 import sillyArguments from './Arguments';
 
 const shellCommand = isWin ? 'call start.bat' : 'bash ./start.sh';
@@ -137,13 +145,22 @@ export function parseArgsToFiles(args: ChosenArgument[]): {commands: string; con
   };
 }
 
-export function parseArgsToString(args: ChosenArgument[]): string {
+export function parseArgsToString(args: ChosenArgument[]): ParsedPreview {
   const {commands, configs} = parseArgsToFiles(args);
 
-  // Combine both file contents into a single preview string
-  let finalResult: string = '-------------Batch File Preview (.bat)-------------';
+  const commandTitle = `Script File Preview (${isWin ? '.bat' : '.sh'})`;
+  const configTitle = 'Configuration File Preview (config.yml)';
+
+  if (isMultiFilePreviewSupported) {
+    return [
+      {title: commandTitle, data: commands},
+      {title: configTitle, data: configs},
+    ];
+  }
+
+  let finalResult: string = `-------------${commandTitle}-------------`;
   finalResult += `\n\n${commands}\n\n`;
-  finalResult += '-------------Configuration File Preview (config.yml)-------------';
+  finalResult += `-------------${configTitle}-------------`;
   finalResult += `\n\n${configs}`;
 
   return finalResult;

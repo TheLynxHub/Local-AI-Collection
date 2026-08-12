@@ -8,9 +8,10 @@ import {
   ChosenArgument,
   DataSection,
   InstallationStepper,
+  ParsedPreview,
 } from '../../../../../src/common/types/plugins/modules';
 import {DescriptionManager, isWin} from '../../../Utils/CrossUtils';
-import {getArgumentType, isValidArg, removeEscapes} from '../../../Utils/RendererUtils';
+import {getArgumentType, isMultiFilePreviewSupported, isValidArg, removeEscapes} from '../../../Utils/RendererUtils';
 import openArguments from '../../Text/OpenWebUI/Arguments';
 import geminiCliArguments from './Arguments';
 
@@ -137,23 +138,24 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
   return {scriptData: scriptString, settingsData: settingsString};
 }
 
-export function parseArgsToString(args: ChosenArgument[]): string {
+export function parseArgsToString(args: ChosenArgument[]): ParsedPreview {
   const {settingsData, scriptData} = parseArgsToFiles(args);
 
-  let envString = `-------------Script File Preview (${isWin ? '.bat' : '.sh'})-------------\n`;
+  const scriptTitle = `Script File Preview (${isWin ? '.bat' : '.sh'})`;
+  const scriptContent = !isEmpty(scriptData) ? scriptData : '# No environment variables or command lines configured.\n';
 
-  if (!isEmpty(scriptData)) {
-    envString += scriptData;
-  } else {
-    envString += '# No environment variables or command lines configured.\n';
+  const settingsTitle = 'Settings File (settings.json)';
+  const settingsContent = !isEmpty(settingsData) ? settingsData : '{\n  // No settings configured.\n}';
+
+  if (isMultiFilePreviewSupported) {
+    return [
+      {title: scriptTitle, data: scriptContent},
+      {title: settingsTitle, data: settingsContent},
+    ];
   }
 
-  let settingsString = '---------------- Settings File (settings.json) ----------------\n';
-  if (!isEmpty(settingsData)) {
-    settingsString += settingsData;
-  } else {
-    settingsString += '{\n  // No settings configured.\n}';
-  }
+  const envString = `-------------${scriptTitle}-------------\n${scriptContent}`;
+  const settingsString = `---------------- ${settingsTitle} ----------------\n${settingsContent}`;
 
   return `${envString}${settingsString}`;
 }
