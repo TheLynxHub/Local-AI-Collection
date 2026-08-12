@@ -18,6 +18,7 @@ import {
   INVOKE_ID,
   KOHYA_ID,
   LANGFLOW_ID,
+  LLAMA_CPP_ID,
   LLAMA_FACTORY_ID,
   LoLLMS_ID,
   LORA_MANAGER_ID,
@@ -59,6 +60,7 @@ import {mainMethods as Ls_MM} from './containers/image/SdAmdgpu';
 import {mainMethods as Vlad_MM} from './containers/image/SdNext';
 import {mainMethods as McMonkey_MM} from './containers/image/SwarmUi';
 import {mainMethods as BOLT_DIY_MM} from './containers/text/BoltDiy';
+import {mainMethods as LlamaCpp_MM} from './containers/text/LlamaCpp';
 import {mainMethods as LoLLM_MM} from './containers/text/LoLLMs';
 import {mainMethods as OpenWebUI_MM} from './containers/text/OpenWebUi';
 import {mainMethods as Silly_MM} from './containers/text/SillyTavern';
@@ -98,7 +100,9 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: INVOKE_ID, methods: () => Invoke_MM(utils)},
     {id: ALLTALK_ID, methods: () => Rrew123_MM(utils)},
     {id: OPEN_WEBUI_ID, methods: () => OpenWebUI_MM(utils)},
+    {id: LLAMA_CPP_ID, methods: () => LlamaCpp_MM(utils)},
     {id: FLOWISEAI_ID, methods: () => Flow_MM(utils)},
+
     {id: LANGFLOW_ID, methods: () => Langflow_MM(utils)},
 
     {id: LoLLMS_ID, methods: () => LoLLM_MM(utils)},

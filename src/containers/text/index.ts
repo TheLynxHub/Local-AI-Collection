@@ -1,6 +1,7 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {BOLT_DIY_ID, LoLLMS_ID, OPEN_WEBUI_ID, SILLYTAVERN_ID, TG_ID} from '../../constants';
+import {BOLT_DIY_ID, LLAMA_CPP_ID, LoLLMS_ID, OPEN_WEBUI_ID, SILLYTAVERN_ID, TG_ID} from '../../constants';
 import {rendererMethods as BOLT_DIY_RM} from './BoltDiy';
+import {arguments as llamaArguments, rendererMethods as LLAMA_CPP_RM} from './LlamaCpp';
 import {rendererMethods as LoLLM_RM} from './LoLLMs';
 import {arguments as openArguments, rendererMethods as OPEN_WEBUI_RM} from './OpenWebUi';
 import {arguments as sillyArguments, rendererMethods as SILLYTAVERN_RM} from './SillyTavern';
@@ -20,6 +21,19 @@ const textPage: PagesData = {
       arguments: oobaboogaArguments,
       methods: TG_RM,
       installationType: 'git',
+    },
+    {
+      id: LLAMA_CPP_ID,
+      title: 'llama.cpp',
+      description: 'LLM inference in C/C++',
+      repoUrl: 'https://github.com/ggml-org/llama.cpp',
+      type: 'text',
+      installationType: 'others',
+      uninstallType: 'removeFolder',
+      supportCustomArguments: true,
+      arguments: llamaArguments,
+      methods: LLAMA_CPP_RM,
+      developer: 'ggml-org',
     },
     {
       id: OPEN_WEBUI_ID,
