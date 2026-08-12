@@ -1,11 +1,15 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
 import {BOLT_DIY_ID, LLAMA_CPP_ID, LoLLMS_ID, OPEN_WEBUI_ID, SILLYTAVERN_ID, TG_ID} from '../../constants';
-import {rendererMethods as BOLT_DIY_RM} from './BoltDiy';
-import {arguments as llamaArguments, rendererMethods as LLAMA_CPP_RM} from './LlamaCpp';
-import {rendererMethods as LoLLM_RM} from './LoLLMs';
-import {arguments as openArguments, rendererMethods as OPEN_WEBUI_RM} from './OpenWebUi';
-import {arguments as sillyArguments, rendererMethods as SILLYTAVERN_RM} from './SillyTavern';
-import {arguments as oobaboogaArguments, rendererMethods as TG_RM} from './TextGenOobabooga';
+import BOLT_DIY_RM from './BoltDiy/RendererMethods';
+import llamaArguments from './LlamaCpp/Arguments';
+import LLAMA_CPP_RM from './LlamaCpp/RendererMethods';
+import LoLLM_RM from './LoLLMs/RendererMethods';
+import openArguments from './OpenWebUi/Arguments';
+import OPEN_WEBUI_RM from './OpenWebUi/RendererMethods';
+import sillyArguments from './SillyTavern/Arguments';
+import SILLYTAVERN_RM from './SillyTavern/RendererMethods';
+import oobaboogaArguments from './TextGenOobabooga/Arguments';
+import TG_RM from './TextGenOobabooga/RendererMethods';
 
 const textPage: PagesData = {
   routePath: 'textGen_page',

@@ -1,11 +1,13 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
 import {AG_ID, ALLTALK_ID, APPLIO_ID, CHAT_TTS_ID, TTS_ID, VOICE_STUDIO_ID} from '../../constants';
-import {rendererMethods as ALLTALK_RM} from './AllTalkTts';
-import {rendererMethods as APPLIO_RM} from './Applio';
-import {arguments as gitmyloArguments, rendererMethods as AG_RM} from './AudioGitmylo';
-import {rendererMethods as CHAT_TTS_RM} from './ChatTts';
-import {rendererMethods as TTS_RM} from './TextToSpeech';
-import {arguments as voiceStudioArguments, rendererMethods as VOICE_STUDIO_RM} from './VoiceStudio';
+import ALLTALK_RM from './AllTalkTts/RendererMethods';
+import APPLIO_RM from './Applio/RendererMethods';
+import gitmyloArguments from './AudioGitmylo/Arguments';
+import AG_RM from './AudioGitmylo/RendererMethods';
+import CHAT_TTS_RM from './ChatTts/RendererMethods';
+import TTS_RM from './TextToSpeech/RendererMethods';
+import voiceStudioArguments from './VoiceStudio/Arguments';
+import VOICE_STUDIO_RM from './VoiceStudio/RendererMethods';
 
 const audioPage: PagesData = {
   routePath: 'audioGen_page',

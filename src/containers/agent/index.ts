@@ -8,13 +8,20 @@ import {
   LANGFLOW_ID,
   N8N_ID,
 } from '../../constants';
-import {arguments as antigravityCliArguments, rendererMethods as AntigravityCli_RM} from './AntigravityCli';
-import {arguments as claudeCodeArguments, rendererMethods as ClaudeCode_RM} from './ClaudeCode';
-import {arguments as flowiseArguments, rendererMethods as Flow_RM} from './Flowise';
-import {arguments as geminiCliArguments, rendererMethods as GeminiCli_RM} from './GeminiCli';
-import {arguments as hermesAgentArguments, rendererMethods as HermesAgent_RM} from './HermesAgent';
-import {arguments as langflowArguments, rendererMethods as Langflow_RM} from './Langflow';
-import {arguments as n8nArguments, rendererMethods as N8N_RM} from './N8N';
+import antigravityCliArguments from './AntigravityCli/Arguments';
+import AntigravityCli_RM from './AntigravityCli/RendererMethods';
+import claudeCodeArguments from './ClaudeCode/Arguments';
+import ClaudeCode_RM from './ClaudeCode/RendererMethods';
+import flowiseArguments from './Flowise/Arguments';
+import Flow_RM from './Flowise/RendererMethods';
+import geminiCliArguments from './GeminiCli/Arguments';
+import GeminiCli_RM from './GeminiCli/RendererMethods';
+import hermesAgentArguments from './HermesAgent/Arguments';
+import HermesAgent_RM from './HermesAgent/RendererMethods';
+import langflowArguments from './Langflow/Arguments';
+import Langflow_RM from './Langflow/RendererMethods';
+import n8nArguments from './N8N/Arguments';
+import N8N_RM from './N8N/RendererMethods';
 
 const agentsPage: PagesData = {
   routePath: 'agents_page',

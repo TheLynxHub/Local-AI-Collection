@@ -8,13 +8,19 @@ import {
   SMARTGALLERY_ID,
   UNSLOTH_STUDIO_ID,
 } from '../../constants';
-import {arguments as aiToolkitArguments, rendererMethods as AITOOLKIT_RM} from './AiToolkit';
-import {arguments as loraManagerArguments, rendererMethods as LORA_MANAGER_RM} from './ComfyUiLoraManager';
-import {arguments as bmaltaisArguments, rendererMethods as KOHYA_GUI_RM} from './KohyasGui';
-import {arguments as llamaFactoryArguments, rendererMethods as LLAMA_FACTORY_RM} from './LlamaFactory';
-import {rendererMethods as ONETRAINER_RM} from './OneTrainer';
-import {arguments as smartGalleryArguments, rendererMethods as SMARTGALLERY_RM} from './SmartGallery';
-import {arguments as unslothStudioArguments, rendererMethods as UNSLOTH_STUDIO_RM} from './UnslothStudio';
+import aiToolkitArguments from './AiToolkit/Arguments';
+import AITOOLKIT_RM from './AiToolkit/RendererMethods';
+import loraManagerArguments from './ComfyUiLoraManager/Arguments';
+import LORA_MANAGER_RM from './ComfyUiLoraManager/RendererMethods';
+import bmaltaisArguments from './KohyasGui/Arguments';
+import KOHYA_GUI_RM from './KohyasGui/RendererMethods';
+import llamaFactoryArguments from './LlamaFactory/Arguments';
+import LLAMA_FACTORY_RM from './LlamaFactory/RendererMethods';
+import ONETRAINER_RM from './OneTrainer/RendererMethods';
+import smartGalleryArguments from './SmartGallery/Arguments';
+import SMARTGALLERY_RM from './SmartGallery/RendererMethods';
+import unslothStudioArguments from './UnslothStudio/Arguments';
+import UNSLOTH_STUDIO_RM from './UnslothStudio/RendererMethods';
 
 /* eslint max-len: 0 */
 

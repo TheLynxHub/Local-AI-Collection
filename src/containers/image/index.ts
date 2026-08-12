@@ -18,22 +18,35 @@ import {
   SWARM_ID,
 } from '../../constants';
 import {isPagesFixed} from '../../utils/rendererUtils';
-import {arguments as aiToolkitArguments, rendererMethods as AITOOLKIT_RM} from '../tools/AiToolkit';
-import {arguments as loraManagerArguments, rendererMethods as LORA_MANAGER_RM} from '../tools/ComfyUiLoraManager';
-import {arguments as bmaltaisArguments, rendererMethods as KOHYA_GUI_RM} from '../tools/KohyasGui';
-import {rendererMethods as ONETRAINER_RM} from '../tools/OneTrainer';
-import {arguments as smartGalleryArguments, rendererMethods as SMARTGALLERY_RM} from '../tools/SmartGallery';
-import {arguments as automatic1111Arguments, rendererMethods as A1_RM} from './Automatic1111Sd';
-import {arguments as comfyArguments, rendererMethods as COMFYUI_RM} from './ComfyUi';
-import {arguments as comfyRocmArguments, rendererMethods as COMFYUI_ROCM_RM} from './ComfyUiRocm';
-import {arguments as comfyZludaArguments, rendererMethods as COMFYUI_ZLUDA_RM} from './ComfyUiZluda';
-import {arguments as invokeArguments, rendererMethods as INVOKE_RM} from './InvokeAi';
-import {arguments as lshqqytigerArguments, rendererMethods as SD_AMD_RM} from './SdAmdgpu';
-import {rendererMethods as SD_FORGE_RM} from './SdForge';
-import {arguments as lshqqytigerForgeArguments, rendererMethods as SD_FORGE_AMD_RM} from './SdForgeAmdgpu';
-import {arguments as vladmandicArguments, rendererMethods as SD_NEXT_RM} from './SdNext';
-import {rendererMethods as SD_UIUX_RM} from './SdUiUx';
-import {arguments as mcMonkeyArguments, rendererMethods as SWARM_RM} from './SwarmUi';
+import aiToolkitArguments from '../tools/AiToolkit/Arguments';
+import AITOOLKIT_RM from '../tools/AiToolkit/RendererMethods';
+import loraManagerArguments from '../tools/ComfyUiLoraManager/Arguments';
+import LORA_MANAGER_RM from '../tools/ComfyUiLoraManager/RendererMethods';
+import bmaltaisArguments from '../tools/KohyasGui/Arguments';
+import KOHYA_GUI_RM from '../tools/KohyasGui/RendererMethods';
+import ONETRAINER_RM from '../tools/OneTrainer/RendererMethods';
+import smartGalleryArguments from '../tools/SmartGallery/Arguments';
+import SMARTGALLERY_RM from '../tools/SmartGallery/RendererMethods';
+import automatic1111Arguments from './Automatic1111Sd/Arguments';
+import A1_RM from './Automatic1111Sd/RendererMethods';
+import comfyArguments from './ComfyUi/Arguments';
+import COMFYUI_RM from './ComfyUi/RendererMethods';
+import comfyRocmArguments from './ComfyUiRocm/Arguments';
+import COMFYUI_ROCM_RM from './ComfyUiRocm/RendererMethods';
+import comfyZludaArguments from './ComfyUiZluda/Arguments';
+import COMFYUI_ZLUDA_RM from './ComfyUiZluda/RendererMethods';
+import invokeArguments from './InvokeAi/Arguments';
+import INVOKE_RM from './InvokeAi/RendererMethods';
+import lshqqytigerArguments from './SdAmdgpu/Arguments';
+import SD_AMD_RM from './SdAmdgpu/RendererMethods';
+import SD_FORGE_RM from './SdForge/RendererMethods';
+import lshqqytigerForgeArguments from './SdForgeAmdgpu/Arguments';
+import SD_FORGE_AMD_RM from './SdForgeAmdgpu/RendererMethods';
+import vladmandicArguments from './SdNext/Arguments';
+import SD_NEXT_RM from './SdNext/RendererMethods';
+import SD_UIUX_RM from './SdUiUx/RendererMethods';
+import mcMonkeyArguments from './SwarmUi/Arguments';
+import SWARM_RM from './SwarmUi/RendererMethods';
 
 /* eslint max-len: 0 */
 
