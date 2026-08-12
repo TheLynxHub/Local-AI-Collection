@@ -26,8 +26,22 @@ function detectIsMac(): boolean {
   return true;
 }
 
+function detectIsLinux(): boolean {
+  // Renderer process - use preload-exposed platform
+  if (typeof window !== 'undefined' && window.osPlatform) {
+    return window.osPlatform === 'linux';
+  }
+  // Main process - use process.platform directly (synchronous)
+  if (typeof process !== 'undefined' && process.platform) {
+    return process.platform === 'linux';
+  }
+  // Fallback (shouldn't happen in Electron)
+  return true;
+}
+
 export const isWin: boolean = detectIsWin();
 export const isMac: boolean = detectIsMac();
+export const isLinux: boolean = detectIsMac();
 
 export const scriptCommentStr = isWin ? 'REM' : '#';
 export const scriptEnvStr = isWin ? 'set' : 'export';
