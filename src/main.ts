@@ -36,40 +36,40 @@ import {
   TTS_ID,
   UNSLOTH_STUDIO_ID,
   VOICE_STUDIO_ID,
-} from './Constants';
-import AntigravityCli_MM from './Container/Agent/Antigravity CLI/MainMethods';
-import ClaudeCode_MM from './Container/Agent/Claude Code/MainMethods';
-import Flow_MM from './Container/Agent/Flowise (FlowiseAI)/MainMethods';
-import GeminiCli_MM from './Container/Agent/Gemini CLI/MainMethods';
-import HermesAgent_MM from './Container/Agent/Hermes Agent (NousResearch)/MainMethods';
-import Langflow_MM from './Container/Agent/Langflow (langflow-ai)/MainMethods';
-import N8N_MM from './Container/Agent/N8N/MainMethods';
-import Rrew123_MM from './Container/Audio/AllTalk TTS (erew123)/MainMethods';
-import Applio_MM from './Container/Audio/Applio/MainMethods';
-import Gitmylo_MM from './Container/Audio/Audio Generation (gitmylo)/MainMethods';
-import ChatTTS_MM from './Container/Audio/ChatTTS (2noise)/MainMethods';
-import Rsx_MM from './Container/Audio/Text to Speech (rsxdalv)/MainMethods';
-import VoiceStudio_MM from './Container/Audio/VoiceStudio (debpalash)/MainMethods';
-import Comfy_MM from './Container/Image/ComfyUI (comfyanonymous)/MainMethods';
-import ComfyRocm_MM from './Container/Image/ComfyUI ROCm (patientx)/MainMethods';
-import ComfyZluda_MM from './Container/Image/ComfyUI Zluda (patientx)/MainMethods';
-import Invoke_MM from './Container/Image/InvokeAI/MainMethods';
-import A1_MM from './Container/Image/SD (AUTOMATIC1111)/MainMethods';
-import Ls_MM from './Container/Image/SD AMDGPU (lshqqytiger)/MainMethods';
-import Vlad_MM from './Container/Image/SD Next (vladmandic)/MainMethods';
-import McMonkey_MM from './Container/Image/SwarmUI (mcmonkeyprojects)/MainMethods';
-import BOLT_DIY_MM from './Container/Text/BoltDiy (StackblitzLabs)/MainMethods';
-import LoLLM_MM from './Container/Text/LoLLMs (ParisNeo)/MainMethods';
-import OpenWebUI_MM from './Container/Text/OpenWebUI/MainMethods';
-import Silly_MM from './Container/Text/SillyTavern/MainMethods';
-import Ooba_MM from './Container/Text/Text Generation (oobabooga)/MainMethods';
-import AIToolkit_MM from './Container/Tools/AI Toolkit (ostris)/MainMethods';
-import LoraManager_MM from './Container/Tools/ComfyUI-Lora-Manager (willmiao)/MainMethods';
-import Bmaltais_MM from './Container/Tools/Kohyas GUI (bmaltais)/MainMethods';
-import LlamaFactory_MM from './Container/Tools/LlamaFactory (hiyouga)/MainMethods';
-import Nerogar_MM from './Container/Tools/OneTrainer (Nerogar)/MainMethods';
-import SmartGallery_MM from './Container/Tools/SmartGallery (biagiomaf)/MainMethods';
-import Unsloth_MM from './Container/Tools/Unsloth Studio/MainMethods';
+} from './constants';
+import {mainMethods as AntigravityCli_MM} from './containers/agent/AntigravityCli';
+import {mainMethods as ClaudeCode_MM} from './containers/agent/ClaudeCode';
+import {mainMethods as Flow_MM} from './containers/agent/Flowise';
+import {mainMethods as GeminiCli_MM} from './containers/agent/GeminiCli';
+import {mainMethods as HermesAgent_MM} from './containers/agent/HermesAgent';
+import {mainMethods as Langflow_MM} from './containers/agent/Langflow';
+import {mainMethods as N8N_MM} from './containers/agent/N8N';
+import {mainMethods as Rrew123_MM} from './containers/audio/AllTalkTts';
+import {mainMethods as Applio_MM} from './containers/audio/Applio';
+import {mainMethods as Gitmylo_MM} from './containers/audio/AudioGitmylo';
+import {mainMethods as ChatTTS_MM} from './containers/audio/ChatTts';
+import {mainMethods as Rsx_MM} from './containers/audio/TextToSpeech';
+import {mainMethods as VoiceStudio_MM} from './containers/audio/VoiceStudio';
+import {mainMethods as A1_MM} from './containers/image/Automatic1111Sd';
+import {mainMethods as Comfy_MM} from './containers/image/ComfyUi';
+import {mainMethods as ComfyRocm_MM} from './containers/image/ComfyUiRocm';
+import {mainMethods as ComfyZluda_MM} from './containers/image/ComfyUiZluda';
+import {mainMethods as Invoke_MM} from './containers/image/InvokeAi';
+import {mainMethods as Ls_MM} from './containers/image/SdAmdgpu';
+import {mainMethods as Vlad_MM} from './containers/image/SdNext';
+import {mainMethods as McMonkey_MM} from './containers/image/SwarmUi';
+import {mainMethods as BOLT_DIY_MM} from './containers/text/BoltDiy';
+import {mainMethods as LoLLM_MM} from './containers/text/LoLLMs';
+import {mainMethods as OpenWebUI_MM} from './containers/text/OpenWebUi';
+import {mainMethods as Silly_MM} from './containers/text/SillyTavern';
+import {mainMethods as Ooba_MM} from './containers/text/TextGenOobabooga';
+import {mainMethods as AIToolkit_MM} from './containers/tools/AiToolkit';
+import {mainMethods as LoraManager_MM} from './containers/tools/ComfyUiLoraManager';
+import {mainMethods as Bmaltais_MM} from './containers/tools/KohyasGui';
+import {mainMethods as LlamaFactory_MM} from './containers/tools/LlamaFactory';
+import {mainMethods as Nerogar_MM} from './containers/tools/OneTrainer';
+import {mainMethods as SmartGallery_MM} from './containers/tools/SmartGallery';
+import {mainMethods as Unsloth_MM} from './containers/tools/UnslothStudio';
 
 export default async function initialModule(utils: MainModuleUtils): Promise<MainModules[]> {
   return [
