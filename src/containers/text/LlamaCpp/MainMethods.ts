@@ -152,6 +152,11 @@ function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('fetch_llama_cpp_latest_tag', async () => {
     return await getLatestLlamaCppTag();
   });
+
+  utils.ipc.handle('copy_llama_cpp_files', async (_event, src: string, dest: string) => {
+    await fs.promises.mkdir(dest, {recursive: true});
+    await fs.promises.cp(src, dest, {recursive: true, force: true});
+  });
 }
 
 const LlamaCpp_MM: CardMainMethodsInitial = utils => {

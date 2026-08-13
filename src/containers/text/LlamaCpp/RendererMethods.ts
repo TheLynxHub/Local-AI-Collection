@@ -8,7 +8,7 @@ import {
   ParsedPreview,
   UserInputField,
 } from '../../../../../src/common/types/plugins/modules';
-import {DescriptionManager, isWin} from '../../../utils/crossUtils';
+import {DescriptionManager} from '../../../utils/crossUtils';
 import llamaCppArguments from './Arguments';
 import {
   detectDefaultPlatformKey,
@@ -183,27 +183,20 @@ function startInstall(stepper: InstallationStepper) {
               stepper.progressBar(true, 'Decompressing archive with 7z...');
               stepper.utils.decompressFile(downloadedFilePath).then(extractedDir => {
                 stepper.progressBar(true, 'Finalizing installation...');
-                stepper
-                  .executeTerminalCommands(
-                    isWin
-                      ? `xcopy /E /Y /I "${extractedDir}\\*" "${installDir}"`
-                      : `cp -rf "${extractedDir}"/* "${installDir}"`,
-                    installDir,
-                  )
-                  .then(() => {
-                    stepper.setInstalled(installDir);
-                    const now = new Date().toLocaleString();
-                    stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
-                    stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
-                    stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
-                    stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
+                stepper.ipc.invoke('copy_llama_cpp_files', extractedDir, installDir).then(() => {
+                  stepper.setInstalled(installDir);
+                  const now = new Date().toLocaleString();
+                  stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
+                  stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
+                  stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
+                  stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
 
-                    stepper.showFinalStep(
-                      'success',
-                      'llama.cpp Ready!',
-                      `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
-                    );
-                  });
+                  stepper.showFinalStep(
+                    'success',
+                    'llama.cpp Ready!',
+                    `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
+                  );
+                });
               });
             });
           });
@@ -240,23 +233,18 @@ function startUpdate(stepper: InstallationStepper, dir?: string) {
           stepper.progressBar(true, 'Decompressing update package via 7z...');
           stepper.utils.decompressFile(downloadedFilePath).then(extractedDir => {
             stepper.progressBar(true, 'Replacing binary files...');
-            stepper
-              .executeTerminalCommands(
-                isWin ? `xcopy /E /Y /I "${extractedDir}\\*" "${dir}"` : `cp -rf "${extractedDir}"/* "${dir}"`,
-                dir,
-              )
-              .then(() => {
-                stepper.setUpdated();
-                const now = new Date().toLocaleString();
-                stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
-                stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestRelease.tag_name);
+            stepper.ipc.invoke('copy_llama_cpp_files', extractedDir, dir).then(() => {
+              stepper.setUpdated();
+              const now = new Date().toLocaleString();
+              stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
+              stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestRelease.tag_name);
 
-                stepper.showFinalStep(
-                  'success',
-                  'llama.cpp Updated!',
-                  `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`,
-                );
-              });
+              stepper.showFinalStep(
+                'success',
+                'llama.cpp Updated!',
+                `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`,
+              );
+            });
           });
         });
       });
