@@ -26,10 +26,10 @@ A collection of local AI tools with **full support** for **arguments**, **config
 ### 📝 Text Generation
 
 | Developer                                                                                     | Project                                                | Developer                                                                                          | Project                                                   |
-| --------------------------------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------ |----------------------------------------------------------------------------------------------------| --------------------------------------------------------- |
 | <img height='20' src="https://avatars.githubusercontent.com/u/112222186?s=20&v=4"> Oobabooga  | [TextGen](https://github.com/oobabooga/textgen)        | <img height='20' src="https://avatars.githubusercontent.com/u/134869877?s=20&v=4"> SillyTavern     | [SillyTavern](https://github.com/SillyTavern/SillyTavern) |
 | <img height='20' src="https://avatars.githubusercontent.com/u/158137808?s=20&v=4"> Open-WebUI | [Open WebUI](https://github.com/open-webui/open-webui) | <img height='20' src="https://avatars.githubusercontent.com/u/164069192?s=20&v=4"> StackBlitz Labs | [bolt.diy](https://github.com/stackblitz-labs/bolt.diy)   |
-| <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo      | [LoLLMs](https://github.com/ParisNeo/lollms-webui)     |                                                                                                    |                                                           |
+| <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo      | [LoLLMs](https://github.com/ParisNeo/lollms-webui)     | <img height='20' src="https://avatars.githubusercontent.com/u/134263123?s=20&v=4"> llama.cpp        | [llama.cpp](https://github.com/ggml-org/llama.cpp)        |
 
 ### 🎵 Audio Generation
 
