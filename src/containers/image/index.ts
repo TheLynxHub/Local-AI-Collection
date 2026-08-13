@@ -1,32 +1,17 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
 import {
   A1_ID,
-  AITOOLKIT_ID,
   COMFYUI_ID,
   COMFYUI_ROCM_ID,
   COMFYUI_ZLUDA_ID,
   INVOKE_ID,
-  KOHYA_ID,
-  LORA_MANAGER_ID,
-  ONETRAINER_ID,
   SD_AMD_ID,
   SD_FORGE_AMD_ID,
   SD_FORGE_ID,
   SD_NEXT_ID,
   SD_UIUX_ID,
-  SMARTGALLERY_ID,
   SWARM_ID,
 } from '../../constants';
-import {isPagesFixed} from '../../utils/rendererUtils';
-import aiToolkitArguments from '../tools/AiToolkit/Arguments';
-import AITOOLKIT_RM from '../tools/AiToolkit/RendererMethods';
-import loraManagerArguments from '../tools/ComfyUiLoraManager/Arguments';
-import LORA_MANAGER_RM from '../tools/ComfyUiLoraManager/RendererMethods';
-import bmaltaisArguments from '../tools/KohyasGui/Arguments';
-import KOHYA_GUI_RM from '../tools/KohyasGui/RendererMethods';
-import ONETRAINER_RM from '../tools/OneTrainer/RendererMethods';
-import smartGalleryArguments from '../tools/SmartGallery/Arguments';
-import SMARTGALLERY_RM from '../tools/SmartGallery/RendererMethods';
 import automatic1111Arguments from './Automatic1111Sd/Arguments';
 import A1_RM from './Automatic1111Sd/RendererMethods';
 import comfyArguments from './ComfyUi/Arguments';
@@ -184,64 +169,5 @@ const imagePage: PagesData = {
     },
   ],
 };
-
-if (!isPagesFixed) {
-  imagePage.cards.push(
-    {
-      id: ONETRAINER_ID,
-      title: 'OneTrainer',
-      description: 'OneTrainer is a one-stop solution for all your stable diffusion training needs.',
-      repoUrl: 'https://github.com/Nerogar/OneTrainer',
-      type: 'image',
-      supportCustomArguments: true,
-      methods: ONETRAINER_RM,
-      installationType: 'git',
-    },
-    {
-      id: KOHYA_ID,
-      title: "Kohya's GUI",
-      description: 'User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.',
-      repoUrl: 'https://github.com/bmaltais/kohya_ss',
-      type: 'image',
-      arguments: bmaltaisArguments,
-      methods: KOHYA_GUI_RM,
-      installationType: 'git',
-    },
-    {
-      id: AITOOLKIT_ID,
-      title: 'AI Toolkit',
-      description: 'The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.',
-      repoUrl: 'https://github.com/ostris/ai-toolkit',
-      type: 'image',
-      supportCustomArguments: true,
-      arguments: aiToolkitArguments,
-      methods: AITOOLKIT_RM,
-      installationType: 'git',
-    },
-    {
-      id: SMARTGALLERY_ID,
-      title: 'SmartGallery',
-      description: 'A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.',
-      repoUrl: 'https://github.com/biagiomaf/smart-comfyui-gallery',
-      type: 'image',
-      arguments: smartGalleryArguments,
-      supportCustomArguments: true,
-      methods: SMARTGALLERY_RM,
-      installationType: 'git',
-    },
-    {
-      id: LORA_MANAGER_ID,
-      title: 'ComfyUI LoRA Manager',
-      description:
-        'Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.',
-      repoUrl: 'https://github.com/willmiao/ComfyUI-Lora-Manager',
-      type: 'image',
-      supportCustomArguments: true,
-      arguments: loraManagerArguments,
-      methods: LORA_MANAGER_RM,
-      installationType: 'git',
-    },
-  );
-}
 
 export default imagePage;

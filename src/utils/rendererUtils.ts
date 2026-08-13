@@ -184,6 +184,5 @@ export async function CardInfo(
   });
 }
 
-export const isPagesFixed = typeof window !== 'undefined' && window.LynxHub && window.LynxHub.buildNumber > 45;
 export const isMultiFilePreviewSupported =
   typeof window !== 'undefined' && window.LynxHub && window.LynxHub.buildNumber > 55;
