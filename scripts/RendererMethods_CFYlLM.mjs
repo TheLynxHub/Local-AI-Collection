@@ -1,4 +1,4 @@
-//#region module/src/Constants.ts
+//#region module/src/constants.ts
 const A1_ID = "Automatic1111_SD";
 const SD_AMD_ID = "LSHQQYTIGER_SD";
 const SD_FORGE_AMD_ID = "LSHQQYTIGER_Forge_SD";
@@ -30,13 +30,14 @@ const CLAUDE_CODE_ID = "ClaudeCode_TG";
 const ANTIGRAVITY_CLI_ID = "AntigravityCli_TG";
 const HERMES_AGENT_ID = "HermesAgent_TG";
 const LANGFLOW_ID = "Langflow_AI";
+const LLAMA_CPP_ID = "GgmlOrg_LlamaCpp";
 const TTS_ID = "Rsxdalv_AG";
 const AG_ID = "Gitmylo_AG";
 const APPLIO_ID = "IAHispano_Applio";
 const CHAT_TTS_ID = "ChatTTS_2Noise";
 const VOICE_STUDIO_ID = "Debpalash_VoiceStudio";
 //#endregion
-//#region module/src/Utils/CrossUtils.ts
+//#region module/src/utils/crossUtils.ts
 function detectIsWin() {
 	if (typeof window !== "undefined" && window.osPlatform) return window.osPlatform === "win32";
 	if (typeof process !== "undefined" && process.platform) return process.platform === "win32";
@@ -47,8 +48,14 @@ function detectIsMac() {
 	if (typeof process !== "undefined" && process.platform) return process.platform === "darwin";
 	return true;
 }
+function detectIsLinux() {
+	if (typeof window !== "undefined" && window.osPlatform) return window.osPlatform === "linux";
+	if (typeof process !== "undefined" && process.platform) return process.platform === "linux";
+	return true;
+}
 const isWin = detectIsWin();
 const isMac = detectIsMac();
+const isLinux = detectIsLinux();
 const scriptCommentStr = isWin ? "REM" : "#";
 function getPythonCommandByOs() {
 	if (isMac) return {
@@ -2172,7 +2179,7 @@ function isEmpty(value) {
 	return true;
 }
 //#endregion
-//#region module/src/Utils/RendererUtils.ts
+//#region module/src/utils/rendererUtils.ts
 function isValidArg(name, Arguments) {
 	if (isEmpty(name)) return false;
 	for (const argument of Arguments) if ("sections" in argument) {
@@ -2296,9 +2303,9 @@ async function CardInfo(url, extensionFolder, api, callback) {
 		descManager.updateItem(1, 0, formatSize(result));
 	});
 }
-const isPagesFixed = typeof window !== "undefined" && window.LynxHub && window.LynxHub.buildNumber > 45;
+const isMultiFilePreviewSupported = typeof window !== "undefined" && window.LynxHub && window.LynxHub.buildNumber > 55;
 //#endregion
-//#region module/src/Container/Agent/Antigravity CLI/Arguments.ts
+//#region module/src/containers/agent/AntigravityCli/Arguments.ts
 const antigravityCliArguments = [
 	{
 		category: "LynxHub Configuration",
@@ -2484,7 +2491,7 @@ const antigravityCliArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Antigravity CLI/RendererMethods.ts
+//#region module/src/containers/agent/AntigravityCli/RendererMethods.ts
 const INSTALL_TIME_KEY$8 = "install-time-antigravityCli";
 const UPDATE_TIME_KEY$8 = "update-time-antigravityCli";
 const UPDATE_AVAILABLE_KEY$6 = "update-available-version-antigravityCli";
@@ -2563,13 +2570,18 @@ function parseArgsToFiles$4(args) {
 }
 function parseArgsToString$23(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$4(args);
-	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
-	if (!isEmpty(scriptData)) scriptPreview += scriptData;
-	else scriptPreview += "# No environment variables or command line arguments configured.\n";
-	let settingsPreview = "---------------- Settings File (settings.json) ----------------\n";
-	if (!isEmpty(settingsData)) settingsPreview += settingsData;
-	else settingsPreview += "{\n  // No settings configured.\n}";
-	return `${scriptPreview}${settingsPreview}`;
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
+	const settingsTitle = "Settings File (settings.json)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$4(scriptContent, settingsContent) {
 	const scriptArgs = parseStringToArgs$23(scriptContent);
@@ -2748,7 +2760,7 @@ const AntigravityCli_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Agent/Claude Code/Arguments.ts
+//#region module/src/containers/agent/ClaudeCode/Arguments.ts
 const claudeCodeArguments = [
 	{
 		category: "LynxHub Configuration",
@@ -3227,7 +3239,7 @@ const claudeCodeArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Claude Code/RendererMethods.ts
+//#region module/src/containers/agent/ClaudeCode/RendererMethods.ts
 const INSTALL_TIME_KEY$7 = "install-time-claudeCode";
 const UPDATE_TIME_KEY$7 = "update-time-claudeCode";
 function checkEnvLine$1(line) {
@@ -3323,13 +3335,18 @@ function parseArgsToFiles$3(args) {
 }
 function parseArgsToString$22(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$3(args);
-	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
-	if (!isEmpty(scriptData)) scriptPreview += scriptData;
-	else scriptPreview += "# No environment variables or command line arguments configured.\n";
-	let settingsPreview = "---------------- Settings File (settings.json) ----------------\n";
-	if (!isEmpty(settingsData)) settingsPreview += settingsData;
-	else settingsPreview += "{\n  // No settings configured.\n}";
-	return `${scriptPreview}${settingsPreview}`;
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
+	const settingsTitle = "Settings File (settings.json)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$3(scriptContent, settingsContent) {
 	const scriptArgs = parseStringToArgs$22(scriptContent);
@@ -3502,7 +3519,7 @@ const ClaudeCode_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Agent/Flowise (FlowiseAI)/Arguments.ts
+//#region module/src/containers/agent/Flowise/Arguments.ts
 const flowiseArguments = [
 	{
 		category: "General",
@@ -4228,7 +4245,7 @@ const flowiseArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Flowise (FlowiseAI)/RendererMethods.ts
+//#region module/src/containers/agent/Flowise/RendererMethods.ts
 const INSTALL_TIME_KEY$6 = "install-time-flowise";
 const UPDATE_TIME_KEY$6 = "update-time-flowise";
 const UPDATE_AVAILABLE_KEY$5 = "update-available-version-flowise";
@@ -4385,7 +4402,7 @@ const Flow_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Text/OpenWebUI/Arguments/index.ts
+//#region module/src/containers/text/OpenWebUi/Arguments/index.ts
 const openArguments = [
 	{
 		category: "App/Backend",
@@ -9026,7 +9043,7 @@ const openArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Gemini CLI/Arguments.ts
+//#region module/src/containers/agent/GeminiCli/Arguments.ts
 const geminiCliArguments = [
 	{
 		category: "LynxHub Configuration",
@@ -9644,7 +9661,7 @@ const geminiCliArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Gemini CLI/RendererMethods.ts
+//#region module/src/containers/agent/GeminiCli/RendererMethods.ts
 const INSTALL_TIME_KEY$5 = "install-time-geminiCli";
 const UPDATE_TIME_KEY$5 = "update-time-geminiCli";
 const UPDATE_AVAILABLE_KEY$4 = "update-available-version-geminiCli";
@@ -9725,13 +9742,18 @@ function parseArgsToFiles$2(args) {
 }
 function parseArgsToString$20(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$2(args);
-	let envString = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
-	if (!isEmpty(scriptData)) envString += scriptData;
-	else envString += "# No environment variables or command lines configured.\n";
-	let settingsString = "---------------- Settings File (settings.json) ----------------\n";
-	if (!isEmpty(settingsData)) settingsString += settingsData;
-	else settingsString += "{\n  // No settings configured.\n}";
-	return `${envString}${settingsString}`;
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command lines configured.\n";
+	const settingsTitle = "Settings File (settings.json)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$2(scriptContent, settingsContent) {
 	const scriptArgs = parseStringToArgs$20(scriptContent);
@@ -9907,7 +9929,7 @@ const GeminiCli_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Agent/Hermes Agent (NousResearch)/Arguments.ts
+//#region module/src/containers/agent/HermesAgent/Arguments.ts
 const hermesAgentArguments = [
 	{
 		category: "LynxHub Configuration",
@@ -10189,150 +10211,264 @@ const hermesAgentArguments = [
 	},
 	{
 		category: "Command Line Arguments",
-		sections: [{
-			section: "Core Execution Options",
-			items: [
-				{
-					name: "--model <model_name>",
-					description: "Specify LLM provider and model (e.g. openrouter:anthropic/claude-sonnet-4).",
-					type: "Input"
-				},
-				{
-					name: "--provider <provider_name>",
-					description: "Force a specific provider (openrouter, nous, anthropic, openai-api, gemini, etc.).",
-					type: "Input"
-				},
-				{
-					name: "-q <prompt>",
-					description: "Run a single prompt non-interactively and exit.",
-					type: "Input"
-				},
-				{
-					name: "-p <prompt>",
-					description: "Run a single prompt non-interactively and exit.",
-					type: "Input"
-				},
-				{
-					name: "-z <prompt>",
-					description: "Scripted one-shot mode (single prompt in, plain response text out, no banner/spinner).",
-					type: "Input"
-				},
-				{
-					name: "--yolo",
-					description: "Bypass all approval prompts and auto-approve command executions.",
-					type: "CheckBox"
-				},
-				{
-					name: "--portal",
-					description: "Use Nous Portal subscription setup for models and tool gateway.",
-					type: "CheckBox"
-				},
-				{
-					name: "--toolsets <toolsets>",
-					description: "Enable a comma-separated set of toolsets (e.g. web,terminal,skills).",
-					type: "Input"
-				},
-				{
-					name: "--skills <skills>",
-					description: "Preload one or more skills for the session (comma-separated).",
-					type: "Input"
-				},
-				{
-					name: "--resume <session_id>",
-					description: "Resume a previous session by ID or title.",
-					type: "Input"
-				},
-				{
-					name: "--continue [name]",
-					description: "Resume the most recent session, or session matching title.",
-					type: "Input"
-				},
-				{
-					name: "--worktree",
-					description: "Start in an isolated git worktree for parallel-agent workflows.",
-					type: "CheckBox"
-				},
-				{
-					name: "--checkpoints",
-					description: "Enable filesystem checkpoints before destructive file changes.",
-					type: "CheckBox"
-				},
-				{
-					name: "--pass-session-id",
-					description: "Include the session ID in the agent system prompt.",
-					type: "CheckBox"
-				},
-				{
-					name: "--ignore-user-config",
-					description: "Ignore ~/.hermes/config.yaml and fall back to built-in defaults.",
-					type: "CheckBox"
-				},
-				{
-					name: "--ignore-rules",
-					description: "Skip auto-injection of AGENTS.md, SOUL.md, .cursorrules, memory, and skills.",
-					type: "CheckBox"
-				},
-				{
-					name: "--safe-mode",
-					description: "Troubleshooting mode: disable ALL user config, rules, plugins, shell hooks, and MCP servers.",
-					type: "CheckBox"
-				},
-				{
-					name: "--tui",
-					description: "Launch the TUI interface instead of classic CLI REPL.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cli",
-					description: "Force classic prompt_toolkit REPL interface.",
-					type: "CheckBox"
-				},
-				{
-					name: "--source <source>",
-					description: "Session source tag for filtering (default: cli).",
-					type: "Input"
-				},
-				{
-					name: "--max-turns <turns>",
-					description: "Maximum tool-calling iterations per turn.",
-					type: "Number"
-				},
-				{
-					name: "--profile <profile_name>",
-					description: "Select which Hermes profile to use for this invocation.",
-					type: "Input"
-				}
-			]
-		}, {
-			section: "Display & Help Options",
-			items: [
-				{
-					name: "-v",
-					description: "Enable verbose logging output.",
-					type: "CheckBox"
-				},
-				{
-					name: "-Q",
-					description: "Programmatic quiet mode: suppress banner, spinner, and tool previews.",
-					type: "CheckBox"
-				},
-				{
-					name: "--debug",
-					description: "Enable verbose debug logging.",
-					type: "CheckBox"
-				},
-				{
-					name: "--help",
-					description: "Displays help information about Hermes Agent commands.",
-					type: "CheckBox"
-				},
-				{
-					name: "--version",
-					description: "Displays the version of Hermes Agent.",
-					type: "CheckBox"
-				}
-			]
-		}]
+		sections: [
+			{
+				section: "Subcommands & Execution Modes",
+				items: [{
+					name: "Subcommand",
+					description: "Select top-level Hermes command to execute (e.g. chat, dashboard, gateway, setup, doctor).",
+					type: "DropDown",
+					defaultValue: "None / Default",
+					values: [
+						"None / Default",
+						"chat",
+						"dashboard",
+						"gateway",
+						"profile",
+						"setup",
+						"doctor",
+						"status",
+						"auth",
+						"cron",
+						"skills",
+						"memory",
+						"mcp",
+						"plugins",
+						"portal",
+						"send",
+						"kanban",
+						"project",
+						"security audit",
+						"logs",
+						"config",
+						"insights",
+						"version",
+						"lsp",
+						"secrets",
+						"proxy",
+						"egress",
+						"pets",
+						"computer-use",
+						"whatsapp",
+						"slack",
+						"migrate",
+						"serve",
+						"desktop",
+						"completion",
+						"uninstall"
+					]
+				}, {
+					name: "gateway subcommand",
+					description: "Subcommand action when running hermes gateway (run, start, stop, restart, status, list, install).",
+					type: "DropDown",
+					defaultValue: "None / Default",
+					values: [
+						"None / Default",
+						"run",
+						"start",
+						"stop",
+						"restart",
+						"status",
+						"list",
+						"install",
+						"uninstall",
+						"setup"
+					]
+				}]
+			},
+			{
+				section: "Core Execution Options",
+				items: [
+					{
+						name: "--model <model_name>",
+						description: "Specify LLM provider and model (e.g. openrouter:anthropic/claude-sonnet-4).",
+						type: "Input"
+					},
+					{
+						name: "--provider <provider_name>",
+						description: "Force a specific provider (openrouter, nous, anthropic, openai-api, gemini, etc.).",
+						type: "Input"
+					},
+					{
+						name: "-q <prompt>",
+						description: "Run a single prompt non-interactively and exit.",
+						type: "Input"
+					},
+					{
+						name: "-p <prompt>",
+						description: "Run a single prompt non-interactively and exit.",
+						type: "Input"
+					},
+					{
+						name: "-z <prompt>",
+						description: "Scripted one-shot mode (single prompt in, plain response text out, no banner/spinner).",
+						type: "Input"
+					},
+					{
+						name: "--image <path>",
+						description: "Attach a local image file to a single query.",
+						type: "File"
+					},
+					{
+						name: "--usage-file <path>",
+						description: "Write a JSON usage report after a scripted one-shot run.",
+						type: "File"
+					},
+					{
+						name: "--yolo",
+						description: "Bypass all approval prompts and auto-approve command executions.",
+						type: "CheckBox"
+					},
+					{
+						name: "--portal",
+						description: "Use Nous Portal subscription setup for models and tool gateway.",
+						type: "CheckBox"
+					},
+					{
+						name: "--toolsets <toolsets>",
+						description: "Enable a comma-separated set of toolsets (e.g. web,terminal,skills).",
+						type: "Input"
+					},
+					{
+						name: "--skills <skills>",
+						description: "Preload one or more skills for the session (comma-separated).",
+						type: "Input"
+					},
+					{
+						name: "--resume <session_id>",
+						description: "Resume a previous session by ID or title.",
+						type: "Input"
+					},
+					{
+						name: "--continue [name]",
+						description: "Resume the most recent session, or session matching title.",
+						type: "Input"
+					},
+					{
+						name: "--in <dir>",
+						description: "Change into directory before starting or resuming.",
+						type: "Directory"
+					},
+					{
+						name: "--worktree",
+						description: "Start in an isolated git worktree for parallel-agent workflows.",
+						type: "CheckBox"
+					},
+					{
+						name: "--checkpoints",
+						description: "Enable filesystem checkpoints before destructive file changes.",
+						type: "CheckBox"
+					},
+					{
+						name: "--pass-session-id",
+						description: "Include the session ID in the agent system prompt.",
+						type: "CheckBox"
+					},
+					{
+						name: "--ignore-user-config",
+						description: "Ignore ~/.hermes/config.yaml and fall back to built-in defaults.",
+						type: "CheckBox"
+					},
+					{
+						name: "--ignore-rules",
+						description: "Skip auto-injection of AGENTS.md, SOUL.md, .cursorrules, memory, and skills.",
+						type: "CheckBox"
+					},
+					{
+						name: "--safe-mode",
+						description: "Troubleshooting mode: disable ALL user config, rules, plugins, shell hooks, and MCP servers.",
+						type: "CheckBox"
+					},
+					{
+						name: "--tui",
+						description: "Launch the TUI interface instead of classic CLI REPL.",
+						type: "CheckBox"
+					},
+					{
+						name: "--cli",
+						description: "Force classic prompt_toolkit REPL interface.",
+						type: "CheckBox"
+					},
+					{
+						name: "--source <source>",
+						description: "Session source tag for filtering (default: cli).",
+						type: "Input"
+					},
+					{
+						name: "--max-turns <turns>",
+						description: "Maximum tool-calling iterations per turn.",
+						type: "Number"
+					},
+					{
+						name: "--profile <profile_name>",
+						description: "Select which Hermes profile to use for this invocation.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Subcommand Specific Flags",
+				items: [
+					{
+						name: "--all",
+						description: "Act on all profiles for gateway, status, or list commands.",
+						type: "CheckBox"
+					},
+					{
+						name: "--json",
+						description: "Emit machine-readable JSON output instead of plain text.",
+						type: "CheckBox"
+					},
+					{
+						name: "--deep",
+						description: "Run deeper diagnostic and status checks.",
+						type: "CheckBox"
+					},
+					{
+						name: "--fail-on <level>",
+						description: "Exit non-zero when security audit finds vulnerabilities at or above severity (low, moderate, high, critical).",
+						type: "DropDown",
+						defaultValue: "critical",
+						values: [
+							"low",
+							"moderate",
+							"high",
+							"critical"
+						]
+					}
+				]
+			},
+			{
+				section: "Display & Help Options",
+				items: [
+					{
+						name: "-v",
+						description: "Enable verbose logging output.",
+						type: "CheckBox"
+					},
+					{
+						name: "-Q",
+						description: "Programmatic quiet mode: suppress banner, spinner, and tool previews.",
+						type: "CheckBox"
+					},
+					{
+						name: "--debug",
+						description: "Enable verbose debug logging.",
+						type: "CheckBox"
+					},
+					{
+						name: "--help",
+						description: "Displays help information about Hermes Agent commands.",
+						type: "CheckBox"
+					},
+					{
+						name: "--version",
+						description: "Displays the version of Hermes Agent.",
+						type: "CheckBox"
+					}
+				]
+			}
+		]
 	},
 	{
 		category: "Settings",
@@ -10509,10 +10645,59 @@ const hermesAgentArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/Hermes Agent (NousResearch)/RendererMethods.ts
+//#region module/src/containers/agent/HermesAgent/RendererMethods.ts
 const INSTALL_TIME_KEY$4 = "install-time-hermesAgent";
 const UPDATE_TIME_KEY$4 = "update-time-hermesAgent";
 const UPDATE_AVAILABLE_KEY$3 = "update-available-version-hermesAgent";
+const KNOWN_SUBCOMMANDS = [
+	"chat",
+	"dashboard",
+	"gateway",
+	"profile",
+	"setup",
+	"doctor",
+	"status",
+	"auth",
+	"cron",
+	"skills",
+	"memory",
+	"mcp",
+	"plugins",
+	"portal",
+	"send",
+	"kanban",
+	"project",
+	"security audit",
+	"security",
+	"logs",
+	"config",
+	"insights",
+	"version",
+	"lsp",
+	"secrets",
+	"proxy",
+	"egress",
+	"pets",
+	"computer-use",
+	"whatsapp",
+	"slack",
+	"migrate",
+	"serve",
+	"desktop",
+	"completion",
+	"uninstall"
+];
+const KNOWN_GATEWAY_SUBCOMMANDS = [
+	"run",
+	"start",
+	"stop",
+	"restart",
+	"status",
+	"list",
+	"install",
+	"uninstall",
+	"setup"
+];
 function checkEnvLine(line) {
 	if (isWin && line.startsWith("set ")) return "set";
 	if (line.startsWith("export ")) return "export";
@@ -10535,7 +10720,25 @@ function parseArgsToFiles$1(args) {
 	const envArgs = [];
 	const cliArgs = [];
 	const settingsArgs = [];
+	const customLines = [];
+	let subcommandStr = "";
 	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (result) {
+				if (result.line) customLines.push(result.line);
+				if (result.commandArg) subcommandStr += ` ${result.commandArg}`;
+			}
+			return;
+		}
+		if (arg.name === "Subcommand" && arg.value && arg.value !== "None / Default") {
+			subcommandStr += ` ${arg.value}`;
+			return;
+		}
+		if (arg.name === "gateway subcommand" && arg.value && arg.value !== "None / Default") {
+			subcommandStr += ` ${arg.value}`;
+			return;
+		}
 		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
 		if (info) switch (info.category) {
 			case "Environment Variables":
@@ -10547,14 +10750,15 @@ function parseArgsToFiles$1(args) {
 			case "Settings": settingsArgs.push(arg);
 		}
 	});
-	let scriptString = "";
-	if (envArgs.length > 0) {
-		envArgs.forEach((arg) => {
-			scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		});
-		scriptString += "\n\n";
-	}
-	scriptString += executeCommand;
+	let scriptString = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	if (envArgs.length > 0) envArgs.forEach((arg) => {
+		scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+	});
+	if (customLines.length > 0) customLines.forEach((line) => {
+		scriptString += `${line}\n`;
+	});
+	if (envArgs.length > 0 || customLines.length > 0) scriptString += "\n";
+	scriptString += `${executeCommand}${subcommandStr}`;
 	cliArgs.forEach((arg) => {
 		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
 		if (!info) return;
@@ -10577,6 +10781,7 @@ function parseArgsToFiles$1(args) {
 			let value = arg.value;
 			if (String(value) === "true") value = true;
 			else if (String(value) === "false") value = false;
+			else if (typeof value === "string" && !isNaN(Number(value)) && value.trim() !== "" && !isNaN(parseFloat(value))) value = Number(value);
 			current[keys[keys.length - 1]] = value;
 		});
 		if (!isEmpty(settingsJson)) settingsString = JSON.stringify(settingsJson, null, 2);
@@ -10588,13 +10793,18 @@ function parseArgsToFiles$1(args) {
 }
 function parseArgsToString$19(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$1(args);
-	let scriptPreview = `-------------Script File Preview (${isWin ? ".bat" : ".sh"})-------------\n`;
-	if (!isEmpty(scriptData)) scriptPreview += scriptData;
-	else scriptPreview += "# No environment variables or command line arguments configured.\n";
-	let settingsPreview = "---------------- Settings File (config.yaml) ----------------\n";
-	if (!isEmpty(settingsData)) settingsPreview += settingsData;
-	else settingsPreview += "{\n  // No settings configured.\n}";
-	return `${scriptPreview}${settingsPreview}`;
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
+	const settingsTitle = "Settings File (config.yaml)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$1(scriptContent, settingsContent) {
 	const scriptArgs = parseStringToArgs$19(scriptContent);
@@ -10633,54 +10843,114 @@ function parseFilesToArgs$1(scriptContent, settingsContent) {
 function parseStringToArgs$19(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		if (line.startsWith("hermes")) {
-			const clArg = line.substring(6).trim();
+		const trimmedLine = line.trim();
+		if (trimmedLine.startsWith("#") || trimmedLine.startsWith("REM") || trimmedLine === "@echo off") return;
+		if (trimmedLine.startsWith("hermes")) {
+			const clArg = trimmedLine.substring(6).trim();
 			if (!clArg) return;
 			const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
 			const tokens = [];
 			let tokenMatch;
 			while ((tokenMatch = tokenRegex.exec(clArg)) !== null) tokens.push(tokenMatch[1] ?? tokenMatch[2] ?? tokenMatch[3]);
 			for (let i = 0; i < tokens.length; i++) {
-				const flag = tokens[i];
-				if (!flag.startsWith("-")) continue;
-				const info = getArgumentInfo(flag);
-				if (!info) continue;
-				if (getArgumentType(info.name, hermesAgentArguments) === "CheckBox") argResult.push({
-					name: info.name,
-					value: "true"
-				});
-				else {
-					const nextToken = tokens[i + 1];
-					if (nextToken && !nextToken.startsWith("-")) {
-						argResult.push({
-							name: info.name,
-							value: nextToken.replace(/"/g, "")
-						});
-						i++;
-					} else argResult.push({
-						name: info.name,
-						value: ""
+				const token = tokens[i];
+				if (KNOWN_SUBCOMMANDS.includes(token)) {
+					argResult.push({
+						name: "Subcommand",
+						value: token
 					});
+					continue;
 				}
+				if (KNOWN_GATEWAY_SUBCOMMANDS.includes(token)) {
+					argResult.push({
+						name: "gateway subcommand",
+						value: token
+					});
+					continue;
+				}
+				if (token.startsWith("-")) {
+					const info = getArgumentInfo(token);
+					if (info) {
+						if (getArgumentType(info.name, hermesAgentArguments) === "CheckBox") argResult.push({
+							name: info.name,
+							value: "true"
+						});
+						else {
+							const nextToken = tokens[i + 1];
+							if (nextToken && !nextToken.startsWith("-")) {
+								argResult.push({
+									name: info.name,
+									value: nextToken.replace(/"/g, "")
+								});
+								i++;
+							} else argResult.push({
+								name: info.name,
+								value: ""
+							});
+						}
+					} else {
+						const nextToken = tokens[i + 1];
+						if (nextToken && !nextToken.startsWith("-")) {
+							argResult.push({
+								name: token,
+								value: nextToken.replace(/"/g, ""),
+								custom: {
+									kind: "commandLine",
+									type: "Input"
+								}
+							});
+							i++;
+						} else argResult.push({
+							name: token,
+							value: "true",
+							custom: {
+								kind: "commandLine",
+								type: "CheckBox"
+							}
+						});
+					}
+				} else argResult.push({
+					name: token,
+					value: token,
+					custom: {
+						kind: "commandLine",
+						type: "Input"
+					}
+				});
 			}
 		}
 		const lineType = checkEnvLine(line);
 		if (lineType === "export" || lineType === "set") {
 			let [name, value] = line.replace(`${lineType} `, "").split("=");
 			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
+			value = removeEscapes((value || "").trim());
 			if (isValidArg(name, hermesAgentArguments)) argResult.push({
 				name,
 				value
 			});
+			else argResult.push({
+				name,
+				value,
+				custom: {
+					kind: "envVar",
+					type: "Input"
+				}
+			});
 		} else if (checkEnvLine(line) === "var") {
 			let [name, value] = line.split("=");
 			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
+			value = removeEscapes((value || "").trim());
 			if (isValidArg(name, hermesAgentArguments)) argResult.push({
 				name,
 				value
+			});
+			else argResult.push({
+				name,
+				value,
+				custom: {
+					kind: "envVar",
+					type: "Input"
+				}
 			});
 		}
 	});
@@ -10773,7 +11043,7 @@ const HermesAgent_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Agent/Langflow (langflow-ai)/Arguments.ts
+//#region module/src/containers/agent/Langflow/Arguments.ts
 const langflowArguments = [{
 	category: "General",
 	sections: [
@@ -10889,7 +11159,7 @@ const langflowArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Agent/Langflow (langflow-ai)/RendererMethods.ts
+//#region module/src/containers/agent/Langflow/RendererMethods.ts
 const INSTALL_TIME_KEY$3 = "install-time-langflow";
 const UPDATE_TIME_KEY$3 = "update-time-langflow";
 const UPDATE_AVAILABLE_KEY$2 = "update-available-version-langflow";
@@ -11090,7 +11360,7 @@ const Langflow_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Agent/N8N/Arguments/index.ts
+//#region module/src/containers/agent/N8N/Arguments/index.ts
 const n8nArguments = [
 	{
 		category: "AI Assistant",
@@ -12869,7 +13139,7 @@ const n8nArguments = [
 	}
 ];
 //#endregion
-//#region module/src/Container/Agent/N8N/RendererMethods.ts
+//#region module/src/containers/agent/N8N/RendererMethods.ts
 const INSTALL_TIME_KEY$2 = "install-time-n8n";
 const UPDATE_TIME_KEY$2 = "update-time-n8n";
 const UPDATE_AVAILABLE_KEY$1 = "update-available-version-n8n";
@@ -13027,7 +13297,7 @@ const N8N_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Audio/Audio Generation (gitmylo)/Arguments.ts
+//#region module/src/containers/audio/AudioGitmylo/Arguments.ts
 const gitmyloArguments = [{
 	category: "Command Line Arguments",
 	sections: [{
@@ -13098,7 +13368,7 @@ const gitmyloArguments = [{
 	}]
 }];
 //#endregion
-//#region module/src/Container/Audio/Audio Generation (gitmylo)/RendererMethods.ts
+//#region module/src/containers/audio/AudioGitmylo/RendererMethods.ts
 const shellCommand$5 = isWin ? "call run.bat" : "bash ./run.sh";
 const URL$5 = "https://github.com/gitmylo/audio-webui";
 function parseArgsToString$16(args) {
@@ -13166,7 +13436,7 @@ const AG_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Audio/VoiceStudio (debpalash)/Arguments.ts
+//#region module/src/containers/audio/VoiceStudio/Arguments.ts
 const voiceStudioArguments = [{
 	category: "Environment Variables",
 	sections: [
@@ -13298,7 +13568,7 @@ const voiceStudioArguments = [{
 	}]
 }];
 //#endregion
-//#region module/src/Container/Audio/VoiceStudio (debpalash)/RendererMethods.ts
+//#region module/src/containers/audio/VoiceStudio/RendererMethods.ts
 const VOICE_STUDIO_URL = "https://github.com/debpalash/VoiceStudio";
 const BUN_WIN_INSTALL = "powershell -c \"irm bun.sh/install.ps1|iex\"";
 const BUN_UNIX_INSTALL = "curl -fsSL https://bun.com/install | bash";
@@ -13456,2279 +13726,7 @@ const VOICE_STUDIO_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Image/ComfyUI (comfyanonymous)/Arguments.ts
-const comfyuiArguments = [{
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--oneapi-device-selector",
-					description: "Sets the oneAPI device(s) this instance will use.",
-					type: "Input"
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API.",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				},
-				{
-					name: "--front-end-version",
-					description: "Specifies the version of the frontend to be used (format: [repoOwner]/[repoName]@[version]).",
-					type: "Input",
-					defaultValue: "comfyanonymous/ComfyUI@latest"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				},
-				{
-					name: "--cuda-malloc",
-					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-cuda-malloc",
-					description: "Disable cudaMallocAsync.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e8m0fnu-unet",
-					description: "Store unet weights in fp8_e8m0fnu.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-intermediates",
-					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--force-channels-last",
-					description: "Force channels last format when inferencing the models.",
-					type: "CheckBox"
-				},
-				{
-					name: "--directml",
-					description: "Use torch-directml.",
-					type: "Input"
-				},
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "none"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-ram",
-					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
-					type: "Input"
-				},
-				{
-					name: "--high-ram",
-					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-split-cross-attention",
-					description: "Use the split cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-xformers",
-					description: "Disable xformers.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-upcast-attention",
-					description: "Force enable attention upcasting, please report if it fixes black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-upcast-attention",
-					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-non-blocking",
-					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast",
-					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: fp16_accumulation fp8_matrix_mult cublas_ops autotune",
-					type: "DropDown",
-					values: [
-						"",
-						"fp16_accumulation",
-						"fp8_matrix_mult",
-						"cublas_ops",
-						"autotune"
-					],
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--default-hashing-function",
-					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
-					type: "DropDown",
-					defaultValue: "sha256",
-					values: [
-						"md5",
-						"sha1",
-						"sha256",
-						"sha512"
-					]
-				},
-				{
-					name: "--deterministic",
-					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
-					type: "CheckBox"
-				},
-				{
-					name: "--mmap-torch-files",
-					description: "Use mmap when loading ckpt/pt files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-mmap",
-					description: "Don't use mmap when loading safetensors.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-print-server",
-					description: "Don't print server output.",
-					type: "CheckBox"
-				},
-				{
-					name: "--debug-hang",
-					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
-					type: "CheckBox"
-				},
-				{
-					name: "--quick-test-for-ci",
-					description: "Quick test for CI.",
-					type: "CheckBox"
-				},
-				{
-					name: "--windows-standalone-build",
-					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-metadata",
-					description: "Disable saving prompt metadata in files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-all-custom-nodes",
-					description: "Disable loading all custom nodes.",
-					type: "CheckBox"
-				},
-				{
-					name: "--whitelist-custom-nodes",
-					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
-					type: "Input"
-				},
-				{
-					name: "--multi-user",
-					description: "Enables per-user storage.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				},
-				{
-					name: "--log-stdout",
-					description: "Send normal process output to stdout instead of stderr (default).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-assets",
-					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-asset-hashing",
-					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
-					type: "CheckBox"
-				},
-				{
-					name: "--feature-flag",
-					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted. Examples: --feature-flag show_signin_button=true or --feature-flag show_signin_button",
-					type: "Input"
-				},
-				{
-					name: "--list-feature-flags",
-					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--reserve-vram",
-					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
-					type: "Input"
-				},
-				{
-					name: "--vram-headroom",
-					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--async-offload",
-					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
-					type: "Input"
-				},
-				{
-					name: "--disable-async-offload",
-					description: "Disable async weight offloading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-dynamic-vram",
-					description: "Disable dynamic VRAM and use estimate based model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-dynamic-vram",
-					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast-disk",
-					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				},
-				{
-					name: "--database-url",
-					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
-					type: "Input"
-				}
-			]
-		}
-	]
-}, {
-	category: "Environment Variables",
-	items: [
-		{
-			name: "HSA_OVERRIDE_GFX_VERSION",
-			description: "Override GFX version for unsupported AMD GPUs. Use \"10.3.0\" for 6700, 6600 and other RDNA2 or older cards. Use \"11.0.0\" for 7600 and other RDNA3 cards.",
-			type: "Input",
-			defaultValue: "11.0.0"
-		},
-		{
-			name: "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL",
-			description: "Enable experimental memory efficient attention on AMD GPUs. Should already be enabled by default on RDNA3.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch tunable operations which might speed things up at the cost of a very slow initial run.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "Set the MIOpen find mode to accelerate find API calls. NORMAL: Full find (benchmarks all solvers). FAST: Uses FindDb or fallback (fast startup, may reduce performance). HYBRID: Uses FindDb or full find on miss (balanced). DYNAMIC_HYBRID: Uses FindDb or find skipping non-dynamic kernels (faster than hybrid, default). TRUST_VERIFY: Uses FindDb with verification and constrained tuning. TRUST_VERIFY_FULL: Same as TRUST_VERIFY with no tuning time limits.",
-			type: "DropDown",
-			values: [
-				"NORMAL",
-				"FAST",
-				"HYBRID",
-				"DYNAMIC_HYBRID",
-				"TRUST_VERIFY",
-				"TRUST_VERIFY_FULL"
-			],
-			defaultValue: "DYNAMIC_HYBRID"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "Controls verbosity of MIOpen internal operation logging. 0: Default (level 4 for release, level 5 for debug). 1: Quiet (no logging). 3: Errors including fatal errors. 4: All errors and warnings. 5: Info level debugging. 6: Detailed debugging. 7: Trace level with additional details.",
-			type: "DropDown",
-			values: [
-				"0",
-				"1",
-				"3",
-				"4",
-				"5",
-				"6",
-				"7"
-			],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_ENABLE_LOGGING",
-			description: "Prints basic layer-by-layer MIOpen API call information with parameters and configurations.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_ENABLE_LOGGING_CMD",
-			description: "Outputs associated MIOpenDriver command lines to console for debugging.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_FIND_ENFORCE",
-			description: "Controls auto-tune behavior and database updates. NONE: No change in default behavior. DB_UPDATE: Always perform auto-tune and update PerfDb. SEARCH: Auto-tune even if not requested via API. SEARCH_DB_UPDATE: Combination of DB_UPDATE and SEARCH. DB_CLEAN: Remove optimized values from User PerfDb.",
-			type: "DropDown",
-			values: [
-				"NONE",
-				"DB_UPDATE",
-				"SEARCH",
-				"SEARCH_DB_UPDATE",
-				"DB_CLEAN"
-			],
-			defaultValue: "NONE"
-		},
-		{
-			name: "MIOPEN_DEBUG_DISABLE_FIND_DB",
-			description: "Disables FindDb functionality. Set to 1 to disable, 0 or unset to enable.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_COMPILE_PARALLEL_LEVEL",
-			description: "Controls parallel compilation thread count for Find() calls. Default: 1 when using COMGR, otherwise half the number of available hardware threads. Set to 1 to disable multi-threaded compilation.",
-			type: "Input"
-		},
-		{
-			name: "MIOPEN_DEBUG_CONVOLUTION_DETERMINISTIC",
-			description: "Controls deterministic convolution behavior. Set to 1 to enable deterministic algorithms (slower but reproducible results).",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		}
-	]
-}];
-//#endregion
-//#region module/src/Container/Image/ComfyUI (comfyanonymous)/RendererMethods.ts
-const COMFYUI_URL = "https://github.com/Comfy-Org/ComfyUI";
-function isEnvironmentVariable$1(name) {
-	for (const arg of comfyuiArguments) if (arg.category === "Environment Variables") {
-		if ("items" in arg) return arg.items.some((item) => item.name === name);
-	}
-	return false;
-}
-function parseArgsToString$14(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let argResult = "";
-	let lines = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (isEnvironmentVariable$1(arg.name)) {
-			if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
-			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		} else {
-			const argType = getArgumentType(arg.name, comfyuiArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	const pythonCommand = getPythonCommandByOs().python;
-	result += isEmpty(argResult) ? `${pythonCommand} main.py` : `${pythonCommand} main.py ${argResult}`;
-	return result;
-}
-function parseStringToArgs$14(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		if (line.startsWith("export ") || line.startsWith("set ")) {
-			const prefix = line.startsWith("export ") ? "export " : "set ";
-			let [name, value] = line.replace(prefix, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, comfyuiArguments) && isEnvironmentVariable$1(name)) argResult.push({
-				name,
-				value
-			});
-			return;
-		}
-		const pythonCommand = getPythonCommandByOs().python;
-		if (!line.startsWith(`${pythonCommand} main.py`)) return;
-		const clArgs = line.split(`${pythonCommand} main.py `)[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, comfyuiArguments)) {
-				if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-function startInstall$13(stepper) {
-	const selectOptions = [
-		"NONE",
-		"NVIDIA CU130",
-		"NVIDIA CU132 Nightly",
-		"AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)",
-		"AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)",
-		"AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)",
-		"AMD GPUs (Linux only) ROCm 7.2",
-		"AMD GPUs (Linux only) ROCm 7.2 Nightly",
-		"Mac Apple silicon",
-		"Mac Apple silicon (Conda)",
-		"Mac x86 (Conda)",
-		"Intel GPUs (Windows and Linux)",
-		"Intel GPUs Nightly (Windows and Linux)"
-	];
-	const getPyTorchInstallCommand = (selectedOption) => {
-		switch (selectedOption) {
-			case "Mac Apple silicon": return "pip3 install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu";
-			case "Mac Apple silicon (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
-			case "Mac x86 (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
-			case "AMD GPUs (Linux only) ROCm 7.2": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.2";
-			case "AMD GPUs (Linux only) ROCm 7.2 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.2";
-			case "AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx110X-all/";
-			case "AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx1151/";
-			case "AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx120X-all/";
-			case "Intel GPUs (Windows and Linux)": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/xpu";
-			case "Intel GPUs Nightly (Windows and Linux)": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu";
-			default:
-			case "NVIDIA CU130": return "pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130";
-			case "NVIDIA CU132 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu132";
-		}
-	};
-	const installReqs = (dir) => {
-		stepper.executeTerminalCommands(["pip install -r requirements.txt", "pip install -r manager_requirements.txt"], dir).then(() => {
-			stepper.setInstalled(dir);
-			stepper.postInstall.config({ customArguments: {
-				presetName: "Lynx Config",
-				customArguments: [{
-					name: "--enable-manager",
-					value: ""
-				}]
-			} });
-			stepper.showFinalStep("success", "ComfyUI installation complete!", "All installation steps completed successfully. Your ComfyUI environment is now ready for use.");
-		});
-	};
-	const getMacCondaInstallCommand = (selectedOption) => {
-		switch (selectedOption) {
-			case "Mac x86 (Conda)": return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh", "sh Miniconda3-latest-MacOSX-x86_64.sh"];
-			default: return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh", "sh Miniconda3-latest-MacOSX-arm64.sh"];
-		}
-	};
-	stepper.initialSteps([
-		"ComfyUI",
-		"Clone",
-		"PyTorch Version",
-		"Install PyTorch",
-		"Install Dependencies",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(COMFYUI_URL).then((dir) => {
-				stepper.nextStep().then(() => {
-					stepper.collectUserInput([{
-						id: "gpu_type",
-						type: "select",
-						label: "Please Select PyTorch Version (Gpu)",
-						selectOptions,
-						defaultValue: selectOptions[0],
-						isRequired: true
-					}]).then((result) => {
-						const selectedOption = result[0].result;
-						if (selectedOption === "NONE") stepper.nextStep().then(() => {
-							stepper.nextStep().then(() => {
-								installReqs(dir);
-							});
-						});
-						else if (selectedOption === "Mac x86 (Conda)" || selectedOption === "Mac Apple silicon (Conda)") stepper.ipc.invoke("Comfy_isCondaInstalled").then((isInstalled) => {
-							if (isInstalled) stepper.nextStep().then(() => {
-								stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-									stepper.nextStep().then(() => {
-										installReqs(dir);
-									});
-								});
-							});
-							else {
-								stepper.initialSteps([
-									"ComfyUI",
-									"Clone",
-									"PyTorch Version",
-									"Conda",
-									"Install PyTorch",
-									"Dependencies",
-									"Finish"
-								]);
-								stepper.nextStep().then(() => {
-									stepper.executeTerminalCommands(getMacCondaInstallCommand(selectedOption), dir).then(() => {
-										stepper.nextStep().then(() => {
-											stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-												stepper.nextStep().then(() => {
-													installReqs(dir);
-												});
-											});
-										});
-									});
-								});
-							}
-						});
-						else stepper.nextStep().then(() => {
-							stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-								stepper.nextStep().then(() => {
-									installReqs(dir);
-								});
-							});
-						});
-					});
-				});
-			});
-		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, COMFYUI_URL).then((isValid) => {
-			if (isValid) {
-				stepper.setInstalled(targetDirectory);
-				stepper.showFinalStep("success", "ComfyUI located successfully!", "Pre-installed ComfyUI detected. Installation skipped as your existing setup is ready to use.");
-			} else stepper.utils.verifyFilesExist(targetDirectory, ["comfy", "main.py"]).then((filesExist) => {
-				if (filesExist) {
-					stepper.setInstalled(targetDirectory);
-					stepper.showFinalStep("success", `ComfyUI located successfully!`, "Detected a manual installation of ComfyUI. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
-				} else stepper.showFinalStep("error", "Unable to locate ComfyUI!", "Please ensure you have selected the correct folder containing the ComfyUI installation ");
-			});
-		});
-	});
-}
-async function cardInfo$13(api, callback) {
-	return CardInfo(COMFYUI_URL, "/custom_nodes", api, callback);
-}
-const COMFYUI_RM = {
-	catchAddress: catchAddress$5,
-	parseArgsToString: parseArgsToString$14,
-	parseStringToArgs: parseStringToArgs$14,
-	cardInfo: cardInfo$13,
-	manager: {
-		startInstall: startInstall$13,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/Container/Image/ComfyUI ROCm (patientx)/Arguments.ts
-const comfyRocmArguments = [{
-	category: "Environment Variables",
-	items: [
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "MIOpen find mode for AMD GPUs.",
-			type: "Input",
-			defaultValue: "2"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "MIOpen log level for AMD GPUs.",
-			type: "Input",
-			defaultValue: "0"
-		},
-		{
-			name: "PYTHON",
-			description: "Sets a custom path for Python executable.",
-			type: "File",
-			defaultValue: "\"%~dp0/python_env/python.exe\""
-		},
-		{
-			name: "GIT",
-			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
-			type: "File",
-			defaultValue: ""
-		},
-		{
-			name: "VENV_DIR",
-			description: "Specifies the path for the virtual environment/python directory.",
-			type: "Directory",
-			defaultValue: "./python_env"
-		},
-		{
-			name: "TRITON_OVERRIDE_ARCH",
-			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1100). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
-			type: "Input",
-			defaultValue: ""
-		},
-		{
-			name: "COMFYUI_ENABLE_MIOPEN",
-			description: "Enable MIOpen in ComfyUI.",
-			type: "Input",
-			defaultValue: "0"
-		},
-		{
-			name: "FLASH_ATTENTION_TRITON_AMD_ENABLE",
-			description: "Enable Flash Attention Triton AMD backend.",
-			type: "Input",
-			defaultValue: "TRUE"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch TunableOp optimization.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_VERBOSE",
-			description: "Enable verbose logging for PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
-			description: "Enable hipBLASLt in PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "0"
-		}
-	]
-}, {
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "auto"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/Container/Image/ComfyUI Zluda (patientx)/Arguments.ts
-const comfyuizludaArguments = [{
-	category: "Environment Variables",
-	items: [
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "MIOpen find mode for AMD GPUs.",
-			type: "Input",
-			defaultValue: "2"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "MIOpen log level for AMD GPUs.",
-			type: "Input",
-			defaultValue: "3"
-		},
-		{
-			name: "PYTHON",
-			description: "Sets a custom path for Python executable.",
-			type: "File",
-			defaultValue: "\"%~dp0/venv/Scripts/python.exe\""
-		},
-		{
-			name: "GIT",
-			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
-			type: "File",
-			defaultValue: ""
-		},
-		{
-			name: "VENV_DIR",
-			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
-			type: "Directory",
-			defaultValue: "./venv"
-		},
-		{
-			name: "TRITON_OVERRIDE_ARCH",
-			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1031). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
-			type: "Input",
-			defaultValue: ""
-		},
-		{
-			name: "ZLUDA_COMGR_LOG_LEVEL",
-			description: "Zluda log level",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch TunableOp optimization.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_VERBOSE",
-			description: "Enable verbose logging for PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
-			description: "Enable hipBLASLt in PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "0"
-		}
-	]
-}, {
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--oneapi-device-selector",
-					description: "Sets the oneAPI device(s) this instance will use.",
-					type: "Input"
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				},
-				{
-					name: "--cuda-malloc",
-					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-cuda-malloc",
-					description: "Disable cudaMallocAsync.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e8m0fnu-unet",
-					description: "Store unet weights in fp8_e8m0fnu.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-intermediates",
-					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--force-channels-last",
-					description: "Force channels last format when inferencing the models.",
-					type: "CheckBox"
-				},
-				{
-					name: "--directml",
-					description: "Use torch-directml.",
-					type: "Input"
-				},
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "auto"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-ram",
-					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--use-split-cross-attention",
-					description: "Use the split cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization . Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-xformers",
-					description: "Disable xformers.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-upcast-attention",
-					description: "Force enable attention upcasting, please report if it fixes black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-upcast-attention",
-					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-non-blocking",
-					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast",
-					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}",
-					type: "DropDown",
-					values: [
-						"",
-						"fp16_accumulation",
-						"fp8_matrix_mult",
-						"cublas_ops",
-						"autotune"
-					],
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-dynamic-vram",
-					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-dynamic-vram",
-					description: "Disable dynamic VRAM and use estimate based model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--vram-headroom",
-					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--fast-disk",
-					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
-					type: "CheckBox"
-				},
-				{
-					name: "--high-ram",
-					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--reserve-vram",
-					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
-					type: "Input"
-				},
-				{
-					name: "--async-offload",
-					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
-					type: "Input"
-				},
-				{
-					name: "--disable-async-offload",
-					description: "Disable async weight offloading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				},
-				{
-					name: "--database-url",
-					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
-					type: "Input",
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-assets",
-					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-asset-hashing",
-					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
-					type: "CheckBox"
-				},
-				{
-					name: "--feature-flag",
-					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted.",
-					type: "Input"
-				},
-				{
-					name: "--list-feature-flags",
-					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
-					type: "CheckBox"
-				},
-				{
-					name: "--debug-hang",
-					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
-					type: "CheckBox"
-				},
-				{
-					name: "--front-end-version",
-					description: "Specifies the version of the frontend to be used. (default: comfyanonymous/ComfyUI@latest)",
-					type: "Input",
-					defaultValue: "comfyanonymous/ComfyUI@latest"
-				},
-				{
-					name: "--default-hashing-function",
-					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
-					type: "DropDown",
-					defaultValue: "sha256",
-					values: [
-						"md5",
-						"sha1",
-						"sha256",
-						"sha512"
-					]
-				},
-				{
-					name: "--deterministic",
-					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
-					type: "CheckBox"
-				},
-				{
-					name: "--mmap-torch-files",
-					description: "Use mmap when loading ckpt/pt files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-mmap",
-					description: "Don't use mmap when loading safetensors.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-print-server",
-					description: "Don't print server output.",
-					type: "CheckBox"
-				},
-				{
-					name: "--quick-test-for-ci",
-					description: "Quick test for CI.",
-					type: "CheckBox"
-				},
-				{
-					name: "--windows-standalone-build",
-					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-metadata",
-					description: "Disable saving prompt metadata in files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-all-custom-nodes",
-					description: "Disable loading all custom nodes.",
-					type: "CheckBox"
-				},
-				{
-					name: "--whitelist-custom-nodes",
-					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
-					type: "Input",
-					defaultValue: "[]"
-				},
-				{
-					name: "--multi-user",
-					description: "Enables per-user storage.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				},
-				{
-					name: "--log-stdout",
-					description: "Send normal process output to stdout instead of stderr (default).",
-					type: "CheckBox"
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/Container/Image/InvokeAI/Utils/Utils_Constants.ts
-const Invoke_Command_CreateVenv = "uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed .venv";
-const Invoke_Command_ActivateVenv = isWin ? ".venv\\Scripts\\activate" : "source .venv/bin/activate";
-const Invoke_Command_InstallPip = `${getPythonCommandByOs().python} -m ensurepip --upgrade`;
-const Invoke_Command_InstallUV = isWin ? "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"" : "wget -qO- https://astral.sh/uv/install.sh | sh";
-const getTorchBackendForVersion = (version) => {
-	const [major, minor] = version.split(".").map(Number);
-	if (major >= 6) return {
-		cuda: "cu128",
-		rocm: "rocm7.1"
-	};
-	if (major === 5 && minor >= 12) return {
-		cuda: "cu128",
-		rocm: "rocm6.3"
-	};
-	if (major === 5 && minor >= 10 && minor <= 11) return {
-		cuda: "cu126",
-		rocm: "rocm6.2.4"
-	};
-	if (major === 5 && minor >= 0 && minor <= 9) return {
-		cuda: "cu124",
-		rocm: "rocm6.1"
-	};
-	if (major === 4) return {
-		cuda: "cu124",
-		rocm: "rocm5.2"
-	};
-	return {
-		cuda: "cu128",
-		rocm: "rocm7.1"
-	};
-};
-const Invoke_PyPI = {
-	cuda: "Windows or Linux with an Nvidia GPU",
-	rocm: "Linux with an AMD GPU",
-	cpu: "No GPU"
-};
-const Invoke_PackageSpec = {
-	invokeai: "invokeai: Nvidia 30xx series GPU or newer, or do not have an Nvidia GPU",
-	invokeaiXformers: "invokeai[xformers]:  Nvidia 20xx series GPU or older"
-};
-const INVOKEAI_INSTALL_TIME_KEY = "install-time-invokeai";
-const INVOKEAI_INSTALL_DIR_KEY = "install-dir-invokeai";
-const INVOKEAI_UPDATE_TIME_KEY = "update-time-invokeai";
-const INVOKEAI_UPDATE_AVAILABLE_KEY = "update-version-invokeai";
-const invokeGetInputFields = async (ipc) => {
-	const releases = await ipc.invoke("invoke_latest_versions");
-	return [
-		{
-			label: "Installation Directory",
-			id: "install_dir",
-			type: "directory",
-			isRequired: true
-		},
-		{
-			label: "InvokeAI Version",
-			id: "invoke_version",
-			type: "select",
-			selectOptions: releases,
-			defaultValue: releases[0],
-			isRequired: true
-		},
-		{
-			label: "Package Specifier",
-			id: "package_spec",
-			type: "select",
-			selectOptions: [Invoke_PackageSpec.invokeai, Invoke_PackageSpec.invokeaiXformers],
-			defaultValue: Invoke_PackageSpec.invokeai,
-			isRequired: true
-		},
-		{
-			label: "Torch Backend",
-			id: "torch_backend",
-			type: "select",
-			selectOptions: [
-				Invoke_PyPI.cuda,
-				Invoke_PyPI.rocm,
-				Invoke_PyPI.cpu,
-				"Others"
-			],
-			defaultValue: Invoke_PyPI.cuda,
-			isRequired: true
-		}
-	];
-};
-const invokeGetInputResults = (items) => {
-	let installDirResult = "";
-	let packageSpecResult = "";
-	let torchBackendResult = "";
-	let version = "";
-	let torchBackendChoice = "";
-	items.forEach((item) => {
-		if (item.id === "install_dir") installDirResult = item.result;
-		else if (item.id === "invoke_version") version = item.result;
-		else if (item.id === "package_spec") switch (item.result) {
-			case Invoke_PackageSpec.invokeaiXformers:
-				packageSpecResult = "invokeai[xformers]";
-				break;
-			case Invoke_PackageSpec.invokeai:
-			default: packageSpecResult = "invokeai";
-		}
-		else if (item.id === "torch_backend") torchBackendChoice = item.result;
-	});
-	console.log("the invoke version is", version);
-	if (torchBackendChoice) {
-		const backends = getTorchBackendForVersion(version);
-		switch (torchBackendChoice) {
-			case Invoke_PyPI.rocm:
-				torchBackendResult = backends.rocm;
-				break;
-			case Invoke_PyPI.cuda:
-				torchBackendResult = backends.cuda;
-				break;
-			case Invoke_PyPI.cpu:
-				torchBackendResult = "cpu";
-				break;
-			default:
-			case "Others": torchBackendResult = "";
-		}
-	}
-	console.log("the torchBackendResult is", torchBackendResult);
-	return {
-		installDirResult,
-		version,
-		packageSpecResult,
-		torchBackendResult
-	};
-};
-const invokeGetInstallCommand = (items) => {
-	const { version, torchBackendResult, packageSpecResult } = invokeGetInputResults(items);
-	return `uv pip install ${packageSpecResult}==${version} --python 3.12 --python-preference only-managed${torchBackendResult ? ` --torch-backend=${torchBackendResult}` : ""} --force-reinstall`;
-};
-//#endregion
-//#region module/src/Container/Image/InvokeAI/RendererMethods.ts
-function parseArgsToString$13(args) {
-	let result = "schema_version: 4.0.2\n\n";
-	const argResult = args.map((arg) => {
-		return `${arg.name}: ${arg.value}`;
-	}).join("\n");
-	result += argResult;
-	return result;
-}
-function parseStringToArgs$13(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("schema_version") || line.startsWith("#") || isEmpty(line.trim())) return;
-		const [name, value] = line.split(`: `);
-		argResult.push({
-			name,
-			value
-		});
-	});
-	return argResult;
-}
-function startInstall$12(stepper) {
-	stepper.initialSteps([
-		"InvokeAI",
-		"UV",
-		"Config",
-		"Install",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Detecting UV installation...");
-			stepper.ipc.invoke("is_uv_installed").then((isUvInstalled) => {
-				if (!isUvInstalled) stepper.executeTerminalCommands(Invoke_Command_InstallUV).then(() => {
-					stepper.showFinalStep("success", "UV Package Manager Installation Complete.", "Restart LynxHub and run the installer again to continue installation.");
-				});
-				else stepper.nextStep().then(() => {
-					stepper.progressBar(true, "Fetching the latest InvokeAI versions...");
-					invokeGetInputFields(stepper.ipc).then((fields) => {
-						stepper.collectUserInput(fields).then((result) => {
-							const { installDirResult } = invokeGetInputResults(result);
-							const installCommand = invokeGetInstallCommand(result);
-							stepper.nextStep().then(() => {
-								stepper.executeTerminalCommands([
-									Invoke_Command_CreateVenv,
-									Invoke_Command_ActivateVenv,
-									Invoke_Command_InstallPip,
-									installCommand
-								], installDirResult).then(() => {
-									stepper.setInstalled(installDirResult);
-									const currentDate = /* @__PURE__ */ new Date();
-									stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
-									stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, installDirResult);
-									stepper.showFinalStep("success", "InvokeAI Installation Complete.", "Your InvokeAI environment is ready. Enjoy!");
-								});
-							});
-						});
-					});
-				});
-			});
-		});
-		else stepper.ipc.invoke("validate_install_dir", targetDirectory).then((isValid) => {
-			if (isValid === true) {
-				stepper.setInstalled(targetDirectory);
-				const currentDate = /* @__PURE__ */ new Date();
-				stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
-				stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, targetDirectory);
-				stepper.showFinalStep("success", "InvokeAI Environment Found.", "Location validated successfully.");
-			} else {
-				const description = typeof isValid === "string" ? isValid : "Could not find InvokeAI installation in the selected directory.";
-				stepper.showFinalStep("error", "Invalid Environment!", description);
-			}
-		});
-	});
-}
-function startUpdate$2(stepper, dir) {
-	if (!dir) return;
-	const pythonPath = getVenvPythonPath(isWin ? `${dir}\\.venv` : `${dir}/.venv`);
-	stepper.initialSteps(["Updating", "Done"]);
-	stepper.executeTerminalCommands(`${isWin ? "&" : "."} "${pythonPath}" -m pip install --upgrade "invokeai"`, dir).then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(INVOKEAI_UPDATE_TIME_KEY, currentDate);
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "InvokeAI Updated Successfully!", `InvokeAI has been updated to the latest version. You can now enjoy the new features and improvements.`);
-	});
-}
-async function cardInfo$12(api, callback) {
-	const dir = api.installationFolder;
-	callback.setOpenFolders(dir ? [dir] : void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INVOKEAI_INSTALL_TIME_KEY).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(INVOKEAI_UPDATE_TIME_KEY).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("invoke_current_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(INVOKEAI_UPDATE_AVAILABLE_KEY).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-const INVOKE_RM = {
-	catchAddress: catchAddress$5,
-	cardInfo: cardInfo$12,
-	parseArgsToString: parseArgsToString$13,
-	parseStringToArgs: parseStringToArgs$13,
-	manager: {
-		startInstall: startInstall$12,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$2
-		}
-	}
-};
-//#endregion
-//#region module/src/Container/Image/SD (AUTOMATIC1111)/Arguments.ts
+//#region module/src/containers/image/Automatic1111Sd/Arguments.ts
 const automatic1111Arguments = [{
 	category: "Command Line Arguments",
 	condition: "COMMANDLINE_ARGS",
@@ -16612,7 +14610,7 @@ const linEV = {
 };
 automatic1111Arguments.unshift(isWin ? winEV : linEV);
 //#endregion
-//#region module/src/Container/Image/SD (AUTOMATIC1111)/SharedRenderer.ts
+//#region module/src/containers/image/Automatic1111Sd/SharedRenderer.ts
 async function fetchExtensionList$2() {
 	try {
 		return (await (await fetch("https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui-extensions/master/index.json")).json()).extensions.map((extension) => ({
@@ -16643,7 +14641,7 @@ function getCategoryType$3(name) {
 		}
 	} else if (argument.items.some((item) => item.name === name)) return getTypeByCategoryName$1(argument.category);
 }
-function parseArgsToString$12(args) {
+function parseArgsToString$14(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let clResult = "";
@@ -16680,7 +14678,7 @@ function checkLinuxArgLine$2(line) {
 		else return;
 	}
 }
-function parseStringToArgs$12(args) {
+function parseStringToArgs$14(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -16733,7 +14731,2279 @@ function parseStringToArgs$12(args) {
 	return argResult;
 }
 //#endregion
-//#region module/src/Container/Image/SD AMDGPU (lshqqytiger)/Arguments.ts
+//#region module/src/containers/image/ComfyUi/Arguments.ts
+const comfyuiArguments = [{
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Input",
+					defaultValue: 8188
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Input",
+					defaultValue: 100
+				},
+				{
+					name: "--oneapi-device-selector",
+					description: "Sets the oneAPI device(s) this instance will use.",
+					type: "Input"
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API.",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				},
+				{
+					name: "--front-end-version",
+					description: "Specifies the version of the frontend to be used (format: [repoOwner]/[repoName]@[version]).",
+					type: "Input",
+					defaultValue: "comfyanonymous/ComfyUI@latest"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Input"
+				},
+				{
+					name: "--cuda-malloc",
+					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-cuda-malloc",
+					description: "Disable cudaMallocAsync.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e8m0fnu-unet",
+					description: "Store unet weights in fp8_e8m0fnu.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-intermediates",
+					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--force-channels-last",
+					description: "Force channels last format when inferencing the models.",
+					type: "CheckBox"
+				},
+				{
+					name: "--directml",
+					description: "Use torch-directml.",
+					type: "Input"
+				},
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "none"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Input",
+					defaultValue: 512
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-ram",
+					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
+					type: "Input"
+				},
+				{
+					name: "--high-ram",
+					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-split-cross-attention",
+					description: "Use the split cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-xformers",
+					description: "Disable xformers.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-upcast-attention",
+					description: "Force enable attention upcasting, please report if it fixes black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-upcast-attention",
+					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-non-blocking",
+					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast",
+					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: fp16_accumulation fp8_matrix_mult cublas_ops autotune",
+					type: "DropDown",
+					values: [
+						"",
+						"fp16_accumulation",
+						"fp8_matrix_mult",
+						"cublas_ops",
+						"autotune"
+					],
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--default-hashing-function",
+					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
+					type: "DropDown",
+					defaultValue: "sha256",
+					values: [
+						"md5",
+						"sha1",
+						"sha256",
+						"sha512"
+					]
+				},
+				{
+					name: "--deterministic",
+					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
+					type: "CheckBox"
+				},
+				{
+					name: "--mmap-torch-files",
+					description: "Use mmap when loading ckpt/pt files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-mmap",
+					description: "Don't use mmap when loading safetensors.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-print-server",
+					description: "Don't print server output.",
+					type: "CheckBox"
+				},
+				{
+					name: "--debug-hang",
+					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
+					type: "CheckBox"
+				},
+				{
+					name: "--quick-test-for-ci",
+					description: "Quick test for CI.",
+					type: "CheckBox"
+				},
+				{
+					name: "--windows-standalone-build",
+					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-metadata",
+					description: "Disable saving prompt metadata in files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-all-custom-nodes",
+					description: "Disable loading all custom nodes.",
+					type: "CheckBox"
+				},
+				{
+					name: "--whitelist-custom-nodes",
+					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
+					type: "Input"
+				},
+				{
+					name: "--multi-user",
+					description: "Enables per-user storage.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				},
+				{
+					name: "--log-stdout",
+					description: "Send normal process output to stdout instead of stderr (default).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-assets",
+					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-asset-hashing",
+					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
+					type: "CheckBox"
+				},
+				{
+					name: "--feature-flag",
+					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted. Examples: --feature-flag show_signin_button=true or --feature-flag show_signin_button",
+					type: "Input"
+				},
+				{
+					name: "--list-feature-flags",
+					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--reserve-vram",
+					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
+					type: "Input"
+				},
+				{
+					name: "--vram-headroom",
+					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--async-offload",
+					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
+					type: "Input"
+				},
+				{
+					name: "--disable-async-offload",
+					description: "Disable async weight offloading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-dynamic-vram",
+					description: "Disable dynamic VRAM and use estimate based model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-dynamic-vram",
+					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast-disk",
+					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				},
+				{
+					name: "--database-url",
+					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
+					type: "Input"
+				}
+			]
+		}
+	]
+}, {
+	category: "Environment Variables",
+	items: [
+		{
+			name: "HSA_OVERRIDE_GFX_VERSION",
+			description: "Override GFX version for unsupported AMD GPUs. Use \"10.3.0\" for 6700, 6600 and other RDNA2 or older cards. Use \"11.0.0\" for 7600 and other RDNA3 cards.",
+			type: "Input",
+			defaultValue: "11.0.0"
+		},
+		{
+			name: "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL",
+			description: "Enable experimental memory efficient attention on AMD GPUs. Should already be enabled by default on RDNA3.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch tunable operations which might speed things up at the cost of a very slow initial run.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "Set the MIOpen find mode to accelerate find API calls. NORMAL: Full find (benchmarks all solvers). FAST: Uses FindDb or fallback (fast startup, may reduce performance). HYBRID: Uses FindDb or full find on miss (balanced). DYNAMIC_HYBRID: Uses FindDb or find skipping non-dynamic kernels (faster than hybrid, default). TRUST_VERIFY: Uses FindDb with verification and constrained tuning. TRUST_VERIFY_FULL: Same as TRUST_VERIFY with no tuning time limits.",
+			type: "DropDown",
+			values: [
+				"NORMAL",
+				"FAST",
+				"HYBRID",
+				"DYNAMIC_HYBRID",
+				"TRUST_VERIFY",
+				"TRUST_VERIFY_FULL"
+			],
+			defaultValue: "DYNAMIC_HYBRID"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "Controls verbosity of MIOpen internal operation logging. 0: Default (level 4 for release, level 5 for debug). 1: Quiet (no logging). 3: Errors including fatal errors. 4: All errors and warnings. 5: Info level debugging. 6: Detailed debugging. 7: Trace level with additional details.",
+			type: "DropDown",
+			values: [
+				"0",
+				"1",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7"
+			],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_ENABLE_LOGGING",
+			description: "Prints basic layer-by-layer MIOpen API call information with parameters and configurations.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_ENABLE_LOGGING_CMD",
+			description: "Outputs associated MIOpenDriver command lines to console for debugging.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_FIND_ENFORCE",
+			description: "Controls auto-tune behavior and database updates. NONE: No change in default behavior. DB_UPDATE: Always perform auto-tune and update PerfDb. SEARCH: Auto-tune even if not requested via API. SEARCH_DB_UPDATE: Combination of DB_UPDATE and SEARCH. DB_CLEAN: Remove optimized values from User PerfDb.",
+			type: "DropDown",
+			values: [
+				"NONE",
+				"DB_UPDATE",
+				"SEARCH",
+				"SEARCH_DB_UPDATE",
+				"DB_CLEAN"
+			],
+			defaultValue: "NONE"
+		},
+		{
+			name: "MIOPEN_DEBUG_DISABLE_FIND_DB",
+			description: "Disables FindDb functionality. Set to 1 to disable, 0 or unset to enable.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_COMPILE_PARALLEL_LEVEL",
+			description: "Controls parallel compilation thread count for Find() calls. Default: 1 when using COMGR, otherwise half the number of available hardware threads. Set to 1 to disable multi-threaded compilation.",
+			type: "Input"
+		},
+		{
+			name: "MIOPEN_DEBUG_CONVOLUTION_DETERMINISTIC",
+			description: "Controls deterministic convolution behavior. Set to 1 to enable deterministic algorithms (slower but reproducible results).",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/ComfyUi/RendererMethods.ts
+const COMFYUI_URL = "https://github.com/Comfy-Org/ComfyUI";
+function isEnvironmentVariable$1(name) {
+	for (const arg of comfyuiArguments) if (arg.category === "Environment Variables") {
+		if ("items" in arg) return arg.items.some((item) => item.name === name);
+	}
+	return false;
+}
+function parseArgsToString$13(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let argResult = "";
+	let lines = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else if (isEnvironmentVariable$1(arg.name)) {
+			if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
+			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		} else {
+			const argType = getArgumentType(arg.name, comfyuiArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	const pythonCommand = getPythonCommandByOs().python;
+	result += isEmpty(argResult) ? `${pythonCommand} main.py` : `${pythonCommand} main.py ${argResult}`;
+	return result;
+}
+function parseStringToArgs$13(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		if (line.startsWith("export ") || line.startsWith("set ")) {
+			const prefix = line.startsWith("export ") ? "export " : "set ";
+			let [name, value] = line.replace(prefix, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, comfyuiArguments) && isEnvironmentVariable$1(name)) argResult.push({
+				name,
+				value
+			});
+			return;
+		}
+		const pythonCommand = getPythonCommandByOs().python;
+		if (!line.startsWith(`${pythonCommand} main.py`)) return;
+		const clArgs = line.split(`${pythonCommand} main.py `)[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, comfyuiArguments)) {
+				if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$13(stepper) {
+	const selectOptions = [
+		"NONE",
+		"NVIDIA CU130",
+		"NVIDIA CU132 Nightly",
+		"AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)",
+		"AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)",
+		"AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)",
+		"AMD GPUs (Linux only) ROCm 7.2",
+		"AMD GPUs (Linux only) ROCm 7.2 Nightly",
+		"Mac Apple silicon",
+		"Mac Apple silicon (Conda)",
+		"Mac x86 (Conda)",
+		"Intel GPUs (Windows and Linux)",
+		"Intel GPUs Nightly (Windows and Linux)"
+	];
+	const getPyTorchInstallCommand = (selectedOption) => {
+		switch (selectedOption) {
+			case "Mac Apple silicon": return "pip3 install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu";
+			case "Mac Apple silicon (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
+			case "Mac x86 (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
+			case "AMD GPUs (Linux only) ROCm 7.2": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.2";
+			case "AMD GPUs (Linux only) ROCm 7.2 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.2";
+			case "AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx110X-all/";
+			case "AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx1151/";
+			case "AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx120X-all/";
+			case "Intel GPUs (Windows and Linux)": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/xpu";
+			case "Intel GPUs Nightly (Windows and Linux)": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu";
+			default:
+			case "NVIDIA CU130": return "pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130";
+			case "NVIDIA CU132 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu132";
+		}
+	};
+	const installReqs = (dir) => {
+		stepper.executeTerminalCommands(["pip install -r requirements.txt", "pip install -r manager_requirements.txt"], dir).then(() => {
+			stepper.setInstalled(dir);
+			stepper.postInstall.config({ customArguments: {
+				presetName: "Lynx Config",
+				customArguments: [{
+					name: "--enable-manager",
+					value: ""
+				}]
+			} });
+			stepper.showFinalStep("success", "ComfyUI installation complete!", "All installation steps completed successfully. Your ComfyUI environment is now ready for use.");
+		});
+	};
+	const getMacCondaInstallCommand = (selectedOption) => {
+		switch (selectedOption) {
+			case "Mac x86 (Conda)": return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh", "sh Miniconda3-latest-MacOSX-x86_64.sh"];
+			default: return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh", "sh Miniconda3-latest-MacOSX-arm64.sh"];
+		}
+	};
+	stepper.initialSteps([
+		"ComfyUI",
+		"Clone",
+		"PyTorch Version",
+		"Install PyTorch",
+		"Install Dependencies",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.cloneRepository(COMFYUI_URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.collectUserInput([{
+						id: "gpu_type",
+						type: "select",
+						label: "Please Select PyTorch Version (Gpu)",
+						selectOptions,
+						defaultValue: selectOptions[0],
+						isRequired: true
+					}]).then((result) => {
+						const selectedOption = result[0].result;
+						if (selectedOption === "NONE") stepper.nextStep().then(() => {
+							stepper.nextStep().then(() => {
+								installReqs(dir);
+							});
+						});
+						else if (selectedOption === "Mac x86 (Conda)" || selectedOption === "Mac Apple silicon (Conda)") stepper.ipc.invoke("Comfy_isCondaInstalled").then((isInstalled) => {
+							if (isInstalled) stepper.nextStep().then(() => {
+								stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+									stepper.nextStep().then(() => {
+										installReqs(dir);
+									});
+								});
+							});
+							else {
+								stepper.initialSteps([
+									"ComfyUI",
+									"Clone",
+									"PyTorch Version",
+									"Conda",
+									"Install PyTorch",
+									"Dependencies",
+									"Finish"
+								]);
+								stepper.nextStep().then(() => {
+									stepper.executeTerminalCommands(getMacCondaInstallCommand(selectedOption), dir).then(() => {
+										stepper.nextStep().then(() => {
+											stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+												stepper.nextStep().then(() => {
+													installReqs(dir);
+												});
+											});
+										});
+									});
+								});
+							}
+						});
+						else stepper.nextStep().then(() => {
+							stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+								stepper.nextStep().then(() => {
+									installReqs(dir);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, COMFYUI_URL).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "ComfyUI located successfully!", "Pre-installed ComfyUI detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, ["comfy", "main.py"]).then((filesExist) => {
+				if (filesExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.showFinalStep("success", `ComfyUI located successfully!`, "Detected a manual installation of ComfyUI. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
+				} else stepper.showFinalStep("error", "Unable to locate ComfyUI!", "Please ensure you have selected the correct folder containing the ComfyUI installation ");
+			});
+		});
+	});
+}
+async function cardInfo$13(api, callback) {
+	return CardInfo(COMFYUI_URL, "/custom_nodes", api, callback);
+}
+const COMFYUI_RM = {
+	catchAddress: catchAddress$5,
+	parseArgsToString: parseArgsToString$13,
+	parseStringToArgs: parseStringToArgs$13,
+	cardInfo: cardInfo$13,
+	manager: {
+		startInstall: startInstall$13,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/image/ComfyUiRocm/Arguments.ts
+const comfyRocmArguments = [{
+	category: "Environment Variables",
+	items: [
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "MIOpen find mode for AMD GPUs.",
+			type: "Input",
+			defaultValue: "2"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "MIOpen log level for AMD GPUs.",
+			type: "Input",
+			defaultValue: "0"
+		},
+		{
+			name: "PYTHON",
+			description: "Sets a custom path for Python executable.",
+			type: "File",
+			defaultValue: "\"%~dp0/python_env/python.exe\""
+		},
+		{
+			name: "GIT",
+			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
+			type: "File",
+			defaultValue: ""
+		},
+		{
+			name: "VENV_DIR",
+			description: "Specifies the path for the virtual environment/python directory.",
+			type: "Directory",
+			defaultValue: "./python_env"
+		},
+		{
+			name: "TRITON_OVERRIDE_ARCH",
+			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1100). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
+			type: "Input",
+			defaultValue: ""
+		},
+		{
+			name: "COMFYUI_ENABLE_MIOPEN",
+			description: "Enable MIOpen in ComfyUI.",
+			type: "Input",
+			defaultValue: "0"
+		},
+		{
+			name: "FLASH_ATTENTION_TRITON_AMD_ENABLE",
+			description: "Enable Flash Attention Triton AMD backend.",
+			type: "Input",
+			defaultValue: "TRUE"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch TunableOp optimization.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_VERBOSE",
+			description: "Enable verbose logging for PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
+			description: "Enable hipBLASLt in PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "0"
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Input",
+					defaultValue: 8188
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Input",
+					defaultValue: 100
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Input"
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Input",
+					defaultValue: 512
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/ComfyUiZluda/Arguments.ts
+const comfyuizludaArguments = [{
+	category: "Environment Variables",
+	items: [
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "MIOpen find mode for AMD GPUs.",
+			type: "Input",
+			defaultValue: "2"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "MIOpen log level for AMD GPUs.",
+			type: "Input",
+			defaultValue: "3"
+		},
+		{
+			name: "PYTHON",
+			description: "Sets a custom path for Python executable.",
+			type: "File",
+			defaultValue: "\"%~dp0/venv/Scripts/python.exe\""
+		},
+		{
+			name: "GIT",
+			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
+			type: "File",
+			defaultValue: ""
+		},
+		{
+			name: "VENV_DIR",
+			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
+			type: "Directory",
+			defaultValue: "./venv"
+		},
+		{
+			name: "TRITON_OVERRIDE_ARCH",
+			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1031). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
+			type: "Input",
+			defaultValue: ""
+		},
+		{
+			name: "ZLUDA_COMGR_LOG_LEVEL",
+			description: "Zluda log level",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch TunableOp optimization.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_VERBOSE",
+			description: "Enable verbose logging for PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
+			description: "Enable hipBLASLt in PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "0"
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Input",
+					defaultValue: 8188
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Input",
+					defaultValue: 100
+				},
+				{
+					name: "--oneapi-device-selector",
+					description: "Sets the oneAPI device(s) this instance will use.",
+					type: "Input"
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Input"
+				},
+				{
+					name: "--cuda-malloc",
+					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-cuda-malloc",
+					description: "Disable cudaMallocAsync.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e8m0fnu-unet",
+					description: "Store unet weights in fp8_e8m0fnu.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-intermediates",
+					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--force-channels-last",
+					description: "Force channels last format when inferencing the models.",
+					type: "CheckBox"
+				},
+				{
+					name: "--directml",
+					description: "Use torch-directml.",
+					type: "Input"
+				},
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Input",
+					defaultValue: 512
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-ram",
+					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--use-split-cross-attention",
+					description: "Use the split cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization . Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-xformers",
+					description: "Disable xformers.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-upcast-attention",
+					description: "Force enable attention upcasting, please report if it fixes black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-upcast-attention",
+					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-non-blocking",
+					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast",
+					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}",
+					type: "DropDown",
+					values: [
+						"",
+						"fp16_accumulation",
+						"fp8_matrix_mult",
+						"cublas_ops",
+						"autotune"
+					],
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-dynamic-vram",
+					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-dynamic-vram",
+					description: "Disable dynamic VRAM and use estimate based model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--vram-headroom",
+					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--fast-disk",
+					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
+					type: "CheckBox"
+				},
+				{
+					name: "--high-ram",
+					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--reserve-vram",
+					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
+					type: "Input"
+				},
+				{
+					name: "--async-offload",
+					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
+					type: "Input"
+				},
+				{
+					name: "--disable-async-offload",
+					description: "Disable async weight offloading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				},
+				{
+					name: "--database-url",
+					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
+					type: "Input",
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-assets",
+					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-asset-hashing",
+					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
+					type: "CheckBox"
+				},
+				{
+					name: "--feature-flag",
+					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted.",
+					type: "Input"
+				},
+				{
+					name: "--list-feature-flags",
+					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
+					type: "CheckBox"
+				},
+				{
+					name: "--debug-hang",
+					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
+					type: "CheckBox"
+				},
+				{
+					name: "--front-end-version",
+					description: "Specifies the version of the frontend to be used. (default: comfyanonymous/ComfyUI@latest)",
+					type: "Input",
+					defaultValue: "comfyanonymous/ComfyUI@latest"
+				},
+				{
+					name: "--default-hashing-function",
+					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
+					type: "DropDown",
+					defaultValue: "sha256",
+					values: [
+						"md5",
+						"sha1",
+						"sha256",
+						"sha512"
+					]
+				},
+				{
+					name: "--deterministic",
+					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
+					type: "CheckBox"
+				},
+				{
+					name: "--mmap-torch-files",
+					description: "Use mmap when loading ckpt/pt files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-mmap",
+					description: "Don't use mmap when loading safetensors.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-print-server",
+					description: "Don't print server output.",
+					type: "CheckBox"
+				},
+				{
+					name: "--quick-test-for-ci",
+					description: "Quick test for CI.",
+					type: "CheckBox"
+				},
+				{
+					name: "--windows-standalone-build",
+					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-metadata",
+					description: "Disable saving prompt metadata in files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-all-custom-nodes",
+					description: "Disable loading all custom nodes.",
+					type: "CheckBox"
+				},
+				{
+					name: "--whitelist-custom-nodes",
+					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
+					type: "Input",
+					defaultValue: "[]"
+				},
+				{
+					name: "--multi-user",
+					description: "Enables per-user storage.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				},
+				{
+					name: "--log-stdout",
+					description: "Send normal process output to stdout instead of stderr (default).",
+					type: "CheckBox"
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/InvokeAi/utils/constants.ts
+const Invoke_Command_CreateVenv = "uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed .venv";
+const Invoke_Command_ActivateVenv = isWin ? ".venv\\Scripts\\activate" : "source .venv/bin/activate";
+const Invoke_Command_InstallPip = `${getPythonCommandByOs().python} -m ensurepip --upgrade`;
+const Invoke_Command_InstallUV = isWin ? "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"" : "wget -qO- https://astral.sh/uv/install.sh | sh";
+const getTorchBackendForVersion = (version) => {
+	const [major, minor] = version.split(".").map(Number);
+	if (major >= 6) return {
+		cuda: "cu128",
+		rocm: "rocm7.1"
+	};
+	if (major === 5 && minor >= 12) return {
+		cuda: "cu128",
+		rocm: "rocm6.3"
+	};
+	if (major === 5 && minor >= 10 && minor <= 11) return {
+		cuda: "cu126",
+		rocm: "rocm6.2.4"
+	};
+	if (major === 5 && minor >= 0 && minor <= 9) return {
+		cuda: "cu124",
+		rocm: "rocm6.1"
+	};
+	if (major === 4) return {
+		cuda: "cu124",
+		rocm: "rocm5.2"
+	};
+	return {
+		cuda: "cu128",
+		rocm: "rocm7.1"
+	};
+};
+const Invoke_PyPI = {
+	cuda: "Windows or Linux with an Nvidia GPU",
+	rocm: "Linux with an AMD GPU",
+	cpu: "No GPU"
+};
+const Invoke_PackageSpec = {
+	invokeai: "invokeai: Nvidia 30xx series GPU or newer, or do not have an Nvidia GPU",
+	invokeaiXformers: "invokeai[xformers]:  Nvidia 20xx series GPU or older"
+};
+const INVOKEAI_INSTALL_TIME_KEY = "install-time-invokeai";
+const INVOKEAI_INSTALL_DIR_KEY = "install-dir-invokeai";
+const INVOKEAI_UPDATE_TIME_KEY = "update-time-invokeai";
+const INVOKEAI_UPDATE_AVAILABLE_KEY = "update-version-invokeai";
+const invokeGetInputFields = async (ipc) => {
+	const releases = await ipc.invoke("invoke_latest_versions");
+	return [
+		{
+			label: "Installation Directory",
+			id: "install_dir",
+			type: "directory",
+			isRequired: true
+		},
+		{
+			label: "InvokeAI Version",
+			id: "invoke_version",
+			type: "select",
+			selectOptions: releases,
+			defaultValue: releases[0],
+			isRequired: true
+		},
+		{
+			label: "Package Specifier",
+			id: "package_spec",
+			type: "select",
+			selectOptions: [Invoke_PackageSpec.invokeai, Invoke_PackageSpec.invokeaiXformers],
+			defaultValue: Invoke_PackageSpec.invokeai,
+			isRequired: true
+		},
+		{
+			label: "Torch Backend",
+			id: "torch_backend",
+			type: "select",
+			selectOptions: [
+				Invoke_PyPI.cuda,
+				Invoke_PyPI.rocm,
+				Invoke_PyPI.cpu,
+				"Others"
+			],
+			defaultValue: Invoke_PyPI.cuda,
+			isRequired: true
+		}
+	];
+};
+const invokeGetInputResults = (items) => {
+	let installDirResult = "";
+	let packageSpecResult = "";
+	let torchBackendResult = "";
+	let version = "";
+	let torchBackendChoice = "";
+	items.forEach((item) => {
+		if (item.id === "install_dir") installDirResult = item.result;
+		else if (item.id === "invoke_version") version = item.result;
+		else if (item.id === "package_spec") switch (item.result) {
+			case Invoke_PackageSpec.invokeaiXformers:
+				packageSpecResult = "invokeai[xformers]";
+				break;
+			case Invoke_PackageSpec.invokeai:
+			default: packageSpecResult = "invokeai";
+		}
+		else if (item.id === "torch_backend") torchBackendChoice = item.result;
+	});
+	console.log("the invoke version is", version);
+	if (torchBackendChoice) {
+		const backends = getTorchBackendForVersion(version);
+		switch (torchBackendChoice) {
+			case Invoke_PyPI.rocm:
+				torchBackendResult = backends.rocm;
+				break;
+			case Invoke_PyPI.cuda:
+				torchBackendResult = backends.cuda;
+				break;
+			case Invoke_PyPI.cpu:
+				torchBackendResult = "cpu";
+				break;
+			default:
+			case "Others": torchBackendResult = "";
+		}
+	}
+	console.log("the torchBackendResult is", torchBackendResult);
+	return {
+		installDirResult,
+		version,
+		packageSpecResult,
+		torchBackendResult
+	};
+};
+const invokeGetInstallCommand = (items) => {
+	const { version, torchBackendResult, packageSpecResult } = invokeGetInputResults(items);
+	return `uv pip install ${packageSpecResult}==${version} --python 3.12 --python-preference only-managed${torchBackendResult ? ` --torch-backend=${torchBackendResult}` : ""} --force-reinstall`;
+};
+//#endregion
+//#region module/src/containers/image/InvokeAi/RendererMethods.ts
+function parseArgsToString$12(args) {
+	let result = "schema_version: 4.0.2\n\n";
+	const argResult = args.map((arg) => {
+		return `${arg.name}: ${arg.value}`;
+	}).join("\n");
+	result += argResult;
+	return result;
+}
+function parseStringToArgs$12(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("schema_version") || line.startsWith("#") || isEmpty(line.trim())) return;
+		const [name, value] = line.split(`: `);
+		argResult.push({
+			name,
+			value
+		});
+	});
+	return argResult;
+}
+function startInstall$12(stepper) {
+	stepper.initialSteps([
+		"InvokeAI",
+		"UV",
+		"Config",
+		"Install",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Detecting UV installation...");
+			stepper.ipc.invoke("is_uv_installed").then((isUvInstalled) => {
+				if (!isUvInstalled) stepper.executeTerminalCommands(Invoke_Command_InstallUV).then(() => {
+					stepper.showFinalStep("success", "UV Package Manager Installation Complete.", "Restart LynxHub and run the installer again to continue installation.");
+				});
+				else stepper.nextStep().then(() => {
+					stepper.progressBar(true, "Fetching the latest InvokeAI versions...");
+					invokeGetInputFields(stepper.ipc).then((fields) => {
+						stepper.collectUserInput(fields).then((result) => {
+							const { installDirResult } = invokeGetInputResults(result);
+							const installCommand = invokeGetInstallCommand(result);
+							stepper.nextStep().then(() => {
+								stepper.executeTerminalCommands([
+									Invoke_Command_CreateVenv,
+									Invoke_Command_ActivateVenv,
+									Invoke_Command_InstallPip,
+									installCommand
+								], installDirResult).then(() => {
+									stepper.setInstalled(installDirResult);
+									const currentDate = /* @__PURE__ */ new Date();
+									stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
+									stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, installDirResult);
+									stepper.showFinalStep("success", "InvokeAI Installation Complete.", "Your InvokeAI environment is ready. Enjoy!");
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+		else stepper.ipc.invoke("validate_install_dir", targetDirectory).then((isValid) => {
+			if (isValid === true) {
+				stepper.setInstalled(targetDirectory);
+				const currentDate = /* @__PURE__ */ new Date();
+				stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
+				stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, targetDirectory);
+				stepper.showFinalStep("success", "InvokeAI Environment Found.", "Location validated successfully.");
+			} else {
+				const description = typeof isValid === "string" ? isValid : "Could not find InvokeAI installation in the selected directory.";
+				stepper.showFinalStep("error", "Invalid Environment!", description);
+			}
+		});
+	});
+}
+function startUpdate$2(stepper, dir) {
+	if (!dir) return;
+	const pythonPath = getVenvPythonPath(isWin ? `${dir}\\.venv` : `${dir}/.venv`);
+	stepper.initialSteps(["Updating", "Done"]);
+	stepper.executeTerminalCommands(`${isWin ? "&" : "."} "${pythonPath}" -m pip install --upgrade "invokeai"`, dir).then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(INVOKEAI_UPDATE_TIME_KEY, currentDate);
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "InvokeAI Updated Successfully!", `InvokeAI has been updated to the latest version. You can now enjoy the new features and improvements.`);
+	});
+}
+async function cardInfo$12(api, callback) {
+	const dir = api.installationFolder;
+	callback.setOpenFolders(dir ? [dir] : void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INVOKEAI_INSTALL_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(INVOKEAI_UPDATE_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("invoke_current_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(INVOKEAI_UPDATE_AVAILABLE_KEY).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+const INVOKE_RM = {
+	catchAddress: catchAddress$5,
+	cardInfo: cardInfo$12,
+	parseArgsToString: parseArgsToString$12,
+	parseStringToArgs: parseStringToArgs$12,
+	manager: {
+		startInstall: startInstall$12,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$2
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/image/SdAmdgpu/Arguments.ts
 const lshqqytigerArguments = cloneDeep(automatic1111Arguments);
 const newSection = {
 	section: "AmdGPU",
@@ -16768,7 +17038,7 @@ const newSection = {
 const commandLineArgsIndex = lshqqytigerArguments.findIndex((arg) => arg.category === "Command Line Arguments");
 if (commandLineArgsIndex !== -1 && lshqqytigerArguments[commandLineArgsIndex].sections) lshqqytigerArguments[commandLineArgsIndex].sections.unshift(newSection);
 //#endregion
-//#region module/src/Container/Image/SD AMDGPU (lshqqytiger)/RendererMethods.ts
+//#region module/src/containers/image/SdAmdgpu/RendererMethods.ts
 const SdAMD_URL = "https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu";
 function startInstall$11(stepper) {
 	GitInstaller("Stable Diffusion AMDGPU", SdAMD_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
@@ -16894,7 +17164,7 @@ const SD_AMD_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Image/SD Next (vladmandic)/Arguments.ts
+//#region module/src/containers/image/SdNext/Arguments.ts
 const vladmandicArguments = [{
 	category: "Environment Variables",
 	items: [{
@@ -17249,7 +17519,7 @@ const vladmandicArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Image/SD Next (vladmandic)/RendererMethods.ts
+//#region module/src/containers/image/SdNext/RendererMethods.ts
 const shellCommand$4 = isWin ? "call webui.bat" : "bash ./webui.sh";
 const URL$4 = "https://github.com/vladmandic/sdnext";
 function parseArgsToString$10(args) {
@@ -17318,7 +17588,7 @@ const SD_NEXT_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Image/SwarmUI (mcmonkeyprojects)/Arguments.ts
+//#region module/src/containers/image/SwarmUi/Arguments.ts
 const mcMonkeyArguments = [{
 	category: "Command Line Arguments",
 	items: [
@@ -17448,7 +17718,7 @@ const mcMonkeyArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Image/SwarmUI (mcmonkeyprojects)/RendererMethods.ts
+//#region module/src/containers/image/SwarmUi/RendererMethods.ts
 const shellCommand$3 = isWin ? "call launch-windows.bat" : "bash ./launch-linux.sh";
 const URL$3 = "https://github.com/mcmonkeyprojects/SwarmUI";
 function parseArgsToString$9(args) {
@@ -17545,7 +17815,166 @@ const SWARM_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Text/OpenWebUI/RendererMethods.ts
+//#region module/src/containers/text/LlamaCpp/utils/github.ts
+const LLAMA_CPP_RELEASES_URL = "https://api.github.com/repos/ggml-org/llama.cpp/releases";
+const LLAMA_CPP_INSTALL_TIME_KEY = "install-time-llamaCpp";
+const LLAMA_CPP_INSTALL_DIR_KEY = "install-dir-llamaCpp";
+const LLAMA_CPP_UPDATE_TIME_KEY = "update-time-llamaCpp";
+const LLAMA_CPP_VERSION_KEY = "version-llamaCpp";
+const LLAMA_CPP_PLATFORM_KEY = "platform-llamaCpp";
+const LLAMA_PLATFORM_OPTIONS = [
+	{
+		label: "Windows x64 (CUDA 12)",
+		key: "win-cuda12-x64",
+		pattern: /bin-win-cuda-12.*-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (CUDA 13)",
+		key: "win-cuda13-x64",
+		pattern: /bin-win-cuda-13.*-x64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (CUDA 13) (preview)",
+		key: "win-cuda13-arm64",
+		pattern: /bin-win-cuda-13.*-arm64\.zip$/i
+	},
+	{
+		label: "Windows x64 (CPU)",
+		key: "win-cpu-x64",
+		pattern: /bin-win-cpu-x64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (CPU)",
+		key: "win-cpu-arm64",
+		pattern: /bin-win-cpu-arm64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (OpenCL Adreno)",
+		key: "win-opencl-adreno-arm64",
+		pattern: /bin-win-opencl-adreno-arm64\.zip$/i
+	},
+	{
+		label: "Windows x64 (Vulkan)",
+		key: "win-vulkan-x64",
+		pattern: /bin-win-vulkan-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (OpenVINO)",
+		key: "win-openvino-x64",
+		pattern: /bin-win-openvino.*-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (SYCL)",
+		key: "win-sycl-x64",
+		pattern: /bin-win-sycl-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (ROCm 7.14)",
+		key: "win-rocm-x64",
+		pattern: /bin-win-rocm.*-x64\.zip$/i
+	},
+	{
+		label: "macOS Apple Silicon (arm64)",
+		key: "macos-arm64",
+		pattern: /bin-macos-arm64\.tar\.gz$/i
+	},
+	{
+		label: "macOS Intel (x64)",
+		key: "macos-x64",
+		pattern: /bin-macos-x64\.tar\.gz$/i
+	},
+	{
+		label: "iOS XCFramework",
+		key: "ios-xcframework",
+		pattern: /xcframework\.zip$/i
+	},
+	{
+		label: "Ubuntu x64 (CPU)",
+		key: "ubuntu-cpu-x64",
+		pattern: /bin-ubuntu-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu arm64 (CPU)",
+		key: "ubuntu-cpu-arm64",
+		pattern: /bin-ubuntu-arm64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu s390x (CPU)",
+		key: "ubuntu-cpu-s390x",
+		pattern: /bin-ubuntu-s390x\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (Vulkan)",
+		key: "ubuntu-vulkan-x64",
+		pattern: /bin-ubuntu-vulkan-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu arm64 (Vulkan)",
+		key: "ubuntu-vulkan-arm64",
+		pattern: /bin-ubuntu-vulkan-arm64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (ROCm 7.14)",
+		key: "ubuntu-rocm-x64",
+		pattern: /bin-ubuntu-rocm.*-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (OpenVINO)",
+		key: "ubuntu-openvino-x64",
+		pattern: /bin-ubuntu-openvino.*-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (SYCL FP32)",
+		key: "ubuntu-sycl-fp32-x64",
+		pattern: /bin-ubuntu-sycl-fp32-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (SYCL FP16)",
+		key: "ubuntu-sycl-fp16-x64",
+		pattern: /bin-ubuntu-sycl-fp16-x64\.tar\.gz$/i
+	},
+	{
+		label: "Android arm64 (CPU)",
+		key: "android-arm64",
+		pattern: /bin-android-arm64\.tar\.gz$/i
+	}
+];
+function detectDefaultPlatformKey() {
+	if (isWin) return "win-cuda12-x64";
+	if (isMac) return "macos-arm64";
+	if (isLinux) return "ubuntu-cpu-x64";
+	return "win-cpu-x64";
+}
+async function fetchLlamaCppReleases() {
+	try {
+		const response = await fetch(LLAMA_CPP_RELEASES_URL, { headers: {
+			"User-Agent": "LynxHub-Desktop",
+			Accept: "application/vnd.github.v3+json"
+		} });
+		if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
+		return (await response.json()).filter((r) => !r.prerelease);
+	} catch (error) {
+		console.error("Failed to fetch llama.cpp releases from GitHub:", error);
+		return [];
+	}
+}
+function findAssetUrlForPlatform(assets, platformKey) {
+	const option = LLAMA_PLATFORM_OPTIONS.find((opt) => opt.key === platformKey);
+	if (!option) return assets.find((a) => a.name.endsWith(".zip") || a.name.endsWith(".tar.gz"))?.browser_download_url;
+	const matchedAsset = assets.find((a) => option.pattern.test(a.name));
+	if (matchedAsset) return matchedAsset.browser_download_url;
+	return assets.find((a) => {
+		if (platformKey.startsWith("win-") && a.name.includes("win")) return true;
+		if (platformKey.startsWith("ubuntu-") && a.name.includes("ubuntu")) return true;
+		if (platformKey.startsWith("macos-") && a.name.includes("macos")) return true;
+		return false;
+	})?.browser_download_url || assets[0]?.browser_download_url;
+}
+async function getLatestLlamaCppTag() {
+	return (await fetchLlamaCppReleases())[0]?.tag_name || "unknown";
+}
+//#endregion
+//#region module/src/containers/text/OpenWebUi/RendererMethods.ts
 const INSTALL_TIME_KEY$1 = "install-time-openwebui";
 const UPDATE_TIME_KEY$1 = "update-time-openwebui";
 const UPDATE_AVAILABLE_KEY = "update-available-version-openwebui";
@@ -20623,7 +21052,7 @@ function dump(input, options = {}) {
 	});
 }
 //#endregion
-//#region module/src/Container/Text/SillyTavern/Arguments.ts
+//#region module/src/containers/text/SillyTavern/Arguments.ts
 const sillyArguments = [{
 	category: "Command Line Arguments",
 	items: [
@@ -21616,7 +22045,7 @@ const sillyArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Text/SillyTavern/RendererMethods.ts
+//#region module/src/containers/text/SillyTavern/RendererMethods.ts
 const shellCommand$2 = isWin ? "call start.bat" : "bash ./start.sh";
 const URL$2 = "https://github.com/SillyTavern/SillyTavern";
 /**
@@ -21701,9 +22130,18 @@ function parseArgsToFiles(args) {
 }
 function parseArgsToString$7(args) {
 	const { commands, configs } = parseArgsToFiles(args);
-	let finalResult = "-------------Batch File Preview (.bat)-------------";
+	const commandTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const configTitle = "Configuration File Preview (config.yml)";
+	if (isMultiFilePreviewSupported) return [{
+		title: commandTitle,
+		data: commands
+	}, {
+		title: configTitle,
+		data: configs
+	}];
+	let finalResult = `-------------${commandTitle}-------------`;
 	finalResult += `\n\n${commands}\n\n`;
-	finalResult += "-------------Configuration File Preview (config.yml)-------------";
+	finalResult += `-------------${configTitle}-------------`;
 	finalResult += `\n\n${configs}`;
 	return finalResult;
 }
@@ -21799,7 +22237,7 @@ const SILLYTAVERN_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Text/Text Generation (oobabooga)/Arguments.ts
+//#region module/src/containers/text/TextGenOobabooga/Arguments.ts
 const oobaboogaArguments = [{
 	category: "Command Line Arguments",
 	sections: [
@@ -22601,7 +23039,7 @@ const oobaboogaArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Text/Text Generation (oobabooga)/ExtensionsList.ts
+//#region module/src/containers/text/TextGenOobabooga/ExtensionsList.ts
 async function fetchExtensionList() {
 	return [
 		{
@@ -22955,7 +23393,7 @@ async function fetchExtensionList() {
 	];
 }
 //#endregion
-//#region module/src/Container/Text/Text Generation (oobabooga)/RendererMethods.ts
+//#region module/src/containers/text/TextGenOobabooga/RendererMethods.ts
 const shellCommand$1 = isWin ? "call start_windows.bat" : isMac ? "bash ./start_macos.sh" : "bash ./start_linux.sh";
 const URL$1 = "https://github.com/oobabooga/textgen";
 function parseArgsToString$6(args) {
@@ -23028,7 +23466,7 @@ const TG_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/AI Toolkit (ostris)/Arguments.ts
+//#region module/src/containers/tools/AiToolkit/Arguments.ts
 const aiToolkitArguments = [{
 	category: "Environment Variables",
 	sections: [{
@@ -23041,7 +23479,7 @@ const aiToolkitArguments = [{
 	}]
 }];
 //#endregion
-//#region module/src/Container/Tools/AI Toolkit (ostris)/RendererMethods.ts
+//#region module/src/containers/tools/AiToolkit/RendererMethods.ts
 const AITOOLKIT_URL = "https://github.com/ostris/ai-toolkit";
 function parseArgsToString$5(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
@@ -23150,7 +23588,7 @@ const AITOOLKIT_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/ComfyUI-Lora-Manager (willmiao)/Arguments.ts
+//#region module/src/containers/tools/ComfyUiLoraManager/Arguments.ts
 const loraManagerArguments = [{
 	category: "Command Line Arguments",
 	sections: [{
@@ -23214,7 +23652,7 @@ const loraManagerArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Tools/ComfyUI-Lora-Manager (willmiao)/RendererMethods.ts
+//#region module/src/containers/tools/ComfyUiLoraManager/RendererMethods.ts
 const LORA_MANAGER_URL = "https://github.com/willmiao/ComfyUI-Lora-Manager";
 function parseArgsToString$4(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
@@ -23315,7 +23753,7 @@ const LORA_MANAGER_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/Kohyas GUI (bmaltais)/Arguments.ts
+//#region module/src/containers/tools/KohyasGui/Arguments.ts
 const bmaltaisArguments = [{
 	category: "Command Line Arguments",
 	items: [
@@ -23448,7 +23886,7 @@ const bmaltaisArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Tools/Kohyas GUI (bmaltais)/RendererMethods.ts
+//#region module/src/containers/tools/KohyasGui/RendererMethods.ts
 const shellCommand = isWin ? "call gui.bat" : "bash ./gui.sh";
 const URL = "https://github.com/bmaltais/kohya_ss";
 function parseArgsToString$3(args) {
@@ -23516,7 +23954,7 @@ const KOHYA_GUI_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/LlamaFactory (hiyouga)/Arguments.ts
+//#region module/src/containers/tools/LlamaFactory/Arguments.ts
 const llamaFactoryArguments = [{
 	category: "Command Line Arguments",
 	sections: [{
@@ -23671,7 +24109,7 @@ const llamaFactoryArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Tools/LlamaFactory (hiyouga)/RendererMethods.ts
+//#region module/src/containers/tools/LlamaFactory/RendererMethods.ts
 const LLAMA_FACTORY_URL = "https://github.com/hiyouga/LlamaFactory";
 function getCategoryType$1(name) {
 	if (name.startsWith("-")) return "cl";
@@ -23805,7 +24243,7 @@ const LLAMA_FACTORY_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/SmartGallery (biagiomaf)/Arguments.ts
+//#region module/src/containers/tools/SmartGallery/Arguments.ts
 const smartGalleryArguments = [{
 	category: "Environment Variables",
 	sections: [
@@ -23976,7 +24414,7 @@ const smartGalleryArguments = [{
 	}]
 }];
 //#endregion
-//#region module/src/Container/Tools/SmartGallery (biagiomaf)/RendererMethods.ts
+//#region module/src/containers/tools/SmartGallery/RendererMethods.ts
 const SMARTGALLERY_URL = "https://github.com/biagiomaf/smart-comfyui-gallery";
 function isEnvironmentVariable(name) {
 	for (const arg of smartGalleryArguments) if (arg.category === "Environment Variables") {
@@ -24107,7 +24545,7 @@ const SMARTGALLERY_RM = {
 	}
 };
 //#endregion
-//#region module/src/Container/Tools/Unsloth Studio/Arguments.ts
+//#region module/src/containers/tools/UnslothStudio/Arguments.ts
 const unslothStudioArguments = [{
 	category: "Command Line Arguments",
 	sections: [{
@@ -24246,7 +24684,7 @@ const unslothStudioArguments = [{
 	}]
 }];
 //#endregion
-//#region module/src/Container/Tools/Unsloth Studio/RendererMethods.ts
+//#region module/src/containers/tools/UnslothStudio/RendererMethods.ts
 const INSTALL_TIME_KEY = "install-time-unsloth-studio";
 const UPDATE_TIME_KEY = "update-time-unsloth-studio";
 const TAG_KEY = "installed-tag-unsloth-studio";
@@ -24467,4 +24905,4 @@ const UNSLOTH_STUDIO_RM = {
 	}
 };
 //#endregion
-export { INVOKE_RM as $, isValidArg as $t, SILLYTAVERN_RM as A, N8N_ID as An, hermesAgentArguments as At, mcMonkeyArguments as B, SWARM_ID as Bn, ClaudeCode_RM as Bt, parseArgsToString$5 as C, HERMES_AGENT_ID as Cn, Langflow_RM as Ct, parseArgsToString$6 as D, LLAMA_FACTORY_ID as Dn, HermesAgent_RM as Dt, TG_RM as E, LANGFLOW_ID as En, langflowArguments as Et, parseArgsToString$8 as F, SD_FORGE_ID as Fn, openArguments as Ft, SD_AMD_RM as G, parseArgsToFiles$4 as Gt, parseArgsToString$10 as H, TTS_ID as Hn, parseFilesToArgs$3 as Ht, parseStringToArgs$8 as I, SD_NEXT_ID as In, Flow_RM as It, lshqqytigerArguments as J, CardInfo as Jt, parseArgsToString$11 as K, parseFilesToArgs$4 as Kt, SWARM_RM as L, SD_UIUX_ID as Ln, parseArgsToString$21 as Lt, parseFilesToArgs as M, OPEN_WEBUI_ID as Mn, parseArgsToFiles$2 as Mt, sillyArguments as N, SD_AMD_ID as Nn, parseFilesToArgs$2 as Nt, parseStringToArgs$6 as O, LORA_MANAGER_ID as On, parseArgsToFiles$1 as Ot, OPEN_WEBUI_RM as P, SD_FORGE_AMD_ID as Pn, geminiCliArguments as Pt, automatic1111Arguments as Q, isPagesFixed as Qt, parseArgsToString$9 as R, SILLYTAVERN_ID as Rn, parseStringToArgs$21 as Rt, AITOOLKIT_RM as S, GeminiCli_ID as Sn, n8nArguments as St, aiToolkitArguments as T, KOHYA_ID as Tn, parseStringToArgs$18 as Tt, parseStringToArgs$10 as U, UNSLOTH_STUDIO_ID as Un, claudeCodeArguments as Ut, SD_NEXT_RM as V, TG_ID as Vn, parseArgsToFiles$3 as Vt, vladmandicArguments as W, VOICE_STUDIO_ID as Wn, AntigravityCli_RM as Wt, parseArgsToString$12 as X, catchAddress$5 as Xt, fetchExtensionList$2 as Y, GitInstaller as Yt, parseStringToArgs$12 as Z, getArgumentType as Zt, bmaltaisArguments as _, CLAUDE_CODE_ID as _n, parseStringToArgs$16 as _t, unslothStudioArguments as a, isMac as an, comfyuizludaArguments as at, parseStringToArgs$4 as b, COMFYUI_ZLUDA_ID as bn, parseArgsToString$17 as bt, parseStringToArgs$1 as c, removeAnsi as cn, parseArgsToString$14 as ct, parseArgsToString$2 as d, AITOOLKIT_ID as dn, VOICE_STUDIO_RM as dt, cloneDeep as en, parseArgsToString$13 as et, parseStringToArgs$2 as f, ALLTALK_ID as fn, parseArgsToString$15 as ft, parseStringToArgs$3 as g, CHAT_TTS_ID as gn, parseArgsToString$16 as gt, parseArgsToString$3 as h, BOLT_DIY_ID as hn, AG_RM as ht, parseStringToArgs as i, getVenvPythonPath as in, Invoke_Command_ActivateVenv as it, parseArgsToFiles as j, ONETRAINER_ID as jn, GeminiCli_RM as jt, oobaboogaArguments as k, LoLLMS_ID as kn, parseFilesToArgs$1 as kt, smartGalleryArguments as l, A1_ID as ln, parseStringToArgs$14 as lt, KOHYA_GUI_RM as m, APPLIO_ID as mn, voiceStudioArguments as mt, UNSLOTH_STUDIO_RM as n, getCdCommand as nn, INVOKEAI_INSTALL_DIR_KEY as nt, SMARTGALLERY_RM as o, isWin as on, comfyRocmArguments as ot, llamaFactoryArguments as p, ANTIGRAVITY_CLI_ID as pn, parseStringToArgs$15 as pt, parseStringToArgs$11 as q, antigravityCliArguments as qt, parseArgsToString as r, getPythonCommandByOs as rn, INVOKEAI_UPDATE_AVAILABLE_KEY as rt, parseArgsToString$1 as s, parseCustomArg as sn, COMFYUI_RM as st, TAG_KEY as t, extractGitUrl as tn, parseStringToArgs$13 as tt, LLAMA_FACTORY_RM as u, AG_ID as un, comfyuiArguments as ut, LORA_MANAGER_RM as v, COMFYUI_ID as vn, gitmyloArguments as vt, parseStringToArgs$5 as w, INVOKE_ID as wn, parseArgsToString$18 as wt, loraManagerArguments as x, FLOWISEAI_ID as xn, parseStringToArgs$17 as xt, parseArgsToString$4 as y, COMFYUI_ROCM_ID as yn, N8N_RM as yt, parseStringToArgs$9 as z, SMARTGALLERY_ID as zn, flowiseArguments as zt };
+export { parseStringToArgs$10 as $, TTS_ID as $n, claudeCodeArguments as $t, SILLYTAVERN_RM as A, COMFYUI_ZLUDA_ID as An, parseArgsToString$17 as At, LLAMA_CPP_UPDATE_TIME_KEY as B, LoLLMS_ID as Bn, hermesAgentArguments as Bt, parseArgsToString$5 as C, ANTIGRAVITY_CLI_ID as Cn, parseStringToArgs$15 as Ct, parseArgsToString$6 as D, CLAUDE_CODE_ID as Dn, parseStringToArgs$16 as Dt, TG_RM as E, CHAT_TTS_ID as En, parseArgsToString$16 as Et, parseArgsToString$8 as F, KOHYA_ID as Fn, parseStringToArgs$18 as Ft, findAssetUrlForPlatform as G, SD_FORGE_AMD_ID as Gn, openArguments as Gt, LLAMA_PLATFORM_OPTIONS as H, ONETRAINER_ID as Hn, parseArgsToFiles$2 as Ht, parseStringToArgs$8 as I, LANGFLOW_ID as In, langflowArguments as It, parseArgsToString$9 as J, SD_UIUX_ID as Jn, parseStringToArgs$21 as Jt, getLatestLlamaCppTag as K, SD_FORGE_ID as Kn, Flow_RM as Kt, LLAMA_CPP_INSTALL_DIR_KEY as L, LLAMA_CPP_ID as Ln, HermesAgent_RM as Lt, parseFilesToArgs as M, GeminiCli_ID as Mn, n8nArguments as Mt, sillyArguments as N, HERMES_AGENT_ID as Nn, Langflow_RM as Nt, parseStringToArgs$6 as O, COMFYUI_ID as On, gitmyloArguments as Ot, OPEN_WEBUI_RM as P, INVOKE_ID as Pn, parseArgsToString$18 as Pt, parseArgsToString$10 as Q, TG_ID as Qn, parseFilesToArgs$3 as Qt, LLAMA_CPP_INSTALL_TIME_KEY as R, LLAMA_FACTORY_ID as Rn, parseArgsToFiles$1 as Rt, AITOOLKIT_RM as S, ALLTALK_ID as Sn, parseArgsToString$15 as St, aiToolkitArguments as T, BOLT_DIY_ID as Tn, AG_RM as Tt, detectDefaultPlatformKey as U, OPEN_WEBUI_ID as Un, parseFilesToArgs$2 as Ut, LLAMA_CPP_VERSION_KEY as V, N8N_ID as Vn, GeminiCli_RM as Vt, fetchLlamaCppReleases as W, SD_AMD_ID as Wn, geminiCliArguments as Wt, mcMonkeyArguments as X, SMARTGALLERY_ID as Xn, ClaudeCode_RM as Xt, parseStringToArgs$9 as Y, SILLYTAVERN_ID as Yn, flowiseArguments as Yt, SD_NEXT_RM as Z, SWARM_ID as Zn, parseArgsToFiles$3 as Zt, bmaltaisArguments as _, parseCustomArg as _n, fetchExtensionList$2 as _t, unslothStudioArguments as a, GitInstaller as an, INVOKE_RM as at, parseStringToArgs$4 as b, AG_ID as bn, automatic1111Arguments as bt, parseStringToArgs$1 as c, isValidArg as cn, INVOKEAI_INSTALL_DIR_KEY as ct, parseArgsToString$2 as d, extractGitUrl as dn, comfyuizludaArguments as dt, AntigravityCli_RM as en, UNSLOTH_STUDIO_ID as er, vladmandicArguments as et, parseStringToArgs$2 as f, getCdCommand as fn, comfyRocmArguments as ft, parseStringToArgs$3 as g, isWin as gn, comfyuiArguments as gt, parseArgsToString$3 as h, isMac as hn, parseStringToArgs$13 as ht, parseStringToArgs as i, CardInfo as in, lshqqytigerArguments as it, parseArgsToFiles as j, FLOWISEAI_ID as jn, parseStringToArgs$17 as jt, oobaboogaArguments as k, COMFYUI_ROCM_ID as kn, N8N_RM as kt, smartGalleryArguments as l, cloneDeep as ln, INVOKEAI_UPDATE_AVAILABLE_KEY as lt, KOHYA_GUI_RM as m, getVenvPythonPath as mn, parseArgsToString$13 as mt, UNSLOTH_STUDIO_RM as n, parseFilesToArgs$4 as nn, parseArgsToString$11 as nt, SMARTGALLERY_RM as o, catchAddress$5 as on, parseArgsToString$12 as ot, llamaFactoryArguments as p, getPythonCommandByOs as pn, COMFYUI_RM as pt, SWARM_RM as q, SD_NEXT_ID as qn, parseArgsToString$21 as qt, parseArgsToString as r, antigravityCliArguments as rn, parseStringToArgs$11 as rt, parseArgsToString$1 as s, getArgumentType as sn, parseStringToArgs$12 as st, TAG_KEY as t, parseArgsToFiles$4 as tn, VOICE_STUDIO_ID as tr, SD_AMD_RM as tt, LLAMA_FACTORY_RM as u, DescriptionManager as un, Invoke_Command_ActivateVenv as ut, LORA_MANAGER_RM as v, removeAnsi as vn, parseArgsToString$14 as vt, parseStringToArgs$5 as w, APPLIO_ID as wn, voiceStudioArguments as wt, loraManagerArguments as x, AITOOLKIT_ID as xn, VOICE_STUDIO_RM as xt, parseArgsToString$4 as y, A1_ID as yn, parseStringToArgs$14 as yt, LLAMA_CPP_PLATFORM_KEY as z, LORA_MANAGER_ID as zn, parseFilesToArgs$1 as zt };

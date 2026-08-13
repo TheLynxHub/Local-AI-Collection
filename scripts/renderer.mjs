@@ -1,5 +1,5 @@
-import { $ as INVOKE_RM, $t as isValidArg, A as SILLYTAVERN_RM, An as N8N_ID, At as hermesAgentArguments, B as mcMonkeyArguments, Bn as SWARM_ID, Bt as ClaudeCode_RM, Cn as HERMES_AGENT_ID, Ct as Langflow_RM, Dn as LLAMA_FACTORY_ID, Dt as HermesAgent_RM, E as TG_RM, En as LANGFLOW_ID, Et as langflowArguments, Fn as SD_FORGE_ID, Ft as openArguments, G as SD_AMD_RM, Hn as TTS_ID, In as SD_NEXT_ID, It as Flow_RM, J as lshqqytigerArguments, Jt as CardInfo, L as SWARM_RM, Ln as SD_UIUX_ID, Mn as OPEN_WEBUI_ID, N as sillyArguments, Nn as SD_AMD_ID, On as LORA_MANAGER_ID, P as OPEN_WEBUI_RM, Pn as SD_FORGE_AMD_ID, Pt as geminiCliArguments, Q as automatic1111Arguments, Qt as isPagesFixed, Rn as SILLYTAVERN_ID, S as AITOOLKIT_RM, Sn as GeminiCli_ID, St as n8nArguments, T as aiToolkitArguments, Tn as KOHYA_ID, Un as UNSLOTH_STUDIO_ID, Ut as claudeCodeArguments, V as SD_NEXT_RM, Vn as TG_ID, W as vladmandicArguments, Wn as VOICE_STUDIO_ID, Wt as AntigravityCli_RM, X as parseArgsToString$2, Xt as catchAddress$3, Y as fetchExtensionList, Yt as GitInstaller, Z as parseStringToArgs$2, Zt as getArgumentType, _ as bmaltaisArguments, _n as CLAUDE_CODE_ID, a as unslothStudioArguments, at as comfyuizludaArguments, bn as COMFYUI_ZLUDA_ID, dn as AITOOLKIT_ID, dt as VOICE_STUDIO_RM, en as cloneDeep, fn as ALLTALK_ID, gn as CHAT_TTS_ID, hn as BOLT_DIY_ID, ht as AG_RM, jn as ONETRAINER_ID, jt as GeminiCli_RM, k as oobaboogaArguments, kn as LoLLMS_ID, l as smartGalleryArguments, ln as A1_ID, m as KOHYA_GUI_RM, mn as APPLIO_ID, mt as voiceStudioArguments, n as UNSLOTH_STUDIO_RM, o as SMARTGALLERY_RM, on as isWin, ot as comfyRocmArguments, p as llamaFactoryArguments, pn as ANTIGRAVITY_CLI_ID, qt as antigravityCliArguments, rn as getPythonCommandByOs, sn as parseCustomArg, st as COMFYUI_RM, u as LLAMA_FACTORY_RM, un as AG_ID, ut as comfyuiArguments, v as LORA_MANAGER_RM, vn as COMFYUI_ID, vt as gitmyloArguments, wn as INVOKE_ID, x as loraManagerArguments, xn as FLOWISEAI_ID, yn as COMFYUI_ROCM_ID, yt as N8N_RM, zn as SMARTGALLERY_ID, zt as flowiseArguments } from "./RendererMethods_Bnfi7l.mjs";
-//#region module/src/Container/Agent/Agents.ts
+import { $n as TTS_ID, $t as claudeCodeArguments, A as SILLYTAVERN_RM, An as COMFYUI_ZLUDA_ID, B as LLAMA_CPP_UPDATE_TIME_KEY, Bn as LoLLMS_ID, Bt as hermesAgentArguments, Cn as ANTIGRAVITY_CLI_ID, Dn as CLAUDE_CODE_ID, E as TG_RM, En as CHAT_TTS_ID, Fn as KOHYA_ID, G as findAssetUrlForPlatform, Gn as SD_FORGE_AMD_ID, Gt as openArguments, H as LLAMA_PLATFORM_OPTIONS, Hn as ONETRAINER_ID, In as LANGFLOW_ID, It as langflowArguments, Jn as SD_UIUX_ID, Kn as SD_FORGE_ID, Kt as Flow_RM, L as LLAMA_CPP_INSTALL_DIR_KEY, Ln as LLAMA_CPP_ID, Lt as HermesAgent_RM, Mn as GeminiCli_ID, Mt as n8nArguments, N as sillyArguments, Nn as HERMES_AGENT_ID, Nt as Langflow_RM, On as COMFYUI_ID, Ot as gitmyloArguments, P as OPEN_WEBUI_RM, Pn as INVOKE_ID, Qn as TG_ID, R as LLAMA_CPP_INSTALL_TIME_KEY, Rn as LLAMA_FACTORY_ID, S as AITOOLKIT_RM, Sn as ALLTALK_ID, T as aiToolkitArguments, Tn as BOLT_DIY_ID, Tt as AG_RM, U as detectDefaultPlatformKey, Un as OPEN_WEBUI_ID, V as LLAMA_CPP_VERSION_KEY, Vn as N8N_ID, Vt as GeminiCli_RM, Wn as SD_AMD_ID, Wt as geminiCliArguments, X as mcMonkeyArguments, Xn as SMARTGALLERY_ID, Xt as ClaudeCode_RM, Yn as SILLYTAVERN_ID, Yt as flowiseArguments, Z as SD_NEXT_RM, Zn as SWARM_ID, _ as bmaltaisArguments, _n as parseCustomArg, _t as fetchExtensionList, a as unslothStudioArguments, an as GitInstaller, at as INVOKE_RM, bn as AG_ID, bt as automatic1111Arguments, cn as isValidArg, dt as comfyuizludaArguments, en as AntigravityCli_RM, er as UNSLOTH_STUDIO_ID, et as vladmandicArguments, ft as comfyRocmArguments, gn as isWin, gt as comfyuiArguments, in as CardInfo, it as lshqqytigerArguments, jn as FLOWISEAI_ID, k as oobaboogaArguments, kn as COMFYUI_ROCM_ID, kt as N8N_RM, l as smartGalleryArguments, ln as cloneDeep, m as KOHYA_GUI_RM, n as UNSLOTH_STUDIO_RM, o as SMARTGALLERY_RM, on as catchAddress$3, p as llamaFactoryArguments, pn as getPythonCommandByOs, pt as COMFYUI_RM, q as SWARM_RM, qn as SD_NEXT_ID, rn as antigravityCliArguments, sn as getArgumentType, tr as VOICE_STUDIO_ID, tt as SD_AMD_RM, u as LLAMA_FACTORY_RM, un as DescriptionManager, v as LORA_MANAGER_RM, vt as parseArgsToString$3, wn as APPLIO_ID, wt as voiceStudioArguments, x as loraManagerArguments, xn as AITOOLKIT_ID, xt as VOICE_STUDIO_RM, yn as A1_ID, yt as parseStringToArgs$3, z as LLAMA_CPP_PLATFORM_KEY, zn as LORA_MANAGER_ID } from "./RendererMethods_CFYlLM.mjs";
+//#region module/src/containers/agent/index.ts
 const agentsPage = {
 	routePath: "agents_page",
 	cards: [
@@ -80,9 +80,9 @@ const agentsPage = {
 	]
 };
 //#endregion
-//#region module/src/Container/Audio/AllTalk TTS (erew123)/RendererMethods.ts
+//#region module/src/containers/audio/AllTalkTts/RendererMethods.ts
 const URL$5 = "https://github.com/erew123/alltalk_tts";
-function startInstall$12(stepper) {
+function startInstall$13(stepper) {
 	stepper.initialSteps([
 		"AllTalk TTS",
 		"Clone",
@@ -113,7 +113,7 @@ function startInstall$12(stepper) {
 		});
 	});
 }
-function startUpdate$2(stepper, dir) {
+function startUpdate$3(stepper, dir) {
 	stepper.initialSteps([
 		"Pull Changes",
 		"Update",
@@ -129,7 +129,7 @@ function startUpdate$2(stepper, dir) {
 	});
 	else stepper.showFinalStep("error", "Unable to update AllTalk TTS");
 }
-async function cardInfo$12(api, callback) {
+async function cardInfo$13(api, callback) {
 	return CardInfo(URL$5, void 0, api, callback);
 }
 function catchAddress$2(input) {
@@ -137,20 +137,20 @@ function catchAddress$2(input) {
 	if (match) return match[1];
 }
 const ALLTALK_RM = {
-	cardInfo: cardInfo$12,
+	cardInfo: cardInfo$13,
 	catchAddress: catchAddress$2,
 	manager: {
-		startInstall: startInstall$12,
+		startInstall: startInstall$13,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$2
+			startUpdate: startUpdate$3
 		}
 	}
 };
 //#endregion
-//#region module/src/Container/Audio/Applio/RendererMethods.ts
+//#region module/src/containers/audio/Applio/RendererMethods.ts
 const URL$4 = "https://github.com/IAHispano/Applio";
-function startInstall$11(stepper) {
+function startInstall$12(stepper) {
 	stepper.initialSteps([
 		"Applio",
 		"Clone",
@@ -182,21 +182,21 @@ function startInstall$11(stepper) {
 		});
 	});
 }
-async function cardInfo$11(api, callback) {
+async function cardInfo$12(api, callback) {
 	return CardInfo(URL$4, void 0, api, callback);
 }
 const APPLIO_RM = {
 	catchAddress: catchAddress$3,
-	cardInfo: cardInfo$11,
+	cardInfo: cardInfo$12,
 	manager: {
-		startInstall: startInstall$11,
+		startInstall: startInstall$12,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Audio/ChatTTS (2noise)/RendererMethods.ts
+//#region module/src/containers/audio/ChatTts/RendererMethods.ts
 const CHAT_TTS_URL = "https://github.com/2noise/ChatTTS";
-function startInstall$10(stepper) {
+function startInstall$11(stepper) {
 	const pipCommand = getPythonCommandByOs().pip;
 	const installReqs = (dir) => {
 		stepper.executeTerminalCommands(`${pipCommand} install -r requirements.txt`, dir).then(() => {
@@ -228,32 +228,32 @@ function startInstall$10(stepper) {
 		});
 	});
 }
-async function cardInfo$10(api, callback) {
+async function cardInfo$11(api, callback) {
 	return CardInfo(CHAT_TTS_URL, void 0, api, callback);
 }
 const CHAT_TTS_RM = {
 	catchAddress: catchAddress$3,
-	cardInfo: cardInfo$10,
+	cardInfo: cardInfo$11,
 	manager: {
-		startInstall: startInstall$10,
+		startInstall: startInstall$11,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Audio/Text to Speech (rsxdalv)/RendererMethods.ts
+//#region module/src/containers/audio/TextToSpeech/RendererMethods.ts
 const URL$3 = "https://github.com/rsxdalv/TTS-WebUI";
 function catchAddress$1(input) {
 	if (input.toLowerCase().includes("Installed Packages".toLowerCase())) return "http://127.0.0.1:7770";
 	else return;
 }
-function startInstall$9(stepper) {
+function startInstall$10(stepper) {
 	GitInstaller("Text to Speech", URL$3, stepper, [isWin ? "start_tts_webui.bat" : "start_tts_webui.sh"]);
 }
-async function cardInfo$9(api, callback) {
+async function cardInfo$10(api, callback) {
 	return CardInfo(URL$3, "/extensions", api, callback);
 }
 //#endregion
-//#region module/src/Container/Audio/AudioGeneration.ts
+//#region module/src/containers/audio/index.ts
 const audioPage = {
 	routePath: "audioGen_page",
 	cards: [
@@ -266,9 +266,9 @@ const audioPage = {
 			extensionsDir: "/extensions",
 			methods: {
 				catchAddress: catchAddress$1,
-				cardInfo: cardInfo$9,
+				cardInfo: cardInfo$10,
 				manager: {
-					startInstall: startInstall$9,
+					startInstall: startInstall$10,
 					updater: { updateType: "git" }
 				}
 			},
@@ -327,64 +327,29 @@ const audioPage = {
 	]
 };
 //#endregion
-//#region module/src/Container/Tools/OneTrainer (Nerogar)/RendererMethods.ts
-const URL$2 = "https://github.com/Nerogar/OneTrainer";
-function startInstall$8(stepper) {
-	stepper.initialSteps([
-		"OneTrainer",
-		"Clone",
-		"Install",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(URL$2).then((dir) => {
-				stepper.nextStep().then(() => {
-					stepper.runTerminalScript(dir, isWin ? "install.bat" : "install.sh").then(() => {
-						stepper.setInstalled(dir);
-						stepper.showFinalStep("success", "OneTrainer installation complete!", "All installation steps completed successfully. Your OneTrainer environment is now ready for use.");
-					});
-				});
-			});
-		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$2).then((isValid) => {
-			if (isValid) {
-				stepper.setInstalled(targetDirectory);
-				stepper.showFinalStep("success", "OneTrainer located successfully!", "Pre-installed OneTrainer detected. Installation skipped as your existing setup is ready to use.");
-			} else stepper.utils.verifyFilesExist(targetDirectory, [isWin ? "start-ui.bat" : "start-ui.sh"]).then((isExist) => {
-				if (isExist) {
-					stepper.setInstalled(targetDirectory);
-					stepper.showFinalStep("success", `OneTrainer located successfully!`, "Detected a manual installation of OneTrainer. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
-				} else stepper.showFinalStep("error", "Unable to locate OneTrainer!", "Please ensure you have selected the correct folder containing the OneTrainer repository.");
-			});
-		});
-	});
+//#region module/src/containers/image/Automatic1111Sd/RendererMethods.ts
+const A1_URL = "https://github.com/AUTOMATIC1111/stable-diffusion-webui";
+function startInstall$9(stepper) {
+	GitInstaller("Automatic1111", A1_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
 }
-function startUpdate$1(stepper, dir) {
-	stepper.initialSteps(["Update", "Finish"]);
-	if (dir) stepper.runTerminalScript(dir, isWin ? "update.bat" : "update.sh").then(() => {
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "OneTrainer Updated Successfully!");
-	});
-	else stepper.showFinalStep("error", "Unable to update OneTrainer");
+async function cardInfo$9(api, callback) {
+	return CardInfo(A1_URL, "/extensions", api, callback);
 }
-async function cardInfo$8(api, callback) {
-	return CardInfo(URL$2, void 0, api, callback);
-}
-const ONETRAINER_RM = {
-	cardInfo: cardInfo$8,
+const A1_RM = {
+	catchAddress: catchAddress$3,
+	fetchExtensionList,
+	parseArgsToString: parseArgsToString$3,
+	parseStringToArgs: parseStringToArgs$3,
+	cardInfo: cardInfo$9,
 	manager: {
-		startInstall: startInstall$8,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$1
-		}
+		startInstall: startInstall$9,
+		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Image/ComfyUI ROCm (patientx)/RendererMethods.ts
-const URL$1 = "https://github.com/patientx-cfz/comfyui-rocm";
-function parseArgsToString$1(args) {
+//#region module/src/containers/image/ComfyUiRocm/RendererMethods.ts
+const URL$2 = "https://github.com/patientx-cfz/comfyui-rocm";
+function parseArgsToString$2(args) {
 	let result = "";
 	let lines = "";
 	let argResult = "";
@@ -418,7 +383,7 @@ function parseArgsToString$1(args) {
 	if (lines) result += lines + "\n";
 	return result;
 }
-function parseStringToArgs$1(args) {
+function parseStringToArgs$2(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("set")) {
@@ -486,7 +451,7 @@ const customArguments$1 = [
 		value: ""
 	}
 ];
-function startInstall$7(stepper) {
+function startInstall$8(stepper) {
 	stepper.initialSteps([
 		"ComfyUI ROCm",
 		"Clone",
@@ -495,7 +460,7 @@ function startInstall$7(stepper) {
 	]);
 	stepper.starterStep().then(({ targetDirectory, chosen }) => {
 		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(URL$1).then((dir) => {
+			stepper.cloneRepository(URL$2).then((dir) => {
 				stepper.nextStep().then(() => {
 					stepper.runTerminalScript(dir, "install.bat").then(() => {
 						stepper.setInstalled(dir);
@@ -508,7 +473,7 @@ function startInstall$7(stepper) {
 				});
 			});
 		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$1).then((isValid) => {
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL$2).then((isValid) => {
 			if (isValid) {
 				stepper.setInstalled(targetDirectory);
 				stepper.postInstall.config({ customArguments: {
@@ -529,23 +494,23 @@ function startInstall$7(stepper) {
 		});
 	});
 }
-async function cardInfo$7(api, callback) {
-	return CardInfo(URL$1, "/custom_nodes", api, callback);
+async function cardInfo$8(api, callback) {
+	return CardInfo(URL$2, "/custom_nodes", api, callback);
 }
 const COMFYUI_ROCM_RM = {
 	catchAddress: catchAddress$3,
-	parseArgsToString: parseArgsToString$1,
-	parseStringToArgs: parseStringToArgs$1,
-	cardInfo: cardInfo$7,
+	parseArgsToString: parseArgsToString$2,
+	parseStringToArgs: parseStringToArgs$2,
+	cardInfo: cardInfo$8,
 	manager: {
-		startInstall: startInstall$7,
+		startInstall: startInstall$8,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Image/ComfyUI Zluda (patientx)/RendererMethods.ts
-const URL = "https://github.com/patientx/ComfyUI-Zluda";
-function parseArgsToString(args) {
+//#region module/src/containers/image/ComfyUiZluda/RendererMethods.ts
+const URL$1 = "https://github.com/patientx/ComfyUI-Zluda";
+function parseArgsToString$1(args) {
 	let result = "";
 	let lines = "";
 	let argResult = "";
@@ -583,7 +548,7 @@ function parseArgsToString(args) {
 	if (lines) result += lines + "\n";
 	return result;
 }
-function parseStringToArgs(args) {
+function parseStringToArgs$1(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (line.startsWith("set")) {
@@ -649,7 +614,7 @@ const customArguments = [
 		value: ""
 	}
 ];
-function startInstall$6(stepper) {
+function startInstall$7(stepper) {
 	stepper.initialSteps([
 		"ComfyUI Zluda",
 		"Clone",
@@ -692,21 +657,21 @@ function startInstall$6(stepper) {
 		});
 	});
 }
-async function cardInfo$6(api, callback) {
-	return CardInfo(URL, "/custom_nodes", api, callback);
+async function cardInfo$7(api, callback) {
+	return CardInfo(URL$1, "/custom_nodes", api, callback);
 }
 const COMFYUI_ZLUDA_RM = {
 	catchAddress: catchAddress$3,
-	parseArgsToString,
-	parseStringToArgs,
-	cardInfo: cardInfo$6,
+	parseArgsToString: parseArgsToString$1,
+	parseStringToArgs: parseStringToArgs$1,
+	cardInfo: cardInfo$7,
 	manager: {
-		startInstall: startInstall$6,
+		startInstall: startInstall$7,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Image/InvokeAI/Arguments.ts
+//#region module/src/containers/image/InvokeAi/Arguments.ts
 const invokeArguments = [{
 	category: "Command Line Arguments",
 	sections: [
@@ -1203,47 +1168,27 @@ const invokeArguments = [{
 	]
 }];
 //#endregion
-//#region module/src/Container/Image/SD (AUTOMATIC1111)/RendererMethods.ts
-const A1_URL = "https://github.com/AUTOMATIC1111/stable-diffusion-webui";
-function startInstall$5(stepper) {
-	GitInstaller("Automatic1111", A1_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
-}
-async function cardInfo$5(api, callback) {
-	return CardInfo(A1_URL, "/extensions", api, callback);
-}
-const A1_RM = {
-	catchAddress: catchAddress$3,
-	fetchExtensionList,
-	parseArgsToString: parseArgsToString$2,
-	parseStringToArgs: parseStringToArgs$2,
-	cardInfo: cardInfo$5,
-	manager: {
-		startInstall: startInstall$5,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/Container/Image/SD Forge (lllyasviel)/RendererMethods.ts
+//#region module/src/containers/image/SdForge/RendererMethods.ts
 const SD_FORGE_URL = "https://github.com/lllyasviel/stable-diffusion-webui-forge";
-function startInstall$4(stepper) {
+function startInstall$6(stepper) {
 	GitInstaller("SD Forge", SD_FORGE_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
 }
-async function cardInfo$4(api, callback) {
+async function cardInfo$6(api, callback) {
 	return CardInfo(SD_FORGE_URL, "/extensions", api, callback);
 }
 const SD_FORGE_RM = {
 	catchAddress: catchAddress$3,
 	fetchExtensionList,
-	parseArgsToString: parseArgsToString$2,
-	parseStringToArgs: parseStringToArgs$2,
-	cardInfo: cardInfo$4,
+	parseArgsToString: parseArgsToString$3,
+	parseStringToArgs: parseStringToArgs$3,
+	cardInfo: cardInfo$6,
 	manager: {
-		startInstall: startInstall$4,
+		startInstall: startInstall$6,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Image/SD Forge AMDGPU (lshqqytiger)/Arguments.ts
+//#region module/src/containers/image/SdForgeAmdgpu/Arguments.ts
 const lshqqytigerForgeArguments = cloneDeep(automatic1111Arguments);
 const newSection = {
 	section: "AmdGPU",
@@ -1273,36 +1218,36 @@ const newSection = {
 const commandLineArgsIndex = lshqqytigerForgeArguments.findIndex((arg) => arg.category === "Command Line Arguments");
 if (commandLineArgsIndex !== -1 && lshqqytigerForgeArguments[commandLineArgsIndex].sections) lshqqytigerForgeArguments[commandLineArgsIndex].sections.unshift(newSection);
 //#endregion
-//#region module/src/Container/Image/SD Forge AMDGPU (lshqqytiger)/RendererMethods.ts
+//#region module/src/containers/image/SdForgeAmdgpu/RendererMethods.ts
 const SdAMD_URL$1 = "https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu-forge";
-function startInstall$3(stepper) {
+function startInstall$5(stepper) {
 	GitInstaller("SD Forge AMDGPU", SdAMD_URL$1, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
 }
-async function cardInfo$3(api, callback) {
+async function cardInfo$5(api, callback) {
 	return CardInfo(SdAMD_URL$1, "RendererMethods", api, callback);
 }
 const SD_FORGE_AMD_RM = {
 	catchAddress: catchAddress$3,
 	fetchExtensionList,
-	parseArgsToString: parseArgsToString$2,
-	parseStringToArgs: parseStringToArgs$2,
-	cardInfo: cardInfo$3,
+	parseArgsToString: parseArgsToString$3,
+	parseStringToArgs: parseStringToArgs$3,
+	cardInfo: cardInfo$5,
 	manager: {
-		startInstall: startInstall$3,
+		startInstall: startInstall$5,
 		updater: { updateType: "git" }
 	}
 };
 //#endregion
-//#region module/src/Container/Image/SD UI-UX (anapnoe)/RendererMethods.ts
+//#region module/src/containers/image/SdUiUx/RendererMethods.ts
 const SdAMD_URL = "https://github.com/anapnoe/stable-diffusion-webui-ux";
-function startInstall$2(stepper) {
+function startInstall$4(stepper) {
 	GitInstaller("SD UI-UX", SdAMD_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
 }
-async function cardInfo$2(api, callback) {
+async function cardInfo$4(api, callback) {
 	return CardInfo(SdAMD_URL, "/extensions", api, callback);
 }
 //#endregion
-//#region module/src/Container/Image/ImageGeneration.ts
+//#region module/src/containers/image/index.ts
 const imagePage = {
 	routePath: "imageGen_page",
 	cards: [
@@ -1434,11 +1379,11 @@ const imagePage = {
 			methods: {
 				catchAddress: catchAddress$3,
 				fetchExtensionList,
-				parseArgsToString: parseArgsToString$2,
-				parseStringToArgs: parseStringToArgs$2,
-				cardInfo: cardInfo$2,
+				parseArgsToString: parseArgsToString$3,
+				parseStringToArgs: parseStringToArgs$3,
+				cardInfo: cardInfo$4,
 				manager: {
-					startInstall: startInstall$2,
+					startInstall: startInstall$4,
 					updater: { updateType: "git" }
 				}
 			},
@@ -1446,57 +1391,8 @@ const imagePage = {
 		}
 	]
 };
-if (!isPagesFixed) imagePage.cards.push({
-	id: ONETRAINER_ID,
-	title: "OneTrainer",
-	description: "OneTrainer is a one-stop solution for all your stable diffusion training needs.",
-	repoUrl: "https://github.com/Nerogar/OneTrainer",
-	type: "image",
-	supportCustomArguments: true,
-	methods: ONETRAINER_RM,
-	installationType: "git"
-}, {
-	id: KOHYA_ID,
-	title: "Kohya's GUI",
-	description: "User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.",
-	repoUrl: "https://github.com/bmaltais/kohya_ss",
-	type: "image",
-	arguments: bmaltaisArguments,
-	methods: KOHYA_GUI_RM,
-	installationType: "git"
-}, {
-	id: AITOOLKIT_ID,
-	title: "AI Toolkit",
-	description: "The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.",
-	repoUrl: "https://github.com/ostris/ai-toolkit",
-	type: "image",
-	supportCustomArguments: true,
-	arguments: aiToolkitArguments,
-	methods: AITOOLKIT_RM,
-	installationType: "git"
-}, {
-	id: SMARTGALLERY_ID,
-	title: "SmartGallery",
-	description: "A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.",
-	repoUrl: "https://github.com/biagiomaf/smart-comfyui-gallery",
-	type: "image",
-	arguments: smartGalleryArguments,
-	supportCustomArguments: true,
-	methods: SMARTGALLERY_RM,
-	installationType: "git"
-}, {
-	id: LORA_MANAGER_ID,
-	title: "ComfyUI LoRA Manager",
-	description: "Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.",
-	repoUrl: "https://github.com/willmiao/ComfyUI-Lora-Manager",
-	type: "image",
-	supportCustomArguments: true,
-	arguments: loraManagerArguments,
-	methods: LORA_MANAGER_RM,
-	installationType: "git"
-});
 //#endregion
-//#region module/src/Container/Text/BoltDiy (StackblitzLabs)/RendererMethods.ts
+//#region module/src/containers/text/BoltDiy/RendererMethods.ts
 const REPO_URL = "https://github.com/stackblitz-labs/bolt.diy";
 const StarterSteps = [
 	"Start",
@@ -1505,7 +1401,7 @@ const StarterSteps = [
 	"Packages",
 	"Done!"
 ];
-function startInstall$1(stepper) {
+function startInstall$3(stepper) {
 	const next = () => stepper.nextStep();
 	const progress = (message) => stepper.progressBar(true, message);
 	const checkNode = () => stepper.ipc.invoke("is_boltdiy_nodejs_installed");
@@ -1546,7 +1442,7 @@ function startInstall$1(stepper) {
 		});
 	});
 }
-async function cardInfo$1(api, callback) {
+async function cardInfo$3(api, callback) {
 	return CardInfo(REPO_URL, void 0, api, callback);
 }
 function catchAddress(line) {
@@ -1559,7 +1455,7 @@ function catchAddress(line) {
 		return address;
 	}
 }
-function startUpdate(stepper, dir) {
+function startUpdate$2(stepper, dir) {
 	stepper.initialSteps(["Updating", "Completed"]);
 	stepper.executeTerminalCommands("git pull && npm i", dir).then(() => {
 		stepper.setUpdated();
@@ -1568,20 +1464,793 @@ function startUpdate(stepper, dir) {
 }
 const BOLT_DIY_RM = {
 	catchAddress,
-	cardInfo: cardInfo$1,
+	cardInfo: cardInfo$3,
 	manager: {
-		startInstall: startInstall$1,
+		startInstall: startInstall$3,
 		updater: {
 			updateType: "stepper",
-			startUpdate
+			startUpdate: startUpdate$2
 		}
 	}
 };
 //#endregion
-//#region module/src/Container/Text/LoLLMs (ParisNeo)/RendererMethods.ts
+//#region module/src/containers/text/LlamaCpp/Arguments.ts
+const llamaCppArguments = [{
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Server & Network Settings",
+			items: [
+				{
+					name: "--host",
+					description: "Hostname or IP address to listen on, or bind to UNIX socket (.sock). Default: 127.0.0.1.",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Port to listen on. Default: 8080.",
+					type: "Number",
+					defaultValue: 8080,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "--path",
+					description: "Path for static web assets directory to serve custom web frontend UI.",
+					type: "Directory"
+				},
+				{
+					name: "--api-key",
+					description: "API key required for authenticating client requests to HTTP server (comma-separated list).",
+					type: "Input"
+				},
+				{
+					name: "--cors-origins",
+					description: "Comma-separated list of allowed origins for CORS. Default: *",
+					type: "Input",
+					defaultValue: "*"
+				},
+				{
+					name: "--threads",
+					description: "Number of CPU threads to use during generation processing (-t).",
+					type: "Number",
+					numberMin: 1,
+					numberMax: 128
+				},
+				{
+					name: "--threads-http",
+					description: "Number of threads used to process HTTP requests.",
+					type: "Number",
+					defaultValue: -1
+				},
+				{
+					name: "--timeout",
+					description: "Server read/write timeout in seconds. Default: 3600.",
+					type: "Number",
+					defaultValue: 3600,
+					numberMin: 1
+				},
+				{
+					name: "--metrics",
+					description: "Enable Prometheus compatible metrics endpoint /metrics.",
+					type: "CheckBox"
+				},
+				{
+					name: "--slots",
+					description: "Expose slots monitoring endpoint.",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--ui",
+					description: "Whether to enable the Web UI frontend.",
+					type: "CheckBox",
+					defaultValue: true
+				}
+			]
+		},
+		{
+			section: "Model & Loading Options",
+			items: [
+				{
+					name: "--model",
+					description: "Path to local GGUF model file (-m).",
+					type: "File"
+				},
+				{
+					name: "--model-url",
+					description: "HTTP/HTTPS URL to download model file automatically (-mu).",
+					type: "Input"
+				},
+				{
+					name: "--hf-repo",
+					description: "Hugging Face model repository (e.g. ggml-org/GLM-4.7-Flash-GGUF:Q4_K_M).",
+					type: "Input"
+				},
+				{
+					name: "--hf-file",
+					description: "Hugging Face model file. If specified, overrides quant in --hf-repo.",
+					type: "Input"
+				},
+				{
+					name: "--hf-token",
+					description: "Hugging Face access token for private or gated models.",
+					type: "Input"
+				},
+				{
+					name: "--load-mode",
+					description: "Model loading mode: auto, none, mmap, mlock, mmap+mlock, dio (DirectIO).",
+					type: "DropDown",
+					values: [
+						"auto",
+						"none",
+						"mmap",
+						"mlock",
+						"mmap+mlock",
+						"dio"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--ctx-size",
+					description: "Size of the prompt context window (-c). Default: 0 (loaded from model).",
+					type: "Number",
+					defaultValue: 4096,
+					numberMin: 0,
+					numberMax: 1048576
+				},
+				{
+					name: "--batch-size",
+					description: "Logical maximum batch size (-b). Default: 2048.",
+					type: "Number",
+					defaultValue: 2048,
+					numberMin: 1
+				},
+				{
+					name: "--ubatch-size",
+					description: "Physical maximum batch size (-ub). Default: 512.",
+					type: "Number",
+					defaultValue: 512,
+					numberMin: 1
+				},
+				{
+					name: "--parallel",
+					description: "Number of server slots for parallel decoding (-np). Default: -1 (auto).",
+					type: "Number",
+					defaultValue: -1
+				}
+			]
+		},
+		{
+			section: "Reasoning & Thinking Parameters",
+			items: [
+				{
+					name: "--reasoning",
+					description: "Enable reasoning/thinking in chat (-rea): on, off, auto (detect from template).",
+					type: "DropDown",
+					values: [
+						"auto",
+						"on",
+						"off"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--reasoning-format",
+					description: "Controls thought tag extraction format: auto, none, deepseek, deepseek-legacy.",
+					type: "DropDown",
+					values: [
+						"auto",
+						"none",
+						"deepseek",
+						"deepseek-legacy"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--reasoning-budget",
+					description: "Token budget for thinking: -1 for unrestricted, 0 for immediate end, N>0 for token budget.",
+					type: "Number",
+					defaultValue: -1
+				},
+				{
+					name: "--reasoning-budget-message",
+					description: "Message injected before end-of-thinking tag when reasoning budget is exhausted.",
+					type: "Input"
+				},
+				{
+					name: "--reasoning-preserve",
+					description: "Preserve reasoning trace in full history, not just the last assistant message.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Hardware & Acceleration Offloading",
+			items: [
+				{
+					name: "--n-gpu-layers",
+					description: "Max number of layers to store in VRAM (-ngl). Number, auto, or all.",
+					type: "Input",
+					defaultValue: "auto"
+				},
+				{
+					name: "--device",
+					description: "Comma-separated list of devices to use for offloading (-dev, e.g. CUDA0, Vulkan0).",
+					type: "Input"
+				},
+				{
+					name: "--flash-attn",
+					description: "Set Flash Attention use (-fa): auto, on, or off.",
+					type: "DropDown",
+					values: [
+						"auto",
+						"on",
+						"off"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--cont-batching",
+					description: "Enable continuous dynamic batching (-cb).",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--cache-type-k",
+					description: "KV cache data type for K (-ctk): f32, f16, bf16, q8_0, q4_0, q4_1, iq4_nl, q5_0, q5_1.",
+					type: "DropDown",
+					values: [
+						"f16",
+						"f32",
+						"bf16",
+						"q8_0",
+						"q4_0",
+						"q4_1",
+						"iq4_nl",
+						"q5_0",
+						"q5_1"
+					],
+					defaultValue: "f16"
+				},
+				{
+					name: "--cache-type-v",
+					description: "KV cache data type for V (-ctv): f32, f16, bf16, q8_0, q4_0, q4_1, iq4_nl, q5_0, q5_1.",
+					type: "DropDown",
+					values: [
+						"f16",
+						"f32",
+						"bf16",
+						"q8_0",
+						"q4_0",
+						"q4_1",
+						"iq4_nl",
+						"q5_0",
+						"q5_1"
+					],
+					defaultValue: "f16"
+				},
+				{
+					name: "--split-mode",
+					description: "How to split model across multiple GPUs (-sm): layer, row, tensor, none.",
+					type: "DropDown",
+					values: [
+						"layer",
+						"row",
+						"tensor",
+						"none"
+					],
+					defaultValue: "layer"
+				},
+				{
+					name: "--main-gpu",
+					description: "Main GPU index to use (-mg). Default: 0.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--tensor-split",
+					description: "Fraction of model offloaded to each GPU (-ts), e.g. 3,1 for 75%/25%.",
+					type: "Input"
+				},
+				{
+					name: "--cpu-moe",
+					description: "Keep all Mixture of Experts (MoE) weights in CPU (-cmoe).",
+					type: "CheckBox"
+				},
+				{
+					name: "--n-cpu-moe",
+					description: "Keep MoE weights of first N layers in CPU (-ncmoe).",
+					type: "Number"
+				},
+				{
+					name: "--numa",
+					description: "NUMA optimization strategy: distribute, isolate, numactl.",
+					type: "DropDown",
+					values: [
+						"distribute",
+						"isolate",
+						"numactl"
+					]
+				}
+			]
+		},
+		{
+			section: "Multimodal & Projector Options",
+			items: [
+				{
+					name: "--mmproj",
+					description: "Path to multimodal projector file (-mm).",
+					type: "File"
+				},
+				{
+					name: "--mmproj-url",
+					description: "URL to download multimodal projector file (-mmu).",
+					type: "Input"
+				},
+				{
+					name: "--mmproj-auto",
+					description: "Automatically use multimodal projector file if available.",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--mmproj-offload",
+					description: "Enable GPU offloading for multimodal projector.",
+					type: "CheckBox",
+					defaultValue: true
+				}
+			]
+		},
+		{
+			section: "Built-in Tools & Agent Capabilities",
+			items: [
+				{
+					name: "--agent",
+					description: "Enable CORS proxy and all built-in agent tools (-ag).",
+					type: "CheckBox"
+				},
+				{
+					name: "--tools",
+					description: "Comma-separated list of built-in tools or \"all\" (e.g. read_file, exec_shell_command).",
+					type: "Input"
+				},
+				{
+					name: "--tools-runtime",
+					description: "Separate runtime environment for tools: none, docker:, podman:, ssh:.",
+					type: "Input"
+				},
+				{
+					name: "--mcp-servers-config",
+					description: "Path to JSON file with MCP server definitions (Cursor-compatible format).",
+					type: "File"
+				}
+			]
+		},
+		{
+			section: "Speculative Decoding",
+			items: [
+				{
+					name: "--spec-type",
+					description: "Types of speculative decoding: none, draft-simple, draft-eagle3, draft-mtp, ngram-simple.",
+					type: "Input"
+				},
+				{
+					name: "--model-draft",
+					description: "Path to draft GGUF model file for speculative decoding (-md).",
+					type: "File"
+				},
+				{
+					name: "--n-gpu-layers-draft",
+					description: "Max number of draft model layers to store in VRAM (-ngld).",
+					type: "Input",
+					defaultValue: "auto"
+				},
+				{
+					name: "--spec-draft-n-max",
+					description: "Number of tokens to draft for speculative decoding. Default: 3.",
+					type: "Number",
+					defaultValue: 3
+				}
+			]
+		},
+		{
+			section: "Sampling & Generation Parameters",
+			items: [
+				{
+					name: "--temp",
+					description: "Temperature sampling value. Higher = creative, lower = deterministic. Default: 0.8.",
+					type: "Number",
+					defaultValue: .8,
+					numberStep: .05,
+					numberMin: 0,
+					numberMax: 2
+				},
+				{
+					name: "--top-p",
+					description: "Top-P (nucleus) sampling threshold. Default: 0.95.",
+					type: "Number",
+					defaultValue: .95,
+					numberStep: .05,
+					numberMin: 0,
+					numberMax: 1
+				},
+				{
+					name: "--top-k",
+					description: "Top-K sampling limit. Default: 40 (0 = disabled).",
+					type: "Number",
+					defaultValue: 40,
+					numberMin: 0
+				},
+				{
+					name: "--min-p",
+					description: "Min-P sampling threshold. Default: 0.05 (0.0 = disabled).",
+					type: "Number",
+					defaultValue: .05,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
+				},
+				{
+					name: "--repeat-penalty",
+					description: "Penalize repeat sequence of tokens. Default: 1.0.",
+					type: "Number",
+					defaultValue: 1,
+					numberStep: .05,
+					numberMin: 1
+				},
+				{
+					name: "--repeat-last-n",
+					description: "Last N tokens to consider for penalizing repeat sequences. Default: 64.",
+					type: "Number",
+					defaultValue: 64
+				},
+				{
+					name: "--presence-penalty",
+					description: "Repeat alpha presence penalty.",
+					type: "Number",
+					defaultValue: 0,
+					numberStep: .1
+				},
+				{
+					name: "--frequency-penalty",
+					description: "Repeat alpha frequency penalty.",
+					type: "Number",
+					defaultValue: 0,
+					numberStep: .1
+				},
+				{
+					name: "--dry-multiplier",
+					description: "DRY sampling multiplier. Default: 0.0 (disabled).",
+					type: "Number",
+					defaultValue: 0,
+					numberStep: .1
+				},
+				{
+					name: "--dry-base",
+					description: "DRY sampling base value. Default: 1.75.",
+					type: "Number",
+					defaultValue: 1.75,
+					numberStep: .05
+				},
+				{
+					name: "--dry-allowed-length",
+					description: "Allowed length for DRY sampling. Default: 2.",
+					type: "Number",
+					defaultValue: 2
+				},
+				{
+					name: "--dry-penalty-last-n",
+					description: "DRY penalty for the last N tokens. Default: 64.",
+					type: "Number",
+					defaultValue: 64
+				},
+				{
+					name: "--dynatemp-range",
+					description: "Dynamic temperature range. Default: 0.0 (disabled).",
+					type: "Number",
+					defaultValue: 0,
+					numberStep: .1
+				},
+				{
+					name: "--dynatemp-exp",
+					description: "Dynamic temperature exponent. Default: 1.0.",
+					type: "Number",
+					defaultValue: 1,
+					numberStep: .1
+				},
+				{
+					name: "--mirostat",
+					description: "Use Mirostat sampling (0 = disabled, 1 = Mirostat 1.0, 2 = Mirostat 2.0).",
+					type: "DropDown",
+					values: [
+						"0",
+						"1",
+						"2"
+					],
+					defaultValue: "0"
+				}
+			]
+		},
+		{
+			section: "Prompt & Chat Templates",
+			items: [
+				{
+					name: "--chat-template",
+					description: "Pre-defined chat template or custom Jinja template string.",
+					type: "Input"
+				},
+				{
+					name: "--jinja",
+					description: "Enable Jinja template engine for chat parsing.",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--prefill-assistant",
+					description: "Prefill assistant response if last message is an assistant message.",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--system-prompt",
+					description: "Default system prompt string.",
+					type: "Input"
+				},
+				{
+					name: "--prompt-file",
+					description: "Path to text file containing prompt template.",
+					type: "File"
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/text/LlamaCpp/RendererMethods.ts
+function getArgumentInfo(argName) {
+	for (const data of llamaCppArguments) if ("sections" in data) {
+		for (const section of data.sections) for (const item of section.items) if (item.name.split(" ")[0] === argName) return {
+			category: data.category,
+			type: item.type,
+			name: item.name
+		};
+	}
+}
+function parseArgsToFiles(args) {
+	let scriptString = "llama-server";
+	args.forEach((arg) => {
+		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
+		const flagName = info ? info.name.split(" ")[0] : arg.name;
+		if (info && info.type === "CheckBox") {
+			if (arg.value !== "false" && arg.value !== false && arg.value !== 0 && String(arg.value) !== "0") scriptString += ` ${flagName}`;
+		} else if (arg.value !== void 0 && arg.value !== null && String(arg.value).trim() !== "") scriptString += ` ${flagName} "${arg.value}"`;
+	});
+	scriptString += "\n";
+	return { scriptData: scriptString };
+}
+function parseArgsToString(args) {
+	const { scriptData } = parseArgsToFiles(args);
+	return scriptData;
+}
+function parseStringToArgs(data) {
+	const argResult = [];
+	data.split("\n").forEach((line) => {
+		const trimmed = line.trim();
+		if (trimmed.startsWith("#") || !trimmed) return;
+		if (trimmed.startsWith("llama-server") || trimmed.startsWith("llama-cli")) {
+			const clArg = trimmed.replace(/^(llama-server|llama-cli)\s*/, "");
+			const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
+			const tokens = [];
+			let tokenMatch;
+			while ((tokenMatch = tokenRegex.exec(clArg)) !== null) tokens.push(tokenMatch[1] ?? tokenMatch[2] ?? tokenMatch[3]);
+			for (let i = 0; i < tokens.length; i++) {
+				const flag = tokens[i];
+				if (!flag.startsWith("-")) continue;
+				const info = getArgumentInfo(flag);
+				const nameToUse = info ? info.name : flag;
+				if (info ? info.type === "CheckBox" : false) argResult.push({
+					name: nameToUse,
+					value: "true"
+				});
+				else {
+					const nextToken = tokens[i + 1];
+					if (nextToken && !nextToken.startsWith("-")) {
+						argResult.push({
+							name: nameToUse,
+							value: nextToken.replace(/"/g, "")
+						});
+						i++;
+					} else argResult.push({
+						name: nameToUse,
+						value: "true"
+					});
+				}
+			}
+		}
+	});
+	return argResult;
+}
+function startInstall$2(stepper) {
+	stepper.initialSteps([
+		"llama.cpp",
+		"Configure Options",
+		"Download & Extract",
+		"Finish"
+	]);
+	stepper.starterStep({ disableSelectDir: true }).then(() => {
+		stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Fetching recent llama.cpp releases from GitHub...");
+			stepper.ipc.invoke("fetch_llama_cpp_releases").then((releases) => {
+				const recentReleases = releases.slice(0, 15);
+				const versionOptions = recentReleases.map((r) => r.tag_name);
+				const defaultVersion = versionOptions[0] || "latest";
+				const platformLabels = LLAMA_PLATFORM_OPTIONS.map((opt) => opt.label);
+				const defaultPlatformKey = detectDefaultPlatformKey();
+				const defaultPlatformOption = LLAMA_PLATFORM_OPTIONS.find((opt) => opt.key === defaultPlatformKey) || LLAMA_PLATFORM_OPTIONS[0];
+				const defaultPlatformLabel = defaultPlatformOption.label;
+				const inputFields = [
+					{
+						id: "install_dir",
+						label: "Installation Folder",
+						type: "directory",
+						isRequired: true
+					},
+					{
+						id: "version",
+						label: "Release Version",
+						type: "select",
+						selectOptions: versionOptions.length > 0 ? versionOptions : ["latest"],
+						defaultValue: defaultVersion,
+						isRequired: true
+					},
+					{
+						id: "platform",
+						label: "Architecture / Platform / Acceleration Backend",
+						type: "select",
+						selectOptions: platformLabels,
+						defaultValue: defaultPlatformLabel,
+						isRequired: true
+					}
+				];
+				stepper.collectUserInput(inputFields, "llama.cpp Setup Options").then((results) => {
+					const installDir = results.find((r) => r.id === "install_dir")?.result || "";
+					const selectedVersionTag = results.find((r) => r.id === "version")?.result || defaultVersion;
+					const selectedPlatformLabel = results.find((r) => r.id === "platform")?.result || defaultPlatformLabel;
+					const selectedPlatformOption = LLAMA_PLATFORM_OPTIONS.find((opt) => opt.label === selectedPlatformLabel) || defaultPlatformOption;
+					const chosenRelease = recentReleases.find((r) => r.tag_name === selectedVersionTag) || recentReleases[0];
+					const assetUrl = chosenRelease ? findAssetUrlForPlatform(chosenRelease.assets, selectedPlatformOption.key) : void 0;
+					if (!assetUrl) {
+						stepper.showFinalStep("error", "Download Error", "Could not find a matching release binary asset for your selection.");
+						return;
+					}
+					stepper.nextStep().then(() => {
+						stepper.progressBar(true, `Downloading llama.cpp (${selectedVersionTag})...`);
+						stepper.downloadFileFromUrl(assetUrl).then((downloadedFilePath) => {
+							stepper.progressBar(true, "Decompressing archive with 7z...");
+							stepper.utils.decompressFile(downloadedFilePath).then((extractedDir) => {
+								stepper.progressBar(true, "Finalizing installation...");
+								stepper.ipc.invoke("copy_llama_cpp_files", extractedDir, installDir).then(() => {
+									stepper.setInstalled(installDir);
+									const now = (/* @__PURE__ */ new Date()).toLocaleString();
+									stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
+									stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
+									stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
+									stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
+									stepper.showFinalStep("success", "llama.cpp Ready!", `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+}
+function startUpdate$1(stepper, dir) {
+	if (!dir) return;
+	stepper.initialSteps([
+		"Checking Release",
+		"Updating llama.cpp",
+		"Done"
+	]);
+	stepper.storage.get(LLAMA_CPP_PLATFORM_KEY).then((platformKey) => {
+		const activePlatformKey = platformKey || detectDefaultPlatformKey();
+		stepper.ipc.invoke("fetch_llama_cpp_releases").then((releases) => {
+			const latestRelease = releases[0];
+			if (!latestRelease) {
+				stepper.showFinalStep("error", "Update Failed", "Failed to fetch latest llama.cpp release metadata.");
+				return;
+			}
+			const assetUrl = findAssetUrlForPlatform(latestRelease.assets, activePlatformKey);
+			if (!assetUrl) {
+				stepper.showFinalStep("error", "Update Failed", "Could not locate matching release asset for update.");
+				return;
+			}
+			stepper.nextStep().then(() => {
+				stepper.progressBar(true, `Downloading latest release (${latestRelease.tag_name})...`);
+				stepper.downloadFileFromUrl(assetUrl).then((downloadedFilePath) => {
+					stepper.progressBar(true, "Decompressing update package via 7z...");
+					stepper.utils.decompressFile(downloadedFilePath).then((extractedDir) => {
+						stepper.progressBar(true, "Replacing binary files...");
+						stepper.ipc.invoke("copy_llama_cpp_files", extractedDir, dir).then(() => {
+							stepper.setUpdated();
+							const now = (/* @__PURE__ */ new Date()).toLocaleString();
+							stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
+							stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestRelease.tag_name);
+							stepper.showFinalStep("success", "llama.cpp Updated!", `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`);
+						});
+					});
+				});
+			});
+		});
+	});
+}
+async function cardInfo$2(api, callback) {
+	const dir = api.installationFolder;
+	callback.setOpenFolders(dir ? [dir] : void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Platform / Backend",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(LLAMA_CPP_INSTALL_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 0, result || "Not Recorded");
+	});
+	api.storage.get(LLAMA_CPP_UPDATE_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 1, result || "Never Updated");
+	});
+	api.storage.get(LLAMA_CPP_VERSION_KEY).then((result) => {
+		descManager.updateItem(0, 2, result || "Unknown");
+	});
+	api.storage.get(LLAMA_CPP_PLATFORM_KEY).then((key) => {
+		const opt = LLAMA_PLATFORM_OPTIONS.find((o) => o.key === key);
+		descManager.updateItem(0, 3, opt ? opt.label : key || "Default");
+	});
+	api.ipc.invoke("fetch_llama_cpp_latest_tag").then((result) => {
+		descManager.updateItem(0, 4, result || "Unknown");
+	});
+}
+const LlamaCpp_RM = {
+	catchAddress: catchAddress$3,
+	cardInfo: cardInfo$2,
+	parseArgsToString,
+	parseStringToArgs,
+	manager: {
+		startInstall: startInstall$2,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$1
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/text/LoLLMs/RendererMethods.ts
 const title = "LoLLMs";
 const url = "https://github.com/ParisNeo/lollms-webui";
-function startInstall(stepper) {
+function startInstall$1(stepper) {
 	stepper.initialSteps([
 		title,
 		"Clone",
@@ -1619,11 +2288,11 @@ function startInstall(stepper) {
 		});
 	});
 }
-async function cardInfo(api, callback) {
+async function cardInfo$1(api, callback) {
 	return CardInfo(url, void 0, api, callback);
 }
 //#endregion
-//#region module/src/Container/Text/TextGeneration.ts
+//#region module/src/containers/text/index.ts
 const textPage = {
 	routePath: "textGen_page",
 	cards: [
@@ -1638,6 +2307,19 @@ const textPage = {
 			arguments: oobaboogaArguments,
 			methods: TG_RM,
 			installationType: "git"
+		},
+		{
+			id: LLAMA_CPP_ID,
+			title: "llama.cpp",
+			description: "LLM inference in C/C++",
+			repoUrl: "https://github.com/ggml-org/llama.cpp",
+			type: "text",
+			installationType: "others",
+			uninstallType: "removeFolder",
+			supportCustomArguments: true,
+			arguments: llamaCppArguments,
+			methods: LlamaCpp_RM,
+			developer: "ggml-org"
 		},
 		{
 			id: OPEN_WEBUI_ID,
@@ -1680,9 +2362,9 @@ const textPage = {
 			type: "text",
 			methods: {
 				catchAddress: catchAddress$3,
-				cardInfo,
+				cardInfo: cardInfo$1,
 				manager: {
-					startInstall,
+					startInstall: startInstall$1,
 					updater: { updateType: "git" }
 				}
 			},
@@ -1691,95 +2373,146 @@ const textPage = {
 	]
 };
 //#endregion
-//#region module/src/Container/Tools/Tools.ts
-const toolsPage = {
-	routePath: "tools_page",
-	cards: [
-		{
-			id: ONETRAINER_ID,
-			title: "OneTrainer",
-			description: "OneTrainer is a one-stop solution for all your stable diffusion training needs.",
-			repoUrl: "https://github.com/Nerogar/OneTrainer",
-			type: "image",
-			supportCustomArguments: true,
-			methods: ONETRAINER_RM,
-			installationType: "git"
-		},
-		{
-			id: KOHYA_ID,
-			title: "Kohya's GUI",
-			description: "User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.",
-			repoUrl: "https://github.com/bmaltais/kohya_ss",
-			type: "image",
-			arguments: bmaltaisArguments,
-			methods: KOHYA_GUI_RM,
-			installationType: "git"
-		},
-		{
-			id: AITOOLKIT_ID,
-			title: "AI Toolkit",
-			description: "The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.",
-			repoUrl: "https://github.com/ostris/ai-toolkit",
-			type: "image",
-			supportCustomArguments: true,
-			arguments: aiToolkitArguments,
-			methods: AITOOLKIT_RM,
-			installationType: "git"
-		},
-		{
-			id: SMARTGALLERY_ID,
-			title: "SmartGallery",
-			description: "A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.",
-			repoUrl: "https://github.com/biagiomaf/smart-comfyui-gallery",
-			type: "image",
-			arguments: smartGalleryArguments,
-			supportCustomArguments: true,
-			methods: SMARTGALLERY_RM,
-			installationType: "git"
-		},
-		{
-			id: LORA_MANAGER_ID,
-			title: "ComfyUI LoRA Manager",
-			description: "Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.",
-			repoUrl: "https://github.com/willmiao/ComfyUI-Lora-Manager",
-			type: "image",
-			supportCustomArguments: true,
-			arguments: loraManagerArguments,
-			methods: LORA_MANAGER_RM,
-			installationType: "git"
-		},
-		{
-			id: UNSLOTH_STUDIO_ID,
-			title: "Unsloth Studio",
-			description: "An open-source, no-code web UI for training and running LLMs locally.",
-			repoUrl: "https://github.com/unslothai/unsloth",
-			type: "text",
-			supportCustomArguments: true,
-			arguments: unslothStudioArguments,
-			methods: UNSLOTH_STUDIO_RM,
-			installationType: "others"
-		},
-		{
-			id: LLAMA_FACTORY_ID,
-			title: "LLaMA Factory",
-			description: "Unified efficient fine-tuning of 100+ Large Language Models with CLI and Web UI.",
-			repoUrl: "https://github.com/hiyouga/LlamaFactory",
-			type: "text",
-			supportCustomArguments: true,
-			arguments: llamaFactoryArguments,
-			methods: LLAMA_FACTORY_RM,
-			installationType: "git"
-		}
-	]
-};
+//#region module/src/containers/tools/OneTrainer/RendererMethods.ts
+const URL = "https://github.com/Nerogar/OneTrainer";
+function startInstall(stepper) {
+	stepper.initialSteps([
+		"OneTrainer",
+		"Clone",
+		"Install",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.cloneRepository(URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.runTerminalScript(dir, isWin ? "install.bat" : "install.sh").then(() => {
+						stepper.setInstalled(dir);
+						stepper.showFinalStep("success", "OneTrainer installation complete!", "All installation steps completed successfully. Your OneTrainer environment is now ready for use.");
+					});
+				});
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, URL).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "OneTrainer located successfully!", "Pre-installed OneTrainer detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, [isWin ? "start-ui.bat" : "start-ui.sh"]).then((isExist) => {
+				if (isExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.showFinalStep("success", `OneTrainer located successfully!`, "Detected a manual installation of OneTrainer. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
+				} else stepper.showFinalStep("error", "Unable to locate OneTrainer!", "Please ensure you have selected the correct folder containing the OneTrainer repository.");
+			});
+		});
+	});
+}
+function startUpdate(stepper, dir) {
+	stepper.initialSteps(["Update", "Finish"]);
+	if (dir) stepper.runTerminalScript(dir, isWin ? "update.bat" : "update.sh").then(() => {
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "OneTrainer Updated Successfully!");
+	});
+	else stepper.showFinalStep("error", "Unable to update OneTrainer");
+}
+async function cardInfo(api, callback) {
+	return CardInfo(URL, void 0, api, callback);
+}
 //#endregion
 //#region module/src/renderer.ts
 const rendererModules = [
 	imagePage,
 	textPage,
 	audioPage,
+	{
+		routePath: "tools_page",
+		cards: [
+			{
+				id: ONETRAINER_ID,
+				title: "OneTrainer",
+				description: "OneTrainer is a one-stop solution for all your stable diffusion training needs.",
+				repoUrl: "https://github.com/Nerogar/OneTrainer",
+				type: "image",
+				supportCustomArguments: true,
+				methods: {
+					cardInfo,
+					manager: {
+						startInstall,
+						updater: {
+							updateType: "stepper",
+							startUpdate
+						}
+					}
+				},
+				installationType: "git"
+			},
+			{
+				id: KOHYA_ID,
+				title: "Kohya's GUI",
+				description: "User-friendly Gradio GUI and CLI for training Stable Diffusion models and LoRAs.",
+				repoUrl: "https://github.com/bmaltais/kohya_ss",
+				type: "image",
+				arguments: bmaltaisArguments,
+				methods: KOHYA_GUI_RM,
+				installationType: "git"
+			},
+			{
+				id: AITOOLKIT_ID,
+				title: "AI Toolkit",
+				description: "The ultimate all-in-one training suite and GUI for fine-tuning diffusion models.",
+				repoUrl: "https://github.com/ostris/ai-toolkit",
+				type: "image",
+				supportCustomArguments: true,
+				arguments: aiToolkitArguments,
+				methods: AITOOLKIT_RM,
+				installationType: "git"
+			},
+			{
+				id: SMARTGALLERY_ID,
+				title: "SmartGallery",
+				description: "A fast, offline-capable digital asset manager and gallery for ComfyUI outputs.",
+				repoUrl: "https://github.com/biagiomaf/smart-comfyui-gallery",
+				type: "image",
+				arguments: smartGalleryArguments,
+				supportCustomArguments: true,
+				methods: SMARTGALLERY_RM,
+				installationType: "git"
+			},
+			{
+				id: LORA_MANAGER_ID,
+				title: "ComfyUI LoRA Manager",
+				description: "Comprehensive toolset for organizing, previewing, downloading, and applying LoRA models in ComfyUI.",
+				repoUrl: "https://github.com/willmiao/ComfyUI-Lora-Manager",
+				type: "image",
+				supportCustomArguments: true,
+				arguments: loraManagerArguments,
+				methods: LORA_MANAGER_RM,
+				installationType: "git"
+			},
+			{
+				id: UNSLOTH_STUDIO_ID,
+				title: "Unsloth Studio",
+				description: "An open-source, no-code web UI for training and running LLMs locally.",
+				repoUrl: "https://github.com/unslothai/unsloth",
+				type: "text",
+				supportCustomArguments: true,
+				arguments: unslothStudioArguments,
+				methods: UNSLOTH_STUDIO_RM,
+				installationType: "others"
+			},
+			{
+				id: LLAMA_FACTORY_ID,
+				title: "LLaMA Factory",
+				description: "Unified efficient fine-tuning of 100+ Large Language Models with CLI and Web UI.",
+				repoUrl: "https://github.com/hiyouga/LlamaFactory",
+				type: "text",
+				supportCustomArguments: true,
+				arguments: llamaFactoryArguments,
+				methods: LLAMA_FACTORY_RM,
+				installationType: "git"
+			}
+		]
+	},
 	agentsPage
 ];
-if (isPagesFixed) rendererModules.push(toolsPage);
 //#endregion
 export { rendererModules as default };
