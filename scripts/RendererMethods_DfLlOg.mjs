@@ -11031,6 +11031,7 @@ async function cardInfo$18(api, callback) {
 	});
 }
 const HermesAgent_RM = {
+	catchAddress: catchAddress$5,
 	cardInfo: cardInfo$18,
 	parseStringToArgs: parseStringToArgs$19,
 	parseArgsToString: parseArgsToString$19,
