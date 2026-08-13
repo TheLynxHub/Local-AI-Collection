@@ -9,7 +9,13 @@ import {
   ParsedPreview,
 } from '../../../../../src/common/types/plugins/modules';
 import {DescriptionManager, isWin, parseCustomArg} from '../../../utils/crossUtils';
-import {getArgumentType, isMultiFilePreviewSupported, isValidArg, removeEscapes} from '../../../utils/rendererUtils';
+import {
+  catchAddress,
+  getArgumentType,
+  isMultiFilePreviewSupported,
+  isValidArg,
+  removeEscapes,
+} from '../../../utils/rendererUtils';
 import hermesAgentArguments from './Arguments';
 
 const INSTALL_TIME_KEY = 'install-time-hermesAgent';
@@ -485,6 +491,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
 }
 
 const HermesAgent_RM: CardRendererMethods = {
+  catchAddress,
   cardInfo,
   parseStringToArgs,
   parseArgsToString,
