@@ -9,6 +9,7 @@ import {
   UserInputField,
 } from '../../../../../src/common/types/plugins/modules';
 import {DescriptionManager} from '../../../utils/crossUtils';
+import {catchAddress} from '../../../utils/rendererUtils';
 import llamaCppArguments from './Arguments';
 import {
   detectDefaultPlatformKey,
@@ -295,6 +296,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
 }
 
 const LlamaCpp_RM: CardRendererMethods = {
+  catchAddress,
   cardInfo,
   parseArgsToString,
   parseStringToArgs,
