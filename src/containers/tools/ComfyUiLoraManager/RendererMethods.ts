@@ -19,7 +19,6 @@ export function parseArgsToString(args: ChosenArgument[]): string {
   let lines: string = '';
   let argResult: string = '';
 
-  // Only include command line arguments (--host, --port), not settings
   args.forEach(arg => {
     if (arg.custom) {
       const result = parseCustomArg(arg);
@@ -28,18 +27,6 @@ export function parseArgsToString(args: ChosenArgument[]): string {
       if (result.line) lines += result.line + '\n';
       if (result.commandArg) argResult += result.commandArg + ' ';
     } else {
-      // Skip settings that go to settings.json
-      if (
-        arg.name === 'civitai_api_key' ||
-        arg.name === 'use_portable_settings' ||
-        arg.name === 'loras_folders' ||
-        arg.name === 'checkpoints_folders' ||
-        arg.name === 'embeddings_folders' ||
-        arg.name === 'auto_organize_exclusions'
-      ) {
-        return;
-      }
-
       const argType = getArgumentType(arg.name, loraManagerArguments);
       if (argType === 'CheckBox') {
         argResult += `${arg.name} `;
@@ -105,8 +92,7 @@ function startInstall(stepper: InstallationStepper) {
       stepper.showFinalStep(
         'success',
         'ComfyUI LoRA Manager installation complete!',
-        'All installation steps completed successfully. Your LoRA Manager is now ready for use. ' +
-          'Configure your CivitAI API key and folder paths in the settings to get started.',
+        'All installation steps completed successfully. Your LoRA Manager is now ready for use.',
       );
     });
   };
@@ -129,8 +115,7 @@ function startInstall(stepper: InstallationStepper) {
           stepper.showFinalStep(
             'success',
             'ComfyUI LoRA Manager located successfully!',
-            'Pre-installed LoRA Manager detected. Installation skipped as your existing setup is ready to use. ' +
-              'Make sure to configure your settings.json with CivitAI API key and folder paths.',
+            'Pre-installed LoRA Manager detected. Installation skipped as your existing setup is ready to use.',
           );
         } else {
           stepper.utils.verifyFilesExist(targetDirectory, ['standalone.py', 'requirements.txt']).then(filesExist => {
