@@ -204,8 +204,19 @@ function mainIpc(utils: MainModuleUtils) {
   });
 
   utils.ipc.handle('copy_llama_cpp_files', async (_event, src: string, dest: string) => {
-    await fs.promises.mkdir(dest, {recursive: true});
-    await fs.promises.cp(src, dest, {recursive: true, force: true});
+    try {
+      await fs.promises.mkdir(dest, {recursive: true});
+      await fs.promises.cp(src, dest, {recursive: true, force: true});
+    } catch (error: any) {
+      console.error('Failed to copy llama.cpp files:', error);
+      if (error?.code === 'EPERM' || error?.code === 'EACCES') {
+        throw new Error(
+          `Permission denied (EPERM) writing to "${dest}". Please choose a directory with write permissions.`,
+          {cause: error},
+        );
+      }
+      throw new Error(`Failed to copy files to "${dest}": ${error?.message || error}`, {cause: error});
+    }
   });
 }
 
