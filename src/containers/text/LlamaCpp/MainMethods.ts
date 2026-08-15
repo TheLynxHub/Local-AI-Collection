@@ -1,3 +1,4 @@
+import {execFile} from 'node:child_process';
 import path from 'node:path';
 
 import fs from 'graceful-fs';
@@ -12,23 +13,16 @@ import {
   LLAMA_CPP_INSTALL_TIME_KEY,
   LLAMA_CPP_PLATFORM_KEY,
   LLAMA_CPP_UPDATE_TIME_KEY,
-  LLAMA_CPP_VERSION_KEY,
 } from './utils/github';
 
-export {
-  LLAMA_CPP_INSTALL_DIR_KEY,
-  LLAMA_CPP_INSTALL_TIME_KEY,
-  LLAMA_CPP_PLATFORM_KEY,
-  LLAMA_CPP_UPDATE_TIME_KEY,
-  LLAMA_CPP_VERSION_KEY,
-};
+export {LLAMA_CPP_INSTALL_DIR_KEY, LLAMA_CPP_INSTALL_TIME_KEY, LLAMA_CPP_PLATFORM_KEY, LLAMA_CPP_UPDATE_TIME_KEY};
 
 export function getLlamaExecutablePath(dir?: string): string | undefined {
   if (!dir || !fs.existsSync(dir)) return undefined;
 
   const binaries = isWin
-    ? ['llama-server.exe', 'llama-cli.exe', 'server.exe', 'main.exe']
-    : ['llama-server', 'llama-cli', 'server', 'main'];
+    ? ['llama-server.exe', 'llama-cli.exe', 'llama.exe', 'server.exe', 'main.exe']
+    : ['llama-server', 'llama-cli', 'llama', 'server', 'main'];
 
   for (const bin of binaries) {
     const fullPath = path.join(dir, bin);
@@ -56,6 +50,56 @@ export function getLlamaExecutablePath(dir?: string): string | undefined {
   }
 
   return undefined;
+}
+
+export function parseLlamaVersion(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  const text = raw.trim();
+
+  // Pattern 1: 'build 10424', 'build: 10424', '(build 10424,'
+  const buildMatch = text.match(/\bbuild[:\s]+(\d+)\b/i);
+  if (buildMatch) {
+    return `b${buildMatch[1]}`;
+  }
+
+  // Pattern 2: 'version: 10375' or 'version: b10375'
+  const versionNumMatch = text.match(/\bversion:\s*b?(\d+)\b/i);
+  if (versionNumMatch) {
+    return `b${versionNumMatch[1]}`;
+  }
+
+  // Pattern 3: 'b10375-ba360efe1' or 'b10375'
+  const bTagMatch = text.match(/\b(b\d+)(?:-[a-f0-9]+)?\b/i);
+  if (bTagMatch) {
+    return bTagMatch[1].toLowerCase();
+  }
+
+  // Pattern 4: Semver like 'v0.1.0' or '0.1.0'
+  const semverMatch = text.match(/\b(v?\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\b/i);
+  if (semverMatch) {
+    return semverMatch[1];
+  }
+
+  return text.split('\n')[0].trim();
+}
+
+export function getLlamaVersion(dir?: string): Promise<string> {
+  return new Promise(resolve => {
+    const exePath = getLlamaExecutablePath(dir);
+    if (!exePath) {
+      resolve('unknown');
+      return;
+    }
+
+    execFile(exePath, ['--version'], {timeout: 10000}, (_error, stdout, stderr) => {
+      const output = `${stdout || ''}\n${stderr || ''}`.trim();
+      if (!output) {
+        resolve('unknown');
+        return;
+      }
+      resolve(parseLlamaVersion(output) || 'unknown');
+    });
+  });
 }
 
 function getArgsFilePath(dir: string): string {
@@ -114,7 +158,8 @@ async function getRunCommands(utils: MainModuleUtils): Promise<string> {
 
 async function updateAvailable(utils: MainModuleUtils): Promise<boolean> {
   try {
-    const currentVersion = utils.storage.get<string>(LLAMA_CPP_VERSION_KEY);
+    const dir = utils.getInstallDir(LLAMA_CPP_ID);
+    const currentVersion = await getLlamaVersion(dir);
     if (!currentVersion || currentVersion === 'unknown') return false;
 
     const latestTag = await getLatestLlamaCppTag();
@@ -143,6 +188,11 @@ function mainIpc(utils: MainModuleUtils) {
   utils.ipc.handle('validate_llama_cpp_install_dir', (_event, dir: string) => {
     const exe = getLlamaExecutablePath(dir);
     return exe !== undefined;
+  });
+
+  utils.ipc.handle('current_llama_cpp_version', async (_event, dir?: string) => {
+    const targetDir = dir || utils.getInstallDir(LLAMA_CPP_ID);
+    return await getLlamaVersion(targetDir);
   });
 
   utils.ipc.handle('fetch_llama_cpp_releases', async () => {

@@ -6,7 +6,6 @@ export const LLAMA_CPP_RELEASES_URL = 'https://api.github.com/repos/ggml-org/lla
 export const LLAMA_CPP_INSTALL_TIME_KEY = 'install-time-llamaCpp';
 export const LLAMA_CPP_INSTALL_DIR_KEY = 'install-dir-llamaCpp';
 export const LLAMA_CPP_UPDATE_TIME_KEY = 'update-time-llamaCpp';
-export const LLAMA_CPP_VERSION_KEY = 'version-llamaCpp';
 export const LLAMA_CPP_PLATFORM_KEY = 'platform-llamaCpp';
 
 export type LlamaPlatformOption = {

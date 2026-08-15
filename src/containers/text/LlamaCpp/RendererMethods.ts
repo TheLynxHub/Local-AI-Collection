@@ -18,7 +18,6 @@ import {
   LLAMA_CPP_INSTALL_TIME_KEY,
   LLAMA_CPP_PLATFORM_KEY,
   LLAMA_CPP_UPDATE_TIME_KEY,
-  LLAMA_CPP_VERSION_KEY,
   LLAMA_PLATFORM_OPTIONS,
 } from './utils/github';
 
@@ -189,7 +188,6 @@ function startInstall(stepper: InstallationStepper) {
                   const now = new Date().toLocaleString();
                   stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
                   stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
-                  stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
                   stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
 
                   stepper.showFinalStep(
@@ -238,7 +236,6 @@ function startUpdate(stepper: InstallationStepper, dir?: string) {
               stepper.setUpdated();
               const now = new Date().toLocaleString();
               stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
-              stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestRelease.tag_name);
 
               stepper.showFinalStep(
                 'success',
@@ -281,7 +278,7 @@ async function cardInfo(api: CardInfoApi, callback: CardInfoCallback) {
     descManager.updateItem(0, 1, result || 'Never Updated');
   });
 
-  api.storage.get(LLAMA_CPP_VERSION_KEY).then(result => {
+  api.ipc.invoke('current_llama_cpp_version', dir).then((result: string) => {
     descManager.updateItem(0, 2, result || 'Unknown');
   });
 
