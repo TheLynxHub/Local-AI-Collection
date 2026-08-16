@@ -4,6 +4,7 @@ import {promises} from 'graceful-fs';
 
 import {CardMainMethodsInitial, ChosenArgument} from '../../../../../src/common/types/plugins/modules';
 import {COMFYUI_ZLUDA_ID} from '../../../constants';
+import {ArgumentValue} from '../../../types';
 import {initBatchFile, isGitTypeInstalled, utilRunCommands} from '../../../utils/mainUtils';
 import {getArgumentType, isValidArg} from '../../../utils/rendererUtils';
 import comfyZludaArguments from './Arguments';
@@ -41,7 +42,7 @@ async function saveArgs(args: ChosenArgument[], dir?: string) {
 
   // Build command line arguments string
   let commandLineArgs = '';
-  const envVars: Record<string, string | number> = {};
+  const envVars: Record<string, ArgumentValue> = {};
 
   // Collect user-selected arguments
   args.forEach(arg => {

@@ -6,6 +6,7 @@ import {
   ChosenArgument,
   InstallationStepper,
 } from '../../../../../src/common/types/plugins/modules';
+import {ArgumentValue} from '../../../types';
 import {parseCustomArg} from '../../../utils/crossUtils';
 import {CardInfo, catchAddress, getArgumentType, isValidArg} from '../../../utils/rendererUtils';
 import comfyRocmArguments from './Arguments';
@@ -16,7 +17,7 @@ export function parseArgsToString(args: ChosenArgument[]): string {
   let result = '';
   let lines: string = '';
   let argResult = '';
-  const envVars: Record<string, string | number> = {};
+  const envVars: Record<string, ArgumentValue> = {};
 
   args.forEach(arg => {
     if (arg.custom) {

@@ -4,6 +4,7 @@ import {promises} from 'graceful-fs';
 
 import {CardMainMethodsInitial, ChosenArgument} from '../../../../../src/common/types/plugins/modules';
 import {COMFYUI_ROCM_ID} from '../../../constants';
+import {ArgumentValue} from '../../../types';
 import {initBatchFile, isGitTypeInstalled, utilRunCommands} from '../../../utils/mainUtils';
 import {getArgumentType, isValidArg} from '../../../utils/rendererUtils';
 import comfyRocmArguments from './Arguments';
@@ -36,7 +37,7 @@ async function saveArgs(args: ChosenArgument[], dir?: string) {
   const lines = fileContent.split('\n');
 
   let commandLineArgs = '';
-  const envVars: Record<string, string | number> = {};
+  const envVars: Record<string, ArgumentValue> = {};
 
   args.forEach(arg => {
     if (

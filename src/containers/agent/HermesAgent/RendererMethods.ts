@@ -8,6 +8,7 @@ import {
   InstallationStepper,
   ParsedPreview,
 } from '../../../../../src/common/types/plugins/modules';
+import {ArgumentValue} from '../../../types';
 import {DescriptionManager, isWin, parseCustomArg} from '../../../utils/crossUtils';
 import {
   catchAddress,
@@ -296,7 +297,7 @@ export function parseFilesToArgs(scriptContent: string, settingsContent: string)
     }
   }
 
-  const combinedArgs = new Map<string, string | number>();
+  const combinedArgs = new Map<string, ArgumentValue>();
 
   scriptArgs.forEach(arg => combinedArgs.set(arg.name, arg.value));
   settingsArgs.forEach(arg => combinedArgs.set(arg.name, arg.value));

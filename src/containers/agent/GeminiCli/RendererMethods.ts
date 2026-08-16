@@ -10,6 +10,7 @@ import {
   InstallationStepper,
   ParsedPreview,
 } from '../../../../../src/common/types/plugins/modules';
+import {ArgumentValue} from '../../../types';
 import {DescriptionManager, isWin} from '../../../utils/crossUtils';
 import {getArgumentType, isMultiFilePreviewSupported, isValidArg, removeEscapes} from '../../../utils/rendererUtils';
 import openArguments from '../../text/OpenWebUi/Arguments';
@@ -200,7 +201,7 @@ export function parseFilesToArgs(scriptContent: string, settingsContent: string)
   }
 
   // 3. Combine args, with settings overriding script args for any duplicates
-  const combinedArgs = new Map<string, string | number>();
+  const combinedArgs = new Map<string, ArgumentValue>();
 
   scriptArgs.forEach(arg => combinedArgs.set(arg.name, arg.value));
   settingsArgs.forEach(arg => combinedArgs.set(arg.name, arg.value));
