@@ -1,6 +1,6 @@
-import { $ as parseStringToArgs$9, $n as TTS_ID, An as COMFYUI_ZLUDA_ID, At as parseArgsToString$2, Bn as LoLLMS_ID, C as parseArgsToString$13, Cn as ANTIGRAVITY_CLI_ID, Ct as parseStringToArgs$4, D as parseArgsToString$12, Dn as CLAUDE_CODE_ID, Dt as parseStringToArgs$3, En as CHAT_TTS_ID, Et as parseArgsToString$3, F as parseArgsToString$11, Fn as KOHYA_ID, Ft as parseStringToArgs$1, Gn as SD_FORGE_AMD_ID, Hn as ONETRAINER_ID, Ht as parseArgsToFiles$2, I as parseStringToArgs$11, In as LANGFLOW_ID, J as parseArgsToString$10, Jn as SD_UIUX_ID, Jt as parseStringToArgs, K as getLatestLlamaCppTag, Kn as SD_FORGE_ID, Ln as LLAMA_CPP_ID, M as parseFilesToArgs$4, Mn as GeminiCli_ID, Nn as HERMES_AGENT_ID, O as parseStringToArgs$12, On as COMFYUI_ID, Pn as INVOKE_ID, Pt as parseArgsToString$1, Q as parseArgsToString$9, Qn as TG_ID, Qt as parseFilesToArgs$1, Rn as LLAMA_FACTORY_ID, Rt as parseArgsToFiles$3, Sn as ALLTALK_ID, St as parseArgsToString$4, Tn as BOLT_DIY_ID, Un as OPEN_WEBUI_ID, Ut as parseFilesToArgs$2, V as LLAMA_CPP_VERSION_KEY, Vn as N8N_ID, W as fetchLlamaCppReleases, Wn as SD_AMD_ID, Xn as SMARTGALLERY_ID, Y as parseStringToArgs$10, Yn as SILLYTAVERN_ID, Zn as SWARM_ID, Zt as parseArgsToFiles$1, b as parseStringToArgs$14, bn as AG_ID, c as parseStringToArgs$17, cn as isValidArg, ct as INVOKEAI_INSTALL_DIR_KEY, d as parseArgsToString$16, dn as extractGitUrl, dt as comfyuizludaArguments, er as UNSLOTH_STUDIO_ID, f as parseStringToArgs$16, fn as getCdCommand, ft as comfyRocmArguments, g as parseStringToArgs$15, gn as isWin, h as parseArgsToString$15, hn as isMac, ht as parseStringToArgs$6, i as parseStringToArgs$18, j as parseArgsToFiles$4, jn as FLOWISEAI_ID, jt as parseStringToArgs$2, kn as COMFYUI_ROCM_ID, lt as INVOKEAI_UPDATE_AVAILABLE_KEY, mn as getVenvPythonPath, mt as parseArgsToString$6, nn as parseFilesToArgs, nt as parseArgsToString$8, ot as parseArgsToString$7, pn as getPythonCommandByOs, qn as SD_NEXT_ID, qt as parseArgsToString, r as parseArgsToString$18, rt as parseStringToArgs$8, s as parseArgsToString$17, sn as getArgumentType, st as parseStringToArgs$7, t as TAG_KEY, tn as parseArgsToFiles, tr as VOICE_STUDIO_ID, ut as Invoke_Command_ActivateVenv, vn as removeAnsi, vt as parseArgsToString$5, w as parseStringToArgs$13, wn as APPLIO_ID, xn as AITOOLKIT_ID, y as parseArgsToString$14, yn as A1_ID, yt as parseStringToArgs$5, zn as LORA_MANAGER_ID, zt as parseFilesToArgs$3 } from "./RendererMethods_DfLlOg.mjs";
+import { $n as UNSLOTH_STUDIO_ID, An as FLOWISEAI_ID, At as parseStringToArgs$2, Bn as N8N_ID, C as parseArgsToString$13, Cn as APPLIO_ID, D as parseArgsToString$12, Dn as COMFYUI_ID, En as CLAUDE_CODE_ID, Et as parseStringToArgs$3, F as parseArgsToString$11, Fn as LANGFLOW_ID, G as getLatestLlamaCppTag, Gn as SD_FORGE_ID, Hn as OPEN_WEBUI_ID, Ht as parseFilesToArgs$2, I as parseStringToArgs$11, In as LLAMA_CPP_ID, J as parseStringToArgs$10, Jn as SILLYTAVERN_ID, Kn as SD_NEXT_ID, Kt as parseArgsToString, Ln as LLAMA_FACTORY_ID, Lt as parseArgsToFiles$3, M as parseFilesToArgs$4, Mn as HERMES_AGENT_ID, Nn as INVOKE_ID, Nt as parseArgsToString$1, O as parseStringToArgs$12, On as COMFYUI_ROCM_ID, Pn as KOHYA_ID, Pt as parseStringToArgs$1, Q as parseStringToArgs$9, Qn as TTS_ID, Rn as LORA_MANAGER_ID, Rt as parseFilesToArgs$3, Sn as ANTIGRAVITY_CLI_ID, St as parseStringToArgs$4, Tn as CHAT_TTS_ID, Tt as parseArgsToString$3, U as fetchLlamaCppReleases, Un as SD_AMD_ID, Vn as ONETRAINER_ID, Vt as parseArgsToFiles$2, Wn as SD_FORGE_AMD_ID, Xn as SWARM_ID, Xt as parseArgsToFiles$1, Yn as SMARTGALLERY_ID, Z as parseArgsToString$9, Zn as TG_ID, Zt as parseFilesToArgs$1, _n as removeAnsi, _t as parseArgsToString$5, at as parseArgsToString$7, b as parseStringToArgs$14, bn as AITOOLKIT_ID, c as parseStringToArgs$17, ct as INVOKEAI_UPDATE_AVAILABLE_KEY, d as parseArgsToString$16, dn as getCdCommand, dt as comfyRocmArguments, en as parseArgsToFiles, er as VOICE_STUDIO_ID, f as parseStringToArgs$16, fn as getPythonCommandByOs, g as parseStringToArgs$15, h as parseArgsToString$15, hn as isWin, i as parseStringToArgs$18, j as parseArgsToFiles$4, jn as GeminiCli_ID, kn as COMFYUI_ZLUDA_ID, kt as parseArgsToString$2, lt as Invoke_Command_ActivateVenv, mn as isMac, mt as parseStringToArgs$6, nt as parseStringToArgs$8, on as getArgumentType, ot as parseStringToArgs$7, pn as getVenvPythonPath, pt as parseArgsToString$6, q as parseArgsToString$10, qn as SD_UIUX_ID, qt as parseStringToArgs, r as parseArgsToString$18, s as parseArgsToString$17, sn as isValidArg, st as INVOKEAI_INSTALL_DIR_KEY, t as TAG_KEY, tn as parseFilesToArgs, tt as parseArgsToString$8, un as extractGitUrl, ut as comfyuizludaArguments, vn as A1_ID, vt as parseStringToArgs$5, w as parseStringToArgs$13, wn as BOLT_DIY_ID, xn as ALLTALK_ID, xt as parseArgsToString$4, y as parseArgsToString$14, yn as AG_ID, zn as LoLLMS_ID } from "./RendererMethods_CgYqv2.mjs";
 import { createRequire } from "node:module";
-import { exec, execSync } from "node:child_process";
+import { exec, execFile, execSync } from "node:child_process";
 import path, { join, normalize, resolve } from "node:path";
 import stream, { Readable } from "stream";
 import util from "util";
@@ -409,7 +409,7 @@ var require_clone = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/graceful-fs/graceful-fs.js
 var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var fs$9 = __require("fs");
+	var fs$8 = __require("fs");
 	var polyfills = require_polyfills();
 	var legacy = require_legacy_streams();
 	var clone = require_clone();
@@ -438,36 +438,36 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		m = "GFS4: " + m.split(/\n/).join("\nGFS4: ");
 		console.error(m);
 	};
-	if (!fs$9[gracefulQueue]) {
-		publishQueue(fs$9, global[gracefulQueue] || []);
-		fs$9.close = (function(fs$close) {
+	if (!fs$8[gracefulQueue]) {
+		publishQueue(fs$8, global[gracefulQueue] || []);
+		fs$8.close = (function(fs$close) {
 			function close(fd, cb) {
-				return fs$close.call(fs$9, fd, function(err) {
+				return fs$close.call(fs$8, fd, function(err) {
 					if (!err) resetQueue();
 					if (typeof cb === "function") cb.apply(this, arguments);
 				});
 			}
 			Object.defineProperty(close, previousSymbol, { value: fs$close });
 			return close;
-		})(fs$9.close);
-		fs$9.closeSync = (function(fs$closeSync) {
+		})(fs$8.close);
+		fs$8.closeSync = (function(fs$closeSync) {
 			function closeSync(fd) {
-				fs$closeSync.apply(fs$9, arguments);
+				fs$closeSync.apply(fs$8, arguments);
 				resetQueue();
 			}
 			Object.defineProperty(closeSync, previousSymbol, { value: fs$closeSync });
 			return closeSync;
-		})(fs$9.closeSync);
+		})(fs$8.closeSync);
 		if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || "")) process.on("exit", function() {
-			debug(fs$9[gracefulQueue]);
-			__require("assert").equal(fs$9[gracefulQueue].length, 0);
+			debug(fs$8[gracefulQueue]);
+			__require("assert").equal(fs$8[gracefulQueue].length, 0);
 		});
 	}
-	if (!global[gracefulQueue]) publishQueue(global, fs$9[gracefulQueue]);
-	module.exports = patch(clone(fs$9));
-	if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$9.__patched) {
-		module.exports = patch(fs$9);
-		fs$9.__patched = true;
+	if (!global[gracefulQueue]) publishQueue(global, fs$8[gracefulQueue]);
+	module.exports = patch(clone(fs$8));
+	if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$8.__patched) {
+		module.exports = patch(fs$8);
+		fs$8.__patched = true;
 	}
 	function patch(fs) {
 		polyfills(fs);
@@ -722,23 +722,23 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	}
 	function enqueue(elem) {
 		debug("ENQUEUE", elem[0].name, elem[1]);
-		fs$9[gracefulQueue].push(elem);
+		fs$8[gracefulQueue].push(elem);
 		retry();
 	}
 	var retryTimer;
 	function resetQueue() {
 		var now = Date.now();
-		for (var i = 0; i < fs$9[gracefulQueue].length; ++i) if (fs$9[gracefulQueue][i].length > 2) {
-			fs$9[gracefulQueue][i][3] = now;
-			fs$9[gracefulQueue][i][4] = now;
+		for (var i = 0; i < fs$8[gracefulQueue].length; ++i) if (fs$8[gracefulQueue][i].length > 2) {
+			fs$8[gracefulQueue][i][3] = now;
+			fs$8[gracefulQueue][i][4] = now;
 		}
 		retry();
 	}
 	function retry() {
 		clearTimeout(retryTimer);
 		retryTimer = void 0;
-		if (fs$9[gracefulQueue].length === 0) return;
-		var elem = fs$9[gracefulQueue].shift();
+		if (fs$8[gracefulQueue].length === 0) return;
+		var elem = fs$8[gracefulQueue].shift();
 		var fn = elem[0];
 		var args = elem[1];
 		var err = elem[2];
@@ -757,7 +757,7 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			if (sinceAttempt >= Math.min(sinceStart * 1.2, 100)) {
 				debug("RETRY", fn.name, args);
 				fn.apply(null, args.concat([startTime]));
-			} else fs$9[gracefulQueue].push(elem);
+			} else fs$8[gracefulQueue].push(elem);
 		}
 		if (retryTimer === void 0) retryTimer = setTimeout(retry, 0);
 	}
@@ -10424,7 +10424,7 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 	var http$2 = __require("http");
 	var https$2 = __require("https");
 	var parseUrl$1 = __require("url").parse;
-	var fs$8 = __require("fs");
+	var fs$7 = __require("fs");
 	var Stream = __require("stream").Stream;
 	var crypto$1 = __require("crypto");
 	var mime = require_mime_types();
@@ -10492,7 +10492,7 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 	FormData.prototype._lengthRetriever = function(value, callback) {
 		if (hasOwn(value, "fd")) {
 			if (value.end != void 0 && value.end != Infinity && value.start != void 0) callback(null, value.end + 1 - (value.start ? value.start : 0));
-			else fs$8.stat(value.path, function(err, stat) {
+			else fs$7.stat(value.path, function(err, stat) {
 				if (err) {
 					callback(err);
 					return;
@@ -23292,11 +23292,13 @@ function getLlamaExecutablePath(dir) {
 	const binaries = isWin ? [
 		"llama-server.exe",
 		"llama-cli.exe",
+		"llama.exe",
 		"server.exe",
 		"main.exe"
 	] : [
 		"llama-server",
 		"llama-cli",
+		"llama",
 		"server",
 		"main"
 	];
@@ -23316,6 +23318,36 @@ function getLlamaExecutablePath(dir) {
 	} catch (e) {
 		console.error("Error searching subdirectories for llama.cpp binary:", e);
 	}
+}
+function parseLlamaVersion(raw) {
+	if (!raw) return void 0;
+	const text = raw.trim();
+	const buildMatch = text.match(/\bbuild[:\s]+(\d+)\b/i);
+	if (buildMatch) return `b${buildMatch[1]}`;
+	const versionNumMatch = text.match(/\bversion:\s*b?(\d+)\b/i);
+	if (versionNumMatch) return `b${versionNumMatch[1]}`;
+	const bTagMatch = text.match(/\b(b\d+)(?:-[a-f0-9]+)?\b/i);
+	if (bTagMatch) return bTagMatch[1].toLowerCase();
+	const semverMatch = text.match(/\b(v?\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\b/i);
+	if (semverMatch) return semverMatch[1];
+	return text.split("\n")[0].trim();
+}
+function getLlamaVersion(dir) {
+	return new Promise((resolve) => {
+		const exePath = getLlamaExecutablePath(dir);
+		if (!exePath) {
+			resolve("unknown");
+			return;
+		}
+		execFile(exePath, ["--version"], { timeout: 1e4 }, (_error, stdout, stderr) => {
+			const output = `${stdout || ""}\n${stderr || ""}`.trim();
+			if (!output) {
+				resolve("unknown");
+				return;
+			}
+			resolve(parseLlamaVersion(output) || "unknown");
+		});
+	});
 }
 function getArgsFilePath(dir) {
 	return path.join(dir, "llama-server.args.json");
@@ -23357,7 +23389,7 @@ async function getRunCommands$11(utils) {
 }
 async function updateAvailable$4(utils) {
 	try {
-		const currentVersion = utils.storage.get(LLAMA_CPP_VERSION_KEY);
+		const currentVersion = await getLlamaVersion(utils.getInstallDir(LLAMA_CPP_ID));
 		if (!currentVersion || currentVersion === "unknown") return false;
 		const latestTag = await getLatestLlamaCppTag();
 		if (!latestTag || latestTag === "unknown") return false;
@@ -23378,6 +23410,9 @@ function mainIpc$3(utils) {
 	utils.ipc.handle("validate_llama_cpp_install_dir", (_event, dir) => {
 		return getLlamaExecutablePath(dir) !== void 0;
 	});
+	utils.ipc.handle("current_llama_cpp_version", async (_event, dir) => {
+		return await getLlamaVersion(dir || utils.getInstallDir("GgmlOrg_LlamaCpp"));
+	});
 	utils.ipc.handle("fetch_llama_cpp_releases", async () => {
 		return await fetchLlamaCppReleases();
 	});
@@ -23385,11 +23420,17 @@ function mainIpc$3(utils) {
 		return await getLatestLlamaCppTag();
 	});
 	utils.ipc.handle("copy_llama_cpp_files", async (_event, src, dest) => {
-		await import_graceful_fs.default.promises.mkdir(dest, { recursive: true });
-		await import_graceful_fs.default.promises.cp(src, dest, {
-			recursive: true,
-			force: true
-		});
+		try {
+			await import_graceful_fs.default.promises.mkdir(dest, { recursive: true });
+			await import_graceful_fs.default.promises.cp(src, dest, {
+				recursive: true,
+				force: true
+			});
+		} catch (error) {
+			console.error("Failed to copy llama.cpp files:", error);
+			if (error?.code === "EPERM" || error?.code === "EACCES") throw new Error(`Permission denied (EPERM) writing to "${dest}". Please choose a directory with write permissions.`, { cause: error });
+			throw new Error(`Failed to copy files to "${dest}": ${error?.message || error}`, { cause: error });
+		}
 	});
 }
 const LlamaCpp_MM = (utils) => {
@@ -23588,77 +23629,14 @@ const AIToolkit_MM = (utils) => {
 const BAT_FILE_NAME$4 = isWin ? "lynx-user.bat" : "lynx-user.sh";
 const pythonCommand = getPythonCommandByOs().python;
 const DEFAULT_BATCH_DATA$4 = isWin ? `@echo off\n\n${pythonCommand} standalone.py` : `#!/bin/bash\n\n${pythonCommand} standalone.py`;
-const SETTINGS_FILE = "settings.json";
-const DEFAULT_SETTINGS = {
-	use_portable_settings: true,
-	civitai_api_key: "",
-	folder_paths: {
-		loras: [],
-		checkpoints: [],
-		embeddings: []
-	},
-	auto_organize_exclusions: []
-};
 async function getRunCommands$5(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$4, dir, DEFAULT_BATCH_DATA$4);
 }
 async function saveArgs$4(args, dir) {
-	if (!dir) return;
-	await utilSaveArgs(args, BAT_FILE_NAME$4, parseArgsToString$14, dir);
-	const settingsPath = path.join(dir, SETTINGS_FILE);
-	const settings = { ...DEFAULT_SETTINGS };
-	args.forEach((arg) => {
-		if (arg.name === "civitai_api_key" && arg.value) settings.civitai_api_key = arg.value;
-		else if (arg.name === "use_portable_settings") {
-			const val = arg.value;
-			settings.use_portable_settings = val === "true" || val === "True" || val === "1";
-		} else if (arg.name === "loras_folders" && arg.value) settings.folder_paths.loras = arg.value.split(",").map((p) => p.trim()).filter(Boolean);
-		else if (arg.name === "checkpoints_folders" && arg.value) settings.folder_paths.checkpoints = arg.value.split(",").map((p) => p.trim()).filter(Boolean);
-		else if (arg.name === "embeddings_folders" && arg.value) settings.folder_paths.embeddings = arg.value.split(",").map((p) => p.trim()).filter(Boolean);
-		else if (arg.name === "auto_organize_exclusions" && arg.value) settings.auto_organize_exclusions = arg.value.split(",").map((p) => p.trim()).filter(Boolean);
-	});
-	try {
-		await import_graceful_fs.default.promises.writeFile(settingsPath, JSON.stringify(settings, null, 2));
-	} catch (e) {
-		console.error("Error saving settings.json for LoRA Manager:", e);
-	}
+	return await utilSaveArgs(args, BAT_FILE_NAME$4, parseArgsToString$14, dir);
 }
 async function readArgs$4(dir) {
-	if (!dir) return [];
-	const cmdArgs = await utilReadArgs(BAT_FILE_NAME$4, DEFAULT_BATCH_DATA$4, parseStringToArgs$14, dir);
-	const settingsPath = path.join(dir, SETTINGS_FILE);
-	let settings = { ...DEFAULT_SETTINGS };
-	try {
-		const settingsContent = await import_graceful_fs.default.promises.readFile(settingsPath, "utf-8");
-		settings = JSON.parse(settingsContent);
-	} catch (e) {}
-	const settingsArgs = [
-		{
-			name: "civitai_api_key",
-			value: settings.civitai_api_key || ""
-		},
-		{
-			name: "use_portable_settings",
-			value: String(settings.use_portable_settings)
-		},
-		{
-			name: "loras_folders",
-			value: settings.folder_paths.loras.join(", ")
-		},
-		{
-			name: "checkpoints_folders",
-			value: settings.folder_paths.checkpoints.join(", ")
-		},
-		{
-			name: "embeddings_folders",
-			value: settings.folder_paths.embeddings.join(", ")
-		},
-		{
-			name: "auto_organize_exclusions",
-			value: settings.auto_organize_exclusions.join(", ")
-		}
-	];
-	return [...cmdArgs, ...settingsArgs];
+	return await utilReadArgs(BAT_FILE_NAME$4, DEFAULT_BATCH_DATA$4, parseStringToArgs$14, dir);
 }
 const LoraManager_MM = (utils) => {
 	const installDir = utils.getInstallDir(LORA_MANAGER_ID);

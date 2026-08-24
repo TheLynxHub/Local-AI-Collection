@@ -1,4 +1,4 @@
-import { $n as TTS_ID, $t as claudeCodeArguments, A as SILLYTAVERN_RM, An as COMFYUI_ZLUDA_ID, B as LLAMA_CPP_UPDATE_TIME_KEY, Bn as LoLLMS_ID, Bt as hermesAgentArguments, Cn as ANTIGRAVITY_CLI_ID, Dn as CLAUDE_CODE_ID, E as TG_RM, En as CHAT_TTS_ID, Fn as KOHYA_ID, G as findAssetUrlForPlatform, Gn as SD_FORGE_AMD_ID, Gt as openArguments, H as LLAMA_PLATFORM_OPTIONS, Hn as ONETRAINER_ID, In as LANGFLOW_ID, It as langflowArguments, Jn as SD_UIUX_ID, Kn as SD_FORGE_ID, Kt as Flow_RM, L as LLAMA_CPP_INSTALL_DIR_KEY, Ln as LLAMA_CPP_ID, Lt as HermesAgent_RM, Mn as GeminiCli_ID, Mt as n8nArguments, N as sillyArguments, Nn as HERMES_AGENT_ID, Nt as Langflow_RM, On as COMFYUI_ID, Ot as gitmyloArguments, P as OPEN_WEBUI_RM, Pn as INVOKE_ID, Qn as TG_ID, R as LLAMA_CPP_INSTALL_TIME_KEY, Rn as LLAMA_FACTORY_ID, S as AITOOLKIT_RM, Sn as ALLTALK_ID, T as aiToolkitArguments, Tn as BOLT_DIY_ID, Tt as AG_RM, U as detectDefaultPlatformKey, Un as OPEN_WEBUI_ID, V as LLAMA_CPP_VERSION_KEY, Vn as N8N_ID, Vt as GeminiCli_RM, Wn as SD_AMD_ID, Wt as geminiCliArguments, X as mcMonkeyArguments, Xn as SMARTGALLERY_ID, Xt as ClaudeCode_RM, Yn as SILLYTAVERN_ID, Yt as flowiseArguments, Z as SD_NEXT_RM, Zn as SWARM_ID, _ as bmaltaisArguments, _n as parseCustomArg, _t as fetchExtensionList, a as unslothStudioArguments, an as GitInstaller, at as INVOKE_RM, bn as AG_ID, bt as automatic1111Arguments, cn as isValidArg, dt as comfyuizludaArguments, en as AntigravityCli_RM, er as UNSLOTH_STUDIO_ID, et as vladmandicArguments, ft as comfyRocmArguments, gn as isWin, gt as comfyuiArguments, in as CardInfo, it as lshqqytigerArguments, jn as FLOWISEAI_ID, k as oobaboogaArguments, kn as COMFYUI_ROCM_ID, kt as N8N_RM, l as smartGalleryArguments, ln as cloneDeep, m as KOHYA_GUI_RM, n as UNSLOTH_STUDIO_RM, o as SMARTGALLERY_RM, on as catchAddress$3, p as llamaFactoryArguments, pn as getPythonCommandByOs, pt as COMFYUI_RM, q as SWARM_RM, qn as SD_NEXT_ID, rn as antigravityCliArguments, sn as getArgumentType, tr as VOICE_STUDIO_ID, tt as SD_AMD_RM, u as LLAMA_FACTORY_RM, un as DescriptionManager, v as LORA_MANAGER_RM, vt as parseArgsToString$3, wn as APPLIO_ID, wt as voiceStudioArguments, x as loraManagerArguments, xn as AITOOLKIT_ID, xt as VOICE_STUDIO_RM, yn as A1_ID, yt as parseStringToArgs$3, z as LLAMA_CPP_PLATFORM_KEY, zn as LORA_MANAGER_ID } from "./RendererMethods_DfLlOg.mjs";
+import { $ as vladmandicArguments, $n as UNSLOTH_STUDIO_ID, $t as AntigravityCli_RM, A as SILLYTAVERN_RM, An as FLOWISEAI_ID, B as LLAMA_CPP_UPDATE_TIME_KEY, Bn as N8N_ID, Bt as GeminiCli_RM, Cn as APPLIO_ID, Ct as voiceStudioArguments, Dn as COMFYUI_ID, Dt as gitmyloArguments, E as TG_RM, En as CLAUDE_CODE_ID, Fn as LANGFLOW_ID, Ft as langflowArguments, Gn as SD_FORGE_ID, Gt as Flow_RM, H as detectDefaultPlatformKey, Hn as OPEN_WEBUI_ID, In as LLAMA_CPP_ID, It as HermesAgent_RM, Jn as SILLYTAVERN_ID, Jt as flowiseArguments, K as SWARM_RM, Kn as SD_NEXT_ID, L as LLAMA_CPP_INSTALL_DIR_KEY, Ln as LLAMA_FACTORY_ID, Mn as HERMES_AGENT_ID, Mt as Langflow_RM, N as sillyArguments, Nn as INVOKE_ID, On as COMFYUI_ROCM_ID, Ot as N8N_RM, P as OPEN_WEBUI_RM, Pn as KOHYA_ID, Qn as TTS_ID, Qt as claudeCodeArguments, R as LLAMA_CPP_INSTALL_TIME_KEY, Rn as LORA_MANAGER_ID, S as AITOOLKIT_RM, Sn as ANTIGRAVITY_CLI_ID, T as aiToolkitArguments, Tn as CHAT_TTS_ID, Un as SD_AMD_ID, Ut as geminiCliArguments, V as LLAMA_PLATFORM_OPTIONS, Vn as ONETRAINER_ID, W as findAssetUrlForPlatform, Wn as SD_FORGE_AMD_ID, Wt as openArguments, X as SD_NEXT_RM, Xn as SWARM_ID, Y as mcMonkeyArguments, Yn as SMARTGALLERY_ID, Yt as ClaudeCode_RM, Zn as TG_ID, _ as bmaltaisArguments, _t as parseArgsToString$3, a as unslothStudioArguments, an as catchAddress$3, bn as AITOOLKIT_ID, bt as VOICE_STUDIO_RM, cn as cloneDeep, dt as comfyRocmArguments, er as VOICE_STUDIO_ID, et as SD_AMD_RM, fn as getPythonCommandByOs, ft as COMFYUI_RM, gn as parseCustomArg, gt as fetchExtensionList, hn as isWin, ht as comfyuiArguments, in as GitInstaller, it as INVOKE_RM, jn as GeminiCli_ID, jt as n8nArguments, k as oobaboogaArguments, kn as COMFYUI_ZLUDA_ID, l as smartGalleryArguments, ln as DescriptionManager, m as KOHYA_GUI_RM, n as UNSLOTH_STUDIO_RM, nn as antigravityCliArguments, o as SMARTGALLERY_RM, on as getArgumentType, p as llamaFactoryArguments, qn as SD_UIUX_ID, rn as CardInfo, rt as lshqqytigerArguments, sn as isValidArg, u as LLAMA_FACTORY_RM, ut as comfyuizludaArguments, v as LORA_MANAGER_RM, vn as A1_ID, vt as parseStringToArgs$3, wn as BOLT_DIY_ID, wt as AG_RM, x as loraManagerArguments, xn as ALLTALK_ID, yn as AG_ID, yt as automatic1111Arguments, z as LLAMA_CPP_PLATFORM_KEY, zn as LoLLMS_ID, zt as hermesAgentArguments } from "./RendererMethods_CgYqv2.mjs";
 //#region module/src/containers/agent/index.ts
 const agentsPage = {
 	routePath: "agents_page",
@@ -2085,6 +2085,10 @@ function startInstall$2(stepper) {
 			stepper.progressBar(true, "Fetching recent llama.cpp releases from GitHub...");
 			stepper.ipc.invoke("fetch_llama_cpp_releases").then((releases) => {
 				const recentReleases = releases.slice(0, 15);
+				if (!recentReleases.length) {
+					stepper.showFinalStep("error", "Fetch Failed", "No llama.cpp releases found on GitHub.");
+					return;
+				}
 				const versionOptions = recentReleases.map((r) => r.tag_name);
 				const defaultVersion = versionOptions[0] || "latest";
 				const platformLabels = LLAMA_PLATFORM_OPTIONS.map((opt) => opt.label);
@@ -2137,16 +2141,27 @@ function startInstall$2(stepper) {
 									const now = (/* @__PURE__ */ new Date()).toLocaleString();
 									stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
 									stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
-									stepper.storage.set(LLAMA_CPP_VERSION_KEY, selectedVersionTag);
 									stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
 									stepper.showFinalStep("success", "llama.cpp Ready!", `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`);
+								}).catch((err) => {
+									stepper.showFinalStep("error", "Installation Failed", `Failed to copy llama.cpp files: ${err?.message || err}`);
 								});
+							}).catch((err) => {
+								stepper.showFinalStep("error", "Extraction Failed", `Failed to decompress archive: ${err?.message || err}`);
 							});
+						}).catch((err) => {
+							stepper.showFinalStep("error", "Download Failed", `Failed to download llama.cpp: ${err?.message || err}`);
 						});
 					});
+				}).catch((err) => {
+					stepper.showFinalStep("error", "Setup Error", `Error collecting user input: ${err?.message || err}`);
 				});
+			}).catch((err) => {
+				stepper.showFinalStep("error", "Fetch Failed", `Failed to fetch llama.cpp releases: ${err?.message || err}`);
 			});
 		});
+	}).catch((err) => {
+		stepper.showFinalStep("error", "Starter Error", `Setup failed: ${err?.message || err}`);
 	});
 }
 function startUpdate$1(stepper, dir) {
@@ -2179,13 +2194,22 @@ function startUpdate$1(stepper, dir) {
 							stepper.setUpdated();
 							const now = (/* @__PURE__ */ new Date()).toLocaleString();
 							stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
-							stepper.storage.set(LLAMA_CPP_VERSION_KEY, latestRelease.tag_name);
 							stepper.showFinalStep("success", "llama.cpp Updated!", `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`);
+						}).catch((err) => {
+							stepper.showFinalStep("error", "Update Failed", `Failed to copy update files: ${err?.message || err}`);
 						});
+					}).catch((err) => {
+						stepper.showFinalStep("error", "Decompression Failed", `Failed to decompress update package: ${err?.message || err}`);
 					});
+				}).catch((err) => {
+					stepper.showFinalStep("error", "Download Failed", `Failed to download update package: ${err?.message || err}`);
 				});
 			});
+		}).catch((err) => {
+			stepper.showFinalStep("error", "Update Failed", `Failed to fetch releases: ${err?.message || err}`);
 		});
+	}).catch((err) => {
+		stepper.showFinalStep("error", "Storage Error", `Failed to retrieve platform configuration: ${err?.message || err}`);
 	});
 }
 async function cardInfo$2(api, callback) {
@@ -2218,19 +2242,29 @@ async function cardInfo$2(api, callback) {
 	}], callback);
 	api.storage.get(LLAMA_CPP_INSTALL_TIME_KEY).then((result) => {
 		descManager.updateItem(0, 0, result || "Not Recorded");
+	}).catch(() => {
+		descManager.updateItem(0, 0, "Not Recorded");
 	});
 	api.storage.get(LLAMA_CPP_UPDATE_TIME_KEY).then((result) => {
 		descManager.updateItem(0, 1, result || "Never Updated");
+	}).catch(() => {
+		descManager.updateItem(0, 1, "Never Updated");
 	});
-	api.storage.get(LLAMA_CPP_VERSION_KEY).then((result) => {
+	api.ipc.invoke("current_llama_cpp_version", dir).then((result) => {
 		descManager.updateItem(0, 2, result || "Unknown");
+	}).catch(() => {
+		descManager.updateItem(0, 2, "Unknown");
 	});
 	api.storage.get(LLAMA_CPP_PLATFORM_KEY).then((key) => {
 		const opt = LLAMA_PLATFORM_OPTIONS.find((o) => o.key === key);
 		descManager.updateItem(0, 3, opt ? opt.label : key || "Default");
+	}).catch(() => {
+		descManager.updateItem(0, 3, "Default");
 	});
 	api.ipc.invoke("fetch_llama_cpp_latest_tag").then((result) => {
 		descManager.updateItem(0, 4, result || "Unknown");
+	}).catch(() => {
+		descManager.updateItem(0, 4, "Unknown");
 	});
 }
 const LlamaCpp_RM = {

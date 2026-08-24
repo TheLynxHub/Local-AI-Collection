@@ -117,12 +117,15 @@ function parseCustomArg(item) {
 	let line = void 0;
 	switch (custom.kind) {
 		case "envVar":
-			if (custom.type === "CheckBox") line = isWin ? `set ${item.name}=true` : `export ${item.name}="true"`;
-			else line = isWin ? `set ${item.name}=${item.value}` : `export ${item.name}="${item.value}"`;
+			if (custom.type === "CheckBox") {
+				const isTrue = value === void 0 || value === true || value === "true" || value === "";
+				line = isWin ? `set ${item.name}=${isTrue ? "true" : "false"}` : `export ${item.name}="${isTrue ? "true" : "false"}"`;
+			} else line = isWin ? `set ${item.name}=${item.value}` : `export ${item.name}="${item.value}"`;
 			break;
 		case "commandLine":
-			if (custom.type === "CheckBox") commandArg = `${item.name}`;
-			else if (custom.type === "File" || custom.type === "Directory") commandArg = `${item.name} "${item.value}"`;
+			if (custom.type === "CheckBox") {
+				if (value === void 0 || value === true || value === "true" || value === "") commandArg = `${item.name}`;
+			} else if (custom.type === "File" || custom.type === "Directory") commandArg = `${item.name} "${item.value}"`;
 			else commandArg = `${item.name} ${item.value}`;
 			break;
 		case "custom":
@@ -17821,7 +17824,6 @@ const LLAMA_CPP_RELEASES_URL = "https://api.github.com/repos/ggml-org/llama.cpp/
 const LLAMA_CPP_INSTALL_TIME_KEY = "install-time-llamaCpp";
 const LLAMA_CPP_INSTALL_DIR_KEY = "install-dir-llamaCpp";
 const LLAMA_CPP_UPDATE_TIME_KEY = "update-time-llamaCpp";
-const LLAMA_CPP_VERSION_KEY = "version-llamaCpp";
 const LLAMA_CPP_PLATFORM_KEY = "platform-llamaCpp";
 const LLAMA_PLATFORM_OPTIONS = [
 	{
@@ -23606,51 +23608,6 @@ const loraManagerArguments = [{
 			defaultValue: 8188
 		}]
 	}]
-}, {
-	category: "Settings Configuration",
-	sections: [
-		{
-			section: "General",
-			items: [{
-				name: "civitai_api_key",
-				description: "Your CivitAI API key for downloading models. Get it from your CivitAI profile settings. Required for downloading models from CivitAI.",
-				type: "Input"
-			}, {
-				name: "use_portable_settings",
-				description: "Enable portable mode to store settings.json in the project directory instead of user settings directory. Recommended for standalone installations.",
-				type: "CheckBox",
-				defaultValue: true
-			}]
-		},
-		{
-			section: "Folder Paths",
-			items: [
-				{
-					name: "loras_folders",
-					description: "Comma-separated list of paths to your LoRA model folders. Example: C:/ComfyUI/models/loras, D:/AI/loras",
-					type: "Directory"
-				},
-				{
-					name: "checkpoints_folders",
-					description: "Comma-separated list of paths to your checkpoint model folders. Example: C:/ComfyUI/models/checkpoints, D:/AI/checkpoints",
-					type: "Directory"
-				},
-				{
-					name: "embeddings_folders",
-					description: "Comma-separated list of paths to your embeddings folders. Example: C:/ComfyUI/models/embeddings, D:/AI/embeddings",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Advanced",
-			items: [{
-				name: "auto_organize_exclusions",
-				description: "Comma-separated (,) list of folder paths to exclude from auto-organization. Models in these folders will not be automatically moved.",
-				type: "Input"
-			}]
-		}
-	]
 }];
 //#endregion
 //#region module/src/containers/tools/ComfyUiLoraManager/RendererMethods.ts
@@ -23666,7 +23623,6 @@ function parseArgsToString$4(args) {
 			if (result.line) lines += result.line + "\n";
 			if (result.commandArg) argResult += result.commandArg + " ";
 		} else {
-			if (arg.name === "civitai_api_key" || arg.name === "use_portable_settings" || arg.name === "loras_folders" || arg.name === "checkpoints_folders" || arg.name === "embeddings_folders" || arg.name === "auto_organize_exclusions") return;
 			const argType = getArgumentType(arg.name, loraManagerArguments);
 			if (argType === "CheckBox") argResult += `${arg.name} `;
 			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
@@ -23710,7 +23666,7 @@ function startInstall$4(stepper) {
 	const installReqs = (dir) => {
 		stepper.executeTerminalCommands("pip install -r requirements.txt", dir).then(() => {
 			stepper.setInstalled(dir);
-			stepper.showFinalStep("success", "ComfyUI LoRA Manager installation complete!", "All installation steps completed successfully. Your LoRA Manager is now ready for use. Configure your CivitAI API key and folder paths in the settings to get started.");
+			stepper.showFinalStep("success", "ComfyUI LoRA Manager installation complete!", "All installation steps completed successfully. Your LoRA Manager is now ready for use.");
 		});
 	};
 	stepper.initialSteps([
@@ -23730,7 +23686,7 @@ function startInstall$4(stepper) {
 		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, LORA_MANAGER_URL).then((isValid) => {
 			if (isValid) {
 				stepper.setInstalled(targetDirectory);
-				stepper.showFinalStep("success", "ComfyUI LoRA Manager located successfully!", "Pre-installed LoRA Manager detected. Installation skipped as your existing setup is ready to use. Make sure to configure your settings.json with CivitAI API key and folder paths.");
+				stepper.showFinalStep("success", "ComfyUI LoRA Manager located successfully!", "Pre-installed LoRA Manager detected. Installation skipped as your existing setup is ready to use.");
 			} else stepper.utils.verifyFilesExist(targetDirectory, ["standalone.py", "requirements.txt"]).then((filesExist) => {
 				if (filesExist) {
 					stepper.setInstalled(targetDirectory);
@@ -24906,4 +24862,4 @@ const UNSLOTH_STUDIO_RM = {
 	}
 };
 //#endregion
-export { parseStringToArgs$10 as $, TTS_ID as $n, claudeCodeArguments as $t, SILLYTAVERN_RM as A, COMFYUI_ZLUDA_ID as An, parseArgsToString$17 as At, LLAMA_CPP_UPDATE_TIME_KEY as B, LoLLMS_ID as Bn, hermesAgentArguments as Bt, parseArgsToString$5 as C, ANTIGRAVITY_CLI_ID as Cn, parseStringToArgs$15 as Ct, parseArgsToString$6 as D, CLAUDE_CODE_ID as Dn, parseStringToArgs$16 as Dt, TG_RM as E, CHAT_TTS_ID as En, parseArgsToString$16 as Et, parseArgsToString$8 as F, KOHYA_ID as Fn, parseStringToArgs$18 as Ft, findAssetUrlForPlatform as G, SD_FORGE_AMD_ID as Gn, openArguments as Gt, LLAMA_PLATFORM_OPTIONS as H, ONETRAINER_ID as Hn, parseArgsToFiles$2 as Ht, parseStringToArgs$8 as I, LANGFLOW_ID as In, langflowArguments as It, parseArgsToString$9 as J, SD_UIUX_ID as Jn, parseStringToArgs$21 as Jt, getLatestLlamaCppTag as K, SD_FORGE_ID as Kn, Flow_RM as Kt, LLAMA_CPP_INSTALL_DIR_KEY as L, LLAMA_CPP_ID as Ln, HermesAgent_RM as Lt, parseFilesToArgs as M, GeminiCli_ID as Mn, n8nArguments as Mt, sillyArguments as N, HERMES_AGENT_ID as Nn, Langflow_RM as Nt, parseStringToArgs$6 as O, COMFYUI_ID as On, gitmyloArguments as Ot, OPEN_WEBUI_RM as P, INVOKE_ID as Pn, parseArgsToString$18 as Pt, parseArgsToString$10 as Q, TG_ID as Qn, parseFilesToArgs$3 as Qt, LLAMA_CPP_INSTALL_TIME_KEY as R, LLAMA_FACTORY_ID as Rn, parseArgsToFiles$1 as Rt, AITOOLKIT_RM as S, ALLTALK_ID as Sn, parseArgsToString$15 as St, aiToolkitArguments as T, BOLT_DIY_ID as Tn, AG_RM as Tt, detectDefaultPlatformKey as U, OPEN_WEBUI_ID as Un, parseFilesToArgs$2 as Ut, LLAMA_CPP_VERSION_KEY as V, N8N_ID as Vn, GeminiCli_RM as Vt, fetchLlamaCppReleases as W, SD_AMD_ID as Wn, geminiCliArguments as Wt, mcMonkeyArguments as X, SMARTGALLERY_ID as Xn, ClaudeCode_RM as Xt, parseStringToArgs$9 as Y, SILLYTAVERN_ID as Yn, flowiseArguments as Yt, SD_NEXT_RM as Z, SWARM_ID as Zn, parseArgsToFiles$3 as Zt, bmaltaisArguments as _, parseCustomArg as _n, fetchExtensionList$2 as _t, unslothStudioArguments as a, GitInstaller as an, INVOKE_RM as at, parseStringToArgs$4 as b, AG_ID as bn, automatic1111Arguments as bt, parseStringToArgs$1 as c, isValidArg as cn, INVOKEAI_INSTALL_DIR_KEY as ct, parseArgsToString$2 as d, extractGitUrl as dn, comfyuizludaArguments as dt, AntigravityCli_RM as en, UNSLOTH_STUDIO_ID as er, vladmandicArguments as et, parseStringToArgs$2 as f, getCdCommand as fn, comfyRocmArguments as ft, parseStringToArgs$3 as g, isWin as gn, comfyuiArguments as gt, parseArgsToString$3 as h, isMac as hn, parseStringToArgs$13 as ht, parseStringToArgs as i, CardInfo as in, lshqqytigerArguments as it, parseArgsToFiles as j, FLOWISEAI_ID as jn, parseStringToArgs$17 as jt, oobaboogaArguments as k, COMFYUI_ROCM_ID as kn, N8N_RM as kt, smartGalleryArguments as l, cloneDeep as ln, INVOKEAI_UPDATE_AVAILABLE_KEY as lt, KOHYA_GUI_RM as m, getVenvPythonPath as mn, parseArgsToString$13 as mt, UNSLOTH_STUDIO_RM as n, parseFilesToArgs$4 as nn, parseArgsToString$11 as nt, SMARTGALLERY_RM as o, catchAddress$5 as on, parseArgsToString$12 as ot, llamaFactoryArguments as p, getPythonCommandByOs as pn, COMFYUI_RM as pt, SWARM_RM as q, SD_NEXT_ID as qn, parseArgsToString$21 as qt, parseArgsToString as r, antigravityCliArguments as rn, parseStringToArgs$11 as rt, parseArgsToString$1 as s, getArgumentType as sn, parseStringToArgs$12 as st, TAG_KEY as t, parseArgsToFiles$4 as tn, VOICE_STUDIO_ID as tr, SD_AMD_RM as tt, LLAMA_FACTORY_RM as u, DescriptionManager as un, Invoke_Command_ActivateVenv as ut, LORA_MANAGER_RM as v, removeAnsi as vn, parseArgsToString$14 as vt, parseStringToArgs$5 as w, APPLIO_ID as wn, voiceStudioArguments as wt, loraManagerArguments as x, AITOOLKIT_ID as xn, VOICE_STUDIO_RM as xt, parseArgsToString$4 as y, A1_ID as yn, parseStringToArgs$14 as yt, LLAMA_CPP_PLATFORM_KEY as z, LORA_MANAGER_ID as zn, parseFilesToArgs$1 as zt };
+export { vladmandicArguments as $, UNSLOTH_STUDIO_ID as $n, AntigravityCli_RM as $t, SILLYTAVERN_RM as A, FLOWISEAI_ID as An, parseStringToArgs$17 as At, LLAMA_CPP_UPDATE_TIME_KEY as B, N8N_ID as Bn, GeminiCli_RM as Bt, parseArgsToString$5 as C, APPLIO_ID as Cn, voiceStudioArguments as Ct, parseArgsToString$6 as D, COMFYUI_ID as Dn, gitmyloArguments as Dt, TG_RM as E, CLAUDE_CODE_ID as En, parseStringToArgs$16 as Et, parseArgsToString$8 as F, LANGFLOW_ID as Fn, langflowArguments as Ft, getLatestLlamaCppTag as G, SD_FORGE_ID as Gn, Flow_RM as Gt, detectDefaultPlatformKey as H, OPEN_WEBUI_ID as Hn, parseFilesToArgs$2 as Ht, parseStringToArgs$8 as I, LLAMA_CPP_ID as In, HermesAgent_RM as It, parseStringToArgs$9 as J, SILLYTAVERN_ID as Jn, flowiseArguments as Jt, SWARM_RM as K, SD_NEXT_ID as Kn, parseArgsToString$21 as Kt, LLAMA_CPP_INSTALL_DIR_KEY as L, LLAMA_FACTORY_ID as Ln, parseArgsToFiles$1 as Lt, parseFilesToArgs as M, HERMES_AGENT_ID as Mn, Langflow_RM as Mt, sillyArguments as N, INVOKE_ID as Nn, parseArgsToString$18 as Nt, parseStringToArgs$6 as O, COMFYUI_ROCM_ID as On, N8N_RM as Ot, OPEN_WEBUI_RM as P, KOHYA_ID as Pn, parseStringToArgs$18 as Pt, parseStringToArgs$10 as Q, TTS_ID as Qn, claudeCodeArguments as Qt, LLAMA_CPP_INSTALL_TIME_KEY as R, LORA_MANAGER_ID as Rn, parseFilesToArgs$1 as Rt, AITOOLKIT_RM as S, ANTIGRAVITY_CLI_ID as Sn, parseStringToArgs$15 as St, aiToolkitArguments as T, CHAT_TTS_ID as Tn, parseArgsToString$16 as Tt, fetchLlamaCppReleases as U, SD_AMD_ID as Un, geminiCliArguments as Ut, LLAMA_PLATFORM_OPTIONS as V, ONETRAINER_ID as Vn, parseArgsToFiles$2 as Vt, findAssetUrlForPlatform as W, SD_FORGE_AMD_ID as Wn, openArguments as Wt, SD_NEXT_RM as X, SWARM_ID as Xn, parseArgsToFiles$3 as Xt, mcMonkeyArguments as Y, SMARTGALLERY_ID as Yn, ClaudeCode_RM as Yt, parseArgsToString$10 as Z, TG_ID as Zn, parseFilesToArgs$3 as Zt, bmaltaisArguments as _, removeAnsi as _n, parseArgsToString$14 as _t, unslothStudioArguments as a, catchAddress$5 as an, parseArgsToString$12 as at, parseStringToArgs$4 as b, AITOOLKIT_ID as bn, VOICE_STUDIO_RM as bt, parseStringToArgs$1 as c, cloneDeep as cn, INVOKEAI_UPDATE_AVAILABLE_KEY as ct, parseArgsToString$2 as d, getCdCommand as dn, comfyRocmArguments as dt, parseArgsToFiles$4 as en, VOICE_STUDIO_ID as er, SD_AMD_RM as et, parseStringToArgs$2 as f, getPythonCommandByOs as fn, COMFYUI_RM as ft, parseStringToArgs$3 as g, parseCustomArg as gn, fetchExtensionList$2 as gt, parseArgsToString$3 as h, isWin as hn, comfyuiArguments as ht, parseStringToArgs as i, GitInstaller as in, INVOKE_RM as it, parseArgsToFiles as j, GeminiCli_ID as jn, n8nArguments as jt, oobaboogaArguments as k, COMFYUI_ZLUDA_ID as kn, parseArgsToString$17 as kt, smartGalleryArguments as l, DescriptionManager as ln, Invoke_Command_ActivateVenv as lt, KOHYA_GUI_RM as m, isMac as mn, parseStringToArgs$13 as mt, UNSLOTH_STUDIO_RM as n, antigravityCliArguments as nn, parseStringToArgs$11 as nt, SMARTGALLERY_RM as o, getArgumentType as on, parseStringToArgs$12 as ot, llamaFactoryArguments as p, getVenvPythonPath as pn, parseArgsToString$13 as pt, parseArgsToString$9 as q, SD_UIUX_ID as qn, parseStringToArgs$21 as qt, parseArgsToString as r, CardInfo as rn, lshqqytigerArguments as rt, parseArgsToString$1 as s, isValidArg as sn, INVOKEAI_INSTALL_DIR_KEY as st, TAG_KEY as t, parseFilesToArgs$4 as tn, parseArgsToString$11 as tt, LLAMA_FACTORY_RM as u, extractGitUrl as un, comfyuizludaArguments as ut, LORA_MANAGER_RM as v, A1_ID as vn, parseStringToArgs$14 as vt, parseStringToArgs$5 as w, BOLT_DIY_ID as wn, AG_RM as wt, loraManagerArguments as x, ALLTALK_ID as xn, parseArgsToString$15 as xt, parseArgsToString$4 as y, AG_ID as yn, automatic1111Arguments as yt, LLAMA_CPP_PLATFORM_KEY as z, LoLLMS_ID as zn, hermesAgentArguments as zt };
