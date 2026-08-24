@@ -1,7 +1,7 @@
 {
   "name": "lynxhub_module_offline_container",
   "type": "module",
-  "version": "16.0.0",
+  "version": "16.1.0",
   "scripts": {
     "fetch-commands": "tsx src/Utils/FetchLatestCommands.ts"
   },
