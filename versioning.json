@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "16.1.0",
+      "commit": "fb6e76c",
+      "engines": {
+        "moduleApi": "^2.1.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "16.0.0",
       "commit": "805bb09",
       "engines": {
@@ -110,6 +119,28 @@
     }
   ],
   "changes": [
+    {
+      "version": "16.1.0",
+      "date": "2026-08-28",
+      "items": [
+        {
+          "⚡ Improvements": [
+            "Hermes Agent: Added auto catch interface url.",
+            "LlamaCpp: Resolve version by installed cli.",
+            "LlamaCpp: Added error handling to install, update and copy file operations."
+          ]
+        },
+        {
+          "🪲 Bug Fixes": ["Fixed boolean(true/false) arguments values parsing."]
+        },
+        {
+          "📌 Minor Changes": [
+            "Support LynxHub v3.6",
+            "Lora Manager: Removed settings configs as it's available in webui."
+          ]
+        }
+      ]
+    },
     {
       "version": "16.0.0",
       "date": "2026-08-13",
