@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "16.1.1",
+      "commit": "271010c",
+      "engines": {
+        "moduleApi": "^2.1.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "16.1.0",
       "commit": "fb6e76c",
       "engines": {
@@ -119,6 +128,18 @@
     }
   ],
   "changes": [
+    {
+      "version": "16.1.1",
+      "date": "2026-09-01",
+      "items": [
+        {
+          "⚡ Improvements": ["LlamaCpp: Added new arguments."]
+        },
+        {
+          "🪲 Bug Fixes": ["LlamaCpp: Fixed release fetching, CUDA companion resolution and version parsing."]
+        }
+      ]
+    },
     {
       "version": "16.1.0",
       "date": "2026-08-28",
