@@ -71,6 +71,22 @@ const llamaCppArguments: ArgumentsData = [
             defaultValue: true,
           },
           {
+            name: '--slot-prompt-similarity',
+            description: 'How much the prompt of a request must match slot prompt to reuse slot. Default: 0.1.',
+            type: 'Number',
+            defaultValue: 0.1,
+            numberStep: 0.05,
+            numberMin: 0,
+            numberMax: 1,
+          },
+          {
+            name: '--sleep-idle-seconds',
+            description:
+              'Number of seconds of idleness after which the server will sleep (-1 to disable). Default: -1.',
+            type: 'Number',
+            defaultValue: -1,
+          },
+          {
             name: '--ui',
             description: 'Whether to enable the Web UI frontend.',
             type: 'CheckBox',
@@ -152,6 +168,13 @@ const llamaCppArguments: ArgumentsData = [
             type: 'DropDown',
             values: ['auto', 'on', 'off'],
             defaultValue: 'auto',
+          },
+          {
+            name: '--reasoning-effort',
+            description: 'Reasoning effort level given to the chat template.',
+            type: 'DropDown',
+            values: ['default', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'],
+            defaultValue: 'default',
           },
           {
             name: '--reasoning-format',
@@ -458,10 +481,20 @@ const llamaCppArguments: ArgumentsData = [
             type: 'Input',
           },
           {
+            name: '--chat-template-file',
+            description: 'Path to text file containing custom Jinja chat template.',
+            type: 'File',
+          },
+          {
             name: '--jinja',
             description: 'Enable Jinja template engine for chat parsing.',
             type: 'CheckBox',
             defaultValue: true,
+          },
+          {
+            name: '--skip-chat-parsing',
+            description: 'Force pure content parser even if Jinja template is specified.',
+            type: 'CheckBox',
           },
           {
             name: '--prefill-assistant',

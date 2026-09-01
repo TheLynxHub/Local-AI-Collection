@@ -57,7 +57,7 @@ export function parseLlamaVersion(raw?: string): string | undefined {
   const text = raw.trim();
 
   // Pattern 1: 'build 10424', 'build: 10424', '(build 10424,'
-  const buildMatch = text.match(/\bbuild[:\s]+(\d+)\b/i);
+  const buildMatch = text.match(/\bbuild[:\s#]+(\d+)\b/i);
   if (buildMatch) {
     return `b${buildMatch[1]}`;
   }
@@ -74,7 +74,13 @@ export function parseLlamaVersion(raw?: string): string | undefined {
     return bTagMatch[1].toLowerCase();
   }
 
-  // Pattern 4: Semver like 'v0.1.0' or '0.1.0'
+  // Pattern 4: Bare build number digits e.g. '10731'
+  const bareNumberMatch = text.match(/^\d+$/);
+  if (bareNumberMatch) {
+    return `b${bareNumberMatch[0]}`;
+  }
+
+  // Pattern 5: Semver like 'v0.1.0' or '0.1.0'
   const semverMatch = text.match(/\b(v?\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\b/i);
   if (semverMatch) {
     return semverMatch[1];
@@ -150,7 +156,7 @@ async function getRunCommands(utils: MainModuleUtils): Promise<string> {
       }
     });
   } else {
-    command += ' --host 127.0.0.1 --port 8080 --cors';
+    command += ' --host 127.0.0.1 --port 8080';
   }
 
   return command;

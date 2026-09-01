@@ -16,20 +16,24 @@ export type LlamaPlatformOption = {
 
 export const LLAMA_PLATFORM_OPTIONS: LlamaPlatformOption[] = [
   // Windows
-  {label: 'Windows x64 (CUDA 12)', key: 'win-cuda12-x64', pattern: /bin-win-cuda-12.*-x64\.zip$/i},
-  {label: 'Windows x64 (CUDA 13)', key: 'win-cuda13-x64', pattern: /bin-win-cuda-13.*-x64\.zip$/i},
-  {label: 'Windows arm64 (CUDA 13) (preview)', key: 'win-cuda13-arm64', pattern: /bin-win-cuda-13.*-arm64\.zip$/i},
-  {label: 'Windows x64 (CPU)', key: 'win-cpu-x64', pattern: /bin-win-cpu-x64\.zip$/i},
-  {label: 'Windows arm64 (CPU)', key: 'win-cpu-arm64', pattern: /bin-win-cpu-arm64\.zip$/i},
+  {label: 'Windows x64 (CUDA 12)', key: 'win-cuda12-x64', pattern: /^(?!.*cudart).*bin-win-cuda-12.*-x64\.zip$/i},
+  {label: 'Windows x64 (CUDA 13)', key: 'win-cuda13-x64', pattern: /^(?!.*cudart).*bin-win-cuda-13.*-x64\.zip$/i},
+  {
+    label: 'Windows arm64 (CUDA 13) (preview)',
+    key: 'win-cuda13-arm64',
+    pattern: /^(?!.*cudart).*bin-win-cuda-13.*-arm64\.zip$/i,
+  },
+  {label: 'Windows x64 (CPU)', key: 'win-cpu-x64', pattern: /^(?!.*cudart).*bin-win-cpu-x64\.zip$/i},
+  {label: 'Windows arm64 (CPU)', key: 'win-cpu-arm64', pattern: /^(?!.*cudart).*bin-win-cpu-arm64\.zip$/i},
   {
     label: 'Windows arm64 (OpenCL Adreno)',
     key: 'win-opencl-adreno-arm64',
-    pattern: /bin-win-opencl-adreno-arm64\.zip$/i,
+    pattern: /^(?!.*cudart).*bin-win-opencl-adreno-arm64\.zip$/i,
   },
-  {label: 'Windows x64 (Vulkan)', key: 'win-vulkan-x64', pattern: /bin-win-vulkan-x64\.zip$/i},
-  {label: 'Windows x64 (OpenVINO)', key: 'win-openvino-x64', pattern: /bin-win-openvino.*-x64\.zip$/i},
-  {label: 'Windows x64 (SYCL)', key: 'win-sycl-x64', pattern: /bin-win-sycl-x64\.zip$/i},
-  {label: 'Windows x64 (ROCm 7.14)', key: 'win-rocm-x64', pattern: /bin-win-rocm.*-x64\.zip$/i},
+  {label: 'Windows x64 (Vulkan)', key: 'win-vulkan-x64', pattern: /^(?!.*cudart).*bin-win-vulkan-x64\.zip$/i},
+  {label: 'Windows x64 (OpenVINO)', key: 'win-openvino-x64', pattern: /^(?!.*cudart).*bin-win-openvino.*-x64\.zip$/i},
+  {label: 'Windows x64 (SYCL)', key: 'win-sycl-x64', pattern: /^(?!.*cudart).*bin-win-sycl-x64\.zip$/i},
+  {label: 'Windows x64 (ROCm)', key: 'win-rocm-x64', pattern: /^(?!.*cudart).*bin-win-rocm.*-x64\.zip$/i},
 
   // macOS / iOS
   {label: 'macOS Apple Silicon (arm64)', key: 'macos-arm64', pattern: /bin-macos-arm64\.tar\.gz$/i},
@@ -42,7 +46,7 @@ export const LLAMA_PLATFORM_OPTIONS: LlamaPlatformOption[] = [
   {label: 'Ubuntu s390x (CPU)', key: 'ubuntu-cpu-s390x', pattern: /bin-ubuntu-s390x\.tar\.gz$/i},
   {label: 'Ubuntu x64 (Vulkan)', key: 'ubuntu-vulkan-x64', pattern: /bin-ubuntu-vulkan-x64\.tar\.gz$/i},
   {label: 'Ubuntu arm64 (Vulkan)', key: 'ubuntu-vulkan-arm64', pattern: /bin-ubuntu-vulkan-arm64\.tar\.gz$/i},
-  {label: 'Ubuntu x64 (ROCm 7.14)', key: 'ubuntu-rocm-x64', pattern: /bin-ubuntu-rocm.*-x64\.tar\.gz$/i},
+  {label: 'Ubuntu x64 (ROCm)', key: 'ubuntu-rocm-x64', pattern: /bin-ubuntu-rocm.*-x64\.tar\.gz$/i},
   {label: 'Ubuntu x64 (OpenVINO)', key: 'ubuntu-openvino-x64', pattern: /bin-ubuntu-openvino.*-x64\.tar\.gz$/i},
   {label: 'Ubuntu x64 (SYCL FP32)', key: 'ubuntu-sycl-fp32-x64', pattern: /bin-ubuntu-sycl-fp32-x64\.tar\.gz$/i},
   {label: 'Ubuntu x64 (SYCL FP16)', key: 'ubuntu-sycl-fp16-x64', pattern: /bin-ubuntu-sycl-fp16-x64\.tar\.gz$/i},
@@ -78,7 +82,9 @@ export async function fetchLlamaCppReleases(): Promise<GitHubRelease[]> {
     }
 
     const releases: GitHubRelease[] = await response.json();
-    return releases.filter(r => !r.prerelease);
+    return releases.filter(
+      r => !r.draft && Boolean(r.assets?.some(a => a.name.endsWith('.zip') || a.name.endsWith('.tar.gz'))),
+    );
   } catch (error) {
     console.error('Failed to fetch llama.cpp releases from GitHub:', error);
     return [];
@@ -88,7 +94,9 @@ export async function fetchLlamaCppReleases(): Promise<GitHubRelease[]> {
 export function findAssetUrlForPlatform(assets: GitHubReleaseAsset[], platformKey: string): string | undefined {
   const option = LLAMA_PLATFORM_OPTIONS.find(opt => opt.key === platformKey);
   if (!option) {
-    const defaultAsset = assets.find(a => a.name.endsWith('.zip') || a.name.endsWith('.tar.gz'));
+    const defaultAsset = assets.find(
+      a => !a.name.startsWith('cudart-') && (a.name.endsWith('.zip') || a.name.endsWith('.tar.gz')),
+    );
     return defaultAsset?.browser_download_url;
   }
 
@@ -97,8 +105,9 @@ export function findAssetUrlForPlatform(assets: GitHubReleaseAsset[], platformKe
     return matchedAsset.browser_download_url;
   }
 
-  // Fallback match based on keywords
+  // Fallback match based on keywords (excluding cudart only DLL archives)
   const fallbackAsset = assets.find(a => {
+    if (a.name.startsWith('cudart-')) return false;
     if (platformKey.startsWith('win-') && a.name.includes('win')) return true;
     if (platformKey.startsWith('ubuntu-') && a.name.includes('ubuntu')) return true;
     if (platformKey.startsWith('macos-') && a.name.includes('macos')) return true;
@@ -106,6 +115,19 @@ export function findAssetUrlForPlatform(assets: GitHubReleaseAsset[], platformKe
   });
 
   return fallbackAsset?.browser_download_url || assets[0]?.browser_download_url;
+}
+
+export function findCudartAssetUrlForPlatform(assets: GitHubReleaseAsset[], platformKey: string): string | undefined {
+  if (platformKey === 'win-cuda12-x64') {
+    return assets.find(a => /cudart-.*bin-win-cuda-12.*-x64\.zip$/i.test(a.name))?.browser_download_url;
+  }
+  if (platformKey === 'win-cuda13-x64') {
+    return assets.find(a => /cudart-.*bin-win-cuda-13.*-x64\.zip$/i.test(a.name))?.browser_download_url;
+  }
+  if (platformKey === 'win-cuda13-arm64') {
+    return assets.find(a => /cudart-.*bin-win-cuda-13.*-arm64\.zip$/i.test(a.name))?.browser_download_url;
+  }
+  return undefined;
 }
 
 export async function getLatestLlamaCppTag(): Promise<string> {

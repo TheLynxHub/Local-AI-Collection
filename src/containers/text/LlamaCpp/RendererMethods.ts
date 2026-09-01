@@ -14,6 +14,7 @@ import llamaCppArguments from './Arguments';
 import {
   detectDefaultPlatformKey,
   findAssetUrlForPlatform,
+  findCudartAssetUrlForPlatform,
   LLAMA_CPP_INSTALL_DIR_KEY,
   LLAMA_CPP_INSTALL_TIME_KEY,
   LLAMA_CPP_PLATFORM_KEY,
@@ -178,6 +179,9 @@ function startInstall(stepper: InstallationStepper) {
                 const assetUrl = chosenRelease
                   ? findAssetUrlForPlatform(chosenRelease.assets, selectedPlatformOption.key)
                   : undefined;
+                const cudartAssetUrl = chosenRelease
+                  ? findCudartAssetUrlForPlatform(chosenRelease.assets, selectedPlatformOption.key)
+                  : undefined;
 
                 if (!assetUrl) {
                   stepper.showFinalStep(
@@ -201,17 +205,40 @@ function startInstall(stepper: InstallationStepper) {
                           stepper.ipc
                             .invoke('copy_llama_cpp_files', extractedDir, installDir)
                             .then(() => {
-                              stepper.setInstalled(installDir);
-                              const now = new Date().toLocaleString();
-                              stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
-                              stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
-                              stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
+                              const finalizeInstall = () => {
+                                stepper.setInstalled(installDir);
+                                const now = new Date().toLocaleString();
+                                stepper.storage.set(LLAMA_CPP_INSTALL_TIME_KEY, now);
+                                stepper.storage.set(LLAMA_CPP_INSTALL_DIR_KEY, installDir);
+                                stepper.storage.set(LLAMA_CPP_PLATFORM_KEY, selectedPlatformOption.key);
 
-                              stepper.showFinalStep(
-                                'success',
-                                'llama.cpp Ready!',
-                                `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
-                              );
+                                stepper.showFinalStep(
+                                  'success',
+                                  'llama.cpp Ready!',
+                                  `Installed llama.cpp version ${selectedVersionTag} successfully to ${installDir}.`,
+                                );
+                              };
+
+                              if (cudartAssetUrl) {
+                                stepper.progressBar(true, 'Downloading CUDA runtime components...');
+                                stepper
+                                  .downloadFileFromUrl(cudartAssetUrl)
+                                  .then(cudartFile => {
+                                    stepper.progressBar(true, 'Extracting CUDA runtime components...');
+                                    stepper.utils
+                                      .decompressFile(cudartFile)
+                                      .then(cudartExtracted => {
+                                        stepper.ipc
+                                          .invoke('copy_llama_cpp_files', cudartExtracted, installDir)
+                                          .then(() => finalizeInstall())
+                                          .catch(() => finalizeInstall());
+                                      })
+                                      .catch(() => finalizeInstall());
+                                  })
+                                  .catch(() => finalizeInstall());
+                              } else {
+                                finalizeInstall();
+                              }
                             })
                             .catch(err => {
                               stepper.showFinalStep(
@@ -276,6 +303,7 @@ function startUpdate(stepper: InstallationStepper, dir?: string) {
           }
 
           const assetUrl = findAssetUrlForPlatform(latestRelease.assets, activePlatformKey);
+          const cudartAssetUrl = findCudartAssetUrlForPlatform(latestRelease.assets, activePlatformKey);
           if (!assetUrl) {
             stepper.showFinalStep('error', 'Update Failed', 'Could not locate matching release asset for update.');
             return;
@@ -294,15 +322,37 @@ function startUpdate(stepper: InstallationStepper, dir?: string) {
                     stepper.ipc
                       .invoke('copy_llama_cpp_files', extractedDir, dir)
                       .then(() => {
-                        stepper.setUpdated();
-                        const now = new Date().toLocaleString();
-                        stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
+                        const finalizeUpdate = () => {
+                          stepper.setUpdated();
+                          const now = new Date().toLocaleString();
+                          stepper.storage.set(LLAMA_CPP_UPDATE_TIME_KEY, now);
 
-                        stepper.showFinalStep(
-                          'success',
-                          'llama.cpp Updated!',
-                          `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`,
-                        );
+                          stepper.showFinalStep(
+                            'success',
+                            'llama.cpp Updated!',
+                            `Successfully updated llama.cpp to version ${latestRelease.tag_name}.`,
+                          );
+                        };
+
+                        if (cudartAssetUrl) {
+                          stepper.progressBar(true, 'Updating CUDA runtime components...');
+                          stepper
+                            .downloadFileFromUrl(cudartAssetUrl)
+                            .then(cudartFile => {
+                              stepper.utils
+                                .decompressFile(cudartFile)
+                                .then(cudartExtracted => {
+                                  stepper.ipc
+                                    .invoke('copy_llama_cpp_files', cudartExtracted, dir)
+                                    .then(() => finalizeUpdate())
+                                    .catch(() => finalizeUpdate());
+                                })
+                                .catch(() => finalizeUpdate());
+                            })
+                            .catch(() => finalizeUpdate());
+                        } else {
+                          finalizeUpdate();
+                        }
                       })
                       .catch(err => {
                         stepper.showFinalStep(
