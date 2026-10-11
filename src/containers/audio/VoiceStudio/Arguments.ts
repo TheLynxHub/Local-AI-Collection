@@ -10,8 +10,10 @@ const voiceStudioArguments: ArgumentsData = [
           {
             name: 'PORT',
             description: 'Server listening port (default: 3900)',
-            type: 'Input',
-            defaultValue: '3900',
+            type: 'Number',
+            defaultValue: 3900,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: 'OMNIVOICE_DATA_DIR',
@@ -27,6 +29,34 @@ const voiceStudioArguments: ArgumentsData = [
             name: 'OMNIVOICE_PUBLIC_API_BASE',
             description: 'Public API base URL when behind a reverse proxy',
             type: 'Input',
+          },
+          {
+            name: 'OMNIVOICE_ALLOWED_ORIGINS',
+            description: 'Comma-separated allowed web origins for cross-origin requests',
+            type: 'Input',
+          },
+          {
+            name: 'OMNIVOICE_ALLOWED_HOSTS',
+            description: 'Comma-separated allowed HTTP Host headers when behind reverse proxies',
+            type: 'Input',
+          },
+          {
+            name: 'OMNIVOICE_ALLOW_PRIVATE_URL_IMPORTS',
+            description: 'Allow importing media files from private or local network IP addresses',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'OMNIVOICE_MCP_DISABLE',
+            description: 'Disable embedded Model Context Protocol (MCP) server at /mcp',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: 'OMNIVOICE_JSON_LOGS',
+            description: 'Enable single-line JSON log formatting for log shippers',
+            type: 'CheckBox',
+            defaultValue: false,
           },
           {
             name: 'OMNIVOICE_TRUSTED_NETWORKS',
@@ -87,8 +117,16 @@ const voiceStudioArguments: ArgumentsData = [
           {
             name: 'UV_HTTP_TIMEOUT',
             description: 'HTTP timeout in seconds for uv package downloads (default: 120)',
-            type: 'Input',
-            defaultValue: '120',
+            type: 'Number',
+            defaultValue: 120,
+            numberMin: 1,
+          },
+          {
+            name: 'HF_HUB_DOWNLOAD_TIMEOUT',
+            description: 'Per-read timeout in seconds for HuggingFace model chunk downloads (default: 30)',
+            type: 'Number',
+            defaultValue: 30,
+            numberMin: 5,
           },
         ],
       },
@@ -109,8 +147,10 @@ const voiceStudioArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Port number to listen on',
-            type: 'Input',
-            defaultValue: '3900',
+            type: 'Number',
+            defaultValue: 3900,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--diagnose',
