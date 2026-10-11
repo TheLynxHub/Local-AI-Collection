@@ -10,8 +10,10 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--PORT',
             description: 'The HTTP port Flowise runs on',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 3000,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--APP_URL',
@@ -59,8 +61,9 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--NUMBER_OF_PROXIES',
             description: 'Rate Limit Proxy count',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 1,
+            numberMin: 0,
           },
         ],
       },
@@ -88,8 +91,9 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--LOG_JSON_SPACES',
             description: 'Spaces to beautify JSON logs',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 2,
+            numberMin: 0,
           },
           {
             name: '--LOG_SANITIZE_BODY_FIELDS',
@@ -177,7 +181,9 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--DATABASE_PORT',
             description: 'Database port (When DATABASE_TYPE is not sqlite)',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--DATABASE_USER',
@@ -320,14 +326,16 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--JWT_TOKEN_EXPIRY_IN_MINUTES',
             description: 'JWT access token expiry time in minutes',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 360,
+            numberMin: 1,
           },
           {
             name: '--JWT_REFRESH_TOKEN_EXPIRY_IN_MINUTES',
             description: 'JWT refresh token expiry time in minutes',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 43200,
+            numberMin: 1,
           },
           {
             name: '--EXPIRE_AUTH_TOKENS_ON_RESTART',
@@ -338,20 +346,98 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--INVITE_TOKEN_EXPIRY_IN_HOURS',
             description: 'Workspace invite token expiry time in hours',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 24,
+            numberMin: 1,
           },
           {
             name: '--PASSWORD_RESET_TOKEN_EXPIRY_IN_MINS',
             description: 'Password reset token expiry time in minutes',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 15,
+            numberMin: 1,
           },
           {
             name: '--PASSWORD_SALT_HASH_ROUNDS',
             description: 'Salt hash rounds for password hashing',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 10,
+            numberMin: 1,
+          },
+          {
+            name: '--JWT_AUTH_TOKEN_SECRET',
+            description: 'Secret key used to sign JWT access tokens (min 32 bytes)',
+            type: 'Input',
+          },
+          {
+            name: '--JWT_REFRESH_TOKEN_SECRET',
+            description: 'Secret key used to sign JWT refresh tokens (min 32 bytes)',
+            type: 'Input',
+          },
+          {
+            name: '--EXPRESS_SESSION_SECRET',
+            description: 'Secret key used for Express session cookies',
+            type: 'Input',
+          },
+          {
+            name: '--SECURE_COOKIES',
+            description: 'Use secure cookies over HTTPS',
+            type: 'CheckBox',
+          },
+          {
+            name: '--TOKEN_HASH_SECRET',
+            description: 'Secret key used for hashing tokens',
+            type: 'Input',
+          },
+          {
+            name: '--WORKSPACE_INVITE_TEMPLATE_PATH',
+            description: 'Path to custom workspace invite template (.hbs file)',
+            type: 'File',
+          },
+        ],
+      },
+      {
+        section: 'SMTP Configuration',
+        items: [
+          {
+            name: '--SMTP_HOST',
+            description: 'SMTP server hostname',
+            type: 'Input',
+          },
+          {
+            name: '--SMTP_PORT',
+            description: 'SMTP server port',
+            type: 'Number',
+            defaultValue: 465,
+            numberMin: 1,
+            numberMax: 65535,
+          },
+          {
+            name: '--SMTP_USER',
+            description: 'SMTP username',
+            type: 'Input',
+          },
+          {
+            name: '--SMTP_PASSWORD',
+            description: 'SMTP password',
+            type: 'Input',
+          },
+          {
+            name: '--SMTP_SECURE',
+            description: 'Use TLS/SSL for SMTP connection',
+            type: 'CheckBox',
+            defaultValue: true,
+          },
+          {
+            name: '--ALLOW_UNAUTHORIZED_CERTS',
+            description: 'Allow self-signed or unauthorized certificates for SMTP',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
+            name: '--SENDER_EMAIL',
+            description: 'Sender email address for workspace invites and notifications',
+            type: 'Input',
           },
         ],
       },
@@ -429,7 +515,7 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--GOOGLE_CLOUD_STORAGE_CREDENTIAL',
             description: 'The credential key file path when `STORAGE_TYPE` is `gcs`',
-            type: 'Input',
+            type: 'File',
           },
           {
             name: '--GOOGLE_CLOUD_STORAGE_BUCKET_NAME',
@@ -499,8 +585,10 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--REDIS_PORT',
             description: 'Redis server port',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 6379,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--REDIS_URL',
@@ -523,10 +611,53 @@ const flowiseArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {
+            name: '--REDIS_CERT',
+            description: 'Path to Redis TLS certificate file',
+            type: 'File',
+          },
+          {
+            name: '--REDIS_KEY',
+            description: 'Path to Redis TLS private key file',
+            type: 'File',
+          },
+          {
+            name: '--REDIS_CA',
+            description: 'Path to Redis TLS CA certificate file',
+            type: 'File',
+          },
+          {
+            name: '--REDIS_KEEP_ALIVE',
+            description: 'Redis socket keep-alive interval in milliseconds',
+            type: 'Number',
+            numberMin: 0,
+          },
+          {
+            name: '--QUEUE_REDIS_EVENT_STREAM_MAX_LEN',
+            description: 'Maximum length of Redis event stream',
+            type: 'Number',
+            defaultValue: 100000,
+            numberMin: 1,
+          },
+          {
             name: '--WORKER_CONCURRENCY',
             description: 'Worker concurrency for background queue tasks',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 100000,
+            numberMin: 1,
+          },
+          {
+            name: '--REMOVE_ON_AGE',
+            description: 'Time in seconds after which completed jobs are removed from queue',
+            type: 'Number',
+            defaultValue: 86400,
+            numberMin: 0,
+          },
+          {
+            name: '--REMOVE_ON_COUNT',
+            description: 'Maximum number of completed jobs to keep in queue',
+            type: 'Number',
+            defaultValue: 10000,
+            numberMin: 0,
           },
           {
             name: '--ENABLE_BULLMQ_DASHBOARD',
@@ -596,14 +727,16 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--CUSTOM_MCP_TOOLS_MAX_BYTES',
             description: 'Maximum payload size in bytes for Custom MCP tools',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 524288,
+            numberMin: 1,
           },
           {
             name: '--CUSTOM_MCP_AUTHORIZE_TIMEOUT_MS',
             description: 'Authorization timeout in milliseconds for Custom MCP tools',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 15000,
+            numberMin: 1,
           },
           {
             name: '--CUSTOM_MCP_ALLOWED_ENV_VARS',
@@ -613,6 +746,25 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--CUSTOM_MCP_ALLOWED_COMMANDS',
             description: 'Comma-separated list of commands a Custom MCP stdio config may run',
+            type: 'Input',
+          },
+          {
+            name: '--CUSTOM_MCP_TOOL_DESCRIPTION_MAX_LENGTH',
+            description: 'Maximum characters for Custom MCP tool descriptions passed to LLM',
+            type: 'Number',
+            defaultValue: 1024,
+            numberMin: 1,
+          },
+          {
+            name: '--CUSTOM_MCP_TOOL_NAME_MAX_LENGTH',
+            description: 'Maximum characters for Custom MCP tool names',
+            type: 'Number',
+            defaultValue: 128,
+            numberMin: 1,
+          },
+          {
+            name: '--CUSTOM_MCP_ALLOWED_ABSOLUTE_SCRIPT_PATHS',
+            description: 'Comma-separated list of absolute file paths that Custom MCP stdio configs may execute',
             type: 'Input',
           },
           {
@@ -711,7 +863,7 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--MODEL_LIST_CONFIG_JSON',
             description: 'File path to load list of models from your local config file',
-            type: 'Input',
+            type: 'File',
             defaultValue: '/your_model_list_config_file_path',
           },
         ],
@@ -727,18 +879,95 @@ const flowiseArguments: ArgumentsData = [
           {
             name: '--PUPPETEER_EXECUTABLE_FILE_PATH',
             description: 'Executable path for Chrome/Chromium used by Puppeteer document loaders',
-            type: 'Input',
+            type: 'File',
           },
           {
             name: '--PLAYWRIGHT_EXECUTABLE_FILE_PATH',
             description: 'Executable path for Chrome/Chromium used by Playwright document loaders',
-            type: 'Input',
+            type: 'File',
           },
           {
             name: '--MIN_SCHEDULE_INTERVAL_SECONDS',
             description: 'Minimum allowed interval in seconds for scheduled tasks',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 60,
+            numberMin: 1,
+          },
+        ],
+      },
+      {
+        section: 'LangSmith Tracing',
+        items: [
+          {
+            name: '--LANGCHAIN_TRACING_V2',
+            description: 'Enable LangSmith tracing v2',
+            type: 'CheckBox',
+          },
+          {
+            name: '--LANGCHAIN_ENDPOINT',
+            description: 'LangSmith API endpoint URL',
+            type: 'Input',
+            defaultValue: 'https://api.smith.langchain.com',
+          },
+          {
+            name: '--LANGCHAIN_API_KEY',
+            description: 'LangSmith API key',
+            type: 'Input',
+          },
+          {
+            name: '--LANGCHAIN_PROJECT',
+            description: 'LangSmith project name for traces',
+            type: 'Input',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Enterprise',
+    sections: [
+      {
+        section: 'License & Enterprise Settings',
+        items: [
+          {
+            name: '--LICENSE_URL',
+            description: 'Enterprise license server URL',
+            type: 'Input',
+          },
+          {
+            name: '--FLOWISE_EE_LICENSE_KEY',
+            description: 'Flowise Enterprise Edition license key',
+            type: 'Input',
+          },
+          {
+            name: '--OFFLINE',
+            description: 'Run Flowise Enterprise in offline mode',
+            type: 'CheckBox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: 'Proxy',
+    sections: [
+      {
+        section: 'Global Agent Proxy',
+        items: [
+          {
+            name: '--GLOBAL_AGENT_HTTP_PROXY',
+            description: 'Corporate HTTP proxy URL',
+            type: 'Input',
+          },
+          {
+            name: '--GLOBAL_AGENT_HTTPS_PROXY',
+            description: 'Corporate HTTPS proxy URL',
+            type: 'Input',
+          },
+          {
+            name: '--GLOBAL_AGENT_NO_PROXY',
+            description: 'Comma-separated list of hostnames or domains to bypass proxy',
+            type: 'Input',
           },
         ],
       },
