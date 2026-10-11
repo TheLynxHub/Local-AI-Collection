@@ -47,8 +47,9 @@ const comfyuizludaArguments: ArgumentsData = [
       {
         name: 'ZLUDA_COMGR_LOG_LEVEL',
         description: 'Zluda log level',
-        type: 'Input',
-        defaultValue: '1',
+        type: 'Number',
+        defaultValue: 1,
+        numberMin: 0,
       },
       {
         name: 'PYTORCH_TUNABLEOP_ENABLED',
@@ -86,8 +87,10 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Set the listen port.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 8188,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--tls-keyfile',
@@ -110,8 +113,9 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--max-upload-size',
             description: 'Set the maximum upload size in MB.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 100,
+            numberMin: 1,
           },
           {
             name: '--oneapi-device-selector',
@@ -212,7 +216,8 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--default-device',
             description: 'Set the id of the default device, all other devices will stay visible.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: '--cuda-malloc',
@@ -361,8 +366,10 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--preview-size',
             description: 'Sets the maximum preview size for sampler nodes.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 512,
+            numberMin: 64,
+            numberStep: 64,
           },
           {
             name: '--cache-classic',
@@ -372,8 +379,9 @@ const comfyuizludaArguments: ArgumentsData = [
           {
             name: '--cache-lru',
             description: 'Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: '--cache-none',
@@ -487,8 +495,9 @@ const comfyuizludaArguments: ArgumentsData = [
             name: '--vram-headroom',
             description:
               'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: '--fast-disk',
@@ -506,13 +515,16 @@ const comfyuizludaArguments: ArgumentsData = [
             name: '--reserve-vram',
             description:
               'Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: '--async-offload',
             description:
               'Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.',
-            type: 'Input',
+            type: 'Number',
+            defaultValue: 2,
+            numberMin: 1,
           },
           {
             name: '--disable-async-offload',
