@@ -42,8 +42,10 @@ const mcMonkeyArguments: ArgumentsData = [
       {
         name: '--port',
         description: "Can be used to override the 'Network.Port' server setting.",
-        type: 'Input',
-        defaultValue: '7801',
+        type: 'Number',
+        defaultValue: 7801,
+        numberMin: 1,
+        numberMax: 65535,
       },
       {
         name: '--asp_loglevel',
@@ -119,7 +121,8 @@ const mcMonkeyArguments: ArgumentsData = [
         description:
           'If specified, give a number of minutes within which a remote API server must send a ' +
           '`AdminTakeControl` API request, or presume the launch is bad. This is useful for auto-managed instances.',
-        type: 'Input',
+        type: 'Number',
+        numberMin: 1,
       },
       {
         name: '--no_persist',
