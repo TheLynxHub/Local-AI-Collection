@@ -16,7 +16,14 @@ const comfyuiArguments: ArgumentsData = [
             type: 'Input',
             defaultValue: '127.0.0.1',
           },
-          {name: '--port', description: 'Set the listen port.', type: 'Input', defaultValue: 8188},
+          {
+            name: '--port',
+            description: 'Set the listen port.',
+            type: 'Number',
+            defaultValue: 8188,
+            numberMin: 1,
+            numberMax: 65535,
+          },
           {
             name: '--tls-keyfile',
             description:
@@ -38,8 +45,9 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--max-upload-size',
             description: 'Set the maximum upload size in MB.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 100,
+            numberMin: 1,
           },
           {
             name: '--oneapi-device-selector',
@@ -138,7 +146,8 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--default-device',
             description: 'Set the id of the default device, all other devices will stay visible.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: '--cuda-malloc',
@@ -196,7 +205,7 @@ const comfyuiArguments: ArgumentsData = [
             description: 'Force channels last format when inferencing the models.',
             type: 'CheckBox',
           },
-          {name: '--directml', description: 'Use torch-directml.', type: 'Input'},
+          {name: '--directml', description: 'Use torch-directml.', type: 'Number', numberMin: 0},
           {
             name: '--enable-triton-backend',
             description:
@@ -219,15 +228,18 @@ const comfyuiArguments: ArgumentsData = [
           {
             name: '--preview-size',
             description: 'Sets the maximum preview size for sampler nodes.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 512,
+            numberMin: 64,
+            numberStep: 64,
           },
           {name: '--cache-classic', description: 'Use the old style (aggressive) caching.', type: 'CheckBox'},
           {
             name: '--cache-lru',
             description: 'Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: '--cache-none',
@@ -263,6 +275,7 @@ const comfyuiArguments: ArgumentsData = [
           },
           {name: '--use-sage-attention', description: 'Use sage attention.', type: 'CheckBox'},
           {name: '--use-flash-attention', description: 'Use FlashAttention.', type: 'CheckBox'},
+          {name: '--use-ck-attention', description: 'Use Comfy Kitchen attention.', type: 'CheckBox'},
           {name: '--disable-xformers', description: 'Disable xformers.', type: 'CheckBox'},
           {
             name: '--force-upcast-attention',
@@ -345,6 +358,22 @@ const comfyuiArguments: ArgumentsData = [
             description: 'Specify custom node folders to load even when --disable-all-custom-nodes is enabled.',
             type: 'Input',
           },
+          {
+            name: '--disabled-nodes-config',
+            description: 'Path to a YAML file listing node IDs to disable.',
+            type: 'File',
+          },
+          {
+            name: '--disable-partner-nodes',
+            description: 'Disable loading partner nodes (the paid API nodes). The frontend keeps its internet access.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--offline',
+            description:
+              'Prevent the frontend from communicating with the internet by setting a restrictive Content-Security-Policy header. Also disables partner nodes.',
+            type: 'CheckBox',
+          },
           {name: '--multi-user', description: 'Enables per-user storage.', type: 'CheckBox'},
           {
             name: '--verbose',
@@ -359,8 +388,13 @@ const comfyuiArguments: ArgumentsData = [
             type: 'CheckBox',
           },
           {
+            name: '--disable-assets',
+            description: 'Disable the assets system (API routes, database synchronization, and background scanning).',
+            type: 'CheckBox',
+          },
+          {
             name: '--enable-assets',
-            description: 'Enable the assets system (API routes, database synchronization, and background scanning).',
+            description: 'Deprecated: the assets system is on by default. Use --disable-assets to turn it off.',
             type: 'CheckBox',
           },
           {
@@ -409,20 +443,29 @@ const comfyuiArguments: ArgumentsData = [
             name: '--reserve-vram',
             description:
               'Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: '--vram-headroom',
             description:
               'Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
+          },
+          {
+            name: '--disable-nvml-pressure',
+            description: 'Use CUDA instead of NVML for DynamicVRAM memory pressure.',
+            type: 'CheckBox',
           },
           {
             name: '--async-offload',
             description:
               'Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.',
-            type: 'Input',
+            type: 'Number',
+            defaultValue: 2,
+            numberMin: 1,
           },
           {name: '--disable-async-offload', description: 'Disable async weight offloading.', type: 'CheckBox'},
           {
@@ -439,6 +482,26 @@ const comfyuiArguments: ArgumentsData = [
             name: '--fast-disk',
             description:
               'Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-fast-disk',
+            description: 'Disable disk-backed dynamic loading and offload over unpinned RAM. Overrides --fast-disk.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-cuda-graphs',
+            description: 'Disable CUDA graphs.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--disable-comfy-compiler',
+            description: 'Disable the Comfy model compiler, including its CUDA graph subfeature.',
+            type: 'CheckBox',
+          },
+          {
+            name: '--assert-graph-breaks',
+            description: 'Fail on Comfy model compiler graph breaks.',
             type: 'CheckBox',
           },
           {
@@ -530,7 +593,8 @@ const comfyuiArguments: ArgumentsData = [
         name: 'MIOPEN_COMPILE_PARALLEL_LEVEL',
         description:
           'Controls parallel compilation thread count for Find() calls. Default: 1 when using COMGR, otherwise half the number of available hardware threads. Set to 1 to disable multi-threaded compilation.',
-        type: 'Input',
+        type: 'Number',
+        numberMin: 1,
       },
       {
         name: 'MIOPEN_DEBUG_CONVOLUTION_DETERMINISTIC',
