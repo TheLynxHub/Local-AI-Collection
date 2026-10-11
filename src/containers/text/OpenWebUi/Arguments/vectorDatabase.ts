@@ -52,8 +52,10 @@ const vectorDatabase: DataSection = {
         {
           name: 'CHROMA_HTTP_PORT',
           description: 'Specifies the port of a remote ChromaDB Server.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 8000,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'CHROMA_HTTP_HEADERS',
@@ -363,15 +365,18 @@ const vectorDatabase: DataSection = {
         {
           name: 'QDRANT_GRPC_PORT',
           description: 'Sets the gRPC port number for Qdrant.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 6334,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'QDRANT_TIMEOUT',
           description:
             'Sets the timeout in seconds for all requests made to the Qdrant server, helping to prevent long-running queries from stalling the application.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 5,
+          numberMin: 0,
         },
         {
           name: 'QDRANT_HNSW_M',
@@ -449,14 +454,18 @@ const vectorDatabase: DataSection = {
         {
           name: 'WEAVIATE_HTTP_PORT',
           description: 'Specifies the HTTP port for connecting to the Weaviate server.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 8080,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'WEAVIATE_GRPC_PORT',
           description: 'Specifies the gRPC port for connecting to the Weaviate server.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 50051,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'WEAVIATE_API_KEY',

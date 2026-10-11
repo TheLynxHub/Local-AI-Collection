@@ -279,8 +279,9 @@ const appBackend: DataSection = {
           name: 'THREAD_POOL_SIZE',
           description:
             'Sets the thread pool size for FastAPI/AnyIO blocking calls. By default (when set to `0`) FastAPI/AnyIO use `40` threads. In case of large instances and many concurrent users, it may be needed to increase `THREAD_POOL_SIZE` to prevent blocking.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 0,
+          numberMin: 0,
         },
         {
           name: 'ENABLE_CUSTOM_MODEL_FALLBACK',
@@ -397,8 +398,10 @@ const appBackend: DataSection = {
         {
           name: 'PORT',
           description: 'Sets the port to run Open WebUI from.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 8080,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'ENABLE_REALTIME_CHAT_SAVE',

@@ -25,8 +25,10 @@ const idap: DataItem = {
     {
       name: 'LDAP_SERVER_PORT',
       description: 'Sets the port number of the LDAP server.',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 389,
+      numberMin: 1,
+      numberMax: 65535,
     },
     {
       name: 'LDAP_ATTRIBUTE_FOR_MAIL',

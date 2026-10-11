@@ -337,7 +337,9 @@ const miscEnv: DataSection = {
         {
           name: 'DATABASE_PORT',
           description: 'Specifies the port number on which the database server is listening.',
-          type: 'Input',
+          type: 'Number',
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'DATABASE_NAME',
@@ -376,8 +378,10 @@ const miscEnv: DataSection = {
         {
           name: 'REDIS_SENTINEL_PORT',
           description: 'Sentinel port for app state Redis.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 26379,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'REDIS_CLUSTER',
@@ -397,8 +401,9 @@ const miscEnv: DataSection = {
           name: 'REDIS_SOCKET_CONNECT_TIMEOUT',
           description:
             'Sets the timeout in seconds for establishing a connection to Redis. If the connection cannot be established within this time, the operation will fail.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 5,
+          numberMin: 0,
         },
         {
           name: 'ENABLE_STAR_SESSIONS_MIDDLEWARE',
@@ -435,8 +440,10 @@ const miscEnv: DataSection = {
         {
           name: 'WEBSOCKET_SENTINEL_PORT',
           description: 'Sentinel port for websocket Redis.',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 26379,
+          numberMin: 1,
+          numberMax: 65535,
         },
         {
           name: 'WEBSOCKET_REDIS_CLUSTER',
