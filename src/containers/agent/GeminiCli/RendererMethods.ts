@@ -13,7 +13,6 @@ import {
 import {ArgumentValue} from '../../../types';
 import {DescriptionManager, isWin} from '../../../utils/crossUtils';
 import {getArgumentType, isMultiFilePreviewSupported, isValidArg, removeEscapes} from '../../../utils/rendererUtils';
-import openArguments from '../../text/OpenWebUi/Arguments';
 import geminiCliArguments from './Arguments';
 
 const INSTALL_TIME_KEY = 'install-time-geminiCli';
@@ -43,13 +42,14 @@ function checkLinuxArgLine(line: string): 'set' | 'export' | 'var' | undefined {
  * @param argName The name of the argument to look up.
  * @returns An object with the category and type, or undefined if not found.
  */
-function getArgumentInfo(argName: string): {category: string; type: string} | undefined {
+function getArgumentInfo(argName: string): {category: string; type: string; name: string} | undefined {
   for (const data of geminiCliArguments) {
     if ('sections' in data) {
       for (const section of data.sections) {
         for (const item of section.items) {
-          if (item.name.split(' ')[0] === argName) {
-            return {category: data.category, type: item.type};
+          const flag = item.name.split(' ')[0];
+          if (flag === argName || item.name === argName) {
+            return {category: data.category, type: item.type, name: item.name};
           }
         }
       }
@@ -67,7 +67,7 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
 
   // 1. Categorize arguments based on their definition in Arguments.ts
   args.forEach(arg => {
-    const info = getArgumentInfo(arg.name);
+    const info = getArgumentInfo(arg.name.split(' ')[0]) || getArgumentInfo(arg.name);
     if (info) {
       switch (info.category) {
         case 'Environment Variables':
@@ -96,13 +96,21 @@ export function parseArgsToFiles(args: ChosenArgument[]): {scriptData: string; s
 
   // 3. Build the Command Line execution preview
   cliArgs.forEach(arg => {
-    const info = getArgumentInfo(arg.name);
-    if (info?.type === 'CheckBox') {
-      if (arg.value === 'true') {
-        scriptString += ` ${arg.name}`;
+    const info = getArgumentInfo(arg.name.split(' ')[0]) || getArgumentInfo(arg.name);
+    if (!info) return;
+
+    const flagName = info.name.split(' ')[0];
+    if (info.type === 'CheckBox') {
+      if (
+        arg.value !== 'false' &&
+        (arg.value as any) !== false &&
+        (arg.value as any) !== 0 &&
+        String(arg.value) !== '0'
+      ) {
+        scriptString += ` ${flagName}`;
       }
-    } else {
-      scriptString += ` ${arg.name} "${arg.value}"`;
+    } else if (arg.value !== undefined && arg.value !== null && String(arg.value).trim() !== '') {
+      scriptString += ` ${flagName} "${arg.value}"`;
     }
   });
 
@@ -233,8 +241,8 @@ export function parseStringToArgs(args: string): ChosenArgument[] {
       });
 
       result.forEach((value: ArgType): void => {
-        if (isValidArg(value.name, openArguments)) {
-          if (getArgumentType(value.name, openArguments) === 'CheckBox') {
+        if (isValidArg(value.name, geminiCliArguments)) {
+          if (getArgumentType(value.name, geminiCliArguments) === 'CheckBox') {
             argResult.push({name: value.name, value: ''});
           } else {
             argResult.push({name: value.name, value: value.value});
@@ -248,14 +256,14 @@ export function parseStringToArgs(args: string): ChosenArgument[] {
       let [name, value] = line.replace(`${lineType} `, '').split('=');
       name = removeEscapes(name.trim());
       value = removeEscapes(value.trim());
-      if (isValidArg(name, openArguments)) {
+      if (isValidArg(name, geminiCliArguments)) {
         argResult.push({name, value});
       }
     } else if (checkLinuxArgLine(line) === 'var') {
       let [name, value] = line.split('=');
       name = removeEscapes(name.trim());
       value = removeEscapes(value.trim());
-      if (isValidArg(name, openArguments)) {
+      if (isValidArg(name, geminiCliArguments)) {
         argResult.push({name, value});
       }
     }

@@ -31,6 +31,12 @@ const geminiCliArguments: ArgumentsData = [
             type: 'Input',
           },
           {
+            name: 'GOOGLE_GENAI_USE_VERTEXAI',
+            description: 'Set to true to route model requests through Google Cloud Vertex AI.',
+            type: 'CheckBox',
+            defaultValue: false,
+          },
+          {
             name: 'GOOGLE_CLOUD_PROJECT',
             description: 'Your Google Cloud Project ID, required for using Code Assist or Vertex AI.',
             type: 'Input',
@@ -45,6 +51,16 @@ const geminiCliArguments: ArgumentsData = [
             description:
               'Your Google Cloud Project Location (e.g., us-central1), required for using Vertex AI in non-express mode.',
             type: 'Input',
+          },
+          {
+            name: 'GEMINI_CLI_SYSTEM_DEFAULTS_PATH',
+            description: 'Custom path to system-wide default settings JSON file.',
+            type: 'File',
+          },
+          {
+            name: 'GEMINI_CLI_SYSTEM_SETTINGS_PATH',
+            description: 'Custom path to system-wide override settings JSON file.',
+            type: 'File',
           },
         ],
       },
@@ -61,6 +77,12 @@ const geminiCliArguments: ArgumentsData = [
             description:
               'Alternative to the `sandbox` setting. Accepts true, false, docker, podman, or a custom command string.',
             type: 'Input',
+          },
+          {
+            name: 'BUILD_SANDBOX',
+            description: 'Automatically build custom sandbox image from .gemini/sandbox.Dockerfile.',
+            type: 'CheckBox',
+            defaultValue: false,
           },
           {
             name: 'SEATBELT_PROFILE',
@@ -89,6 +111,45 @@ const geminiCliArguments: ArgumentsData = [
             description: 'Your Google Cloud Project ID for Telemetry in Google Cloud.',
             type: 'Input',
           },
+          {
+            name: 'GEMINI_TELEMETRY_ENABLED',
+            description: 'Set to true or 1 to enable telemetry collection.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_TARGET',
+            description: 'Destination for collected telemetry.',
+            type: 'DropDown',
+            values: ['local', 'gcp'],
+            defaultValue: 'local',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_OTLP_ENDPOINT',
+            description: 'Endpoint for the OTLP Exporter.',
+            type: 'Input',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_OTLP_PROTOCOL',
+            description: 'Protocol for the OTLP Exporter.',
+            type: 'DropDown',
+            values: ['grpc', 'http'],
+            defaultValue: 'grpc',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_LOG_PROMPTS',
+            description: 'Include the content of user prompts in telemetry logs.',
+            type: 'CheckBox',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_OUTFILE',
+            description: 'File path to write telemetry to when target is local.',
+            type: 'File',
+          },
+          {
+            name: 'GEMINI_TELEMETRY_USE_COLLECTOR',
+            description: 'Enable or disable using an external OTLP collector.',
+            type: 'CheckBox',
+          },
         ],
       },
       {
@@ -106,8 +167,8 @@ const geminiCliArguments: ArgumentsData = [
           },
           {
             name: 'NO_COLOR',
-            description: 'Set to any value to disable all color output in the CLI.',
-            type: 'Input',
+            description: 'Disable all color output in the CLI.',
+            type: 'CheckBox',
           },
         ],
       },
@@ -133,6 +194,13 @@ const geminiCliArguments: ArgumentsData = [
             name: '--prompt-interactive <your_prompt>',
             description: 'Starts an interactive session with the provided prompt as the initial input.',
             type: 'Input',
+          },
+          {
+            name: '--output-format <format>',
+            description: 'Specifies the format of the CLI output for non-interactive mode.',
+            type: 'DropDown',
+            values: ['text', 'json'],
+            defaultValue: 'text',
           },
           {
             name: '--all-files',
@@ -188,7 +256,9 @@ const geminiCliArguments: ArgumentsData = [
           {
             name: '--telemetry-target',
             description: 'Sets the telemetry target.',
-            type: 'Input',
+            type: 'DropDown',
+            values: ['local', 'gcp'],
+            defaultValue: 'local',
           },
           {
             name: '--telemetry-otlp-endpoint',
@@ -301,6 +371,18 @@ const geminiCliArguments: ArgumentsData = [
         ],
       },
       {
+        section: 'output',
+        items: [
+          {
+            name: 'output.format',
+            description: 'The format of the CLI output (text or json).',
+            type: 'DropDown',
+            values: ['text', 'json'],
+            defaultValue: 'text',
+          },
+        ],
+      },
+      {
         section: 'ui',
         items: [
           {
@@ -363,11 +445,17 @@ const geminiCliArguments: ArgumentsData = [
             name: 'ui.showCitations',
             description: 'Show citations for generated text in the chat.',
             type: 'CheckBox',
+            defaultValue: true,
           },
           {
             name: 'ui.accessibility.disableLoadingPhrases',
             description: 'Disable loading phrases for accessibility.',
             type: 'CheckBox',
+          },
+          {
+            name: 'ui.customWittyPhrases',
+            description: 'A list of custom phrases to display during loading states.',
+            type: 'Input',
           },
         ],
       },
@@ -393,6 +481,7 @@ const geminiCliArguments: ArgumentsData = [
             name: 'privacy.usageStatisticsEnabled',
             description: 'Enable collection of usage statistics.',
             type: 'CheckBox',
+            defaultValue: true,
           },
         ],
       },
@@ -407,8 +496,9 @@ const geminiCliArguments: ArgumentsData = [
           {
             name: 'model.maxSessionTurns',
             description: 'Maximum number of user/model/tool turns to keep in a session. -1 means unlimited.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
+            numberMin: -1,
           },
           {
             name: 'model.summarizeToolOutput',
@@ -419,8 +509,11 @@ const geminiCliArguments: ArgumentsData = [
             name: 'model.chatCompression.contextPercentageThreshold',
             description:
               "Sets the threshold for chat history compression as a percentage of the model's total token limit.",
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0.7,
+            numberMin: 0,
+            numberMax: 1,
+            numberStep: 0.05,
           },
           {
             name: 'model.skipNextSpeakerCheck',
@@ -445,8 +538,9 @@ const geminiCliArguments: ArgumentsData = [
           {
             name: 'context.discoveryMaxDirs',
             description: 'Maximum number of directories to search for memory.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 200,
+            numberMin: 1,
           },
           {
             name: 'context.includeDirectories',
@@ -463,16 +557,19 @@ const geminiCliArguments: ArgumentsData = [
             name: 'context.fileFiltering.respectGitIgnore',
             description: 'Respect .gitignore files when searching.',
             type: 'CheckBox',
+            defaultValue: true,
           },
           {
             name: 'context.fileFiltering.respectGeminiIgnore',
             description: 'Respect .geminiignore files when searching.',
             type: 'CheckBox',
+            defaultValue: true,
           },
           {
             name: 'context.fileFiltering.enableRecursiveFileSearch',
             description: 'Enable searching recursively for filenames when completing @ prefixes.',
             type: 'CheckBox',
+            defaultValue: true,
           },
         ],
       },
@@ -488,6 +585,12 @@ const geminiCliArguments: ArgumentsData = [
             name: 'tools.usePty',
             description: 'Use node-pty for shell command execution.',
             type: 'CheckBox',
+          },
+          {
+            name: 'tools.shell.enableInteractiveShell',
+            description: 'Use node-pty for an interactive shell experience.',
+            type: 'CheckBox',
+            defaultValue: false,
           },
           {
             name: 'tools.core',
@@ -621,6 +724,12 @@ const geminiCliArguments: ArgumentsData = [
             name: 'telemetry.outfile',
             description: 'The file to write telemetry to when target is local.',
             type: 'File',
+          },
+          {
+            name: 'telemetry.useCollector',
+            description: 'Whether to use an external OTLP collector.',
+            type: 'CheckBox',
+            defaultValue: false,
           },
         ],
       },
