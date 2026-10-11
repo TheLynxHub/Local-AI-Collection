@@ -70,6 +70,26 @@ const vladmandicArguments: ArgumentsData = [
             type: 'Directory',
           },
           {
+            name: '--embeddings-dir',
+            description: 'Base path where all embeddings are stored',
+            type: 'Directory',
+          },
+          {
+            name: '--vae-dir',
+            description: 'Base path where all VAEs are stored',
+            type: 'Directory',
+          },
+          {
+            name: '--lora-dir',
+            description: 'Base path where all LoRAs are stored',
+            type: 'Directory',
+          },
+          {
+            name: '--extensions-dir',
+            description: 'Base path where all extensions are stored',
+            type: 'Directory',
+          },
+          {
             name: '--allowed-paths',
             description: 'Add additional paths to paths allowed for web access',
             type: 'Input',
@@ -97,7 +117,9 @@ const vladmandicArguments: ArgumentsData = [
           {
             name: '--device-id',
             description: 'Select the default CUDA device to use',
-            type: 'Input',
+            type: 'Number',
+            defaultValue: 0,
+            numberMin: 0,
           },
         ],
       },
@@ -177,8 +199,10 @@ const vladmandicArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Launch web server with given server port',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 7860,
+            numberMin: 1,
+            numberMax: 65535,
           },
         ],
       },
@@ -343,8 +367,16 @@ const vladmandicArguments: ArgumentsData = [
           {
             name: '--monitor',
             description: 'Monitor load and log in specific periods',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
+          },
+          {
+            name: '--status',
+            description: 'Run server is-alive status interval in seconds (default: -1)',
+            type: 'Number',
+            defaultValue: -1,
+            numberMin: -1,
           },
           {
             name: '--docs',
