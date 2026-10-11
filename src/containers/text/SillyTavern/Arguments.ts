@@ -24,7 +24,9 @@ const sillyArguments: ArgumentsData = [
         name: '--port',
         description:
           "Sets the port under which SillyTavern will run. If not provided falls back to yaml config 'port'.",
-        type: 'Input',
+        type: 'Number',
+        numberMin: 1,
+        numberMax: 65535,
       },
       {
         name: '--listen',
@@ -53,7 +55,13 @@ const sillyArguments: ArgumentsData = [
         type: 'CheckBox',
       },
       {name: '--browserLaunchHostname', description: 'Sets the browser launch hostname', type: 'Input'},
-      {name: '--browserLaunchPort', description: 'Overrides the port for browser launch', type: 'Input'},
+      {
+        name: '--browserLaunchPort',
+        description: 'Overrides the port for browser launch',
+        type: 'Number',
+        numberMin: 1,
+        numberMax: 65535,
+      },
       {
         name: '--browserLaunchAvoidLocalhost',
         description: "Avoids using 'localhost' for browser launch in auto mode",
@@ -76,7 +84,9 @@ const sillyArguments: ArgumentsData = [
       {
         name: '--heartbeatInterval',
         description: 'Interval in seconds to write a heartbeat file. 0 to disable.',
-        type: 'Input',
+        type: 'Number',
+        defaultValue: 0,
+        numberMin: 0,
       },
     ],
   },
@@ -139,12 +149,20 @@ const sillyArguments: ArgumentsData = [
             type: 'CheckBox',
             defaultValue: false,
           },
-          {name: 'port', description: 'Server listening port', type: 'Input', defaultValue: 8000},
+          {
+            name: 'port',
+            description: 'Server listening port',
+            type: 'Number',
+            defaultValue: 8000,
+            numberMin: 1,
+            numberMax: 65535,
+          },
           {
             name: 'heartbeatInterval',
             description: 'Interval in seconds to write a heartbeat file for Docker healthchecks. Set to 0 to disable',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: 'enableKeepAlive',
@@ -394,7 +412,7 @@ const sillyArguments: ArgumentsData = [
             type: 'CheckBox',
             defaultValue: false,
           },
-          {name: 'sessionTimeout', description: 'User session timeout in seconds', type: 'Input', defaultValue: -1},
+          {name: 'sessionTimeout', description: 'User session timeout in seconds', type: 'Number', defaultValue: -1},
           {
             name: 'perUserBasicAuth',
             description: 'Use account credentials for basic auth',
@@ -438,26 +456,30 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'rateLimiting.accountsLoginMaxAttempts',
             description: 'Maximum account login attempts before temporary lockout (0 to disable)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 5,
+            numberMin: 0,
           },
           {
             name: 'rateLimiting.accountsRecoverMaxAttempts',
             description: 'Maximum account recovery attempts before temporary lockout (0 to disable)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 5,
+            numberMin: 0,
           },
           {
             name: 'rateLimiting.basicAuthMaxAttempts',
             description: 'Maximum basic auth attempts before temporary lockout (0 to disable)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 5,
+            numberMin: 0,
           },
           {
             name: 'rateLimiting.accountsResetMaxAttempts',
             description: 'Maximum account reset attempts before temporary lockout (0 to disable)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 5,
+            numberMin: 0,
           },
         ],
       },
@@ -515,7 +537,7 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'browserLaunch.port',
             description: 'Override the port for browser launch',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
           },
           {
@@ -568,8 +590,9 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'performance.requestCompression.timeout',
             description: 'Timeout for request compression in milliseconds',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 4000,
+            numberMin: 0,
           },
         ],
       },
@@ -599,7 +622,14 @@ const sillyArguments: ArgumentsData = [
             type: 'CheckBox',
             defaultValue: true,
           },
-          {name: 'thumbnails.quality', description: 'JPEG thumbnail quality', type: 'Input', defaultValue: 95},
+          {
+            name: 'thumbnails.quality',
+            description: 'JPEG thumbnail quality',
+            type: 'Number',
+            defaultValue: 95,
+            numberMin: 1,
+            numberMax: 100,
+          },
           {
             name: 'thumbnails.format',
             description: 'Image format for thumbnails',
@@ -651,19 +681,21 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'backups.common.numberOfBackups',
             description: 'Number of backups to keep',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 50,
+            numberMin: 0,
           },
           {
             name: 'backups.chat.throttleInterval',
             description: 'Backup throttle interval (ms)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 10000,
+            numberMin: 0,
           },
           {
             name: 'backups.chat.maxTotalBackups',
             description: 'Maximum total chat backups to keep',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
           },
         ],
@@ -775,13 +807,13 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'ollama.keepAlive',
             description: 'Model keep-alive duration (seconds)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
           },
           {
             name: 'ollama.batchSize',
             description: 'Controls the "num_batch" (batch size) parameter of the generation request',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
           },
           {
@@ -793,7 +825,7 @@ const sillyArguments: ArgumentsData = [
           {
             name: 'claude.cachingAtDepth',
             description: 'Enable message history caching',
-            type: 'Input',
+            type: 'Number',
             defaultValue: -1,
           },
           {
