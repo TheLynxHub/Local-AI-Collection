@@ -1,7 +1,9 @@
 import {PagesData} from '../../../../src/common/types/plugins/modules';
-import {AG_ID, ALLTALK_ID, APPLIO_ID, CHAT_TTS_ID, TTS_ID, VOICE_STUDIO_ID} from '../../constants';
+import {AG_ID, ALLTALK_ID, APPLIO_ID, AUDIO_CPP_WEBUI_ID, CHAT_TTS_ID, TTS_ID, VOICE_STUDIO_ID} from '../../constants';
 import ALLTALK_RM from './AllTalkTts/RendererMethods';
 import APPLIO_RM from './Applio/RendererMethods';
+import audioCppArguments from './AudioCppWebui/Arguments';
+import AUDIO_CPP_WEBUI_RM from './AudioCppWebui/RendererMethods';
 import gitmyloArguments from './AudioGitmylo/Arguments';
 import AG_RM from './AudioGitmylo/RendererMethods';
 import CHAT_TTS_RM from './ChatTts/RendererMethods';
@@ -74,6 +76,21 @@ const audioPage: PagesData = {
       arguments: voiceStudioArguments,
       methods: VOICE_STUDIO_RM,
       installationType: 'git',
+    },
+    {
+      id: AUDIO_CPP_WEBUI_ID,
+      title: 'audio.cpp WebUI',
+      description:
+        'A high-performance C++ audio inference framework built on ggml for TTS, voice cloning, ASR, and more ' +
+        'with modern local WebUI.',
+      repoUrl: 'https://github.com/kigner/audio.cpp-webui',
+      type: 'audio',
+      supportCustomArguments: true,
+      arguments: audioCppArguments,
+      methods: AUDIO_CPP_WEBUI_RM,
+      installationType: 'others',
+      uninstallType: 'removeFolder',
+      developer: 'kigner',
     },
   ],
 };

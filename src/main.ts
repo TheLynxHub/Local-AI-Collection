@@ -6,6 +6,7 @@ import {
   ALLTALK_ID,
   ANTIGRAVITY_CLI_ID,
   APPLIO_ID,
+  AUDIO_CPP_WEBUI_ID,
   BOLT_DIY_ID,
   CHAT_TTS_ID,
   CLAUDE_CODE_ID,
@@ -47,6 +48,7 @@ import Langflow_MM from './containers/agent/Langflow/MainMethods';
 import N8N_MM from './containers/agent/N8N/MainMethods';
 import Rrew123_MM from './containers/audio/AllTalkTts/MainMethods';
 import Applio_MM from './containers/audio/Applio/MainMethods';
+import AudioCppWebui_MM from './containers/audio/AudioCppWebui/MainMethods';
 import Gitmylo_MM from './containers/audio/AudioGitmylo/MainMethods';
 import ChatTTS_MM from './containers/audio/ChatTts/MainMethods';
 import Rsx_MM from './containers/audio/TextToSpeech/MainMethods';
@@ -115,6 +117,7 @@ export default async function initialModule(utils: MainModuleUtils): Promise<Mai
     {id: APPLIO_ID, methods: () => Applio_MM(utils)},
     {id: CHAT_TTS_ID, methods: () => ChatTTS_MM(utils)},
     {id: VOICE_STUDIO_ID, methods: () => VoiceStudio_MM(utils)},
+    {id: AUDIO_CPP_WEBUI_ID, methods: () => AudioCppWebui_MM(utils)},
     {id: UNSLOTH_STUDIO_ID, methods: () => Unsloth_MM(utils)},
     {id: LLAMA_FACTORY_ID, methods: () => LlamaFactory_MM(utils)},
   ];
