@@ -19,7 +19,7 @@ const gitmyloArguments: ArgumentsData = [
           },
           {
             name: '--no-data-cache',
-            description: "Don\\'t override the default huggingface_hub cache path.",
+            description: "Don't override the default huggingface_hub cache path.",
             type: 'CheckBox',
           },
           {
@@ -62,7 +62,9 @@ const gitmyloArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Use a different port, automatic when not set.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--launch',
