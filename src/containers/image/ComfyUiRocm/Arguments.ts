@@ -91,8 +91,10 @@ const comfyRocmArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Set the listen port.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 8188,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--tls-keyfile',
@@ -115,8 +117,9 @@ const comfyRocmArguments: ArgumentsData = [
           {
             name: '--max-upload-size',
             description: 'Set the maximum upload size in MB.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 100,
+            numberMin: 1,
           },
           {
             name: '--supports-fp8-compute',
@@ -212,7 +215,8 @@ const comfyRocmArguments: ArgumentsData = [
           {
             name: '--default-device',
             description: 'Set the id of the default device, all other devices will stay visible.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
         ],
       },
@@ -331,8 +335,10 @@ const comfyRocmArguments: ArgumentsData = [
           {
             name: '--preview-size',
             description: 'Sets the maximum preview size for sampler nodes.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 512,
+            numberMin: 64,
+            numberStep: 64,
           },
           {
             name: '--cache-classic',
@@ -342,8 +348,9 @@ const comfyRocmArguments: ArgumentsData = [
           {
             name: '--cache-lru',
             description: 'Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: '--cache-none',
