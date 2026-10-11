@@ -7,8 +7,9 @@ const sourceControl: DataItem = {
   items: [
     {
       name: 'N8N_SOURCECONTROL_DEFAULT_SSH_KEY_TYPE',
-      type: 'Input',
+      type: 'DropDown',
       defaultValue: 'ed25519',
+      values: ['ed25519', 'rsa'],
       description: 'Set to `rsa` to make RSA the default SSH key type for Source control setup.',
     },
   ],

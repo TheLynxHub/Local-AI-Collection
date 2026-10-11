@@ -32,8 +32,9 @@ const license: DataItem = {
     },
     {
       name: 'N8N_LICENSE_TENANT_ID',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 1,
+      numberMin: 1,
       description: 'Tenant ID associated with the license. Only set this variable if explicitly instructed by n8n.',
     },
     {

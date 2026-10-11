@@ -128,8 +128,9 @@ const security: DataItem = {
     },
     {
       name: 'N8N_SECURITY_AUDIT_DAYS_ABANDONED_WORKFLOW',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 90,
+      numberMin: 1,
       description: "Number of days to consider a workflow abandoned if it's not executed.",
     },
     {

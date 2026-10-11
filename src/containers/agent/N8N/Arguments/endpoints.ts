@@ -7,14 +7,16 @@ const endpoints: DataItem = {
   items: [
     {
       name: 'N8N_PAYLOAD_SIZE_MAX',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 16,
+      numberMin: 1,
       description: 'The maximum payload size in MiB.',
     },
     {
       name: 'N8N_FORMDATA_FILE_SIZE_MAX',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 200,
+      numberMin: 1,
       description: 'Max payload size for files in form-data webhook payloads in MiB.',
     },
     {name: 'N8N_METRICS', type: 'CheckBox', description: 'Whether to enable the /metrics endpoint.'},
@@ -81,8 +83,9 @@ const endpoints: DataItem = {
     },
     {
       name: 'N8N_METRICS_QUEUE_METRICS_INTERVAL',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 20,
+      numberMin: 1,
       description: 'How often (in seconds) to update queue metrics.',
     },
     {

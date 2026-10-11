@@ -22,8 +22,10 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_BROKER_PORT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 5679,
+      numberMin: 1,
+      numberMax: 65535,
       description: 'Port the task broker listens on for task runner connections.',
     },
     {
@@ -34,8 +36,9 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_MAX_PAYLOAD',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 1073741824,
+      numberMin: 1024,
       description: 'Maximum payload size in bytes for communication between a task broker and a task runner.',
     },
     {
@@ -46,21 +49,24 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_MAX_CONCURRENCY',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 5,
+      numberMin: 1,
       description: 'The number of concurrent tasks a task runner can execute at a time.',
     },
     {
       name: 'N8N_RUNNERS_TASK_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 300,
+      numberMin: 1,
       description:
         'The maximum time, in seconds, a task can run before the runner stops it and restarts. This value must be greater than 0.',
     },
     {
       name: 'N8N_RUNNERS_HEARTBEAT_INTERVAL',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 30,
+      numberMin: 1,
       description:
         "The interval, in seconds, at which the runner must send a heartbeat to the broker. If the runner doesn't send a heartbeat in time, the task stops and the runner restarts. This value must be greater than 0.",
     },
@@ -72,8 +78,9 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_TASK_REQUEST_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 20,
+      numberMin: 1,
       description:
         'How long (in seconds) a task request can wait for a runner to become available before timing out. This prevents workflows from hanging indefinitely when no runners are available. Must be greater than 0.',
     },
@@ -86,8 +93,9 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 15,
+      numberMin: 1,
       description: 'The number of seconds to wait before shutting down an idle runner.',
     },
     {
@@ -98,8 +106,10 @@ const runners: DataItem = {
     },
     {
       name: 'N8N_RUNNERS_LAUNCHER_HEALTH_CHECK_PORT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 5680,
+      numberMin: 1,
+      numberMax: 65535,
       description: "Port for the launcher's health check server.",
     },
     {name: 'NODE_OPTIONS', type: 'Input', description: 'Options for Node.js.'},

@@ -15,8 +15,9 @@ const database: DataItem = {
     {name: 'DB_TABLE_PREFIX', type: 'Input', description: 'Prefix to use for table names.'},
     {
       name: 'DB_PING_INTERVAL_SECONDS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 2,
+      numberMin: 1,
       description: 'The interval, in seconds, between pings to the database to check if the connection is still alive.',
     },
     {
@@ -26,26 +27,36 @@ const database: DataItem = {
       description: 'The name of the PostgreSQL database.',
     },
     {name: 'DB_POSTGRESDB_HOST', type: 'Input', defaultValue: 'localhost', description: 'The PostgreSQL host.'},
-    {name: 'DB_POSTGRESDB_PORT', type: 'Input', defaultValue: 5432, description: 'The PostgreSQL port.'},
+    {
+      name: 'DB_POSTGRESDB_PORT',
+      type: 'Number',
+      defaultValue: 5432,
+      numberMin: 1,
+      numberMax: 65535,
+      description: 'The PostgreSQL port.',
+    },
     {name: 'DB_POSTGRESDB_USER', type: 'Input', defaultValue: 'postgres', description: 'The PostgreSQL user.'},
     {name: 'DB_POSTGRESDB_PASSWORD', type: 'Input', description: 'The PostgreSQL password.'},
     {
       name: 'DB_POSTGRESDB_POOL_SIZE',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 2,
+      numberMin: 1,
       description:
         'Control how many parallel open Postgres connections n8n should have. Increasing it may help with resource utilization, but too many connections may degrade performance.',
     },
     {
       name: 'DB_POSTGRESDB_CONNECTION_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 20000,
+      numberMin: 0,
       description: 'Postgres connection timeout (ms).',
     },
     {
       name: 'DB_POSTGRESDB_IDLE_CONNECTION_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 30000,
+      numberMin: 0,
       description: 'Amount of time before an idle connection is eligible for eviction for being idle.',
     },
     {name: 'DB_POSTGRESDB_SCHEMA', type: 'Input', defaultValue: 'public', description: 'The PostgreSQL schema.'},
@@ -55,9 +66,9 @@ const database: DataItem = {
       description:
         'Whether to enable SSL. Automatically enabled if DB_POSTGRESDB_SSL_CA, DB_POSTGRESDB_SSL_CERT or DB_POSTGRESDB_SSL_KEY is defined.',
     },
-    {name: 'DB_POSTGRESDB_SSL_CA', type: 'Input', description: 'The PostgreSQL SSL certificate authority.'},
-    {name: 'DB_POSTGRESDB_SSL_CERT', type: 'Input', description: 'The PostgreSQL SSL certificate.'},
-    {name: 'DB_POSTGRESDB_SSL_KEY', type: 'Input', description: 'The PostgreSQL SSL key.'},
+    {name: 'DB_POSTGRESDB_SSL_CA', type: 'File', description: 'The PostgreSQL SSL certificate authority.'},
+    {name: 'DB_POSTGRESDB_SSL_CERT', type: 'File', description: 'The PostgreSQL SSL certificate.'},
+    {name: 'DB_POSTGRESDB_SSL_KEY', type: 'File', description: 'The PostgreSQL SSL key.'},
     {
       name: 'DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED',
       type: 'CheckBox',
@@ -65,8 +76,9 @@ const database: DataItem = {
     },
     {
       name: 'DB_SQLITE_POOL_SIZE',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 0,
+      numberMin: 0,
       description:
         'Controls whether to open the SQLite file in WAL mode or rollback journal mode. Uses rollback journal mode when set to zero. When greater than zero, uses WAL mode with the value determining the number of parallel SQL read connections to configure. WAL mode is much more performant and reliable than the rollback journal mode.',
     },

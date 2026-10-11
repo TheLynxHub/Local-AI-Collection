@@ -48,7 +48,7 @@ const deployment: DataItem = {
     },
     {
       name: 'N8N_CONFIG_FILES',
-      type: 'Input',
+      type: 'File',
       description: 'Use to provide the path to any JSON configuration file.',
     },
     {name: 'N8N_DISABLE_UI', type: 'CheckBox', description: 'Set to `true` to disable the UI.'},
@@ -75,14 +75,21 @@ const deployment: DataItem = {
     },
     {
       name: 'N8N_USER_FOLDER',
-      type: 'Input',
+      type: 'Directory',
       defaultValue: 'user-folder',
       description:
         'Provide the path where n8n will create the .n8n folder. This directory stores user-specific data, such as database file and encryption key.',
     },
     {name: 'N8N_PATH', type: 'Input', defaultValue: '/', description: 'The path n8n deploys to.'},
     {name: 'N8N_HOST', type: 'Input', defaultValue: 'localhost', description: 'Host name n8n runs on.'},
-    {name: 'N8N_PORT', type: 'Input', defaultValue: 5678, description: 'The HTTP port n8n runs on.'},
+    {
+      name: 'N8N_PORT',
+      type: 'Number',
+      defaultValue: 5678,
+      numberMin: 1,
+      numberMax: 65535,
+      description: 'The HTTP port n8n runs on.',
+    },
     {
       name: 'N8N_LISTEN_ADDRESS',
       type: 'Input',
@@ -96,8 +103,8 @@ const deployment: DataItem = {
       values: ['http', 'https'],
       description: 'The protocol used to reach n8n.',
     },
-    {name: 'N8N_SSL_KEY', type: 'Input', description: 'The SSL key for HTTPS protocol.'},
-    {name: 'N8N_SSL_CERT', type: 'Input', description: 'The SSL certificate for HTTPS protocol.'},
+    {name: 'N8N_SSL_KEY', type: 'File', description: 'The SSL key for HTTPS protocol.'},
+    {name: 'N8N_SSL_CERT', type: 'File', description: 'The SSL certificate for HTTPS protocol.'},
     {
       name: 'N8N_PERSONALIZATION_ENABLED',
       type: 'CheckBox',
@@ -140,8 +147,9 @@ const deployment: DataItem = {
     },
     {
       name: 'N8N_PUSH_BACKEND',
-      type: 'Input',
+      type: 'DropDown',
       defaultValue: 'websocket',
+      values: ['websocket', 'sse'],
       description:
         'Choose whether the n8n backend uses server-sent events (`sse`) or WebSockets (`websocket`) to send changes to the UI.',
     },
@@ -175,8 +183,9 @@ const deployment: DataItem = {
     },
     {
       name: 'N8N_GRACEFUL_SHUTDOWN_TIMEOUT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 30,
+      numberMin: 1,
       description:
         'How long should the n8n process wait (in seconds) for components to shut down before exiting the process.',
     },
@@ -198,8 +207,9 @@ const deployment: DataItem = {
     },
     {
       name: 'N8N_PROXY_HOPS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 0,
+      numberMin: 0,
       description: 'Number of reverse-proxies n8n is running behind.',
     },
   ],

@@ -20,29 +20,33 @@ const mcp: DataItem = {
     },
     {
       name: 'N8N_MCP_SERVER_SESSION_IDLE_TTL_MS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 900000,
+      numberMin: 1000,
       description:
         'Time in milliseconds an MCP server session may stay idle before it is evicted and its resources released. Default: 15 minutes (900000 ms).',
     },
     {
       name: 'N8N_MCP_SERVER_SESSION_SWEEP_INTERVAL_MS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 300000,
+      numberMin: 1000,
       description:
         'Interval in milliseconds between sweeps that evict idle MCP server sessions. Default: 5 minutes (300000 ms).',
     },
     {
       name: 'N8N_MCP_CLIENT_CACHE_TTL_MS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 300000,
+      numberMin: 1000,
       description:
         'Time in milliseconds a cached MCP client is kept alive after its last use before being evicted. Default: 5 minutes (300000 ms).',
     },
     {
       name: 'N8N_MCP_CLIENT_CACHE_MAX_SIZE',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 500,
+      numberMin: 1,
       description: 'Maximum number of MCP clients kept in the in-memory session cache. Default: 500.',
     },
   ],

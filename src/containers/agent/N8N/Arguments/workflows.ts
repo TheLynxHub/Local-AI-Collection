@@ -15,14 +15,16 @@ const workflows: DataSection = {
         },
         {
           name: 'N8N_WORKFLOW_ACTIVATION_BATCH_SIZE',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 1,
+          numberMin: 1,
           description: 'How many workflows to publish simultaneously during startup.',
         },
         {
           name: 'N8N_WORKFLOW_CALLER_POLICY_DEFAULT_OPTION',
-          type: 'Input',
+          type: 'DropDown',
           defaultValue: 'workflowsFromSameOwner',
+          values: ['any', 'none', 'workflowsFromAList', 'workflowsFromSameOwner'],
           description:
             'Which workflows can call a workflow. Options are: any, none, workflowsFromAList, workflowsFromSameOwner. This feature requires Workflow sharing.',
         },
@@ -44,8 +46,9 @@ const workflows: DataSection = {
       items: [
         {
           name: 'N8N_WORKFLOW_HISTORY_PRUNE_TIME',
-          type: 'Input',
+          type: 'Number',
           defaultValue: -1,
+          numberMin: -1,
           description:
             'How long to keep workflow history versions before automatically deleting them (in hours). Set to `-1` to keep all versions indefinitely.',
         },

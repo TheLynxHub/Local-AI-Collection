@@ -27,8 +27,9 @@ const externalHooksSecrets: DataSection = {
       items: [
         {
           name: 'N8N_EXTERNAL_SECRETS_UPDATE_INTERVAL',
-          type: 'Input',
+          type: 'Number',
           defaultValue: 300,
+          numberMin: 1,
           description: 'How often (in seconds) to check for secret updates.',
         },
       ],

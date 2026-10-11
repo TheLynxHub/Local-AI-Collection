@@ -97,7 +97,14 @@ const userManagement: DataItem = {
     },
     {name: 'N8N_EMAIL_MODE', type: 'Input', defaultValue: 'smtp', description: 'Enable emails.'},
     {name: 'N8N_SMTP_HOST', type: 'Input', description: 'your_SMTP_server_name'},
-    {name: 'N8N_SMTP_PORT', type: 'Input', description: 'your_SMTP_server_port'},
+    {
+      name: 'N8N_SMTP_PORT',
+      type: 'Number',
+      defaultValue: 587,
+      numberMin: 1,
+      numberMax: 65535,
+      description: 'The SMTP port to connect to (e.g. 587 or 465).',
+    },
     {name: 'N8N_SMTP_USER', type: 'Input', description: 'your_SMTP_username'},
     {name: 'N8N_SMTP_PASS', type: 'Input', description: 'your_SMTP_password'},
     {
@@ -130,54 +137,54 @@ const userManagement: DataItem = {
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_INVITE',
-      type: 'Input',
+      type: 'File',
       description: 'Full path to your HTML email template. This overrides the default template for invite emails.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_PWRESET',
-      type: 'Input',
+      type: 'File',
       description:
         'Full path to your HTML email template. This overrides the default template for password reset emails.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_WORKFLOW_SHARED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that a workflow was shared. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_WORKFLOW_AUTODEACTIVATED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that a workflow was deactivated. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_WORKFLOW_FAILURE',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that a workflow execution failed. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_CREDENTIALS_SHARED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that a credential was shared. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_PROJECT_SHARED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that a project was shared. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_API_KEY_REVOKED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that an API key was revoked. Provide the full path to the template.',
     },
     {
       name: 'N8N_UM_EMAIL_TEMPLATES_MCP_CLIENT_REVOKED',
-      type: 'Input',
+      type: 'File',
       description:
         'Overrides the default HTML template for notifying users that an MCP client was revoked. Provide the full path to the template.',
     },
@@ -188,14 +195,16 @@ const userManagement: DataItem = {
     },
     {
       name: 'N8N_USER_MANAGEMENT_JWT_DURATION_HOURS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 168,
+      numberMin: 1,
       description: 'Set an expiration date for the JWTs in hours.',
     },
     {
       name: 'N8N_USER_MANAGEMENT_JWT_REFRESH_TIMEOUT_HOURS',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 0,
+      numberMin: -1,
       description:
         'How many hours before the JWT expires to automatically refresh it. 0 means 25% of N8N_USER_MANAGEMENT_JWT_DURATION_HOURS. -1 means it will never refresh, which forces users to log in again after the period defined in N8N_USER_MANAGEMENT_JWT_DURATION_HOURS.',
     },

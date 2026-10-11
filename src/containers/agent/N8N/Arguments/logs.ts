@@ -47,25 +47,28 @@ const logs: DataItem = {
     },
     {
       name: 'N8N_LOG_CRON_ACTIVE_INTERVAL',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 0,
+      numberMin: 0,
       description: 'Interval in minutes to log currently active cron jobs. Set to 0 to disable.',
     },
     {
       name: 'N8N_LOG_FILE_COUNT_MAX',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 100,
+      numberMin: 1,
       description: 'Max number of log files to keep.',
     },
     {
       name: 'N8N_LOG_FILE_SIZE_MAX',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 16,
+      numberMin: 1,
       description: 'Max size of each log file in MB.',
     },
     {
       name: 'N8N_LOG_FILE_LOCATION',
-      type: 'Input',
+      type: 'File',
       defaultValue: '<n8n-directory-path>/logs/n8n.log',
       description: 'Log file location. Requires N8N_LOG_OUTPUT set to `file`.',
     },
@@ -79,8 +82,9 @@ const logs: DataItem = {
     },
     {
       name: 'DB_LOGGING_MAX_EXECUTION_TIME',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 1000,
+      numberMin: 0,
       description:
         'Maximum execution time (in milliseconds) before n8n logs a warning. Set to 0 to disable long running query warning.',
     },
@@ -99,8 +103,9 @@ const logs: DataItem = {
     },
     {
       name: 'N8N_EVENTBUS_CHECKUNSENTINTERVAL',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 0,
+      numberMin: 0,
       description:
         'How often (in milliseconds) to check for unsent event messages. Can in rare cases send message twice. Set to 0 to disable it.',
     },
@@ -111,14 +116,16 @@ const logs: DataItem = {
     },
     {
       name: 'N8N_EVENTBUS_LOGWRITER_KEEPLOGCOUNT',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 3,
+      numberMin: 1,
       description: 'Number of event log files to keep.',
     },
     {
       name: 'N8N_EVENTBUS_LOGWRITER_MAXFILESIZEINKB',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 10240,
+      numberMin: 1,
       description: 'Maximum size (in kilo-bytes) of an event log file before a new one starts.',
     },
     {

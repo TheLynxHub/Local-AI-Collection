@@ -26,8 +26,9 @@ const aiAssistant: DataItem = {
     },
     {
       name: 'N8N_AI_AGENT_MAX_PASSTHROUGH_BINARY_SIZE_BYTES',
-      type: 'Input',
+      type: 'Number',
       defaultValue: 52428800,
+      numberMin: 0,
       description:
         'Maximum size in bytes of a single binary file (e.g. an image or PDF) that the AI Agent node will pass through to a model. Default: 50 MB (52428800 bytes).',
     },
