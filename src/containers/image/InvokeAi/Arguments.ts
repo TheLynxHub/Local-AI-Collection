@@ -16,8 +16,10 @@ const invokeArguments: ArgumentsData = [
           {
             name: 'port',
             description: 'Port to bind to.',
-            type: 'Input',
-            defaultValue: '9090',
+            type: 'Number',
+            defaultValue: 9090,
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: 'allow_origins',
@@ -229,7 +231,8 @@ const invokeArguments: ArgumentsData = [
             description:
               'The maximum amount of CPU RAM to use for model caching in GB. If unset,' +
               ' the limit will be configured based on the available RAM. It is recommended to leave this unset.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: 'max_cache_vram_gb',
@@ -237,14 +240,16 @@ const invokeArguments: ArgumentsData = [
               'The amount of VRAM to use for model caching in GB. If unset, the limit' +
               ' will be configured based on the available VRAM and device_working_mem_gb.' +
               ' It is recommended to leave this unset.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: 'device_working_mem_gb',
             description:
               'The amount of working memory to keep available on the compute device (in GB).' +
               ' Has no effect if running on CPU. If you are experiencing OOM errors, try increasing this value.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: 'log_memory_usage',
@@ -261,8 +266,9 @@ const invokeArguments: ArgumentsData = [
               'How long to keep models in cache after last use, in minutes. A value of 0 (the default)' +
               ' means models are kept in cache indefinitely. If no model generations occur within the timeout' +
               ' period, the model cache is cleared using the same logic as the "Clear Model Cache" button.',
-            type: 'Input',
-            defaultValue: '0',
+            type: 'Number',
+            defaultValue: 0,
+            numberMin: 0,
           },
           {
             name: 'enable_partial_loading',
@@ -345,14 +351,17 @@ const invokeArguments: ArgumentsData = [
             description:
               'The compress_level setting of PIL.Image.save(), used for PNG encoding. All settings are lossless.' +
               ' 0 = no compression, 1 = fastest (slightly larger file), 9 = slowest (smallest file). 1 is recommended.',
-            type: 'Input',
-            defaultValue: '1',
+            type: 'Number',
+            defaultValue: 1,
+            numberMin: 0,
+            numberMax: 9,
           },
           {
             name: 'max_queue_size',
             description: 'Maximum number of items in the session queue.',
-            type: 'Input',
-            defaultValue: '10000',
+            type: 'Number',
+            defaultValue: 10000,
+            numberMin: 1,
           },
           {
             name: 'session_queue_mode',
@@ -364,7 +373,8 @@ const invokeArguments: ArgumentsData = [
           {
             name: 'max_queue_history',
             description: 'Keep the last N completed, failed, and canceled queue items on startup. 0 prunes all.',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             name: 'clear_queue_on_startup',
@@ -384,8 +394,9 @@ const invokeArguments: ArgumentsData = [
           {
             name: 'node_cache_size',
             description: 'How many cached nodes to keep in memory.',
-            type: 'Input',
-            defaultValue: '512',
+            type: 'Number',
+            defaultValue: 512,
+            numberMin: 0,
           },
           {
             name: 'hashing_algorithm',
