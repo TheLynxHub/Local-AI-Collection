@@ -73,9 +73,9 @@ const automatic1111Arguments: ArgumentsData = [
             type: 'Directory',
           },
           {
-            defaultValue: 'GFPGAN model file name.',
+            description: 'GFPGAN model file name.',
             name: '--gfpgan-model',
-            type: 'Input',
+            type: 'File',
           },
           {
             defaultValue: 'models/Codeformer/',
@@ -190,7 +190,8 @@ const automatic1111Arguments: ArgumentsData = [
             defaultValue: 16,
             description: 'Maximum batch count value for the UI.',
             name: '--max-batch-count',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
           },
           {
             defaultValue: 'config.json',
@@ -222,7 +223,9 @@ const automatic1111Arguments: ArgumentsData = [
               'Launch gradio with given server port, you need root/admin rights for ports' +
               ' < 1024; defaults to 7860 if available.',
             name: '--port',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             defaultValue: false,
@@ -324,7 +327,8 @@ const automatic1111Arguments: ArgumentsData = [
             description:
               'Select the default CUDA device to use (export `CUDA_VISIBLE_DEVICES=0,1` etc might be needed before).',
             name: '--device-id',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 0,
           },
           {
             defaultValue: false,
@@ -428,7 +432,8 @@ const automatic1111Arguments: ArgumentsData = [
             defaultValue: 30,
             description: 'set timeout_keep_alive for uvicorn',
             name: '--timeout-keep-alive',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
           },
         ],
         section: 'Configuration',
@@ -504,19 +509,23 @@ const automatic1111Arguments: ArgumentsData = [
             defaultValue: 1024,
             description: 'Query chunk size for the sub-quadratic cross-attention layer optimization to use.',
             name: '--sub-quad-q-chunk-size',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
           },
           {
             description: 'KV chunk size for the sub-quadratic cross-attention layer optimization to use.',
             name: '--sub-quad-kv-chunk-size',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
           },
           {
             description:
               'The percentage of VRAM threshold for the sub-quadratic cross-attention' +
               ' layer optimization to use chunking.',
             name: '--sub-quad-chunk-threshold',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 100,
           },
           {
             defaultValue: false,
@@ -627,6 +636,7 @@ const automatic1111Arguments: ArgumentsData = [
               ' uses the default browser theme.',
             name: '--theme',
             type: 'DropDown',
+            values: ['dark', 'light'],
           },
           {
             defaultValue: false,
@@ -736,7 +746,8 @@ const automatic1111Arguments: ArgumentsData = [
               'maximal length of filenames of saved images, longer filenames will be truncated.' +
               ' if overridden it can potentially cause issues with the file system',
             name: '--filenames-max-length',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
           },
           {
             defaultValue: false,
@@ -814,7 +825,9 @@ const winEV: DataItem = {
         "Log verbosity. Supports any valid logging level supported by Python's built-in" +
         ' `logging` module. Defaults to `INFO` if not set.',
       name: 'SD_WEBUI_LOG_LEVEL',
-      type: 'Input',
+      type: 'DropDown',
+      defaultValue: 'INFO',
+      values: ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
     },
     {
       description: 'Cache file path. Defaults to `cache.json` in the root directory if not set.',
