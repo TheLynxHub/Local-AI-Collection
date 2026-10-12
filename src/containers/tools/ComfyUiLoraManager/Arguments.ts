@@ -18,8 +18,10 @@ const loraManagerArguments: ArgumentsData = [
           {
             name: '--port',
             description: 'Set the listen port (default: 8188)',
-            type: 'Input',
+            type: 'Number',
             defaultValue: 8188,
+            numberMin: 1,
+            numberMax: 65535,
           },
         ],
       },
