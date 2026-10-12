@@ -20,6 +20,8 @@ const llamaFactoryArguments: ArgumentsData = [
             description: 'The port for the LLaMA Board web UI (default 7860).',
             defaultValue: 7860,
             type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--share',
@@ -78,6 +80,14 @@ const llamaFactoryArguments: ArgumentsData = [
             description: 'Set the host address for the Gradio web UI server (e.g., 127.0.0.1 or 0.0.0.0).',
             defaultValue: '',
             type: 'Input',
+          },
+          {
+            name: 'GRADIO_SERVER_PORT',
+            description: 'Set the port number for the Gradio server (default 7860).',
+            defaultValue: 7860,
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: 'GRADIO_SHARE',
