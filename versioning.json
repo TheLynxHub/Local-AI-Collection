@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "17.0.0",
+      "commit": "0bff61e",
+      "engines": {
+        "moduleApi": "^2.1.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "16.1.1",
       "commit": "271010c",
       "engines": {
@@ -128,6 +137,21 @@
     }
   ],
   "changes": [
+    {
+      "version": "17.0.0",
+      "date": "2026-10-12",
+      "items": [
+        {
+          "✨ New": ["Added audio.cpp Webui."]
+        },
+        {
+          "⚡ Improvements": [
+            "Updated all configurations and arguments to the latest changes.",
+            "Updated all argument types."
+          ]
+        }
+      ]
+    },
     {
       "version": "16.1.1",
       "date": "2026-09-01",
