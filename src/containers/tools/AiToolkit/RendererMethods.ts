@@ -27,7 +27,7 @@ export function parseArgsToString(args: ChosenArgument[]): string {
       if (result.commandArg) argResult += result.commandArg + ' ';
     } else {
       const argType = getArgumentType(arg.name, aiToolkitArguments);
-      if (argType === 'Input' && arg.value) {
+      if ((argType === 'Input' || argType === 'Number') && arg.value !== undefined && arg.value !== '') {
         // Environment variables
         if (isWin) {
           lines += `set ${arg.name}=${arg.value}\n`;
