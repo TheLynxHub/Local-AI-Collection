@@ -1,4 +1,4 @@
-import { $ as parseStringToArgs$9, $n as TTS_ID, An as COMFYUI_ZLUDA_ID, At as parseArgsToString$2, Bn as LoLLMS_ID, C as parseArgsToString$13, Cn as ANTIGRAVITY_CLI_ID, Ct as parseStringToArgs$4, D as parseArgsToString$12, Dn as CLAUDE_CODE_ID, Dt as parseStringToArgs$3, En as CHAT_TTS_ID, Et as parseArgsToString$3, F as parseArgsToString$11, Fn as KOHYA_ID, Ft as parseStringToArgs$1, Gn as SD_FORGE_AMD_ID, Hn as ONETRAINER_ID, Ht as parseArgsToFiles$2, I as parseStringToArgs$11, In as LANGFLOW_ID, J as parseArgsToString$10, Jn as SD_UIUX_ID, Jt as parseStringToArgs, K as getLatestLlamaCppTag, Kn as SD_FORGE_ID, Ln as LLAMA_CPP_ID, M as parseFilesToArgs$4, Mn as GeminiCli_ID, Nn as HERMES_AGENT_ID, O as parseStringToArgs$12, On as COMFYUI_ID, Pn as INVOKE_ID, Pt as parseArgsToString$1, Q as parseArgsToString$9, Qn as TG_ID, Qt as parseFilesToArgs$1, Rn as LLAMA_FACTORY_ID, Rt as parseArgsToFiles$3, Sn as ALLTALK_ID, St as parseArgsToString$4, Tn as BOLT_DIY_ID, U as fetchLlamaCppReleases, Un as OPEN_WEBUI_ID, Ut as parseFilesToArgs$2, Vn as N8N_ID, Wn as SD_AMD_ID, Xn as SMARTGALLERY_ID, Y as parseStringToArgs$10, Yn as SILLYTAVERN_ID, Zn as SWARM_ID, Zt as parseArgsToFiles$1, b as parseStringToArgs$14, bn as AG_ID, c as parseStringToArgs$17, cn as isValidArg, ct as INVOKEAI_INSTALL_DIR_KEY, d as parseArgsToString$16, dn as extractGitUrl, dt as comfyuizludaArguments, er as UNSLOTH_STUDIO_ID, f as parseStringToArgs$16, fn as getCdCommand, ft as comfyRocmArguments, g as parseStringToArgs$15, gn as isWin, h as parseArgsToString$15, hn as isMac, ht as parseStringToArgs$6, i as parseStringToArgs$18, j as parseArgsToFiles$4, jn as FLOWISEAI_ID, jt as parseStringToArgs$2, kn as COMFYUI_ROCM_ID, lt as INVOKEAI_UPDATE_AVAILABLE_KEY, mn as getVenvPythonPath, mt as parseArgsToString$6, nn as parseFilesToArgs, nt as parseArgsToString$8, ot as parseArgsToString$7, pn as getPythonCommandByOs, qn as SD_NEXT_ID, qt as parseArgsToString, r as parseArgsToString$18, rt as parseStringToArgs$8, s as parseArgsToString$17, sn as getArgumentType, st as parseStringToArgs$7, t as TAG_KEY, tn as parseArgsToFiles, tr as VOICE_STUDIO_ID, ut as Invoke_Command_ActivateVenv, vn as removeAnsi, vt as parseArgsToString$5, w as parseStringToArgs$13, wn as APPLIO_ID, xn as AITOOLKIT_ID, y as parseArgsToString$14, yn as A1_ID, yt as parseStringToArgs$5, zn as LORA_MANAGER_ID, zt as parseFilesToArgs$3 } from "./RendererMethods_BWB0EZ.mjs";
+import { $ as parseArgsToString$10, $n as SD_FORGE_ID, $t as parseArgsToString, An as APPLIO_ID, Bn as HERMES_AGENT_ID, C as parseArgsToString$14, Ct as parseArgsToString$5, D as parseArgsToString$13, Dn as AITOOLKIT_ID, Dt as parseArgsToString$4, En as AG_ID, F as parseArgsToString$12, Fn as COMFYUI_ID, Gn as LLAMA_FACTORY_ID, Gt as parseArgsToFiles$3, Hn as KOHYA_ID, Ht as parseStringToArgs$1, I as parseStringToArgs$12, In as COMFYUI_ROCM_ID, Jn as N8N_ID, Kn as LORA_MANAGER_ID, Kt as parseFilesToArgs$3, Ln as COMFYUI_ZLUDA_ID, Lt as parseArgsToString$2, M as parseFilesToArgs$4, Mn as BOLT_DIY_ID, Mt as parseStringToArgs$3, Nn as CHAT_TTS_ID, Nt as fetchAudioCppReleases, O as parseStringToArgs$13, On as ALLTALK_ID, Ot as parseStringToArgs$4, Pn as CLAUDE_CODE_ID, Pt as getLatestAudioCppTag, Qn as SD_FORGE_AMD_ID, Rn as FLOWISEAI_ID, Rt as parseStringToArgs$2, Sn as isWin, Tn as A1_ID, Un as LANGFLOW_ID, Vn as INVOKE_ID, Vt as parseArgsToString$1, W as fetchLlamaCppReleases, Wn as LLAMA_CPP_ID, X as parseStringToArgs$11, Xn as OPEN_WEBUI_ID, Xt as parseFilesToArgs$2, Y as parseArgsToString$11, Yn as ONETRAINER_ID, Yt as parseArgsToFiles$2, Zn as SD_AMD_ID, _n as extractGitUrl, ar as TG_ID, b as parseStringToArgs$15, bn as getVenvPythonPath, bt as parseStringToArgs$6, c as parseStringToArgs$18, cn as parseFilesToArgs, cr as VOICE_STUDIO_ID, ct as parseStringToArgs$8, d as parseArgsToString$17, dt as Invoke_Command_ActivateVenv, en as parseStringToArgs, er as SD_NEXT_ID, et as parseStringToArgs$10, f as parseStringToArgs$17, ft as comfyuizludaArguments, g as parseStringToArgs$16, gt as parseStringToArgs$7, h as parseArgsToString$16, ht as parseArgsToString$7, i as parseStringToArgs$19, in as parseFilesToArgs$1, ir as SWARM_ID, it as parseStringToArgs$9, j as parseArgsToFiles$4, jn as AUDIO_CPP_WEBUI_ID, jt as parseArgsToString$3, kn as ANTIGRAVITY_CLI_ID, lt as INVOKEAI_INSTALL_DIR_KEY, mn as isValidArg, nr as SILLYTAVERN_ID, or as TTS_ID, pn as getArgumentType, pt as comfyRocmArguments, q as getLatestLlamaCppTag, qn as LoLLMS_ID, r as parseArgsToString$19, rn as parseArgsToFiles$1, rr as SMARTGALLERY_ID, rt as parseArgsToString$9, s as parseArgsToString$18, sn as parseArgsToFiles, sr as UNSLOTH_STUDIO_ID, st as parseArgsToString$8, t as TAG_KEY, tr as SD_UIUX_ID, ut as INVOKEAI_UPDATE_AVAILABLE_KEY, vn as getCdCommand, w as parseStringToArgs$14, wn as removeAnsi, wt as parseStringToArgs$5, xn as isMac, y as parseArgsToString$15, yn as getPythonCommandByOs, yt as parseArgsToString$6, zn as GeminiCli_ID } from "./RendererMethods_jdxHkj.mjs";
 import { createRequire } from "node:module";
 import { exec, execFile, execSync } from "node:child_process";
 import path, { join, normalize, resolve } from "node:path";
@@ -409,7 +409,7 @@ var require_clone = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/graceful-fs/graceful-fs.js
 var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var fs$8 = __require("fs");
+	var fs$9 = __require("fs");
 	var polyfills = require_polyfills();
 	var legacy = require_legacy_streams();
 	var clone = require_clone();
@@ -438,36 +438,36 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		m = "GFS4: " + m.split(/\n/).join("\nGFS4: ");
 		console.error(m);
 	};
-	if (!fs$8[gracefulQueue]) {
-		publishQueue(fs$8, global[gracefulQueue] || []);
-		fs$8.close = (function(fs$close) {
+	if (!fs$9[gracefulQueue]) {
+		publishQueue(fs$9, global[gracefulQueue] || []);
+		fs$9.close = (function(fs$close) {
 			function close(fd, cb) {
-				return fs$close.call(fs$8, fd, function(err) {
+				return fs$close.call(fs$9, fd, function(err) {
 					if (!err) resetQueue();
 					if (typeof cb === "function") cb.apply(this, arguments);
 				});
 			}
 			Object.defineProperty(close, previousSymbol, { value: fs$close });
 			return close;
-		})(fs$8.close);
-		fs$8.closeSync = (function(fs$closeSync) {
+		})(fs$9.close);
+		fs$9.closeSync = (function(fs$closeSync) {
 			function closeSync(fd) {
-				fs$closeSync.apply(fs$8, arguments);
+				fs$closeSync.apply(fs$9, arguments);
 				resetQueue();
 			}
 			Object.defineProperty(closeSync, previousSymbol, { value: fs$closeSync });
 			return closeSync;
-		})(fs$8.closeSync);
+		})(fs$9.closeSync);
 		if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || "")) process.on("exit", function() {
-			debug(fs$8[gracefulQueue]);
-			__require("assert").equal(fs$8[gracefulQueue].length, 0);
+			debug(fs$9[gracefulQueue]);
+			__require("assert").equal(fs$9[gracefulQueue].length, 0);
 		});
 	}
-	if (!global[gracefulQueue]) publishQueue(global, fs$8[gracefulQueue]);
-	module.exports = patch(clone(fs$8));
-	if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$8.__patched) {
-		module.exports = patch(fs$8);
-		fs$8.__patched = true;
+	if (!global[gracefulQueue]) publishQueue(global, fs$9[gracefulQueue]);
+	module.exports = patch(clone(fs$9));
+	if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$9.__patched) {
+		module.exports = patch(fs$9);
+		fs$9.__patched = true;
 	}
 	function patch(fs) {
 		polyfills(fs);
@@ -722,23 +722,23 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	}
 	function enqueue(elem) {
 		debug("ENQUEUE", elem[0].name, elem[1]);
-		fs$8[gracefulQueue].push(elem);
+		fs$9[gracefulQueue].push(elem);
 		retry();
 	}
 	var retryTimer;
 	function resetQueue() {
 		var now = Date.now();
-		for (var i = 0; i < fs$8[gracefulQueue].length; ++i) if (fs$8[gracefulQueue][i].length > 2) {
-			fs$8[gracefulQueue][i][3] = now;
-			fs$8[gracefulQueue][i][4] = now;
+		for (var i = 0; i < fs$9[gracefulQueue].length; ++i) if (fs$9[gracefulQueue][i].length > 2) {
+			fs$9[gracefulQueue][i][3] = now;
+			fs$9[gracefulQueue][i][4] = now;
 		}
 		retry();
 	}
 	function retry() {
 		clearTimeout(retryTimer);
 		retryTimer = void 0;
-		if (fs$8[gracefulQueue].length === 0) return;
-		var elem = fs$8[gracefulQueue].shift();
+		if (fs$9[gracefulQueue].length === 0) return;
+		var elem = fs$9[gracefulQueue].shift();
 		var fn = elem[0];
 		var args = elem[1];
 		var err = elem[2];
@@ -757,7 +757,7 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			if (sinceAttempt >= Math.min(sinceStart * 1.2, 100)) {
 				debug("RETRY", fn.name, args);
 				fn.apply(null, args.concat([startTime]));
-			} else fs$8[gracefulQueue].push(elem);
+			} else fs$9[gracefulQueue].push(elem);
 		}
 		if (retryTimer === void 0) retryTimer = setTimeout(retry, 0);
 	}
@@ -10424,7 +10424,7 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 	var http$2 = __require("http");
 	var https$2 = __require("https");
 	var parseUrl$1 = __require("url").parse;
-	var fs$7 = __require("fs");
+	var fs$8 = __require("fs");
 	var Stream = __require("stream").Stream;
 	var crypto$1 = __require("crypto");
 	var mime = require_mime_types();
@@ -10492,7 +10492,7 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 	FormData.prototype._lengthRetriever = function(value, callback) {
 		if (hasOwn(value, "fd")) {
 			if (value.end != void 0 && value.end != Infinity && value.start != void 0) callback(null, value.end + 1 - (value.start ? value.start : 0));
-			else fs$7.stat(value.path, function(err, stat) {
+			else fs$8.stat(value.path, function(err, stat) {
 				if (err) {
 					callback(err);
 					return;
@@ -20637,15 +20637,15 @@ async function isGitTypeInstalled(dir, url, files) {
 //#endregion
 //#region module/src/containers/agent/AntigravityCli/MainMethods.ts
 const CONFIG_FILE$11 = isWin ? "agy_config.bat" : "agy_config.sh";
-const DEFAULT_BATCH_DATA$25 = isWin ? "@echo off\n\nagy" : "#!/bin/bash\n\nagy";
-async function getRunCommands$33(configDir) {
+const DEFAULT_BATCH_DATA$26 = isWin ? "@echo off\n\nagy" : "#!/bin/bash\n\nagy";
+async function getRunCommands$34(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$11));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$25);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$26);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$26(args, configDir) {
+async function saveArgs$27(args, configDir) {
 	if (!configDir) return;
 	const { scriptData, settingsData } = parseArgsToFiles(args);
 	const scriptPath = path.join(configDir, CONFIG_FILE$11);
@@ -20661,10 +20661,10 @@ async function saveArgs$26(args, configDir) {
 		console.error("Error saving settings file for Antigravity CLI", e);
 	}
 }
-async function readArgs$26(configDir) {
+async function readArgs$27(configDir) {
 	if (!configDir) return [];
 	const scriptPath = path.join(configDir, CONFIG_FILE$11);
-	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$25);
+	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$26);
 	if (!isWin) await ensureScriptExecutable(scriptPath);
 	const lines = (await import_graceful_fs.default.promises.readFile(scriptPath, "utf-8")).split("\n");
 	let settingsPath;
@@ -20703,7 +20703,7 @@ async function fetchLatestManifestVersion() {
 		return;
 	}
 }
-async function updateAvailable$13(utils) {
+async function updateAvailable$14(utils) {
 	try {
 		const currentRaw = await getAntigravityCliVersion();
 		const latestVersion = await fetchLatestManifestVersion();
@@ -20717,7 +20717,7 @@ async function updateAvailable$13(utils) {
 	}
 	return false;
 }
-function mainIpc$13(utils) {
+function mainIpc$14(utils) {
 	utils.ipc.handle("is_antigravity_cli_installed", () => checkWhich("agy"));
 	utils.ipc.handle("current_antigravity_cli_version", () => getAntigravityCliVersion());
 }
@@ -20736,26 +20736,26 @@ const isInstalled$10 = () => checkWhich("agy");
 const AntigravityCli_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$13(utils),
-		getRunCommands: () => getRunCommands$33(configDir),
+		mainIpc: () => mainIpc$14(utils),
+		getRunCommands: () => getRunCommands$34(configDir),
 		isInstalled: isInstalled$10,
-		saveArgs: (args) => saveArgs$26(args, configDir),
-		readArgs: () => readArgs$26(configDir),
-		updateAvailable: () => updateAvailable$13(utils)
+		saveArgs: (args) => saveArgs$27(args, configDir),
+		readArgs: () => readArgs$27(configDir),
+		updateAvailable: () => updateAvailable$14(utils)
 	};
 };
 //#endregion
 //#region module/src/containers/agent/ClaudeCode/MainMethods.ts
 const CONFIG_FILE$10 = isWin ? "claude_config.bat" : "claude_config.sh";
-const DEFAULT_BATCH_DATA$24 = isWin ? "@echo off\n\nclaude" : "#!/bin/bash\n\nclaude";
-async function getRunCommands$32(configDir) {
+const DEFAULT_BATCH_DATA$25 = isWin ? "@echo off\n\nclaude" : "#!/bin/bash\n\nclaude";
+async function getRunCommands$33(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$10));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$24);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$25);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$25(args, configDir) {
+async function saveArgs$26(args, configDir) {
 	if (!configDir) return;
 	const { scriptData, settingsData } = parseArgsToFiles$1(args);
 	const scriptPath = path.join(configDir, CONFIG_FILE$10);
@@ -20771,10 +20771,10 @@ async function saveArgs$25(args, configDir) {
 		console.error("Error saving settings.json file for Claude Code", e);
 	}
 }
-async function readArgs$25(configDir) {
+async function readArgs$26(configDir) {
 	if (!configDir) return [];
 	const scriptPath = path.join(configDir, CONFIG_FILE$10);
-	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$24);
+	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$25);
 	if (!isWin) await ensureScriptExecutable(scriptPath);
 	const lines = (await import_graceful_fs.default.promises.readFile(scriptPath, "utf-8")).split("\n");
 	let settingsPath;
@@ -20795,10 +20795,10 @@ async function readArgs$25(configDir) {
 	}
 	return parseFilesToArgs$1(scriptData, settingsContent);
 }
-async function updateAvailable$12(utils) {
+async function updateAvailable$13(utils) {
 	return false;
 }
-function mainIpc$12(utils) {
+function mainIpc$13(utils) {
 	utils.ipc.handle("is_claude_code_installed", () => checkWhich("claude"));
 	utils.ipc.handle("current_claude_code_version", () => getClaudeCodeVersion());
 }
@@ -20817,12 +20817,12 @@ const isInstalled$9 = () => checkWhich("claude");
 const ClaudeCode_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$12(utils),
-		getRunCommands: () => getRunCommands$32(configDir),
+		mainIpc: () => mainIpc$13(utils),
+		getRunCommands: () => getRunCommands$33(configDir),
 		isInstalled: isInstalled$9,
-		saveArgs: (args) => saveArgs$25(args, configDir),
-		readArgs: () => readArgs$25(configDir),
-		updateAvailable: () => updateAvailable$12(utils)
+		saveArgs: (args) => saveArgs$26(args, configDir),
+		readArgs: () => readArgs$26(configDir),
+		updateAvailable: () => updateAvailable$13(utils)
 	};
 };
 //#endregion
@@ -20902,21 +20902,21 @@ async function isNpmVersionAbove12() {
 //#region module/src/containers/agent/Flowise/MainMethods.ts
 const PACKAGE_NAME$2 = "flowise";
 const CONFIG_FILE$9 = isWin ? "flowise_config.bat" : "flowise_config.sh";
-const DEFAULT_BATCH_DATA$23 = isWin ? "@echo off\n\nnpx flowise start" : "#!/bin/bash\n\nnpx flowise start";
-async function getRunCommands$31(configDir) {
+const DEFAULT_BATCH_DATA$24 = isWin ? "@echo off\n\nnpx flowise start" : "#!/bin/bash\n\nnpx flowise start";
+async function getRunCommands$32(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$9));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$23);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$24);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$24(args, configDir) {
+async function saveArgs$25(args, configDir) {
 	return await utilSaveArgs(args, CONFIG_FILE$9, parseArgsToString, configDir);
 }
-async function readArgs$24(configDir) {
-	return await utilReadArgs(CONFIG_FILE$9, DEFAULT_BATCH_DATA$23, parseStringToArgs, configDir);
+async function readArgs$25(configDir) {
+	return await utilReadArgs(CONFIG_FILE$9, DEFAULT_BATCH_DATA$24, parseStringToArgs, configDir);
 }
-async function updateAvailable$11(utils) {
+async function updateAvailable$12(utils) {
 	const available = await checkNpmPackageUpdate(PACKAGE_NAME$2);
 	if (available) {
 		utils.storage.set("update-available-version-flowise", available);
@@ -20925,7 +20925,7 @@ async function updateAvailable$11(utils) {
 	utils.storage.set("update-available-version-flowise", void 0);
 	return false;
 }
-function mainIpc$11(utils) {
+function mainIpc$12(utils) {
 	utils.ipc.handle("is_flowise_installed", () => isNpmPackageInstalled(PACKAGE_NAME$2));
 	utils.ipc.handle("current_flowise_version", () => getNpmPackageVersion(PACKAGE_NAME$2));
 	utils.ipc.handle("is_flowise_npm_available", () => checkWhich("npm"));
@@ -20935,12 +20935,12 @@ const isInstalled$8 = () => isNpmPackageInstalled(PACKAGE_NAME$2);
 const Flow_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		updateAvailable: () => updateAvailable$11(utils),
-		getRunCommands: () => getRunCommands$31(configDir),
-		mainIpc: () => mainIpc$11(utils),
+		updateAvailable: () => updateAvailable$12(utils),
+		getRunCommands: () => getRunCommands$32(configDir),
+		mainIpc: () => mainIpc$12(utils),
 		isInstalled: isInstalled$8,
-		saveArgs: (args) => saveArgs$24(args, configDir),
-		readArgs: () => readArgs$24(configDir),
+		saveArgs: (args) => saveArgs$25(args, configDir),
+		readArgs: () => readArgs$25(configDir),
 		uninstall: () => uninstallNpmPackage(PACKAGE_NAME$2)
 	};
 };
@@ -20948,15 +20948,15 @@ const Flow_MM = (utils) => {
 //#region module/src/containers/agent/GeminiCli/MainMethods.ts
 const PACKAGE_NAME$1 = "@google/gemini-cli";
 const CONFIG_FILE$8 = isWin ? "geminiCli_config.bat" : "geminiCli_config.sh";
-const DEFAULT_BATCH_DATA$22 = isWin ? "@echo off\n\ngemini" : "#!/bin/bash\n\ngemini";
-async function getRunCommands$30(configDir) {
+const DEFAULT_BATCH_DATA$23 = isWin ? "@echo off\n\ngemini" : "#!/bin/bash\n\ngemini";
+async function getRunCommands$31(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$8));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$22);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$23);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$23(args, configDir) {
+async function saveArgs$24(args, configDir) {
 	if (!configDir) return;
 	const { scriptData, settingsData } = parseArgsToFiles$2(args);
 	const scriptPath = path.join(configDir, CONFIG_FILE$8);
@@ -20969,15 +20969,15 @@ async function saveArgs$23(args, configDir) {
 		console.error("Error saving settings.json file for gemini-cli", e);
 	}
 }
-async function readArgs$23(configDir) {
+async function readArgs$24(configDir) {
 	if (!configDir) return [];
 	const scriptPath = path.join(configDir, CONFIG_FILE$8);
-	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$22);
+	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$23);
 	if (!isWin) await ensureScriptExecutable(scriptPath);
 	const scriptData = await import_graceful_fs.default.promises.readFile(scriptPath, "utf-8");
 	return parseFilesToArgs$2(scriptData, "");
 }
-async function updateAvailable$10(utils) {
+async function updateAvailable$11(utils) {
 	const available = await checkNpmPackageUpdate(PACKAGE_NAME$1);
 	if (available) {
 		utils.storage.set("update-available-version-geminiCli", available);
@@ -20986,7 +20986,7 @@ async function updateAvailable$10(utils) {
 	utils.storage.set("update-available-version-geminiCli", void 0);
 	return false;
 }
-function mainIpc$10(utils) {
+function mainIpc$11(utils) {
 	utils.ipc.handle("is_geminiCli_installed", () => isNpmPackageInstalled(PACKAGE_NAME$1));
 	utils.ipc.handle("current_geminiCli_version", () => getNpmPackageVersion(PACKAGE_NAME$1));
 	utils.ipc.handle("is_gemini_npm_available", () => checkWhich("npm"));
@@ -20996,27 +20996,27 @@ const isInstalled$7 = () => isNpmPackageInstalled(PACKAGE_NAME$1);
 const GeminiCli_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$10(utils),
-		getRunCommands: () => getRunCommands$30(configDir),
+		mainIpc: () => mainIpc$11(utils),
+		getRunCommands: () => getRunCommands$31(configDir),
 		isInstalled: isInstalled$7,
-		saveArgs: (args) => saveArgs$23(args, configDir),
-		readArgs: () => readArgs$23(configDir),
-		updateAvailable: () => updateAvailable$10(utils),
+		saveArgs: (args) => saveArgs$24(args, configDir),
+		readArgs: () => readArgs$24(configDir),
+		updateAvailable: () => updateAvailable$11(utils),
 		uninstall: () => uninstallNpmPackage(PACKAGE_NAME$1)
 	};
 };
 //#endregion
 //#region module/src/containers/agent/HermesAgent/MainMethods.ts
 const CONFIG_FILE$7 = isWin ? "hermes_config.bat" : "hermes_config.sh";
-const DEFAULT_BATCH_DATA$21 = isWin ? "@echo off\n\nhermes" : "#!/bin/bash\n\nhermes";
-async function getRunCommands$29(configDir) {
+const DEFAULT_BATCH_DATA$22 = isWin ? "@echo off\n\nhermes" : "#!/bin/bash\n\nhermes";
+async function getRunCommands$30(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$7));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$21);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$22);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$22(args, configDir) {
+async function saveArgs$23(args, configDir) {
 	if (!configDir) return;
 	const { scriptData, settingsData } = parseArgsToFiles$3(args);
 	const scriptPath = path.join(configDir, CONFIG_FILE$7);
@@ -21032,10 +21032,10 @@ async function saveArgs$22(args, configDir) {
 		console.error("Error saving settings file for Hermes Agent", e);
 	}
 }
-async function readArgs$22(configDir) {
+async function readArgs$23(configDir) {
 	if (!configDir) return [];
 	const scriptPath = path.join(configDir, CONFIG_FILE$7);
-	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$21);
+	await initBatchFile(scriptPath, DEFAULT_BATCH_DATA$22);
 	if (!isWin) await ensureScriptExecutable(scriptPath);
 	const lines = (await import_graceful_fs.default.promises.readFile(scriptPath, "utf-8")).split("\n");
 	let settingsPath;
@@ -21077,7 +21077,7 @@ function getHermesAgentVersion() {
 		});
 	});
 }
-function mainIpc$9(utils) {
+function mainIpc$10(utils) {
 	utils.ipc.handle("is_hermes_agent_installed", () => checkWhich("hermes"));
 	utils.ipc.handle("current_hermes_agent_version", () => getHermesAgentVersion());
 }
@@ -21100,7 +21100,7 @@ async function fetchLatestHermesVersion() {
 		return;
 	}
 }
-async function updateAvailable$9(utils) {
+async function updateAvailable$10(utils) {
 	try {
 		const currentVersion = await getHermesAgentVersion();
 		const latestVersion = await fetchLatestHermesVersion();
@@ -21117,12 +21117,12 @@ const isInstalled$6 = () => checkWhich("hermes");
 const HermesAgent_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$9(utils),
-		getRunCommands: () => getRunCommands$29(configDir),
+		mainIpc: () => mainIpc$10(utils),
+		getRunCommands: () => getRunCommands$30(configDir),
 		isInstalled: isInstalled$6,
-		saveArgs: (args) => saveArgs$22(args, configDir),
-		readArgs: () => readArgs$22(configDir),
-		updateAvailable: () => updateAvailable$9(utils)
+		saveArgs: (args) => saveArgs$23(args, configDir),
+		readArgs: () => readArgs$23(configDir),
+		updateAvailable: () => updateAvailable$10(utils)
 	};
 };
 //#endregion
@@ -22524,24 +22524,24 @@ var import_semver = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 })))();
 const CONFIG_FILE$6 = isWin ? "langflow_config.bat" : "langflow_config.sh";
-const DEFAULT_BATCH_DATA$20 = isWin ? "@echo off\n\nlangflow run" : "#!/bin/bash\n\nlangflow run";
-async function getRunCommands$28(configDir) {
+const DEFAULT_BATCH_DATA$21 = isWin ? "@echo off\n\nlangflow run" : "#!/bin/bash\n\nlangflow run";
+async function getRunCommands$29(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$6));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$20);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$21);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$21(args, configDir) {
+async function saveArgs$22(args, configDir) {
 	return await utilSaveArgs(args, CONFIG_FILE$6, parseArgsToString$1, configDir);
 }
-async function readArgs$21(configDir) {
-	return await utilReadArgs(CONFIG_FILE$6, DEFAULT_BATCH_DATA$20, parseStringToArgs$1, configDir);
+async function readArgs$22(configDir) {
+	return await utilReadArgs(CONFIG_FILE$6, DEFAULT_BATCH_DATA$21, parseStringToArgs$1, configDir);
 }
 async function isInstalled$5(utils) {
 	return !!await getPipPackageVersion("langflow", utils, LANGFLOW_ID);
 }
-async function updateAvailable$8(utils) {
+async function updateAvailable$9(utils) {
 	try {
 		const currentVersion = await getPipPackageVersion("langflow", utils, LANGFLOW_ID);
 		const latestVersion = await getLatestPipPackageVersion("langflow");
@@ -22557,11 +22557,11 @@ async function updateAvailable$8(utils) {
 	utils.storage.set("update-available-version-langflow", void 0);
 	return false;
 }
-function mainIpc$8(utils) {
+function mainIpc$9(utils) {
 	utils.ipc.handle("is_langflow_installed", () => isInstalled$5(utils));
 	utils.ipc.handle("current_langflow_version", () => getPipPackageVersion("langflow", utils, LANGFLOW_ID));
 }
-async function uninstall$3(utils) {
+async function uninstall$4(utils) {
 	return new Promise((resolve, reject) => {
 		const ptyProcess = utils.pty.spawn(determineShell(), [], {});
 		let output = "";
@@ -22588,34 +22588,34 @@ async function uninstall$3(utils) {
 const Langflow_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$8(utils),
-		getRunCommands: () => getRunCommands$28(configDir),
+		mainIpc: () => mainIpc$9(utils),
+		getRunCommands: () => getRunCommands$29(configDir),
 		isInstalled: () => isInstalled$5(utils),
-		saveArgs: (args) => saveArgs$21(args, configDir),
-		readArgs: () => readArgs$21(configDir),
-		updateAvailable: () => updateAvailable$8(utils),
-		uninstall: () => uninstall$3(utils)
+		saveArgs: (args) => saveArgs$22(args, configDir),
+		readArgs: () => readArgs$22(configDir),
+		updateAvailable: () => updateAvailable$9(utils),
+		uninstall: () => uninstall$4(utils)
 	};
 };
 //#endregion
 //#region module/src/containers/agent/N8N/MainMethods.ts
 const PACKAGE_NAME = "n8n";
 const CONFIG_FILE$5 = isWin ? "n8n_config.bat" : "n8n_config.sh";
-const DEFAULT_BATCH_DATA$19 = isWin ? "@echo off\n\nn8n start" : "#!/bin/bash\n\nn8n start";
-async function getRunCommands$27(configDir) {
+const DEFAULT_BATCH_DATA$20 = isWin ? "@echo off\n\nn8n start" : "#!/bin/bash\n\nn8n start";
+async function getRunCommands$28(configDir) {
 	if (!configDir) return "";
 	const filePath = path.resolve(path.join(configDir, CONFIG_FILE$5));
-	await initBatchFile(filePath, DEFAULT_BATCH_DATA$19);
+	await initBatchFile(filePath, DEFAULT_BATCH_DATA$20);
 	if (!isWin) await ensureScriptExecutable(filePath);
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
-async function saveArgs$20(args, configDir) {
+async function saveArgs$21(args, configDir) {
 	return await utilSaveArgs(args, CONFIG_FILE$5, parseArgsToString$2, configDir);
 }
-async function readArgs$20(configDir) {
-	return await utilReadArgs(CONFIG_FILE$5, DEFAULT_BATCH_DATA$19, parseStringToArgs$2, configDir);
+async function readArgs$21(configDir) {
+	return await utilReadArgs(CONFIG_FILE$5, DEFAULT_BATCH_DATA$20, parseStringToArgs$2, configDir);
 }
-async function updateAvailable$7(utils) {
+async function updateAvailable$8(utils) {
 	const available = await checkNpmPackageUpdate(PACKAGE_NAME);
 	if (available) {
 		utils.storage.set("update-available-version-n8n", available);
@@ -22624,7 +22624,7 @@ async function updateAvailable$7(utils) {
 	utils.storage.set("update-available-version-n8n", void 0);
 	return false;
 }
-function mainIpc$7(utils) {
+function mainIpc$8(utils) {
 	utils.ipc.handle("is_n8n_installed", () => isNpmPackageInstalled(PACKAGE_NAME));
 	utils.ipc.handle("current_n8n_version", () => getNpmPackageVersion(PACKAGE_NAME));
 	utils.ipc.handle("is_n8n_npm_available", () => checkWhich("npm"));
@@ -22634,39 +22634,143 @@ const isInstalled$4 = () => isNpmPackageInstalled(PACKAGE_NAME);
 const N8N_MM = (utils) => {
 	const configDir = utils.getConfigDir();
 	return {
-		mainIpc: () => mainIpc$7(utils),
-		getRunCommands: () => getRunCommands$27(configDir),
+		mainIpc: () => mainIpc$8(utils),
+		getRunCommands: () => getRunCommands$28(configDir),
 		isInstalled: isInstalled$4,
-		saveArgs: (args) => saveArgs$20(args, configDir),
-		readArgs: () => readArgs$20(configDir),
-		updateAvailable: () => updateAvailable$7(utils),
+		saveArgs: (args) => saveArgs$21(args, configDir),
+		readArgs: () => readArgs$21(configDir),
+		updateAvailable: () => updateAvailable$8(utils),
 		uninstall: () => uninstallNpmPackage(PACKAGE_NAME)
 	};
 };
 //#endregion
 //#region module/src/containers/audio/AllTalkTts/MainMethods.ts
-const BAT_FILE_NAME$17 = isWin ? "start_alltalk.bat" : "start_alltalk.sh";
-async function getRunCommands$26() {
-	return await utilRunCommands(BAT_FILE_NAME$17);
+const BAT_FILE_NAME$18 = isWin ? "start_alltalk.bat" : "start_alltalk.sh";
+async function getRunCommands$27() {
+	return await utilRunCommands(BAT_FILE_NAME$18);
 }
 const Rrew123_MM = (utils) => {
 	const installDir = utils.getInstallDir(ALLTALK_ID);
 	return {
-		getRunCommands: () => getRunCommands$26(),
-		isInstalled: () => isGitTypeInstalled(installDir, "https://github.com/erew123/alltalk_tts", [BAT_FILE_NAME$17])
+		getRunCommands: () => getRunCommands$27(),
+		isInstalled: () => isGitTypeInstalled(installDir, "https://github.com/erew123/alltalk_tts", [BAT_FILE_NAME$18])
 	};
 };
 //#endregion
 //#region module/src/containers/audio/Applio/MainMethods.ts
 const BAT_FILE = isWin ? "run-applio.bat" : "run-applio.sh";
-async function getRunCommands$25(dir) {
+async function getRunCommands$26(dir) {
 	return await utilRunCommands(BAT_FILE, dir);
 }
 const Applio_MM = (utils) => {
 	const installDir = utils.getInstallDir(AG_ID);
 	return {
-		getRunCommands: () => getRunCommands$25(installDir),
+		getRunCommands: () => getRunCommands$26(installDir),
 		isInstalled: () => isGitTypeInstalled(installDir, "https://github.com/IAHispano/Applio", [BAT_FILE])
+	};
+};
+//#endregion
+//#region module/src/containers/audio/AudioCppWebui/MainMethods.ts
+const BAT_FILE_NAME$17 = isWin ? "lynx-user.bat" : "lynx-user.sh";
+const DEFAULT_BATCH_DATA$19 = isWin ? "@echo off\n\nset AUDIOCPP_NO_BROWSER=1\nif exist \"%~dp0venv\\Scripts\\python.exe\" (\n  \"%~dp0venv\\Scripts\\python.exe\" webui\\webui.py\n) else (\n  python webui\\webui.py\n)" : "#!/usr/bin/env bash\n\nexport AUDIOCPP_NO_BROWSER=\"1\"\nif [ -f \"./venv/bin/python\" ]; then\n  ./venv/bin/python webui/webui.py\nelse\n  python webui/webui.py\nfi";
+async function isAudioCppInstalled(dir) {
+	if (!dir) return false;
+	if (!await checkDirExist(dir)) return false;
+	const keyFiles = [
+		"run_webui.bat",
+		"run_native_webui.bat",
+		"run_server.bat",
+		path.join("webui", "webui.py"),
+		path.join("gpu", "audiocpp_server.exe"),
+		path.join("cpu", "audiocpp_server.exe"),
+		"audiocpp_server.exe",
+		"audiocpp_server",
+		"CMakeLists.txt",
+		"requirements.txt"
+	];
+	for (const file of keyFiles) if (import_graceful_fs.default.existsSync(path.join(dir, file))) return true;
+	return false;
+}
+async function getInstalledVersion(dir) {
+	if (!dir || !import_graceful_fs.default.existsSync(dir)) return "unknown";
+	const versionJsonPath = path.join(dir, "version.json");
+	if (import_graceful_fs.default.existsSync(versionJsonPath)) try {
+		const data = JSON.parse(await import_graceful_fs.default.promises.readFile(versionJsonPath, "utf8"));
+		if (data?.version) return `v${data.version}`;
+	} catch {}
+	try {
+		const manifest = (await import_graceful_fs.default.promises.readdir(dir)).find((f) => f.startsWith("manifest-") && f.endsWith(".json"));
+		if (manifest) {
+			const tagMatch = manifest.match(/manifest-(v[\d.]+)\.json/i);
+			if (tagMatch) return tagMatch[1];
+		}
+	} catch {}
+	return "unknown";
+}
+async function getRunCommands$25(dir) {
+	return await utilRunCommands(BAT_FILE_NAME$17, dir, DEFAULT_BATCH_DATA$19);
+}
+async function saveArgs$20(args, dir) {
+	await utilSaveArgs(args, BAT_FILE_NAME$17, parseArgsToString$3, dir);
+}
+async function readArgs$20(dir) {
+	return await utilReadArgs(BAT_FILE_NAME$17, DEFAULT_BATCH_DATA$19, parseStringToArgs$3, dir);
+}
+async function updateAvailable$7(utils) {
+	try {
+		const currentVersion = await getInstalledVersion(utils.getInstallDir(AUDIO_CPP_WEBUI_ID));
+		if (!currentVersion || currentVersion === "unknown") return false;
+		const latestTag = await getLatestAudioCppTag();
+		if (!latestTag || latestTag === "unknown") return false;
+		return !latestTag.includes(currentVersion.replace(/^v/, ""));
+	} catch (error) {
+		console.error("Error checking audio.cpp-webui updates:", error);
+		return false;
+	}
+}
+async function uninstall$3(utils) {
+	const dir = utils.getInstallDir(AUDIO_CPP_WEBUI_ID);
+	if (dir && import_graceful_fs.default.existsSync(dir)) await utils.removeDir(dir);
+}
+function mainIpc$7(utils) {
+	utils.ipc.handle("validate_audiocpp_install_dir", async (_event, dir) => {
+		return await isAudioCppInstalled(dir);
+	});
+	utils.ipc.handle("current_audiocpp_version", async (_event, dir) => {
+		return await getInstalledVersion(dir || utils.getInstallDir("Kigner_AudioCppWebui"));
+	});
+	utils.ipc.handle("fetch_audiocpp_releases", async () => {
+		return await fetchAudioCppReleases();
+	});
+	utils.ipc.handle("fetch_audiocpp_latest_tag", async () => {
+		return await getLatestAudioCppTag();
+	});
+	utils.ipc.handle("copy_audiocpp_files", async (_event, src, dest) => {
+		try {
+			await import_graceful_fs.default.promises.mkdir(dest, { recursive: true });
+			const payloadPath = path.join(src, "payload");
+			const actualSrc = import_graceful_fs.default.existsSync(payloadPath) ? payloadPath : src;
+			await import_graceful_fs.default.promises.cp(actualSrc, dest, {
+				recursive: true,
+				force: true
+			});
+		} catch (error) {
+			console.error("Failed to copy audio.cpp-webui files:", error);
+			if (error?.code === "EPERM" || error?.code === "EACCES") throw new Error(`Permission denied (EPERM) writing to "${dest}". Please choose a directory with write permissions.`, { cause: error });
+			throw new Error(`Failed to copy files to "${dest}": ${error?.message || error}`, { cause: error });
+		}
+	});
+}
+const AudioCppWebui_MM = (utils) => {
+	const installDir = utils.getInstallDir(AUDIO_CPP_WEBUI_ID);
+	return {
+		getRunCommands: () => getRunCommands$25(installDir),
+		readArgs: () => readArgs$20(installDir),
+		saveArgs: (args) => saveArgs$20(args, installDir),
+		mainIpc: () => mainIpc$7(utils),
+		isInstalled: () => isAudioCppInstalled(installDir),
+		updateAvailable: () => updateAvailable$7(utils),
+		uninstall: () => uninstall$3(utils)
 	};
 };
 //#endregion
@@ -22677,10 +22781,10 @@ async function getRunCommands$24(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$16, dir, DEFAULT_BATCH_DATA$18);
 }
 async function saveArgs$19(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$16, parseArgsToString$3, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$16, parseArgsToString$4, dir);
 }
 async function readArgs$19(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$16, DEFAULT_BATCH_DATA$18, parseStringToArgs$3, dir);
+	return await utilReadArgs(BAT_FILE_NAME$16, DEFAULT_BATCH_DATA$18, parseStringToArgs$4, dir);
 }
 const Gitmylo_MM = (utils) => {
 	const installDir = utils.getInstallDir(AG_ID);
@@ -22726,10 +22830,10 @@ async function getRunCommands$21(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$13, dir, DEFAULT_BATCH_DATA$16);
 }
 async function saveArgs$18(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$13, parseArgsToString$4, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$13, parseArgsToString$5, dir);
 }
 async function readArgs$18(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$13, DEFAULT_BATCH_DATA$16, parseStringToArgs$4, dir);
+	return await utilReadArgs(BAT_FILE_NAME$13, DEFAULT_BATCH_DATA$16, parseStringToArgs$5, dir);
 }
 const VoiceStudio_MM = (utils) => {
 	const installDir = utils.getInstallDir(VOICE_STUDIO_ID);
@@ -22750,10 +22854,10 @@ async function getRunCommands$20(dir) {
 	return await utilRunCommands(EXEC_FILE$1, dir, DEFAULT_BATCH_DATA$15);
 }
 async function saveArgs$17(args, dir) {
-	return await utilSaveArgs(args, CONFIG_FILE$4, parseArgsToString$5, dir);
+	return await utilSaveArgs(args, CONFIG_FILE$4, parseArgsToString$6, dir);
 }
 async function readArgs$17(dir) {
-	return await utilReadArgs(CONFIG_FILE$4, DEFAULT_BATCH_DATA$15, parseStringToArgs$5, dir);
+	return await utilReadArgs(CONFIG_FILE$4, DEFAULT_BATCH_DATA$15, parseStringToArgs$6, dir);
 }
 function A1_MM(utils, url) {
 	const installDir = utils.getInstallDir(A1_ID);
@@ -22773,10 +22877,10 @@ async function getRunCommands$19(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$12, dir, DEFAULT_BATCH_DATA$14);
 }
 async function saveArgs$16(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$12, parseArgsToString$6, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$12, parseArgsToString$7, dir);
 }
 async function readArgs$16(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$12, DEFAULT_BATCH_DATA$14, parseStringToArgs$6, dir);
+	return await utilReadArgs(BAT_FILE_NAME$12, DEFAULT_BATCH_DATA$14, parseStringToArgs$7, dir);
 }
 function mainIpc$6(ipc) {
 	ipc.handle("Comfy_isCondaInstalled", async () => checkWhich("conda"));
@@ -23149,10 +23253,10 @@ async function getRunCommands$16(dir) {
 	return [`${Invoke_Command_ActivateVenv}${LINE_ENDING}`, `invokeai-web --root ${dir}${LINE_ENDING}`];
 }
 async function saveArgs$13(args, dir) {
-	return await utilSaveArgs(args, CONFIG_FILE$3, parseArgsToString$7, dir);
+	return await utilSaveArgs(args, CONFIG_FILE$3, parseArgsToString$8, dir);
 }
 async function readArgs$13(dir) {
-	return await utilReadArgs(CONFIG_FILE$3, DEFAULT_CONFIG_DATA, parseStringToArgs$7, dir);
+	return await utilReadArgs(CONFIG_FILE$3, DEFAULT_CONFIG_DATA, parseStringToArgs$8, dir);
 }
 async function mainIpc$5(utils) {
 	utils.ipc.handle("is_uv_installed", () => {
@@ -23205,10 +23309,10 @@ async function getRunCommands$15(dir) {
 	return await utilRunCommands(EXEC_FILE, dir, DEFAULT_BATCH_DATA$11);
 }
 async function saveArgs$12(args, dir) {
-	return await utilSaveArgs(args, CONFIG_FILE$2, parseArgsToString$8, dir);
+	return await utilSaveArgs(args, CONFIG_FILE$2, parseArgsToString$9, dir);
 }
 async function readArgs$12(dir) {
-	return await utilReadArgs(CONFIG_FILE$2, DEFAULT_BATCH_DATA$11, parseStringToArgs$8, dir);
+	return await utilReadArgs(CONFIG_FILE$2, DEFAULT_BATCH_DATA$11, parseStringToArgs$9, dir);
 }
 const Ls_MM = (utils) => {
 	const installDir = utils.getInstallDir(SD_AMD_ID);
@@ -23227,10 +23331,10 @@ async function getRunCommands$14(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$9, dir, DEFAULT_BATCH_DATA$10);
 }
 async function saveArgs$11(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$9, parseArgsToString$9, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$9, parseArgsToString$10, dir);
 }
 async function readArgs$11(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$9, DEFAULT_BATCH_DATA$10, parseStringToArgs$9, dir);
+	return await utilReadArgs(BAT_FILE_NAME$9, DEFAULT_BATCH_DATA$10, parseStringToArgs$10, dir);
 }
 const Vlad_MM = (utils) => {
 	const installDir = utils.getInstallDir(SD_NEXT_ID);
@@ -23249,10 +23353,10 @@ async function getRunCommands$13(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$8, dir, DEFAULT_BATCH_DATA$9);
 }
 async function saveArgs$10(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$8, parseArgsToString$10, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$8, parseArgsToString$11, dir);
 }
 async function readArgs$10(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$8, DEFAULT_BATCH_DATA$9, parseStringToArgs$10, dir);
+	return await utilReadArgs(BAT_FILE_NAME$8, DEFAULT_BATCH_DATA$9, parseStringToArgs$11, dir);
 }
 const McMonkey_MM = (utils) => {
 	const installDir = utils.getInstallDir(SWARM_ID);
@@ -23475,10 +23579,10 @@ async function getRunCommands$9(configDir) {
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
 async function saveArgs$8(args, configDir) {
-	return await utilSaveArgs(args, CONFIG_FILE$1, parseArgsToString$11, configDir);
+	return await utilSaveArgs(args, CONFIG_FILE$1, parseArgsToString$12, configDir);
 }
 async function readArgs$8(configDir) {
-	return await utilReadArgs(CONFIG_FILE$1, DEFAULT_BATCH_DATA$8, parseStringToArgs$11, configDir);
+	return await utilReadArgs(CONFIG_FILE$1, DEFAULT_BATCH_DATA$8, parseStringToArgs$12, configDir);
 }
 async function isInstalled$1(utils) {
 	return !!await getPipPackageVersion("open-webui", utils, OPEN_WEBUI_ID);
@@ -23586,10 +23690,10 @@ async function getRunCommands$7(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$6, dir, DEFAULT_BATCH_DATA$6);
 }
 async function saveArgs$6(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$6, parseArgsToString$12, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$6, parseArgsToString$13, dir);
 }
 async function readArgs$6(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$6, DEFAULT_BATCH_DATA$6, parseStringToArgs$12, dir);
+	return await utilReadArgs(BAT_FILE_NAME$6, DEFAULT_BATCH_DATA$6, parseStringToArgs$13, dir);
 }
 const Ooba_MM = (utils) => {
 	const installDir = utils.getInstallDir(TG_ID);
@@ -23608,10 +23712,10 @@ async function getRunCommands$6(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$5, dir, DEFAULT_BATCH_DATA$5);
 }
 async function saveArgs$5(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$5, parseArgsToString$13, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$5, parseArgsToString$14, dir);
 }
 async function readArgs$5(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$5, DEFAULT_BATCH_DATA$5, parseStringToArgs$13, dir);
+	return await utilReadArgs(BAT_FILE_NAME$5, DEFAULT_BATCH_DATA$5, parseStringToArgs$14, dir);
 }
 function mainIpc$1(utils) {
 	utils.ipc.handle("is_aitoolkit_npm_available", () => checkWhich("npm"));
@@ -23635,10 +23739,10 @@ async function getRunCommands$5(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$4, dir, DEFAULT_BATCH_DATA$4);
 }
 async function saveArgs$4(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$4, parseArgsToString$14, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$4, parseArgsToString$15, dir);
 }
 async function readArgs$4(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$4, DEFAULT_BATCH_DATA$4, parseStringToArgs$14, dir);
+	return await utilReadArgs(BAT_FILE_NAME$4, DEFAULT_BATCH_DATA$4, parseStringToArgs$15, dir);
 }
 const LoraManager_MM = (utils) => {
 	const installDir = utils.getInstallDir(LORA_MANAGER_ID);
@@ -23657,10 +23761,10 @@ async function getRunCommands$4(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$3, dir, DEFAULT_BATCH_DATA$3);
 }
 async function saveArgs$3(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$3, parseArgsToString$15, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$3, parseArgsToString$16, dir);
 }
 async function readArgs$3(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$3, DEFAULT_BATCH_DATA$3, parseStringToArgs$15, dir);
+	return await utilReadArgs(BAT_FILE_NAME$3, DEFAULT_BATCH_DATA$3, parseStringToArgs$16, dir);
 }
 const Bmaltais_MM = (utils) => {
 	const installDir = utils.getInstallDir(KOHYA_ID);
@@ -23679,10 +23783,10 @@ async function getRunCommands$3(dir) {
 	return await utilRunCommands(BAT_FILE_NAME$2, dir, DEFAULT_BATCH_DATA$2);
 }
 async function saveArgs$2(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME$2, parseArgsToString$16, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME$2, parseArgsToString$17, dir);
 }
 async function readArgs$2(dir) {
-	return await utilReadArgs(BAT_FILE_NAME$2, DEFAULT_BATCH_DATA$2, parseStringToArgs$16, dir);
+	return await utilReadArgs(BAT_FILE_NAME$2, DEFAULT_BATCH_DATA$2, parseStringToArgs$17, dir);
 }
 const LlamaFactory_MM = (utils) => {
 	const installDir = utils.getInstallDir(LLAMA_FACTORY_ID);
@@ -23720,10 +23824,10 @@ async function getRunCommands$1(dir) {
 	return await utilRunCommands(BAT_FILE_NAME, dir, DEFAULT_BATCH_DATA$1);
 }
 async function saveArgs$1(args, dir) {
-	return await utilSaveArgs(args, BAT_FILE_NAME, parseArgsToString$17, dir);
+	return await utilSaveArgs(args, BAT_FILE_NAME, parseArgsToString$18, dir);
 }
 async function readArgs$1(dir) {
-	return await utilReadArgs(BAT_FILE_NAME, DEFAULT_BATCH_DATA$1, parseStringToArgs$17, dir);
+	return await utilReadArgs(BAT_FILE_NAME, DEFAULT_BATCH_DATA$1, parseStringToArgs$18, dir);
 }
 const SmartGallery_MM = (utils) => {
 	const installDir = utils.getInstallDir(SMARTGALLERY_ID);
@@ -23749,10 +23853,10 @@ async function getRunCommands(configDir) {
 	return [getCdCommand(configDir) + LINE_ENDING, `${isWin ? `& "${filePath}"` : `bash "${filePath}"`}${LINE_ENDING}`];
 }
 async function saveArgs(args, configDir) {
-	return await utilSaveArgs(args, CONFIG_FILE, parseArgsToString$18, configDir);
+	return await utilSaveArgs(args, CONFIG_FILE, parseArgsToString$19, configDir);
 }
 async function readArgs(configDir) {
-	return await utilReadArgs(CONFIG_FILE, DEFAULT_BATCH_DATA, parseStringToArgs$18, configDir);
+	return await utilReadArgs(CONFIG_FILE, DEFAULT_BATCH_DATA, parseStringToArgs$19, configDir);
 }
 async function fetchLatestTag() {
 	try {
@@ -23954,6 +24058,10 @@ async function initialModule(utils) {
 		{
 			id: VOICE_STUDIO_ID,
 			methods: () => VoiceStudio_MM(utils)
+		},
+		{
+			id: AUDIO_CPP_WEBUI_ID,
+			methods: () => AudioCppWebui_MM(utils)
 		},
 		{
 			id: UNSLOTH_STUDIO_ID,

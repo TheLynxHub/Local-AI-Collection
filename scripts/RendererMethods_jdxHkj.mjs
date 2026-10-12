@@ -36,6 +36,7 @@ const AG_ID = "Gitmylo_AG";
 const APPLIO_ID = "IAHispano_Applio";
 const CHAT_TTS_ID = "ChatTTS_2Noise";
 const VOICE_STUDIO_ID = "Debpalash_VoiceStudio";
+const AUDIO_CPP_WEBUI_ID = "Kigner_AudioCppWebui";
 //#endregion
 //#region module/src/utils/crossUtils.ts
 function detectIsWin() {
@@ -2333,15 +2334,23 @@ const antigravityCliArguments = [
 			}]
 		}, {
 			section: "Networking & Proxy",
-			items: [{
-				name: "HTTPS_PROXY",
-				description: "HTTPS proxy URL for Antigravity CLI network traffic.",
-				type: "Input"
-			}, {
-				name: "HTTP_PROXY",
-				description: "HTTP proxy URL for Antigravity CLI network traffic.",
-				type: "Input"
-			}]
+			items: [
+				{
+					name: "HTTPS_PROXY",
+					description: "HTTPS proxy URL for Antigravity CLI network traffic.",
+					type: "Input"
+				},
+				{
+					name: "HTTP_PROXY",
+					description: "HTTP proxy URL for Antigravity CLI network traffic.",
+					type: "Input"
+				},
+				{
+					name: "NO_PROXY",
+					description: "Space or comma separated list of hosts to bypass the proxy.",
+					type: "Input"
+				}
+			]
 		}]
 	},
 	{
@@ -2375,6 +2384,68 @@ const antigravityCliArguments = [
 					type: "Input"
 				},
 				{
+					name: "--agent <agent_name>",
+					description: "Agent for the current CLI session.",
+					type: "Input"
+				},
+				{
+					name: "--effort <level>",
+					description: "Reasoning effort for the current CLI session (low|medium|high|xhigh|max).",
+					type: "DropDown",
+					values: [
+						"low",
+						"medium",
+						"high",
+						"xhigh",
+						"max"
+					],
+					defaultValue: "high"
+				},
+				{
+					name: "--mode <mode>",
+					description: "Set the agent execution mode for this session (accept-edits, plan).",
+					type: "DropDown",
+					values: ["accept-edits", "plan"]
+				},
+				{
+					name: "--output-format <format>",
+					description: "Output format for print mode (text, json, stream-json).",
+					type: "DropDown",
+					values: [
+						"text",
+						"json",
+						"stream-json"
+					],
+					defaultValue: "text"
+				},
+				{
+					name: "--input-format <format>",
+					description: "Input format for print mode (text, stream-json).",
+					type: "DropDown",
+					values: ["text", "stream-json"],
+					defaultValue: "text"
+				},
+				{
+					name: "--json-schema <schema>",
+					description: "Optional JSON schema string or path to a schema file to enforce structured output.",
+					type: "Input"
+				},
+				{
+					name: "--project <project_id>",
+					description: "Project ID or project name for the current CLI session.",
+					type: "Input"
+				},
+				{
+					name: "--new-project",
+					description: "Create a new project for this session.",
+					type: "CheckBox"
+				},
+				{
+					name: "--remote-control",
+					description: "Create a remote connection for the CLI session on startup.",
+					type: "CheckBox"
+				},
+				{
 					name: "--add-dir <directory_path>",
 					description: "Add a directory to the workspace (repeatable).",
 					type: "Directory"
@@ -2382,6 +2453,11 @@ const antigravityCliArguments = [
 				{
 					name: "--dangerously-skip-permissions",
 					description: "Auto-approve all tool permission requests without prompting.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-slash-commands",
+					description: "Disable slash command and skill expansion in print mode.",
 					type: "CheckBox"
 				},
 				{
@@ -2396,7 +2472,7 @@ const antigravityCliArguments = [
 				},
 				{
 					name: "--print-timeout <duration>",
-					description: "Timeout for print mode wait (default 5m0s).",
+					description: "Optional time limit for print mode; 0 waits until the turn completes (default: 0s).",
 					type: "Input"
 				}
 			]
@@ -2409,39 +2485,74 @@ const antigravityCliArguments = [
 				section: "General & Appearance",
 				items: [
 					{
+						name: "model",
+						description: "Default model in settings.json.",
+						type: "Input",
+						defaultValue: "Gemini 3.8 Flash (Medium)"
+					},
+					{
 						name: "colorScheme",
 						description: "Color theme: \"light\", \"solarized light\", \"colorblind-friendly light\", \"dark\", \"solarized dark\", \"colorblind-friendly dark\", \"tokyo night\", or \"terminal\".",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"dark",
+							"light",
+							"solarized light",
+							"colorblind-friendly light",
+							"solarized dark",
+							"colorblind-friendly dark",
+							"tokyo night",
+							"terminal"
+						],
+						defaultValue: "dark"
 					},
 					{
 						name: "altScreenMode",
 						description: "Screen buffer usage: \"default\", \"always\", or \"never\".",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"default",
+							"always",
+							"never"
+						],
+						defaultValue: "default"
 					},
 					{
 						name: "verbosity",
 						description: "Visual verbosity level: \"high\" (full thoughts and tool outputs) or \"low\" (minimal indicator).",
-						type: "Input"
+						type: "DropDown",
+						values: ["high", "low"],
+						defaultValue: "high"
 					},
 					{
 						name: "runningLightSpeed",
 						description: "Progress animation speed: \"fast\", \"medium\", \"slow\", or \"off\".",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"fast",
+							"medium",
+							"slow",
+							"off"
+						],
+						defaultValue: "medium"
 					},
 					{
 						name: "showTips",
 						description: "Display helpful agentic tips above the prompt panel during generation turns.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: true
 					},
 					{
 						name: "showFeedbackSurvey",
 						description: "Display periodic quality feedback surveys upon task completions.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: true
 					},
 					{
 						name: "notifications",
 						description: "Emit system desktop and terminal bell notifications upon task completion.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: true
 					}
 				]
 			},
@@ -2451,22 +2562,37 @@ const antigravityCliArguments = [
 					{
 						name: "toolPermission",
 						description: "Global safety presets: \"request-review\", \"proceed-in-sandbox\", \"always-proceed\", or \"strict\".",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"request-review",
+							"proceed-in-sandbox",
+							"always-proceed",
+							"strict"
+						],
+						defaultValue: "request-review"
 					},
 					{
 						name: "artifactReviewPolicy",
 						description: "Code review policy: \"asks-for-review\", \"agent-decides\", or \"always-proceed\".",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"asks-for-review",
+							"agent-decides",
+							"always-proceed"
+						],
+						defaultValue: "asks-for-review"
 					},
 					{
 						name: "enableTerminalSandbox",
 						description: "Restrict all local execution commands launched by agents to OS containment rings.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: true
 					},
 					{
 						name: "allowNonWorkspaceAccess",
 						description: "Permit file read/write tools to navigate outside recognized workspace roots.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: false
 					}
 				]
 			},
@@ -2476,17 +2602,26 @@ const antigravityCliArguments = [
 					{
 						name: "useG1Credits",
 						description: "Use personal AI credits for model calls once plan quotas are exhausted.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "enableTelemetry",
 						description: "Permit metric collection and crash log streaming to improve tool reliability.",
-						type: "CheckBox"
+						type: "CheckBox",
+						defaultValue: true
 					},
 					{
 						name: "editor",
-						description: "Target text editor utility (\"auto\", \"vim\", \"emacs\").",
-						type: "Input"
+						description: "Target text editor utility (\"auto\", \"vim\", \"emacs\", \"code\").",
+						type: "DropDown",
+						values: [
+							"auto",
+							"vim",
+							"emacs",
+							"code"
+						],
+						defaultValue: "auto"
 					}
 				]
 			}
@@ -2571,7 +2706,7 @@ function parseArgsToFiles$4(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$23(args) {
+function parseArgsToString$24(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$4(args);
 	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
 	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
@@ -2587,7 +2722,7 @@ function parseArgsToString$23(args) {
 	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$4(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$23(scriptContent);
+	const scriptArgs = parseStringToArgs$24(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -2620,7 +2755,7 @@ function parseFilesToArgs$4(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$23(data) {
+function parseStringToArgs$24(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -2676,7 +2811,7 @@ function parseStringToArgs$23(data) {
 	});
 	return argResult;
 }
-function startInstall$22(stepper) {
+function startInstall$23(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Detect Existing",
@@ -2705,7 +2840,7 @@ function startInstall$22(stepper) {
 		});
 	});
 }
-function startUpdate$10(stepper) {
+function startUpdate$11(stepper) {
 	stepper.initialSteps(["Update Antigravity CLI", "Complete Update"]);
 	stepper.executeTerminalCommands("agy update").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -2714,7 +2849,7 @@ function startUpdate$10(stepper) {
 		stepper.showFinalStep("success", "Antigravity CLI Updated Successfully!", "Antigravity CLI has been updated to the latest available version.");
 	});
 }
-async function cardInfo$22(api, callback) {
+async function cardInfo$23(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -2751,14 +2886,14 @@ async function cardInfo$22(api, callback) {
 	});
 }
 const AntigravityCli_RM = {
-	cardInfo: cardInfo$22,
-	parseStringToArgs: parseStringToArgs$23,
-	parseArgsToString: parseArgsToString$23,
+	cardInfo: cardInfo$23,
+	parseStringToArgs: parseStringToArgs$24,
+	parseArgsToString: parseArgsToString$24,
 	manager: {
-		startInstall: startInstall$22,
+		startInstall: startInstall$23,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$10
+			startUpdate: startUpdate$11
 		}
 	}
 };
@@ -2793,6 +2928,11 @@ const claudeCodeArguments = [
 						name: "ANTHROPIC_BASE_URL",
 						description: "Override the API endpoint to route requests through a proxy or gateway.",
 						type: "Input"
+					},
+					{
+						name: "ANTHROPIC_MODEL",
+						description: "Default model alias or full model name for Claude Code.",
+						type: "Input"
 					}
 				]
 			},
@@ -2802,12 +2942,14 @@ const claudeCodeArguments = [
 					{
 						name: "CLAUDE_CODE_ENABLE_TELEMETRY",
 						description: "Enable Claude Code telemetry collection when set to 1.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "DISABLE_TELEMETRY",
 						description: "Set to 1 to disable telemetry collection.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "OTEL_METRICS_EXPORTER",
@@ -2822,7 +2964,9 @@ const claudeCodeArguments = [
 					{
 						name: "OTEL_EXPORTER_OTLP_PROTOCOL",
 						description: "OTLP protocol, usually grpc or http.",
-						type: "Input"
+						type: "DropDown",
+						values: ["grpc", "http"],
+						defaultValue: "grpc"
 					},
 					{
 						name: "OTEL_EXPORTER_OTLP_ENDPOINT",
@@ -2837,12 +2981,14 @@ const claudeCodeArguments = [
 					{
 						name: "OTEL_METRIC_EXPORT_INTERVAL",
 						description: "Metric export interval in milliseconds.",
-						type: "Input"
+						type: "Number",
+						numberMin: 100
 					},
 					{
 						name: "OTEL_LOGS_EXPORT_INTERVAL",
 						description: "Log export interval in milliseconds.",
-						type: "Input"
+						type: "Number",
+						numberMin: 100
 					}
 				]
 			},
@@ -2852,7 +2998,8 @@ const claudeCodeArguments = [
 					{
 						name: "CLAUDE_CODE_USE_VERTEX",
 						description: "Set to 1 to enable Google Vertex AI / Agent Platform integration.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "CLOUD_ML_REGION",
@@ -2867,7 +3014,8 @@ const claudeCodeArguments = [
 					{
 						name: "DISABLE_PROMPT_CACHING",
 						description: "Set to 1 to disable prompt caching when using Vertex AI.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					}
 				]
 			},
@@ -2877,7 +3025,8 @@ const claudeCodeArguments = [
 					{
 						name: "CLAUDE_CODE_USE_BEDROCK",
 						description: "Set to 1 to enable Amazon Bedrock integration.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "AWS_REGION",
@@ -2912,12 +3061,14 @@ const claudeCodeArguments = [
 					{
 						name: "API_TIMEOUT_MS",
 						description: "Timeout for API requests in milliseconds (default: 600000).",
-						type: "Input"
+						type: "Number",
+						defaultValue: 6e5,
+						numberMin: 1e3
 					},
 					{
 						name: "CLAUDE_CODE_GIT_BASH_PATH",
 						description: "Custom path to bash.exe when using portable Git on Windows.",
-						type: "Input"
+						type: "File"
 					}
 				]
 			},
@@ -2938,6 +3089,34 @@ const claudeCodeArguments = [
 						name: "AWS_SESSION_TOKEN",
 						description: "Optional AWS session token when using temporary credentials.",
 						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Advanced & Experimental",
+				items: [
+					{
+						name: "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS",
+						description: "Enable experimental agent team features.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "CLAUDE_CODE_TMPDIR",
+						description: "Custom temporary directory used by Claude Code.",
+						type: "Directory"
+					},
+					{
+						name: "CLAUDE_CODE_SAFE_MODE",
+						description: "Start with all customizations disabled to troubleshoot broken configurations.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "CLAUDE_CODE_SIMPLE",
+						description: "Start in minimal bare mode without auto-discovery of hooks or plugins.",
+						type: "CheckBox",
+						defaultValue: false
 					}
 				]
 			}
@@ -2972,17 +3151,119 @@ const claudeCodeArguments = [
 					{
 						name: "--output-format <format>",
 						description: "Output format for print mode (text, json, stream-json).",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"text",
+							"json",
+							"stream-json"
+						],
+						defaultValue: "text"
+					},
+					{
+						name: "--input-format <format>",
+						description: "Input format for print mode (text, stream-json).",
+						type: "DropDown",
+						values: ["text", "stream-json"],
+						defaultValue: "text"
 					},
 					{
 						name: "--effort <level>",
 						description: "Set effort level for session (low, medium, high, xhigh, max, ultracode).",
-						type: "Input"
+						type: "DropDown",
+						values: [
+							"low",
+							"medium",
+							"high",
+							"xhigh",
+							"max",
+							"ultracode"
+						],
+						defaultValue: "high"
 					},
 					{
 						name: "--fallback-model <models>",
 						description: "Automatic fallback model(s) when primary model is overloaded (comma-separated).",
 						type: "Input"
+					},
+					{
+						name: "--max-turns <n>",
+						description: "Limit the number of agentic turns in non-interactive print mode.",
+						type: "Number",
+						numberMin: 1
+					},
+					{
+						name: "--max-budget-usd <amount>",
+						description: "Stop the run once estimated spend on API calls reaches this amount in USD.",
+						type: "Number",
+						numberMin: 0,
+						numberStep: .1
+					},
+					{
+						name: "--verbose",
+						description: "Enable verbose logging, showing full turn-by-turn output.",
+						type: "CheckBox"
+					},
+					{
+						name: "--debug",
+						description: "Enable debug mode logging.",
+						type: "CheckBox"
+					},
+					{
+						name: "--debug-file <path>",
+						description: "Write debug logs to a specific file path.",
+						type: "File"
+					},
+					{
+						name: "--chrome",
+						description: "Enable Chrome browser integration for web automation and testing.",
+						type: "CheckBox"
+					},
+					{
+						name: "--no-chrome",
+						description: "Disable Chrome browser integration for this session.",
+						type: "CheckBox"
+					},
+					{
+						name: "--session-id <uuid>",
+						description: "Use a specific UUID session ID for the conversation.",
+						type: "Input"
+					},
+					{
+						name: "--autocompact <window>",
+						description: "Set the auto-compact window for this session (e.g. auto, 500k).",
+						type: "Input"
+					},
+					{
+						name: "--ax-screen-reader",
+						description: "Render screen-reader friendly output without animations.",
+						type: "CheckBox"
+					},
+					{
+						name: "--teammate-mode <mode>",
+						description: "Display mode for agent team teammates (in-process, auto, tmux, iterm2).",
+						type: "DropDown",
+						values: [
+							"in-process",
+							"auto",
+							"tmux",
+							"iterm2"
+						],
+						defaultValue: "in-process"
+					},
+					{
+						name: "--fork-session",
+						description: "Create a new session ID when resuming instead of reusing the original.",
+						type: "CheckBox"
+					},
+					{
+						name: "--init",
+						description: "Run setup hooks with the init matcher before the session (print mode only).",
+						type: "CheckBox"
+					},
+					{
+						name: "--init-only",
+						description: "Run setup and session start hooks then exit without starting conversation.",
+						type: "CheckBox"
 					},
 					{
 						name: "--bg",
@@ -3011,8 +3292,25 @@ const claudeCodeArguments = [
 				items: [
 					{
 						name: "--permission-mode <mode>",
-						description: "Permission mode (default, acceptEdits, plan, auto, dontAsk, bypassPermissions, manual).",
-						type: "Input"
+						description: "Permission mode (default, manual, acceptEdits, plan, auto, dontAsk, bypassPermissions).",
+						type: "DropDown",
+						values: [
+							"default",
+							"manual",
+							"acceptEdits",
+							"plan",
+							"auto",
+							"dontAsk",
+							"bypassPermissions"
+						],
+						defaultValue: "default"
+					},
+					{
+						name: "--permission-prompts <who>",
+						description: "Set who answers permission prompts in print mode (host or none).",
+						type: "DropDown",
+						values: ["host", "none"],
+						defaultValue: "host"
 					},
 					{
 						name: "--permission-prompt-tool <tool>",
@@ -3075,6 +3373,16 @@ const claudeCodeArguments = [
 						type: "File"
 					},
 					{
+						name: "--append-subagent-system-prompt <prompt>",
+						description: "Append custom text to the end of every subagent system prompt (print mode only).",
+						type: "Input"
+					},
+					{
+						name: "--append-subagent-system-prompt-file <file>",
+						description: "Load text from a file and append it to subagent system prompts (print mode only).",
+						type: "File"
+					},
+					{
 						name: "--mcp-config <file>",
 						description: "Load MCP servers from JSON files or strings (space-separated).",
 						type: "File"
@@ -3111,8 +3419,16 @@ const claudeCodeArguments = [
 					},
 					{
 						name: "effortLevel",
-						description: "Persist default effort level across sessions (low, medium, high, xhigh).",
-						type: "Input"
+						description: "Persist default effort level across sessions (low, medium, high, xhigh, max).",
+						type: "DropDown",
+						values: [
+							"low",
+							"medium",
+							"high",
+							"xhigh",
+							"max"
+						],
+						defaultValue: "high"
 					},
 					{
 						name: "fallbackModel",
@@ -3127,12 +3443,16 @@ const claudeCodeArguments = [
 					{
 						name: "editorMode",
 						description: "Key binding mode for the input prompt (normal, vim).",
-						type: "Input"
+						type: "DropDown",
+						values: ["normal", "vim"],
+						defaultValue: "normal"
 					},
 					{
 						name: "autoUpdatesChannel",
 						description: "Release channel to follow for updates (latest, stable).",
-						type: "Input"
+						type: "DropDown",
+						values: ["latest", "stable"],
+						defaultValue: "latest"
 					}
 				]
 			},
@@ -3140,8 +3460,18 @@ const claudeCodeArguments = [
 				section: "Permissions",
 				items: [{
 					name: "permissions.defaultMode",
-					description: "Default permission mode, for example plan or active.",
-					type: "Input"
+					description: "Default permission mode (default, manual, acceptEdits, plan, auto, dontAsk, bypassPermissions).",
+					type: "DropDown",
+					values: [
+						"default",
+						"manual",
+						"acceptEdits",
+						"plan",
+						"auto",
+						"dontAsk",
+						"bypassPermissions"
+					],
+					defaultValue: "default"
 				}]
 			},
 			{
@@ -3150,7 +3480,8 @@ const claudeCodeArguments = [
 					{
 						name: "env.CLAUDE_CODE_ENABLE_TELEMETRY",
 						description: "Enable telemetry via env section in settings.json.",
-						type: "Input"
+						type: "CheckBox",
+						defaultValue: false
 					},
 					{
 						name: "env.OTEL_METRICS_EXPORTER",
@@ -3222,7 +3553,8 @@ const claudeCodeArguments = [
 					{
 						name: "statusLine.padding",
 						description: "Optional numeric padding value for the status line.",
-						type: "Input"
+						type: "Number",
+						numberMin: 0
 					}
 				]
 			},
@@ -3336,7 +3668,7 @@ function parseArgsToFiles$3(args) {
 		settingsData: settingsString
 	};
 }
-function parseArgsToString$22(args) {
+function parseArgsToString$23(args) {
 	const { settingsData, scriptData } = parseArgsToFiles$3(args);
 	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
 	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
@@ -3352,7 +3684,7 @@ function parseArgsToString$22(args) {
 	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
 }
 function parseFilesToArgs$3(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$22(scriptContent);
+	const scriptArgs = parseStringToArgs$23(scriptContent);
 	const settingsArgs = [];
 	if (settingsContent) try {
 		const settingsJson = JSON.parse(settingsContent);
@@ -3385,7 +3717,7 @@ function parseFilesToArgs$3(scriptContent, settingsContent) {
 		value
 	}));
 }
-function parseStringToArgs$22(data) {
+function parseStringToArgs$23(data) {
 	const argResult = [];
 	data.split("\n").forEach((line) => {
 		if (line.startsWith("#")) return;
@@ -3441,7 +3773,7 @@ function parseStringToArgs$22(data) {
 	});
 	return argResult;
 }
-function startInstall$21(stepper) {
+function startInstall$22(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Detect Existing",
@@ -3470,7 +3802,7 @@ function startInstall$21(stepper) {
 		});
 	});
 }
-function startUpdate$9(stepper) {
+function startUpdate$10(stepper) {
 	stepper.initialSteps(["Update Claude Code", "Complete Update"]);
 	const installCommand = isWin ? "irm https://claude.ai/install.ps1 | iex" : "curl -fsSL https://claude.ai/install.sh | bash";
 	stepper.executeTerminalCommands(installCommand).then(() => {
@@ -3480,7 +3812,7 @@ function startUpdate$9(stepper) {
 		stepper.showFinalStep("success", "Claude Code Updated Successfully!", "Claude Code has been updated to the latest available version.");
 	});
 }
-async function cardInfo$21(api, callback) {
+async function cardInfo$22(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -3510,14 +3842,14 @@ async function cardInfo$21(api, callback) {
 	});
 }
 const ClaudeCode_RM = {
-	cardInfo: cardInfo$21,
-	parseStringToArgs: parseStringToArgs$22,
-	parseArgsToString: parseArgsToString$22,
+	cardInfo: cardInfo$22,
+	parseStringToArgs: parseStringToArgs$23,
+	parseArgsToString: parseArgsToString$23,
 	manager: {
-		startInstall: startInstall$21,
+		startInstall: startInstall$22,
 		updater: {
 			updateType: "stepper",
-			startUpdate: startUpdate$9
+			startUpdate: startUpdate$10
 		}
 	}
 };
@@ -3533,8 +3865,10 @@ const flowiseArguments = [
 					{
 						name: "--PORT",
 						description: "The HTTP port Flowise runs on",
-						type: "Input",
-						defaultValue: 3e3
+						type: "Number",
+						defaultValue: 3e3,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "--APP_URL",
@@ -3582,8 +3916,9 @@ const flowiseArguments = [
 					{
 						name: "--NUMBER_OF_PROXIES",
 						description: "Rate Limit Proxy count",
-						type: "Input",
-						defaultValue: 1
+						type: "Number",
+						defaultValue: 1,
+						numberMin: 0
 					}
 				]
 			},
@@ -3617,8 +3952,9 @@ const flowiseArguments = [
 					{
 						name: "--LOG_JSON_SPACES",
 						description: "Spaces to beautify JSON logs",
-						type: "Input",
-						defaultValue: 2
+						type: "Number",
+						defaultValue: 2,
+						numberMin: 0
 					},
 					{
 						name: "--LOG_SANITIZE_BODY_FIELDS",
@@ -3706,7 +4042,9 @@ const flowiseArguments = [
 				{
 					name: "--DATABASE_PORT",
 					description: "Database port (When DATABASE_TYPE is not sqlite)",
-					type: "Input"
+					type: "Number",
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "--DATABASE_USER",
@@ -3839,14 +4177,16 @@ const flowiseArguments = [
 				{
 					name: "--JWT_TOKEN_EXPIRY_IN_MINUTES",
 					description: "JWT access token expiry time in minutes",
-					type: "Input",
-					defaultValue: 360
+					type: "Number",
+					defaultValue: 360,
+					numberMin: 1
 				},
 				{
 					name: "--JWT_REFRESH_TOKEN_EXPIRY_IN_MINUTES",
 					description: "JWT refresh token expiry time in minutes",
-					type: "Input",
-					defaultValue: 43200
+					type: "Number",
+					defaultValue: 43200,
+					numberMin: 1
 				},
 				{
 					name: "--EXPIRE_AUTH_TOKENS_ON_RESTART",
@@ -3857,20 +4197,97 @@ const flowiseArguments = [
 				{
 					name: "--INVITE_TOKEN_EXPIRY_IN_HOURS",
 					description: "Workspace invite token expiry time in hours",
-					type: "Input",
-					defaultValue: 24
+					type: "Number",
+					defaultValue: 24,
+					numberMin: 1
 				},
 				{
 					name: "--PASSWORD_RESET_TOKEN_EXPIRY_IN_MINS",
 					description: "Password reset token expiry time in minutes",
-					type: "Input",
-					defaultValue: 15
+					type: "Number",
+					defaultValue: 15,
+					numberMin: 1
 				},
 				{
 					name: "--PASSWORD_SALT_HASH_ROUNDS",
 					description: "Salt hash rounds for password hashing",
-					type: "Input",
-					defaultValue: 10
+					type: "Number",
+					defaultValue: 10,
+					numberMin: 1
+				},
+				{
+					name: "--JWT_AUTH_TOKEN_SECRET",
+					description: "Secret key used to sign JWT access tokens (min 32 bytes)",
+					type: "Input"
+				},
+				{
+					name: "--JWT_REFRESH_TOKEN_SECRET",
+					description: "Secret key used to sign JWT refresh tokens (min 32 bytes)",
+					type: "Input"
+				},
+				{
+					name: "--EXPRESS_SESSION_SECRET",
+					description: "Secret key used for Express session cookies",
+					type: "Input"
+				},
+				{
+					name: "--SECURE_COOKIES",
+					description: "Use secure cookies over HTTPS",
+					type: "CheckBox"
+				},
+				{
+					name: "--TOKEN_HASH_SECRET",
+					description: "Secret key used for hashing tokens",
+					type: "Input"
+				},
+				{
+					name: "--WORKSPACE_INVITE_TEMPLATE_PATH",
+					description: "Path to custom workspace invite template (.hbs file)",
+					type: "File"
+				}
+			]
+		}, {
+			section: "SMTP Configuration",
+			items: [
+				{
+					name: "--SMTP_HOST",
+					description: "SMTP server hostname",
+					type: "Input"
+				},
+				{
+					name: "--SMTP_PORT",
+					description: "SMTP server port",
+					type: "Number",
+					defaultValue: 465,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "--SMTP_USER",
+					description: "SMTP username",
+					type: "Input"
+				},
+				{
+					name: "--SMTP_PASSWORD",
+					description: "SMTP password",
+					type: "Input"
+				},
+				{
+					name: "--SMTP_SECURE",
+					description: "Use TLS/SSL for SMTP connection",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "--ALLOW_UNAUTHORIZED_CERTS",
+					description: "Allow self-signed or unauthorized certificates for SMTP",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "--SENDER_EMAIL",
+					description: "Sender email address for workspace invites and notifications",
+					type: "Input"
 				}
 			]
 		}]
@@ -3948,7 +4365,7 @@ const flowiseArguments = [
 					{
 						name: "--GOOGLE_CLOUD_STORAGE_CREDENTIAL",
 						description: "The credential key file path when `STORAGE_TYPE` is `gcs`",
-						type: "Input"
+						type: "File"
 					},
 					{
 						name: "--GOOGLE_CLOUD_STORAGE_BUCKET_NAME",
@@ -4017,8 +4434,10 @@ const flowiseArguments = [
 				{
 					name: "--REDIS_PORT",
 					description: "Redis server port",
-					type: "Input",
-					defaultValue: 6379
+					type: "Number",
+					defaultValue: 6379,
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "--REDIS_URL",
@@ -4041,10 +4460,53 @@ const flowiseArguments = [
 					type: "CheckBox"
 				},
 				{
+					name: "--REDIS_CERT",
+					description: "Path to Redis TLS certificate file",
+					type: "File"
+				},
+				{
+					name: "--REDIS_KEY",
+					description: "Path to Redis TLS private key file",
+					type: "File"
+				},
+				{
+					name: "--REDIS_CA",
+					description: "Path to Redis TLS CA certificate file",
+					type: "File"
+				},
+				{
+					name: "--REDIS_KEEP_ALIVE",
+					description: "Redis socket keep-alive interval in milliseconds",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--QUEUE_REDIS_EVENT_STREAM_MAX_LEN",
+					description: "Maximum length of Redis event stream",
+					type: "Number",
+					defaultValue: 1e5,
+					numberMin: 1
+				},
+				{
 					name: "--WORKER_CONCURRENCY",
 					description: "Worker concurrency for background queue tasks",
-					type: "Input",
-					defaultValue: 1e5
+					type: "Number",
+					defaultValue: 1e5,
+					numberMin: 1
+				},
+				{
+					name: "--REMOVE_ON_AGE",
+					description: "Time in seconds after which completed jobs are removed from queue",
+					type: "Number",
+					defaultValue: 86400,
+					numberMin: 0
+				},
+				{
+					name: "--REMOVE_ON_COUNT",
+					description: "Maximum number of completed jobs to keep in queue",
+					type: "Number",
+					defaultValue: 1e4,
+					numberMin: 0
 				},
 				{
 					name: "--ENABLE_BULLMQ_DASHBOARD",
@@ -4107,14 +4569,16 @@ const flowiseArguments = [
 				{
 					name: "--CUSTOM_MCP_TOOLS_MAX_BYTES",
 					description: "Maximum payload size in bytes for Custom MCP tools",
-					type: "Input",
-					defaultValue: 524288
+					type: "Number",
+					defaultValue: 524288,
+					numberMin: 1
 				},
 				{
 					name: "--CUSTOM_MCP_AUTHORIZE_TIMEOUT_MS",
 					description: "Authorization timeout in milliseconds for Custom MCP tools",
-					type: "Input",
-					defaultValue: 15e3
+					type: "Number",
+					defaultValue: 15e3,
+					numberMin: 1
 				},
 				{
 					name: "--CUSTOM_MCP_ALLOWED_ENV_VARS",
@@ -4124,6 +4588,25 @@ const flowiseArguments = [
 				{
 					name: "--CUSTOM_MCP_ALLOWED_COMMANDS",
 					description: "Comma-separated list of commands a Custom MCP stdio config may run",
+					type: "Input"
+				},
+				{
+					name: "--CUSTOM_MCP_TOOL_DESCRIPTION_MAX_LENGTH",
+					description: "Maximum characters for Custom MCP tool descriptions passed to LLM",
+					type: "Number",
+					defaultValue: 1024,
+					numberMin: 1
+				},
+				{
+					name: "--CUSTOM_MCP_TOOL_NAME_MAX_LENGTH",
+					description: "Maximum characters for Custom MCP tool names",
+					type: "Number",
+					defaultValue: 128,
+					numberMin: 1
+				},
+				{
+					name: "--CUSTOM_MCP_ALLOWED_ABSOLUTE_SCRIPT_PATHS",
+					description: "Comma-separated list of absolute file paths that Custom MCP stdio configs may execute",
 					type: "Input"
 				},
 				{
@@ -4217,7 +4700,7 @@ const flowiseArguments = [
 			items: [{
 				name: "--MODEL_LIST_CONFIG_JSON",
 				description: "File path to load list of models from your local config file",
-				type: "Input",
+				type: "File",
 				defaultValue: "/your_model_list_config_file_path"
 			}]
 		}]
@@ -4230,18 +4713,90 @@ const flowiseArguments = [
 				{
 					name: "--PUPPETEER_EXECUTABLE_FILE_PATH",
 					description: "Executable path for Chrome/Chromium used by Puppeteer document loaders",
-					type: "Input"
+					type: "File"
 				},
 				{
 					name: "--PLAYWRIGHT_EXECUTABLE_FILE_PATH",
 					description: "Executable path for Chrome/Chromium used by Playwright document loaders",
-					type: "Input"
+					type: "File"
 				},
 				{
 					name: "--MIN_SCHEDULE_INTERVAL_SECONDS",
 					description: "Minimum allowed interval in seconds for scheduled tasks",
+					type: "Number",
+					defaultValue: 60,
+					numberMin: 1
+				}
+			]
+		}, {
+			section: "LangSmith Tracing",
+			items: [
+				{
+					name: "--LANGCHAIN_TRACING_V2",
+					description: "Enable LangSmith tracing v2",
+					type: "CheckBox"
+				},
+				{
+					name: "--LANGCHAIN_ENDPOINT",
+					description: "LangSmith API endpoint URL",
 					type: "Input",
-					defaultValue: 60
+					defaultValue: "https://api.smith.langchain.com"
+				},
+				{
+					name: "--LANGCHAIN_API_KEY",
+					description: "LangSmith API key",
+					type: "Input"
+				},
+				{
+					name: "--LANGCHAIN_PROJECT",
+					description: "LangSmith project name for traces",
+					type: "Input"
+				}
+			]
+		}]
+	},
+	{
+		category: "Enterprise",
+		sections: [{
+			section: "License & Enterprise Settings",
+			items: [
+				{
+					name: "--LICENSE_URL",
+					description: "Enterprise license server URL",
+					type: "Input"
+				},
+				{
+					name: "--FLOWISE_EE_LICENSE_KEY",
+					description: "Flowise Enterprise Edition license key",
+					type: "Input"
+				},
+				{
+					name: "--OFFLINE",
+					description: "Run Flowise Enterprise in offline mode",
+					type: "CheckBox"
+				}
+			]
+		}]
+	},
+	{
+		category: "Proxy",
+		sections: [{
+			section: "Global Agent Proxy",
+			items: [
+				{
+					name: "--GLOBAL_AGENT_HTTP_PROXY",
+					description: "Corporate HTTP proxy URL",
+					type: "Input"
+				},
+				{
+					name: "--GLOBAL_AGENT_HTTPS_PROXY",
+					description: "Corporate HTTPS proxy URL",
+					type: "Input"
+				},
+				{
+					name: "--GLOBAL_AGENT_NO_PROXY",
+					description: "Comma-separated list of hostnames or domains to bypass proxy",
+					type: "Input"
 				}
 			]
 		}]
@@ -4253,7 +4808,7 @@ const INSTALL_TIME_KEY$6 = "install-time-flowise";
 const UPDATE_TIME_KEY$6 = "update-time-flowise";
 const UPDATE_AVAILABLE_KEY$5 = "update-available-version-flowise";
 const shellCommand$6 = "npx flowise start";
-function parseArgsToString$21(args) {
+function parseArgsToString$22(args) {
 	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
 	let lines = "";
 	let argResult = "";
@@ -4274,7 +4829,7 @@ function parseArgsToString$21(args) {
 	result += isEmpty(argResult) ? shellCommand$6 : `${shellCommand$6} ${argResult}`;
 	return result;
 }
-function parseStringToArgs$21(args) {
+function parseStringToArgs$22(args) {
 	const argResult = [];
 	args.split("\n").forEach((line) => {
 		if (!line.startsWith(shellCommand$6)) return;
@@ -4301,7 +4856,7 @@ function parseStringToArgs$21(args) {
 	});
 	return argResult;
 }
-function startInstall$20(stepper) {
+function startInstall$21(stepper) {
 	stepper.initialSteps([
 		"Getting Started",
 		"Checking NodeJS",
@@ -4339,7 +4894,7 @@ function startInstall$20(stepper) {
 		});
 	});
 }
-function startUpdate$8(stepper) {
+function startUpdate$9(stepper) {
 	stepper.initialSteps(["Update Flowise", "Complete Update"]);
 	stepper.executeTerminalCommands("npm -g update flowise").then(() => {
 		const currentDate = /* @__PURE__ */ new Date();
@@ -4348,7 +4903,7 @@ function startUpdate$8(stepper) {
 		stepper.showFinalStep("success", "Flowise Updated Successfully!", `Flowise has been updated to the latest version. You can now enjoy the new features and improvements.`);
 	});
 }
-async function cardInfo$20(api, callback) {
+async function cardInfo$21(api, callback) {
 	callback.setOpenFolders(void 0);
 	const descManager = new DescriptionManager([{
 		title: "Installation Data",
@@ -4393,9 +4948,1008 @@ function catchAddress$4(input) {
 }
 const Flow_RM = {
 	catchAddress: catchAddress$4,
-	parseArgsToString: parseArgsToString$21,
-	parseStringToArgs: parseStringToArgs$21,
+	parseArgsToString: parseArgsToString$22,
+	parseStringToArgs: parseStringToArgs$22,
+	cardInfo: cardInfo$21,
+	manager: {
+		startInstall: startInstall$21,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$9
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/agent/GeminiCli/Arguments.ts
+const geminiCliArguments = [
+	{
+		category: "LynxHub Configuration",
+		items: [{
+			name: "Settings File Location",
+			description: "!!Please backup your existing settings.json, this will overwrite it!!. Choose a custom location to save your `settings.json` configuration file.",
+			type: "File"
+		}]
+	},
+	{
+		category: "Environment Variables",
+		sections: [
+			{
+				section: "Authentication & API",
+				items: [
+					{
+						name: "GEMINI_API_KEY",
+						description: "Your API key for the Gemini API.",
+						type: "Input"
+					},
+					{
+						name: "GOOGLE_API_KEY",
+						description: "Your Google Cloud API key, required for using Vertex AI in express mode.",
+						type: "Input"
+					},
+					{
+						name: "GOOGLE_GENAI_USE_VERTEXAI",
+						description: "Set to true to route model requests through Google Cloud Vertex AI.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "GOOGLE_CLOUD_PROJECT",
+						description: "Your Google Cloud Project ID, required for using Code Assist or Vertex AI.",
+						type: "Input"
+					},
+					{
+						name: "GOOGLE_APPLICATION_CREDENTIALS",
+						description: "The path to your Google Application Credentials JSON file.",
+						type: "File"
+					},
+					{
+						name: "GOOGLE_CLOUD_LOCATION",
+						description: "Your Google Cloud Project Location (e.g., us-central1), required for using Vertex AI in non-express mode.",
+						type: "Input"
+					},
+					{
+						name: "GEMINI_CLI_SYSTEM_DEFAULTS_PATH",
+						description: "Custom path to system-wide default settings JSON file.",
+						type: "File"
+					},
+					{
+						name: "GEMINI_CLI_SYSTEM_SETTINGS_PATH",
+						description: "Custom path to system-wide override settings JSON file.",
+						type: "File"
+					}
+				]
+			},
+			{
+				section: "Configuration",
+				items: [
+					{
+						name: "GEMINI_MODEL",
+						description: "Specifies the default Gemini model to use.",
+						type: "Input"
+					},
+					{
+						name: "GEMINI_SANDBOX",
+						description: "Alternative to the `sandbox` setting. Accepts true, false, docker, podman, or a custom command string.",
+						type: "Input"
+					},
+					{
+						name: "BUILD_SANDBOX",
+						description: "Automatically build custom sandbox image from .gemini/sandbox.Dockerfile.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "SEATBELT_PROFILE",
+						description: "Switches the Seatbelt (`sandbox-exec`) profile on macOS.",
+						type: "DropDown",
+						defaultValue: "permissive-open",
+						values: ["permissive-open", "strict"]
+					},
+					{
+						name: "CLI_TITLE",
+						description: "Set a custom title for the CLI window.",
+						type: "Input"
+					},
+					{
+						name: "CODE_ASSIST_ENDPOINT",
+						description: "Specifies the endpoint for the code assist server.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Telemetry",
+				items: [
+					{
+						name: "OTLP_GOOGLE_CLOUD_PROJECT",
+						description: "Your Google Cloud Project ID for Telemetry in Google Cloud.",
+						type: "Input"
+					},
+					{
+						name: "GEMINI_TELEMETRY_ENABLED",
+						description: "Set to true or 1 to enable telemetry collection.",
+						type: "CheckBox"
+					},
+					{
+						name: "GEMINI_TELEMETRY_TARGET",
+						description: "Destination for collected telemetry.",
+						type: "DropDown",
+						values: ["local", "gcp"],
+						defaultValue: "local"
+					},
+					{
+						name: "GEMINI_TELEMETRY_OTLP_ENDPOINT",
+						description: "Endpoint for the OTLP Exporter.",
+						type: "Input"
+					},
+					{
+						name: "GEMINI_TELEMETRY_OTLP_PROTOCOL",
+						description: "Protocol for the OTLP Exporter.",
+						type: "DropDown",
+						values: ["grpc", "http"],
+						defaultValue: "grpc"
+					},
+					{
+						name: "GEMINI_TELEMETRY_LOG_PROMPTS",
+						description: "Include the content of user prompts in telemetry logs.",
+						type: "CheckBox"
+					},
+					{
+						name: "GEMINI_TELEMETRY_OUTFILE",
+						description: "File path to write telemetry to when target is local.",
+						type: "File"
+					},
+					{
+						name: "GEMINI_TELEMETRY_USE_COLLECTOR",
+						description: "Enable or disable using an external OTLP collector.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "Debugging & Display",
+				items: [
+					{
+						name: "DEBUG",
+						description: "Set to true or 1 to enable verbose debug logging.",
+						type: "Input"
+					},
+					{
+						name: "DEBUG_MODE",
+						description: "Set to true or 1 to enable verbose debug logging.",
+						type: "Input"
+					},
+					{
+						name: "NO_COLOR",
+						description: "Disable all color output in the CLI.",
+						type: "CheckBox"
+					}
+				]
+			}
+		]
+	},
+	{
+		category: "Command Line Arguments",
+		sections: [
+			{
+				section: "Core Functionality",
+				items: [
+					{
+						name: "--model <model_name>",
+						description: "Specifies the Gemini model to use for this session.",
+						type: "Input"
+					},
+					{
+						name: "--prompt <your_prompt>",
+						description: "Pass a prompt directly to the command for non-interactive mode.",
+						type: "Input"
+					},
+					{
+						name: "--prompt-interactive <your_prompt>",
+						description: "Starts an interactive session with the provided prompt as the initial input.",
+						type: "Input"
+					},
+					{
+						name: "--output-format <format>",
+						description: "Specifies the format of the CLI output for non-interactive mode.",
+						type: "DropDown",
+						values: ["text", "json"],
+						defaultValue: "text"
+					},
+					{
+						name: "--all-files",
+						description: "Recursively includes all files within the current directory as context.",
+						type: "CheckBox"
+					},
+					{
+						name: "--include-directories <dir1,dir2,...>",
+						description: "Includes additional directories in the workspace for multi-directory support.",
+						type: "Directory"
+					}
+				]
+			},
+			{
+				section: "Tool & Sandbox Control",
+				items: [
+					{
+						name: "--sandbox",
+						description: "Enables sandbox mode for this session.",
+						type: "CheckBox"
+					},
+					{
+						name: "--sandbox-image",
+						description: "Sets the sandbox image URI.",
+						type: "Input"
+					},
+					{
+						name: "--yolo",
+						description: "Enables YOLO mode, which automatically approves all tool calls.",
+						type: "CheckBox"
+					},
+					{
+						name: "--approval-mode <mode>",
+						description: "Sets the approval mode for tool calls.",
+						type: "DropDown",
+						values: [
+							"default",
+							"auto_edit",
+							"yolo"
+						]
+					},
+					{
+						name: "--allowed-tools <tool1,tool2,...>",
+						description: "A comma-separated list of tool names that will bypass the confirmation dialog.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Telemetry & Checkpointing",
+				items: [
+					{
+						name: "--telemetry",
+						description: "Enables telemetry.",
+						type: "CheckBox"
+					},
+					{
+						name: "--telemetry-target",
+						description: "Sets the telemetry target.",
+						type: "DropDown",
+						values: ["local", "gcp"],
+						defaultValue: "local"
+					},
+					{
+						name: "--telemetry-otlp-endpoint",
+						description: "Sets the OTLP endpoint for telemetry.",
+						type: "Input"
+					},
+					{
+						name: "--telemetry-otlp-protocol",
+						description: "Sets the OTLP protocol for telemetry.",
+						type: "DropDown",
+						defaultValue: "grpc",
+						values: ["grpc", "http"]
+					},
+					{
+						name: "--telemetry-log-prompts",
+						description: "Enables logging of prompts for telemetry.",
+						type: "CheckBox"
+					},
+					{
+						name: "--checkpointing",
+						description: "Enables checkpointing.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "Extensions & Display",
+				items: [
+					{
+						name: "--extensions <extension_name ...>",
+						description: "Specifies a list of extensions to use for the session.",
+						type: "Input"
+					},
+					{
+						name: "--list-extensions",
+						description: "Lists all available extensions and exits.",
+						type: "CheckBox"
+					},
+					{
+						name: "--proxy",
+						description: "Sets the proxy for the CLI.",
+						type: "Input"
+					},
+					{
+						name: "--screen-reader",
+						description: "Enables screen reader mode for better TUI compatibility.",
+						type: "CheckBox"
+					},
+					{
+						name: "--show-memory-usage",
+						description: "Displays the current memory usage.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "Help & Version",
+				items: [
+					{
+						name: "--debug",
+						description: "Enables debug mode for this session, providing more verbose output.",
+						type: "CheckBox"
+					},
+					{
+						name: "--help",
+						description: "Displays help information about command-line arguments.",
+						type: "CheckBox"
+					},
+					{
+						name: "--version",
+						description: "Displays the version of the CLI.",
+						type: "CheckBox"
+					}
+				]
+			}
+		]
+	},
+	{
+		category: "Settings",
+		condition: "Settings File Location",
+		sections: [
+			{
+				section: "general",
+				items: [
+					{
+						name: "general.preferredEditor",
+						description: "The preferred editor to open files in.",
+						type: "Input"
+					},
+					{
+						name: "general.vimMode",
+						description: "Enable Vim keybindings.",
+						type: "CheckBox"
+					},
+					{
+						name: "general.disableAutoUpdate",
+						description: "Disable automatic updates.",
+						type: "CheckBox"
+					},
+					{
+						name: "general.disableUpdateNag",
+						description: "Disable update notification prompts.",
+						type: "CheckBox"
+					},
+					{
+						name: "general.checkpointing.enabled",
+						description: "Enable session checkpointing for recovery.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "output",
+				items: [{
+					name: "output.format",
+					description: "The format of the CLI output (text or json).",
+					type: "DropDown",
+					values: ["text", "json"],
+					defaultValue: "text"
+				}]
+			},
+			{
+				section: "ui",
+				items: [
+					{
+						name: "ui.theme",
+						description: "The color theme for the UI.",
+						type: "DropDown",
+						values: [
+							"ANSI",
+							"ANSI Light",
+							"Atom One",
+							"Ayu",
+							"Ayu Light",
+							"Default",
+							"Default Light",
+							"Dracula",
+							"GitHub",
+							"GitHub Light",
+							"Google Code",
+							"Xcode"
+						],
+						defaultValue: "Default"
+					},
+					{
+						name: "ui.customThemes",
+						description: "Custom theme definitions.",
+						type: "Input",
+						defaultValue: {}
+					},
+					{
+						name: "ui.hideWindowTitle",
+						description: "Hide the window title bar.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.hideTips",
+						description: "Hide helpful tips in the UI.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.hideBanner",
+						description: "Hide the application banner.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.hideFooter",
+						description: "Hide the footer from the UI.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.showMemoryUsage",
+						description: "Display memory usage information in the UI.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.showLineNumbers",
+						description: "Show line numbers in the chat.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.showCitations",
+						description: "Show citations for generated text in the chat.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "ui.accessibility.disableLoadingPhrases",
+						description: "Disable loading phrases for accessibility.",
+						type: "CheckBox"
+					},
+					{
+						name: "ui.customWittyPhrases",
+						description: "A list of custom phrases to display during loading states.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "ide",
+				items: [{
+					name: "ide.enabled",
+					description: "Enable IDE integration mode.",
+					type: "CheckBox"
+				}, {
+					name: "ide.hasSeenNudge",
+					description: "Whether the user has seen the IDE integration nudge.",
+					type: "CheckBox"
+				}]
+			},
+			{
+				section: "privacy",
+				items: [{
+					name: "privacy.usageStatisticsEnabled",
+					description: "Enable collection of usage statistics.",
+					type: "CheckBox",
+					defaultValue: true
+				}]
+			},
+			{
+				section: "model",
+				items: [
+					{
+						name: "model.name",
+						description: "The Gemini model to use for conversations.",
+						type: "Input"
+					},
+					{
+						name: "model.maxSessionTurns",
+						description: "Maximum number of user/model/tool turns to keep in a session. -1 means unlimited.",
+						type: "Number",
+						defaultValue: -1,
+						numberMin: -1
+					},
+					{
+						name: "model.summarizeToolOutput",
+						description: "Enables or disables the summarization of tool output.",
+						type: "Input"
+					},
+					{
+						name: "model.chatCompression.contextPercentageThreshold",
+						description: "Sets the threshold for chat history compression as a percentage of the model's total token limit.",
+						type: "Number",
+						defaultValue: .7,
+						numberMin: 0,
+						numberMax: 1,
+						numberStep: .05
+					},
+					{
+						name: "model.skipNextSpeakerCheck",
+						description: "Skip the next speaker check.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "context",
+				items: [
+					{
+						name: "context.fileName",
+						description: "The name of the context file(s).",
+						type: "File"
+					},
+					{
+						name: "context.importFormat",
+						description: "The format to use when importing memory.",
+						type: "Input"
+					},
+					{
+						name: "context.discoveryMaxDirs",
+						description: "Maximum number of directories to search for memory.",
+						type: "Number",
+						defaultValue: 200,
+						numberMin: 1
+					},
+					{
+						name: "context.includeDirectories",
+						description: "Additional directories to include in the workspace context.",
+						type: "Directory",
+						defaultValue: []
+					},
+					{
+						name: "context.loadFromIncludeDirectories",
+						description: "If true, /memory refresh loads GEMINI.md from all added directories.",
+						type: "CheckBox"
+					},
+					{
+						name: "context.fileFiltering.respectGitIgnore",
+						description: "Respect .gitignore files when searching.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "context.fileFiltering.respectGeminiIgnore",
+						description: "Respect .geminiignore files when searching.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "context.fileFiltering.enableRecursiveFileSearch",
+						description: "Enable searching recursively for filenames when completing @ prefixes.",
+						type: "CheckBox",
+						defaultValue: true
+					}
+				]
+			},
+			{
+				section: "tools",
+				items: [
+					{
+						name: "tools.sandbox",
+						description: "Sandbox execution environment (can be a boolean or a path string).",
+						type: "Input"
+					},
+					{
+						name: "tools.usePty",
+						description: "Use node-pty for shell command execution.",
+						type: "CheckBox"
+					},
+					{
+						name: "tools.shell.enableInteractiveShell",
+						description: "Use node-pty for an interactive shell experience.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "tools.core",
+						description: "Restricts the set of built-in tools with an allowlist.",
+						type: "Input"
+					},
+					{
+						name: "tools.exclude",
+						description: "Tool names to exclude from discovery.",
+						type: "Input"
+					},
+					{
+						name: "tools.allowed",
+						description: "A list of tool names that will bypass the confirmation dialog.",
+						type: "Input"
+					},
+					{
+						name: "tools.discoveryCommand",
+						description: "Command to run for tool discovery.",
+						type: "Input"
+					},
+					{
+						name: "tools.callCommand",
+						description: "Defines a custom shell command for calling a specific tool.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "mcp",
+				items: [
+					{
+						name: "mcp.serverCommand",
+						description: "Command to start an MCP server.",
+						type: "Input"
+					},
+					{
+						name: "mcp.allowed",
+						description: "An allowlist of MCP servers to allow.",
+						type: "Input"
+					},
+					{
+						name: "mcp.excluded",
+						description: "A denylist of MCP servers to exclude.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "security",
+				items: [
+					{
+						name: "security.folderTrust.enabled",
+						description: "Setting to track whether Folder trust is enabled.",
+						type: "CheckBox"
+					},
+					{
+						name: "security.auth.selectedType",
+						description: "The currently selected authentication type.",
+						type: "Input"
+					},
+					{
+						name: "security.auth.enforcedType",
+						description: "The required auth type (useful for enterprises).",
+						type: "Input"
+					},
+					{
+						name: "security.auth.useExternal",
+						description: "Whether to use an external authentication flow.",
+						type: "CheckBox"
+					}
+				]
+			},
+			{
+				section: "advanced",
+				items: [
+					{
+						name: "advanced.autoConfigureMemory",
+						description: "Automatically configure Node.js memory limits.",
+						type: "CheckBox"
+					},
+					{
+						name: "advanced.dnsResolutionOrder",
+						description: "The DNS resolution order.",
+						type: "Input"
+					},
+					{
+						name: "advanced.excludedEnvVars",
+						description: "Environment variables to exclude from project context.",
+						type: "Input",
+						defaultValue: ["DEBUG", "DEBUG_MODE"]
+					},
+					{
+						name: "advanced.bugCommand",
+						description: "Configuration for the bug report command.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "telemetry",
+				items: [
+					{
+						name: "telemetry.enabled",
+						description: "Whether or not telemetry is enabled.",
+						type: "CheckBox"
+					},
+					{
+						name: "telemetry.target",
+						description: "The destination for collected telemetry.",
+						type: "DropDown",
+						values: ["local", "gcp"]
+					},
+					{
+						name: "telemetry.otlpEndpoint",
+						description: "The endpoint for the OTLP Exporter.",
+						type: "Input"
+					},
+					{
+						name: "telemetry.otlpProtocol",
+						description: "The protocol for the OTLP Exporter.",
+						type: "DropDown",
+						values: ["grpc", "http"]
+					},
+					{
+						name: "telemetry.logPrompts",
+						description: "Whether or not to include the content of user prompts in the logs.",
+						type: "CheckBox"
+					},
+					{
+						name: "telemetry.outfile",
+						description: "The file to write telemetry to when target is local.",
+						type: "File"
+					},
+					{
+						name: "telemetry.useCollector",
+						description: "Whether to use an external OTLP collector.",
+						type: "CheckBox",
+						defaultValue: false
+					}
+				]
+			}
+		]
+	}
+];
+//#endregion
+//#region module/src/containers/agent/GeminiCli/RendererMethods.ts
+const INSTALL_TIME_KEY$5 = "install-time-geminiCli";
+const UPDATE_TIME_KEY$5 = "update-time-geminiCli";
+const UPDATE_AVAILABLE_KEY$4 = "update-available-version-geminiCli";
+function checkLinuxArgLine$5(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	for (const arg of geminiCliArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
+}
+/**
+* Finds the category and type of a given argument name.
+* @param argName The name of the argument to look up.
+* @returns An object with the category and type, or undefined if not found.
+*/
+function getArgumentInfo$1(argName) {
+	for (const data of geminiCliArguments) if ("sections" in data) {
+		for (const section of data.sections) for (const item of section.items) if (item.name.split(" ")[0] === argName || item.name === argName) return {
+			category: data.category,
+			type: item.type,
+			name: item.name
+		};
+	}
+}
+function parseArgsToFiles$2(args) {
+	const executeCommand = "gemini";
+	const envArgs = [];
+	const cliArgs = [];
+	const settingsArgs = [];
+	args.forEach((arg) => {
+		const info = getArgumentInfo$1(arg.name.split(" ")[0]) || getArgumentInfo$1(arg.name);
+		if (info) switch (info.category) {
+			case "Environment Variables":
+				envArgs.push(arg);
+				break;
+			case "Command Line Arguments":
+				cliArgs.push(arg);
+				break;
+			case "Settings": settingsArgs.push(arg);
+		}
+	});
+	let scriptString = "";
+	if (envArgs.length > 0) {
+		envArgs.forEach((arg) => {
+			scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		});
+		scriptString += "\n\n";
+	}
+	scriptString += executeCommand;
+	cliArgs.forEach((arg) => {
+		const info = getArgumentInfo$1(arg.name.split(" ")[0]) || getArgumentInfo$1(arg.name);
+		if (!info) return;
+		const flagName = info.name.split(" ")[0];
+		if (info.type === "CheckBox") {
+			if (arg.value !== "false" && arg.value !== false && arg.value !== 0 && String(arg.value) !== "0") scriptString += ` ${flagName}`;
+		} else if (arg.value !== void 0 && arg.value !== null && String(arg.value).trim() !== "") scriptString += ` ${flagName} "${arg.value}"`;
+	});
+	scriptString += "\n";
+	let settingsString = "";
+	const settingsJson = {};
+	if (settingsArgs.length > 0) {
+		settingsArgs.forEach((arg) => {
+			const keys = arg.name.split(".");
+			let current = settingsJson;
+			keys.slice(0, -1).forEach((key) => {
+				current[key] = current[key] || {};
+				current = current[key];
+			});
+			let value = arg.value;
+			if (value === "true") value = true;
+			else if (value === "false") value = false;
+			else if (!isNaN(Number(value)) && value.trim() !== "" && !isNaN(parseFloat(value))) value = Number(value);
+			current[keys[keys.length - 1]] = value;
+		});
+		settingsString += JSON.stringify(settingsJson, null, 2);
+	}
+	return {
+		scriptData: scriptString,
+		settingsData: settingsString
+	};
+}
+function parseArgsToString$21(args) {
+	const { settingsData, scriptData } = parseArgsToFiles$2(args);
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command lines configured.\n";
+	const settingsTitle = "Settings File (settings.json)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
+}
+function parseFilesToArgs$2(scriptContent, settingsContent) {
+	const scriptArgs = parseStringToArgs$21(scriptContent);
+	const settingsArgs = [];
+	if (settingsContent) try {
+		const settingsJson = JSON.parse(settingsContent);
+		const flatten = (obj, path = "") => {
+			let result = [];
+			for (const key in obj) if (Object.prototype.hasOwnProperty.call(obj, key)) {
+				const newPath = path ? `${path}.${key}` : key;
+				if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) result = result.concat(flatten(obj[key], newPath));
+				else result.push({
+					name: newPath,
+					value: String(obj[key])
+				});
+			}
+			return result;
+		};
+		flatten(settingsJson).forEach((arg) => {
+			if (isValidArg(arg.name, geminiCliArguments)) settingsArgs.push(arg);
+		});
+	} catch (error) {
+		console.error("Error parsing settings.json content:", error);
+	}
+	const combinedArgs = /* @__PURE__ */ new Map();
+	scriptArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
+	settingsArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
+	return Array.from(combinedArgs, ([name, value]) => ({
+		name,
+		value
+	}));
+}
+function parseStringToArgs$21(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		if (line.startsWith("gemini")) {
+			const clArg = line.split("gemini ")[1];
+			if (!clArg) return;
+			clArg.split("--").filter(Boolean).map((arg) => {
+				const [id, ...value] = arg.trim().split(" ");
+				return {
+					name: `${id}`.toUpperCase(),
+					value: value.join(" ").replace(/"/g, "")
+				};
+			}).forEach((value) => {
+				if (isValidArg(value.name, geminiCliArguments)) {
+					if (getArgumentType(value.name, geminiCliArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
+			});
+		}
+		const lineType = checkLinuxArgLine$5(line);
+		if (lineType === "export" || lineType === "set") {
+			let [name, value] = line.replace(`${lineType} `, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, geminiCliArguments)) argResult.push({
+				name,
+				value
+			});
+		} else if (checkLinuxArgLine$5(line) === "var") {
+			let [name, value] = line.split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, geminiCliArguments)) argResult.push({
+				name,
+				value
+			});
+		}
+	});
+	return argResult;
+}
+function startInstall$20(stepper) {
+	stepper.initialSteps([
+		"Getting Started",
+		"NodeJS",
+		"Detect Existing",
+		"Gemini Cli",
+		"All Done!"
+	]);
+	stepper.starterStep({ disableSelectDir: true }).then(() => {
+		stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking if NPM is installed...");
+			stepper.ipc.invoke("is_gemini_npm_available").then((isNpmInstalled) => {
+				if (isNpmInstalled) stepper.nextStep().then(() => {
+					stepper.progressBar(true, "Checking for existing Gemini Cli installation...");
+					stepper.ipc.invoke("is_geminiCli_installed").then((isGeminiCliInstalled) => {
+						if (isGeminiCliInstalled) {
+							stepper.setInstalled();
+							const currentDate = /* @__PURE__ */ new Date();
+							stepper.storage.set(INSTALL_TIME_KEY$5, currentDate.toLocaleString());
+							stepper.showFinalStep("success", "You're All Set!", "Gemini Cli is already installed. You're good to go!");
+						} else stepper.nextStep().then(() => {
+							stepper.ipc.invoke("is_gemini_npm_version_above_12").then((isAbove12) => {
+								const flags = isAbove12 ? " --allow-remote=all --dangerously-allow-all-scripts" : "";
+								stepper.executeTerminalCommands(`npm i -g @google/gemini-cli${flags}`).then(() => {
+									stepper.setInstalled();
+									const currentDate = /* @__PURE__ */ new Date();
+									stepper.storage.set(INSTALL_TIME_KEY$5, currentDate.toLocaleString());
+									stepper.showFinalStep("success", "Installation Complete!", "Your Gemini Cli environment is ready. Enjoy!");
+								});
+							});
+						});
+					});
+				});
+				else stepper.showFinalStep("error", "NodeJs is not installed!", "Gemini Cli need NPM! Please install NodeJs then try again.");
+			});
+		});
+	});
+}
+function startUpdate$8(stepper) {
+	stepper.initialSteps(["Update Gemini Cli", "Complete Update"]);
+	stepper.executeTerminalCommands("npm -g update @google/gemini-cli").then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(UPDATE_TIME_KEY$5, currentDate.toLocaleString());
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "Gemini Cli Updated Successfully!", `Gemini Cli has been updated to the latest version. You can now enjoy the new features and improvements.`);
+	});
+}
+async function cardInfo$20(api, callback) {
+	callback.setOpenFolders(void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INSTALL_TIME_KEY$5).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(UPDATE_TIME_KEY$5).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("current_geminiCli_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(UPDATE_AVAILABLE_KEY$4).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+const GeminiCli_RM = {
 	cardInfo: cardInfo$20,
+	parseStringToArgs: parseStringToArgs$21,
+	parseArgsToString: parseArgsToString$21,
 	manager: {
 		startInstall: startInstall$20,
 		updater: {
@@ -4404,6 +5958,9334 @@ const Flow_RM = {
 		}
 	}
 };
+//#endregion
+//#region module/src/containers/agent/HermesAgent/Arguments.ts
+const hermesAgentArguments = [
+	{
+		category: "LynxHub Configuration",
+		items: [{
+			name: "Settings File Location",
+			description: "Optional path to a config.yaml or settings file. If set, LynxHub writes settings here from the Settings section.",
+			type: "File"
+		}]
+	},
+	{
+		category: "Environment Variables",
+		sections: [
+			{
+				section: "API & Provider Options",
+				items: [
+					{
+						name: "NOUS_API_KEY",
+						description: "API key for Nous Portal / Nous Research API.",
+						type: "Input"
+					},
+					{
+						name: "OPENROUTER_API_KEY",
+						description: "API key for OpenRouter provider (recommended for multi-model access).",
+						type: "Input"
+					},
+					{
+						name: "OPENAI_API_KEY",
+						description: "API key for OpenAI or custom OpenAI-compatible endpoints.",
+						type: "Input"
+					},
+					{
+						name: "OPENAI_BASE_URL",
+						description: "Base URL for custom OpenAI-compatible endpoints (vLLM, SGLang, Ollama, etc.).",
+						type: "Input"
+					},
+					{
+						name: "ANTHROPIC_API_KEY",
+						description: "API key for Anthropic Console / Claude provider.",
+						type: "Input"
+					},
+					{
+						name: "ANTHROPIC_BASE_URL",
+						description: "Override base URL for Anthropic-compatible endpoints.",
+						type: "Input"
+					},
+					{
+						name: "GOOGLE_API_KEY",
+						description: "API key for Google AI Studio / Gemini provider (alias: GEMINI_API_KEY).",
+						type: "Input"
+					},
+					{
+						name: "DEEPSEEK_API_KEY",
+						description: "API key for direct DeepSeek access.",
+						type: "Input"
+					},
+					{
+						name: "FIREWORKS_API_KEY",
+						description: "API key for Fireworks AI provider.",
+						type: "Input"
+					},
+					{
+						name: "GLM_API_KEY",
+						description: "API key for z.ai / ZhipuAI GLM provider (alias: ZAI_API_KEY).",
+						type: "Input"
+					},
+					{
+						name: "KIMI_API_KEY",
+						description: "API key for Kimi / Moonshot AI provider.",
+						type: "Input"
+					},
+					{
+						name: "DASHSCOPE_API_KEY",
+						description: "API key for Qwen Cloud (Alibaba DashScope) provider.",
+						type: "Input"
+					},
+					{
+						name: "MINIMAX_API_KEY",
+						description: "API key for MiniMax provider.",
+						type: "Input"
+					},
+					{
+						name: "XAI_API_KEY",
+						description: "API key for xAI (Grok) provider.",
+						type: "Input"
+					},
+					{
+						name: "MISTRAL_API_KEY",
+						description: "API key for Mistral provider (Voxtral STT & TTS).",
+						type: "Input"
+					},
+					{
+						name: "OLLAMA_API_KEY",
+						description: "API key for Ollama Cloud provider.",
+						type: "Input"
+					},
+					{
+						name: "OLLAMA_BASE_URL",
+						description: "Base URL for local or remote Ollama server (default: http://localhost:11434).",
+						type: "Input"
+					},
+					{
+						name: "NVIDIA_API_KEY",
+						description: "API key for NVIDIA NIM provider.",
+						type: "Input"
+					},
+					{
+						name: "COPILOT_GITHUB_TOKEN",
+						description: "GitHub token for GitHub Copilot API integration.",
+						type: "Input"
+					},
+					{
+						name: "AZURE_FOUNDRY_API_KEY",
+						description: "API key for Microsoft Azure Foundry / Azure OpenAI.",
+						type: "Input"
+					},
+					{
+						name: "HERMES_YOLO_MODE",
+						description: "Enable auto-approval of all command prompts.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "HERMES_MODEL",
+						description: "Override default model name at process level.",
+						type: "Input"
+					},
+					{
+						name: "HERMES_HOME",
+						description: "Override Hermes config and state directory (default: ~/.hermes).",
+						type: "Directory"
+					},
+					{
+						name: "HERMES_TIMEZONE",
+						description: "Timezone for scheduling and timestamps (e.g. UTC, America/New_York).",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Cloud & Remote Sandbox Credentials",
+				items: [
+					{
+						name: "TERMINAL_SSH_HOST",
+						description: "Remote hostname or IP for SSH terminal backend.",
+						type: "Input"
+					},
+					{
+						name: "TERMINAL_SSH_USER",
+						description: "Remote username for SSH terminal backend.",
+						type: "Input"
+					},
+					{
+						name: "TERMINAL_SSH_PORT",
+						description: "SSH port for remote terminal backend.",
+						type: "Number",
+						defaultValue: 22,
+						numberMin: 1,
+						numberMax: 65535
+					},
+					{
+						name: "TERMINAL_SSH_KEY",
+						description: "Path to SSH private key file for remote backend.",
+						type: "File"
+					},
+					{
+						name: "TERMINAL_SSH_PERSISTENT",
+						description: "Enable persistent shell process across commands on remote host.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "MODAL_TOKEN_ID",
+						description: "Modal authentication token ID for Modal cloud sandboxes.",
+						type: "Input"
+					},
+					{
+						name: "MODAL_TOKEN_SECRET",
+						description: "Modal authentication token secret.",
+						type: "Input"
+					},
+					{
+						name: "VERCEL_TOKEN",
+						description: "Vercel API token for Vercel Sandbox backend.",
+						type: "Input"
+					},
+					{
+						name: "VERCEL_PROJECT_ID",
+						description: "Vercel Project ID for Vercel Sandbox backend.",
+						type: "Input"
+					},
+					{
+						name: "VERCEL_TEAM_ID",
+						description: "Vercel Team ID for Vercel Sandbox backend.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Tool & Integration APIs",
+				items: [
+					{
+						name: "FIRECRAWL_API_KEY",
+						description: "API key for Firecrawl web scraping, search, and cloud browser.",
+						type: "Input"
+					},
+					{
+						name: "FIRECRAWL_API_URL",
+						description: "Custom Firecrawl API endpoint for self-hosted instances.",
+						type: "Input"
+					},
+					{
+						name: "PARALLEL_API_KEY",
+						description: "API key for Parallel AI search.",
+						type: "Input"
+					},
+					{
+						name: "TAVILY_API_KEY",
+						description: "API key for Tavily AI web search.",
+						type: "Input"
+					},
+					{
+						name: "SEARXNG_URL",
+						description: "SearXNG instance URL for free self-hosted web search.",
+						type: "Input"
+					},
+					{
+						name: "EXA_API_KEY",
+						description: "API key for Exa AI search.",
+						type: "Input"
+					},
+					{
+						name: "BRAVE_SEARCH_API_KEY",
+						description: "API key for Brave Search.",
+						type: "Input"
+					},
+					{
+						name: "BROWSERBASE_API_KEY",
+						description: "API key for Browserbase cloud browser.",
+						type: "Input"
+					},
+					{
+						name: "BROWSER_USE_API_KEY",
+						description: "API key for Browser Use cloud browser.",
+						type: "Input"
+					},
+					{
+						name: "FAL_KEY",
+						description: "API key for FAL image generation.",
+						type: "Input"
+					},
+					{
+						name: "KREA_API_KEY",
+						description: "API key for Krea 2 image generation.",
+						type: "Input"
+					},
+					{
+						name: "GROQ_API_KEY",
+						description: "API key for Groq Whisper speech-to-text.",
+						type: "Input"
+					},
+					{
+						name: "ELEVENLABS_API_KEY",
+						description: "API key for ElevenLabs premium TTS voices.",
+						type: "Input"
+					},
+					{
+						name: "HONCHO_API_KEY",
+						description: "API key for Honcho user modeling memory system.",
+						type: "Input"
+					},
+					{
+						name: "SUPERMEMORY_API_KEY",
+						description: "API key for Supermemory semantic long-term memory.",
+						type: "Input"
+					},
+					{
+						name: "DAYTONA_API_KEY",
+						description: "API key for Daytona cloud sandboxes.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Messaging Platforms",
+				items: [
+					{
+						name: "TELEGRAM_BOT_TOKEN",
+						description: "Bot token from @BotFather for Telegram gateway.",
+						type: "Input"
+					},
+					{
+						name: "TELEGRAM_ALLOWED_USERS",
+						description: "Comma-separated list of allowed Telegram user IDs.",
+						type: "Input"
+					},
+					{
+						name: "DISCORD_BOT_TOKEN",
+						description: "Bot token for Discord gateway.",
+						type: "Input"
+					},
+					{
+						name: "DISCORD_ALLOWED_USERS",
+						description: "Comma-separated list of allowed Discord user IDs.",
+						type: "Input"
+					},
+					{
+						name: "SLACK_BOT_TOKEN",
+						description: "Bot token (xoxb-...) for Slack gateway.",
+						type: "Input"
+					},
+					{
+						name: "SLACK_APP_TOKEN",
+						description: "App-level token (xapp-...) for Slack Socket Mode.",
+						type: "Input"
+					},
+					{
+						name: "SLACK_ALLOWED_USERS",
+						description: "Comma-separated list of allowed Slack user IDs.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Networking & Proxy",
+				items: [
+					{
+						name: "HTTPS_PROXY",
+						description: "HTTPS proxy URL for network traffic.",
+						type: "Input"
+					},
+					{
+						name: "HTTP_PROXY",
+						description: "HTTP proxy URL for network traffic.",
+						type: "Input"
+					},
+					{
+						name: "NO_PROXY",
+						description: "Comma-separated domain or IP list to bypass proxy.",
+						type: "Input"
+					}
+				]
+			}
+		]
+	},
+	{
+		category: "Command Line Arguments",
+		sections: [
+			{
+				section: "Subcommands & Execution Modes",
+				items: [{
+					name: "Subcommand",
+					description: "Select top-level Hermes command to execute (e.g. chat, dashboard, gateway, setup, doctor).",
+					type: "DropDown",
+					defaultValue: "None / Default",
+					values: [
+						"None / Default",
+						"chat",
+						"dashboard",
+						"gateway",
+						"profile",
+						"setup",
+						"doctor",
+						"status",
+						"auth",
+						"cron",
+						"skills",
+						"memory",
+						"mcp",
+						"plugins",
+						"portal",
+						"send",
+						"kanban",
+						"project",
+						"security audit",
+						"logs",
+						"config",
+						"insights",
+						"version",
+						"lsp",
+						"secrets",
+						"proxy",
+						"egress",
+						"pets",
+						"computer-use",
+						"whatsapp",
+						"slack",
+						"migrate",
+						"serve",
+						"desktop",
+						"completion",
+						"uninstall"
+					]
+				}, {
+					name: "gateway subcommand",
+					description: "Subcommand action when running hermes gateway (run, start, stop, restart, status, list, install).",
+					type: "DropDown",
+					defaultValue: "None / Default",
+					values: [
+						"None / Default",
+						"run",
+						"start",
+						"stop",
+						"restart",
+						"status",
+						"list",
+						"install",
+						"uninstall",
+						"setup"
+					]
+				}]
+			},
+			{
+				section: "Core Execution Options",
+				items: [
+					{
+						name: "--model <model_name>",
+						description: "Specify LLM provider and model (e.g. openrouter:anthropic/claude-sonnet-4).",
+						type: "Input"
+					},
+					{
+						name: "--provider <provider_name>",
+						description: "Force a specific provider (openrouter, nous, anthropic, openai-api, gemini, etc.).",
+						type: "Input"
+					},
+					{
+						name: "-q <prompt>",
+						description: "Run a single prompt non-interactively and exit.",
+						type: "Input"
+					},
+					{
+						name: "-p <prompt>",
+						description: "Run a single prompt non-interactively and exit.",
+						type: "Input"
+					},
+					{
+						name: "-z <prompt>",
+						description: "Scripted one-shot mode (single prompt in, plain response text out, no banner/spinner).",
+						type: "Input"
+					},
+					{
+						name: "--query-file <path>",
+						description: "Read user query / prompt from a file.",
+						type: "File"
+					},
+					{
+						name: "--image <path>",
+						description: "Attach a local image file to a single query.",
+						type: "File"
+					},
+					{
+						name: "--usage-file <path>",
+						description: "Write a JSON usage report after a scripted one-shot run.",
+						type: "File"
+					},
+					{
+						name: "--yolo",
+						description: "Bypass all approval prompts and auto-approve command executions.",
+						type: "CheckBox"
+					},
+					{
+						name: "--portal",
+						description: "Use Nous Portal subscription setup for models and tool gateway.",
+						type: "CheckBox"
+					},
+					{
+						name: "--toolsets <toolsets>",
+						description: "Enable a comma-separated set of toolsets (e.g. web,terminal,skills).",
+						type: "Input"
+					},
+					{
+						name: "--skills <skills>",
+						description: "Preload one or more skills for the session (comma-separated).",
+						type: "Input"
+					},
+					{
+						name: "--resume <session_id>",
+						description: "Resume a previous session by ID or title.",
+						type: "Input"
+					},
+					{
+						name: "--continue [name]",
+						description: "Resume the most recent session, or session matching title.",
+						type: "Input"
+					},
+					{
+						name: "--in <dir>",
+						description: "Change into directory before starting or resuming.",
+						type: "Directory"
+					},
+					{
+						name: "--worktree",
+						description: "Start in an isolated git worktree for parallel-agent workflows.",
+						type: "CheckBox"
+					},
+					{
+						name: "--checkpoints",
+						description: "Enable filesystem checkpoints before destructive file changes.",
+						type: "CheckBox"
+					},
+					{
+						name: "--pass-session-id",
+						description: "Include the session ID in the agent system prompt.",
+						type: "CheckBox"
+					},
+					{
+						name: "--ignore-user-config",
+						description: "Ignore ~/.hermes/config.yaml and fall back to built-in defaults.",
+						type: "CheckBox"
+					},
+					{
+						name: "--ignore-rules",
+						description: "Skip auto-injection of AGENTS.md, SOUL.md, .cursorrules, memory, and skills.",
+						type: "CheckBox"
+					},
+					{
+						name: "--safe-mode",
+						description: "Troubleshooting mode: disable ALL user config, rules, plugins, shell hooks, and MCP servers.",
+						type: "CheckBox"
+					},
+					{
+						name: "--tui",
+						description: "Launch the TUI interface instead of classic CLI REPL.",
+						type: "CheckBox"
+					},
+					{
+						name: "--cli",
+						description: "Force classic prompt_toolkit REPL interface.",
+						type: "CheckBox"
+					},
+					{
+						name: "--source <source>",
+						description: "Session source tag for filtering (default: cli).",
+						type: "Input"
+					},
+					{
+						name: "--max-turns <turns>",
+						description: "Maximum tool-calling iterations per turn.",
+						type: "Number",
+						numberMin: 1
+					},
+					{
+						name: "--profile <profile_name>",
+						description: "Select which Hermes profile to use for this invocation.",
+						type: "Input"
+					}
+				]
+			},
+			{
+				section: "Subcommand Specific Flags",
+				items: [
+					{
+						name: "--all",
+						description: "Act on all profiles for gateway, status, or list commands.",
+						type: "CheckBox"
+					},
+					{
+						name: "--json",
+						description: "Emit machine-readable JSON output instead of plain text.",
+						type: "CheckBox"
+					},
+					{
+						name: "--deep",
+						description: "Run deeper diagnostic and status checks.",
+						type: "CheckBox"
+					},
+					{
+						name: "--fail-on <level>",
+						description: "Exit non-zero when security audit finds vulnerabilities at or above severity (low, moderate, high, critical).",
+						type: "DropDown",
+						defaultValue: "critical",
+						values: [
+							"low",
+							"moderate",
+							"high",
+							"critical"
+						]
+					}
+				]
+			},
+			{
+				section: "Display & Help Options",
+				items: [
+					{
+						name: "-v",
+						description: "Enable verbose logging output.",
+						type: "CheckBox"
+					},
+					{
+						name: "-Q",
+						description: "Programmatic quiet mode: suppress banner, spinner, and tool previews.",
+						type: "CheckBox"
+					},
+					{
+						name: "--debug",
+						description: "Enable verbose debug logging.",
+						type: "CheckBox"
+					},
+					{
+						name: "--help",
+						description: "Displays help information about Hermes Agent commands.",
+						type: "CheckBox"
+					},
+					{
+						name: "--version",
+						description: "Displays the version of Hermes Agent.",
+						type: "CheckBox"
+					}
+				]
+			}
+		]
+	},
+	{
+		category: "Settings",
+		condition: "Settings File Location",
+		sections: [
+			{
+				section: "General & Learning",
+				items: [
+					{
+						name: "learning.enabled",
+						description: "Enable autonomous skill creation and procedural memory learning loop.",
+						type: "CheckBox"
+					},
+					{
+						name: "learning.autoSaveSkills",
+						description: "Automatically save skills generated during task execution.",
+						type: "CheckBox"
+					},
+					{
+						name: "telemetry.enabled",
+						description: "Permit metric collection and crash log streaming.",
+						type: "CheckBox"
+					},
+					{
+						name: "updates.pre_update_backup",
+						description: "Pre-update safety backup mode before running hermes update.",
+						type: "DropDown",
+						defaultValue: "quick",
+						values: [
+							"quick",
+							"full",
+							"off"
+						]
+					}
+				]
+			},
+			{
+				section: "Terminal Environment & Sandboxing",
+				items: [
+					{
+						name: "terminal.backend",
+						description: "Execution backend for terminal commands (local, docker, ssh, modal, daytona, singularity).",
+						type: "DropDown",
+						defaultValue: "local",
+						values: [
+							"local",
+							"docker",
+							"ssh",
+							"modal",
+							"daytona",
+							"singularity"
+						]
+					},
+					{
+						name: "terminal.timeout",
+						description: "Per-command execution timeout in seconds.",
+						type: "Number",
+						defaultValue: 180,
+						numberMin: 1
+					},
+					{
+						name: "terminal.home_mode",
+						description: "Subprocess HOME directory policy for launched tools.",
+						type: "DropDown",
+						defaultValue: "auto",
+						values: [
+							"auto",
+							"real",
+							"profile"
+						]
+					},
+					{
+						name: "terminal.persistent_shell",
+						description: "Maintain a long-lived bash shell process across commands (default true for SSH).",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "terminal.docker_image",
+						description: "Docker container image for Docker terminal backend.",
+						type: "Input",
+						defaultValue: "nikolaik/python-nodejs:python3.11-nodejs20"
+					},
+					{
+						name: "terminal.docker_run_as_host_user",
+						description: "Run Docker container as host UID:GID to avoid root file ownership issues.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "terminal.docker_network",
+						description: "Enable network access inside Docker container (false = air-gap with --network=none).",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "terminal.container_cpu",
+						description: "CPU cores limit for container sandboxes (0 = unlimited).",
+						type: "Number",
+						defaultValue: 0,
+						numberMin: 0
+					},
+					{
+						name: "terminal.container_memory",
+						description: "Memory limit in MB for container sandboxes (0 = unlimited).",
+						type: "Number",
+						defaultValue: 0,
+						numberMin: 0
+					},
+					{
+						name: "terminal.container_disk",
+						description: "Disk space limit in MB for container sandboxes (0 = unlimited).",
+						type: "Number",
+						defaultValue: 0,
+						numberMin: 0
+					},
+					{
+						name: "terminal.container_persistent",
+						description: "Keep container alive across commands for stateful sessions.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "terminal.lifetime_seconds",
+						description: "Maximum idle container lifetime in seconds.",
+						type: "Number",
+						defaultValue: 300,
+						numberMin: 10
+					}
+				]
+			},
+			{
+				section: "Memory & Context Controls",
+				items: [
+					{
+						name: "memory.memory_enabled",
+						description: "Enable persistent long-term memory system.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "memory.user_profile_enabled",
+						description: "Enable automatic user profile modeling across sessions.",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "memory.write_approval",
+						description: "Require user approval before staging or writing memory entries.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "skills.guard_agent_created",
+						description: "Scan agent-created skills for dangerous keyword patterns.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "skills.write_approval",
+						description: "Gate all agent skill creations and modifications behind explicit review.",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "context_file_max_chars",
+						description: "Maximum character limit for loaded context files (SOUL.md, AGENTS.md, etc.).",
+						type: "Number",
+						defaultValue: 2e4,
+						numberMin: 100
+					},
+					{
+						name: "file_read_max_chars",
+						description: "Maximum character limit per single read_file tool call.",
+						type: "Number",
+						defaultValue: 1e5,
+						numberMin: 100
+					},
+					{
+						name: "worktree",
+						description: "Automatically run in an isolated git worktree per session.",
+						type: "CheckBox",
+						defaultValue: false
+					}
+				]
+			},
+			{
+				section: "Tool Output Truncation",
+				items: [
+					{
+						name: "tool_output.max_bytes",
+						description: "Maximum character cap for terminal tool output before truncation.",
+						type: "Number",
+						defaultValue: 5e4,
+						numberMin: 100
+					},
+					{
+						name: "tool_output.max_lines",
+						description: "Maximum line limit for read_file pagination.",
+						type: "Number",
+						defaultValue: 2e3,
+						numberMin: 10
+					},
+					{
+						name: "tool_output.max_line_length",
+						description: "Maximum character length per line in line-numbered read_file views.",
+						type: "Number",
+						defaultValue: 2e3,
+						numberMin: 10
+					}
+				]
+			},
+			{
+				section: "Database & Storage",
+				items: [{
+					name: "database.journal_mode",
+					description: "SQLite journal mode for Hermes sessions database.",
+					type: "DropDown",
+					defaultValue: "wal",
+					values: [
+						"wal",
+						"delete",
+						"truncate",
+						"memory",
+						"off"
+					]
+				}]
+			}
+		]
+	}
+];
+//#endregion
+//#region module/src/containers/agent/HermesAgent/RendererMethods.ts
+const INSTALL_TIME_KEY$4 = "install-time-hermesAgent";
+const UPDATE_TIME_KEY$4 = "update-time-hermesAgent";
+const UPDATE_AVAILABLE_KEY$3 = "update-available-version-hermesAgent";
+const KNOWN_SUBCOMMANDS = [
+	"chat",
+	"dashboard",
+	"gateway",
+	"profile",
+	"setup",
+	"doctor",
+	"status",
+	"auth",
+	"cron",
+	"skills",
+	"memory",
+	"mcp",
+	"plugins",
+	"portal",
+	"send",
+	"kanban",
+	"project",
+	"security audit",
+	"security",
+	"logs",
+	"config",
+	"insights",
+	"version",
+	"lsp",
+	"secrets",
+	"proxy",
+	"egress",
+	"pets",
+	"computer-use",
+	"whatsapp",
+	"slack",
+	"migrate",
+	"serve",
+	"desktop",
+	"completion",
+	"uninstall"
+];
+const KNOWN_GATEWAY_SUBCOMMANDS = [
+	"run",
+	"start",
+	"stop",
+	"restart",
+	"status",
+	"list",
+	"install",
+	"uninstall",
+	"setup"
+];
+function checkEnvLine(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	const varName = line.split("=")[0].trim();
+	for (const arg of hermesAgentArguments) if (arg.category === "Environment Variables" && "sections" in arg) {
+		for (const section of arg.sections) if (section.items.some((item) => item.name === varName)) return "var";
+	}
+}
+function getArgumentInfo(argName) {
+	for (const data of hermesAgentArguments) if ("sections" in data) {
+		for (const section of data.sections) for (const item of section.items) if (item.name.split(" ")[0] === argName) return {
+			category: data.category,
+			type: item.type,
+			name: item.name
+		};
+	}
+}
+function parseArgsToFiles$1(args) {
+	const executeCommand = "hermes";
+	const envArgs = [];
+	const cliArgs = [];
+	const settingsArgs = [];
+	const customLines = [];
+	let subcommandStr = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (result) {
+				if (result.line) customLines.push(result.line);
+				if (result.commandArg) subcommandStr += ` ${result.commandArg}`;
+			}
+			return;
+		}
+		if (arg.name === "Subcommand" && arg.value && arg.value !== "None / Default") {
+			subcommandStr += ` ${arg.value}`;
+			return;
+		}
+		if (arg.name === "gateway subcommand" && arg.value && arg.value !== "None / Default") {
+			subcommandStr += ` ${arg.value}`;
+			return;
+		}
+		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
+		if (info) switch (info.category) {
+			case "Environment Variables":
+				envArgs.push(arg);
+				break;
+			case "Command Line Arguments":
+				cliArgs.push(arg);
+				break;
+			case "Settings": settingsArgs.push(arg);
+		}
+	});
+	let scriptString = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	if (envArgs.length > 0) envArgs.forEach((arg) => {
+		scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+	});
+	if (customLines.length > 0) customLines.forEach((line) => {
+		scriptString += `${line}\n`;
+	});
+	if (envArgs.length > 0 || customLines.length > 0) scriptString += "\n";
+	scriptString += `${executeCommand}${subcommandStr}`;
+	cliArgs.forEach((arg) => {
+		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
+		if (!info) return;
+		const flagName = info.name.split(" ")[0];
+		if (info.type === "CheckBox") {
+			if (arg.value !== "false" && arg.value !== false && arg.value !== 0 && String(arg.value) !== "0") scriptString += ` ${flagName}`;
+		} else if (arg.value !== void 0 && arg.value !== null && String(arg.value).trim() !== "") scriptString += ` ${flagName} "${arg.value}"`;
+	});
+	scriptString += "\n";
+	let settingsString = "";
+	const settingsJson = {};
+	if (settingsArgs.length > 0) {
+		settingsArgs.forEach((arg) => {
+			const keys = arg.name.split(".");
+			let current = settingsJson;
+			keys.slice(0, -1).forEach((key) => {
+				current[key] = current[key] || {};
+				current = current[key];
+			});
+			let value = arg.value;
+			if (String(value) === "true") value = true;
+			else if (String(value) === "false") value = false;
+			else if (typeof value === "string" && !isNaN(Number(value)) && value.trim() !== "" && !isNaN(parseFloat(value))) value = Number(value);
+			current[keys[keys.length - 1]] = value;
+		});
+		if (!isEmpty(settingsJson)) settingsString = JSON.stringify(settingsJson, null, 2);
+	}
+	return {
+		scriptData: scriptString,
+		settingsData: settingsString
+	};
+}
+function parseArgsToString$20(args) {
+	const { settingsData, scriptData } = parseArgsToFiles$1(args);
+	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
+	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
+	const settingsTitle = "Settings File (config.yaml)";
+	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
+	if (isMultiFilePreviewSupported) return [{
+		title: scriptTitle,
+		data: scriptContent
+	}, {
+		title: settingsTitle,
+		data: settingsContent
+	}];
+	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
+}
+function parseFilesToArgs$1(scriptContent, settingsContent) {
+	const scriptArgs = parseStringToArgs$20(scriptContent);
+	const settingsArgs = [];
+	if (settingsContent) try {
+		const settingsJson = JSON.parse(settingsContent);
+		const flatten = (obj, path = "") => {
+			let result = [];
+			for (const key in obj) if (Object.prototype.hasOwnProperty.call(obj, key)) {
+				const newPath = path ? `${path}.${key}` : key;
+				if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) result = result.concat(flatten(obj[key], newPath));
+				else {
+					const value = typeof obj[key] === "string" ? obj[key] : JSON.stringify(obj[key]);
+					result.push({
+						name: newPath,
+						value
+					});
+				}
+			}
+			return result;
+		};
+		flatten(settingsJson).forEach((arg) => {
+			if (isValidArg(arg.name, hermesAgentArguments)) settingsArgs.push(arg);
+		});
+	} catch (error) {
+		console.error("Error parsing settings content for Hermes Agent:", error);
+	}
+	const combinedArgs = /* @__PURE__ */ new Map();
+	scriptArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
+	settingsArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
+	return Array.from(combinedArgs, ([name, value]) => ({
+		name,
+		value
+	}));
+}
+function parseStringToArgs$20(data) {
+	const argResult = [];
+	data.split("\n").forEach((line) => {
+		const trimmedLine = line.trim();
+		if (trimmedLine.startsWith("#") || trimmedLine.startsWith("REM") || trimmedLine === "@echo off") return;
+		if (trimmedLine.startsWith("hermes")) {
+			const clArg = trimmedLine.substring(6).trim();
+			if (!clArg) return;
+			const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
+			const tokens = [];
+			let tokenMatch;
+			while ((tokenMatch = tokenRegex.exec(clArg)) !== null) tokens.push(tokenMatch[1] ?? tokenMatch[2] ?? tokenMatch[3]);
+			for (let i = 0; i < tokens.length; i++) {
+				const token = tokens[i];
+				if (KNOWN_SUBCOMMANDS.includes(token)) {
+					argResult.push({
+						name: "Subcommand",
+						value: token
+					});
+					continue;
+				}
+				if (KNOWN_GATEWAY_SUBCOMMANDS.includes(token)) {
+					argResult.push({
+						name: "gateway subcommand",
+						value: token
+					});
+					continue;
+				}
+				if (token.startsWith("-")) {
+					const info = getArgumentInfo(token);
+					if (info) {
+						if (getArgumentType(info.name, hermesAgentArguments) === "CheckBox") argResult.push({
+							name: info.name,
+							value: "true"
+						});
+						else {
+							const nextToken = tokens[i + 1];
+							if (nextToken && !nextToken.startsWith("-")) {
+								argResult.push({
+									name: info.name,
+									value: nextToken.replace(/"/g, "")
+								});
+								i++;
+							} else argResult.push({
+								name: info.name,
+								value: ""
+							});
+						}
+					} else {
+						const nextToken = tokens[i + 1];
+						if (nextToken && !nextToken.startsWith("-")) {
+							argResult.push({
+								name: token,
+								value: nextToken.replace(/"/g, ""),
+								custom: {
+									kind: "commandLine",
+									type: "Input"
+								}
+							});
+							i++;
+						} else argResult.push({
+							name: token,
+							value: "true",
+							custom: {
+								kind: "commandLine",
+								type: "CheckBox"
+							}
+						});
+					}
+				} else argResult.push({
+					name: token,
+					value: token,
+					custom: {
+						kind: "commandLine",
+						type: "Input"
+					}
+				});
+			}
+		}
+		const lineType = checkEnvLine(line);
+		if (lineType === "export" || lineType === "set") {
+			let [name, value] = line.replace(`${lineType} `, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes((value || "").trim());
+			if (isValidArg(name, hermesAgentArguments)) argResult.push({
+				name,
+				value
+			});
+			else argResult.push({
+				name,
+				value,
+				custom: {
+					kind: "envVar",
+					type: "Input"
+				}
+			});
+		} else if (checkEnvLine(line) === "var") {
+			let [name, value] = line.split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes((value || "").trim());
+			if (isValidArg(name, hermesAgentArguments)) argResult.push({
+				name,
+				value
+			});
+			else argResult.push({
+				name,
+				value,
+				custom: {
+					kind: "envVar",
+					type: "Input"
+				}
+			});
+		}
+	});
+	return argResult;
+}
+function startInstall$19(stepper) {
+	stepper.initialSteps([
+		"Getting Started",
+		"Detect Existing",
+		"Hermes Agent",
+		"All Done!"
+	]);
+	stepper.starterStep({ disableSelectDir: true }).then(() => {
+		stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking for existing Hermes Agent installation...");
+			stepper.ipc.invoke("is_hermes_agent_installed").then((isInstalled) => {
+				if (isInstalled) {
+					stepper.setInstalled();
+					const currentDate = /* @__PURE__ */ new Date();
+					stepper.storage.set(INSTALL_TIME_KEY$4, currentDate.toLocaleString());
+					stepper.showFinalStep("success", "You're All Set!", "Hermes Agent is already installed and ready to use.");
+				} else stepper.nextStep().then(() => {
+					const installCommand = isWin ? "iex (irm https://hermes-agent.nousresearch.com/install.ps1)" : "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash";
+					stepper.executeTerminalCommands(installCommand).then(() => {
+						stepper.setInstalled();
+						const currentDate = /* @__PURE__ */ new Date();
+						stepper.storage.set(INSTALL_TIME_KEY$4, currentDate.toLocaleString());
+						stepper.showFinalStep("success", "Installation Complete!", "Hermes Agent has been installed successfully.");
+					});
+				});
+			});
+		});
+	});
+}
+function startUpdate$7(stepper) {
+	stepper.initialSteps(["Update Hermes Agent", "Complete Update"]);
+	stepper.executeTerminalCommands("hermes update").then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(UPDATE_TIME_KEY$4, currentDate.toLocaleString());
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "Hermes Agent Updated Successfully!", "Hermes Agent has been updated to the latest available version.");
+	});
+}
+async function cardInfo$19(api, callback) {
+	callback.setOpenFolders(void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INSTALL_TIME_KEY$4).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(UPDATE_TIME_KEY$4).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("current_hermes_agent_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(UPDATE_AVAILABLE_KEY$3).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+const HermesAgent_RM = {
+	catchAddress: catchAddress$5,
+	cardInfo: cardInfo$19,
+	parseStringToArgs: parseStringToArgs$20,
+	parseArgsToString: parseArgsToString$20,
+	manager: {
+		startInstall: startInstall$19,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$7
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/agent/Langflow/Arguments.ts
+const langflowArguments = [
+	{
+		category: "General",
+		sections: [
+			{
+				section: "Server & Execution",
+				items: [
+					{
+						name: "PORT",
+						description: "The HTTP port Langflow runs on",
+						type: "Number",
+						defaultValue: 7860,
+						numberMin: 1,
+						numberMax: 65535
+					},
+					{
+						name: "HOST",
+						description: "The host address to bind the server to",
+						type: "Input",
+						defaultValue: "127.0.0.1"
+					},
+					{
+						name: "--deployment-profile",
+						description: "Deployment profile: 'dev' or 'prod' (runs fail-loud production infrastructure checks)",
+						type: "DropDown",
+						values: ["dev", "prod"],
+						defaultValue: "dev"
+					},
+					{
+						name: "--open-browser",
+						description: "Open the browser automatically after starting the server",
+						type: "CheckBox",
+						defaultValue: true
+					},
+					{
+						name: "--backend-only",
+						description: "Run only the backend server without serving frontend assets",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "--dev",
+						description: "Run in development mode (may contain experimental features)",
+						type: "CheckBox",
+						defaultValue: false
+					},
+					{
+						name: "--frontend-path",
+						description: "Path to custom frontend directory containing build files",
+						type: "Directory"
+					},
+					{
+						name: "--store",
+						description: "Enables store features",
+						type: "CheckBox"
+					},
+					{
+						name: "--auto-saving",
+						description: "Defines if auto save is enabled",
+						type: "CheckBox"
+					},
+					{
+						name: "--auto-saving-interval",
+						description: "Debounce time for auto save in milliseconds",
+						type: "Number",
+						numberMin: 0
+					},
+					{
+						name: "--max-file-size-upload",
+						description: "Maximum file size allowed for upload in MB",
+						type: "Number",
+						numberMin: 1
+					},
+					{
+						name: "--health-check-max-retries",
+						description: "Number of retries for the server health check",
+						type: "Number",
+						numberMin: 0
+					},
+					{
+						name: "--webhook-polling-interval",
+						description: "Polling interval for webhooks in seconds",
+						type: "Number",
+						numberMin: 1
+					}
+				]
+			},
+			{
+				section: "Logging & Environment",
+				items: [
+					{
+						name: "LANGFLOW_LOG_LEVEL",
+						description: "Set logging level for Langflow backend",
+						type: "DropDown",
+						values: [
+							"debug",
+							"info",
+							"warning",
+							"error",
+							"critical"
+						],
+						defaultValue: "info"
+					},
+					{
+						name: "LANGFLOW_ENV_FILE",
+						description: "Path to custom .env file",
+						type: "File"
+					},
+					{
+						name: "LANGFLOW_COMPONENTS_PATH",
+						description: "Path to custom components directory",
+						type: "Directory"
+					},
+					{
+						name: "--log-file",
+						description: "Path to the log file",
+						type: "File"
+					},
+					{
+						name: "--log-rotation",
+						description: "Log rotation rule (e.g. 10 MB or 1 day)",
+						type: "Input"
+					},
+					{
+						name: "DO_NOT_TRACK",
+						description: "Opt out of anonymous telemetry usage data collection",
+						type: "CheckBox",
+						defaultValue: false
+					}
+				]
+			},
+			{
+				section: "Performance & SSL",
+				items: [
+					{
+						name: "--workers",
+						description: "Number of worker processes",
+						type: "Number",
+						numberMin: 1
+					},
+					{
+						name: "--worker-timeout",
+						description: "Worker process timeout in seconds",
+						type: "Number",
+						numberMin: 1
+					},
+					{
+						name: "--ssl-cert-file-path",
+						description: "Defines the SSL certificate file path",
+						type: "File"
+					},
+					{
+						name: "--ssl-key-file-path",
+						description: "Defines the SSL key file path",
+						type: "File"
+					}
+				]
+			}
+		]
+	},
+	{
+		category: "Database & Storage",
+		sections: [{
+			section: "Database Configuration",
+			items: [
+				{
+					name: "LANGFLOW_DATABASE_URL",
+					description: "Database connection URL (SQLite or PostgreSQL)",
+					type: "Input",
+					defaultValue: "sqlite:///./langflow.db"
+				},
+				{
+					name: "LANGFLOW_CONFIG_DIR",
+					description: "Directory where files, logs, and database are stored",
+					type: "Directory"
+				},
+				{
+					name: "LANGFLOW_SAVE_DB_IN_CONFIG_DIR",
+					description: "Save database in the config directory instead of root",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "LANGFLOW_DATABASE_CONNECTION_RETRY",
+					description: "Retry database connection if initial attempt fails",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "LANGFLOW_STORE_ENVIRONMENT_VARIABLES",
+					description: "Store environment variables securely in the database",
+					type: "CheckBox"
+				}
+			]
+		}]
+	},
+	{
+		category: "Authentication & Security",
+		sections: [{
+			section: "Authentication",
+			items: [
+				{
+					name: "LANGFLOW_AUTO_LOGIN",
+					description: "Enable automatic login without credentials",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "LANGFLOW_SUPERUSER",
+					description: "Superuser username for administrative login",
+					type: "Input"
+				},
+				{
+					name: "LANGFLOW_SUPERUSER_PASSWORD",
+					description: "Superuser password for administrative login",
+					type: "Input"
+				},
+				{
+					name: "LANGFLOW_ENABLE_SUPERUSER_CLI",
+					description: "Allow superuser creation via CLI",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "LANGFLOW_API_KEY_SOURCE",
+					description: "Source for validating API keys (database or environment variable)",
+					type: "DropDown",
+					values: ["db", "env"],
+					defaultValue: "db"
+				},
+				{
+					name: "LANGFLOW_API_KEY",
+					description: "Static API key when LANGFLOW_API_KEY_SOURCE is set to 'env'",
+					type: "Input"
+				},
+				{
+					name: "--remove-api-keys",
+					description: "Remove API keys from projects saved in the database",
+					type: "CheckBox"
+				}
+			]
+		}, {
+			section: "Security & Rate Limiting",
+			items: [
+				{
+					name: "LANGFLOW_RATE_LIMIT_PER_MINUTE",
+					description: "Number of login attempts allowed per minute per IP",
+					type: "Number",
+					defaultValue: 5,
+					numberMin: 1
+				},
+				{
+					name: "LANGFLOW_PUBLIC_FLOW_RATE_LIMIT_PER_MINUTE",
+					description: "Number of anonymous public-flow runs allowed per minute per IP",
+					type: "Number",
+					defaultValue: 20,
+					numberMin: 1
+				},
+				{
+					name: "LANGFLOW_RATE_LIMIT_STORAGE_URI",
+					description: "Storage backend for rate limit counters (memory:// or redis://host:port)",
+					type: "Input",
+					defaultValue: "memory://"
+				},
+				{
+					name: "LANGFLOW_RATE_LIMIT_TRUST_PROXY",
+					description: "Trust X-Forwarded-For header for client IP when behind a trusted proxy",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "LANGFLOW_SSRF_PROTECTION_ENABLED",
+					description: "Block requests to private IP ranges, localhost, and cloud metadata endpoints",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "LANGFLOW_SSRF_ALLOWED_HOSTS",
+					description: "Comma-separated list of allowed hosts/IPs/CIDRs when SSRF protection is enabled",
+					type: "Input"
+				}
+			]
+		}]
+	},
+	{
+		category: "Cache & Queue",
+		sections: [{
+			section: "Cache & Job Queue",
+			items: [
+				{
+					name: "LANGFLOW_CACHE_TYPE",
+					description: "Cache storage backend type",
+					type: "DropDown",
+					values: [
+						"memory",
+						"redis",
+						"async"
+					],
+					defaultValue: "memory"
+				},
+				{
+					name: "--cache",
+					description: "LangChain cache type to use",
+					type: "DropDown",
+					values: ["InMemoryCache", "SQLiteCache"]
+				},
+				{
+					name: "LANGFLOW_JOB_QUEUE_TYPE",
+					description: "Job queue type for background task execution (redis required for multi-worker)",
+					type: "DropDown",
+					values: ["in-memory", "redis"],
+					defaultValue: "in-memory"
+				},
+				{
+					name: "LANGFLOW_REDIS_HOST",
+					description: "Redis server hostname for cache and queue",
+					type: "Input",
+					defaultValue: "localhost"
+				},
+				{
+					name: "LANGFLOW_REDIS_PORT",
+					description: "Redis server port",
+					type: "Number",
+					defaultValue: 6379,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "LANGFLOW_REDIS_DB",
+					description: "Redis database index",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "LANGFLOW_REDIS_CACHE_EXPIRE",
+					description: "Redis cache expiration TTL in seconds",
+					type: "Number",
+					defaultValue: 3600,
+					numberMin: 1
+				}
+			]
+		}]
+	},
+	{
+		category: "MCP",
+		sections: [{
+			section: "Model Context Protocol",
+			items: [
+				{
+					name: "LANGFLOW_MCP_COMPOSER_ENABLED",
+					description: "Enable MCP composer feature in MCP projects",
+					type: "CheckBox",
+					defaultValue: true
+				},
+				{
+					name: "LANGFLOW_MCP_SESSION_CLEANUP_INTERVAL",
+					description: "Interval in seconds to scan for and reap idle MCP sessions (minimum 30)",
+					type: "Number",
+					defaultValue: 120,
+					numberMin: 30
+				},
+				{
+					name: "LANGFLOW_MCP_SESSION_IDLE_TIMEOUT",
+					description: "Seconds of inactivity before closing an idle MCP session",
+					type: "Number",
+					defaultValue: 400,
+					numberMin: 1
+				},
+				{
+					name: "LANGFLOW_MCP_MAX_SESSIONS_PER_SERVER",
+					description: "Maximum concurrent live sessions per MCP server URL/command",
+					type: "Number",
+					defaultValue: 10,
+					numberMin: 1
+				}
+			]
+		}]
+	}
+];
+//#endregion
+//#region module/src/containers/agent/Langflow/RendererMethods.ts
+const INSTALL_TIME_KEY$3 = "install-time-langflow";
+const UPDATE_TIME_KEY$3 = "update-time-langflow";
+const UPDATE_AVAILABLE_KEY$2 = "update-available-version-langflow";
+function checkLinuxArgLine$4(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	for (const arg of langflowArguments) if (arg.category === "General") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+	}
+}
+function parseArgsToString$19(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let cmArgs = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const res = parseCustomArg(arg);
+			if (!res) return;
+			if (res.line) lines += res.line + "\n";
+			if (res.commandArg) cmArgs += res.commandArg + " ";
+		} else {
+			if (arg.name === "PORT") {
+				cmArgs += `--port ${arg.value} `;
+				return;
+			}
+			if (arg.name === "HOST") {
+				cmArgs += `--host ${arg.value} `;
+				return;
+			}
+			if (arg.name.startsWith("--")) {
+				if (getArgumentType(arg.name, langflowArguments) === "CheckBox") {
+					if (arg.value !== "false") cmArgs += `${arg.name} `;
+				} else cmArgs += `${arg.name} ${arg.value} `;
+				return;
+			}
+			if (getArgumentType(arg.name, langflowArguments) === "CheckBox") {
+				const eWinResult = `set ${arg.name}=true\n`;
+				const eResult = `export ${arg.name}="true"\n`;
+				result += isWin ? eWinResult : eResult;
+			} else {
+				const eWinResult = `set ${arg.name}=${arg.value}\n`;
+				const eResult = `export ${arg.name}="${arg.value}"\n`;
+				result += isWin ? eWinResult : eResult;
+			}
+		}
+	});
+	if (lines) result += lines + "\n";
+	cmArgs = cmArgs.trim();
+	result += `langflow run${cmArgs ? " " + cmArgs : ""}`;
+	return result;
+}
+function parseStringToArgs$19(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#") || line.startsWith("REM") || line.startsWith("@echo")) return;
+		if (line.includes("langflow run")) {
+			const clArg = line.split("langflow run")[1]?.trim();
+			if (!clArg) return;
+			clArg.split("--").filter(Boolean).forEach((arg) => {
+				const [id, ...valueParts] = arg.trim().split(" ");
+				const name = `--${id}`;
+				const value = valueParts.join(" ").replace(/"/g, "");
+				if (isValidArg(name, langflowArguments)) {
+					if (getArgumentType(name, langflowArguments) === "CheckBox") argResult.push({
+						name,
+						value: ""
+					});
+					else argResult.push({
+						name,
+						value
+					});
+				} else if (isValidArg(id.toUpperCase(), langflowArguments)) argResult.push({
+					name: id.toUpperCase(),
+					value
+				});
+			});
+		}
+		const lineType = checkLinuxArgLine$4(line);
+		if (lineType === "export" || lineType === "set") {
+			let [name, value] = line.replace(`${lineType} `, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes((value || "").trim());
+			if (isValidArg(name, langflowArguments)) argResult.push({
+				name,
+				value
+			});
+		}
+	});
+	return argResult;
+}
+function startInstall$18(stepper) {
+	const pipCommand = getPythonCommandByOs().pip;
+	stepper.initialSteps([
+		"Getting Started",
+		"Detect Existing",
+		"Install Langflow",
+		"All Done!"
+	]);
+	stepper.starterStep({ disableSelectDir: true }).then(() => {
+		stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking for existing Langflow installation...");
+			stepper.ipc.invoke("is_langflow_installed").then((isInstalled) => {
+				if (isInstalled) {
+					stepper.setInstalled();
+					const currentDate = /* @__PURE__ */ new Date();
+					stepper.storage.set(INSTALL_TIME_KEY$3, currentDate.toLocaleString());
+					stepper.showFinalStep("success", "You're All Set!", "Langflow is already installed. You're good to go!");
+				} else stepper.nextStep().then(() => {
+					stepper.executeTerminalCommands([`${pipCommand} install uv`, "uv pip install langflow"]).then(() => {
+						stepper.setInstalled();
+						const currentDate = /* @__PURE__ */ new Date();
+						stepper.storage.set(INSTALL_TIME_KEY$3, currentDate.toLocaleString());
+						stepper.showFinalStep("success", "Installation Complete!", "Your Langflow environment is ready. Enjoy!");
+					});
+				});
+			});
+		});
+	});
+}
+function startUpdate$6(stepper) {
+	stepper.initialSteps(["Update Langflow", "Complete Update"]);
+	stepper.executeTerminalCommands("pip install --upgrade langflow").then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(UPDATE_TIME_KEY$3, currentDate.toLocaleString());
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "Langflow Updated Successfully!", "Langflow has been updated to the latest version. You can now enjoy the new features and improvements.");
+	});
+}
+async function cardInfo$18(api, callback) {
+	callback.setOpenFolders(void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INSTALL_TIME_KEY$3).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(UPDATE_TIME_KEY$3).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("current_langflow_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(UPDATE_AVAILABLE_KEY$2).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+function catchAddress$3(input) {
+	const cleanInput = input.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, "");
+	if (cleanInput.toLowerCase().includes("[OK] Open Langflow".toLowerCase())) return void 0;
+	if (cleanInput.toLowerCase().includes("Uvicorn running on".toLowerCase())) {
+		const match = cleanInput.match(/Uvicorn running on\s+([^\s)]+)/i);
+		if (match) {
+			let url = match[1].replace(/[.,;:)]+$/, "");
+			if (!/^https?:\/\//i.test(url)) url = `http://${url}`;
+			return replaceAddress(url);
+		}
+	}
+	for (const pattern of [
+		/https?:\/\/localhost(?::\d+)?/i,
+		/https?:\/\/127\.0\.0\.1(?::\d+)?/i,
+		/https?:\/\/0\.0\.0\.0(?::\d+)?/i,
+		/https?:\/\/\[::1](?::\d+)?/i,
+		/https?:\/\/(?:[\w-]+\.)*localhost(?::\d+)?/i
+	]) {
+		const match = cleanInput.match(pattern);
+		if (match) return replaceAddress(match[0]);
+	}
+}
+const Langflow_RM = {
+	catchAddress: catchAddress$3,
+	cardInfo: cardInfo$18,
+	parseStringToArgs: parseStringToArgs$19,
+	parseArgsToString: parseArgsToString$19,
+	manager: {
+		startInstall: startInstall$18,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$6
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/agent/N8N/Arguments/index.ts
+const n8nArguments = [
+	{
+		category: "AI Assistant",
+		items: [
+			{
+				name: "N8N_AI_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether AI features (such as AI nodes and AI assistant) are enabled globally."
+			},
+			{
+				name: "N8N_AI_ASSISTANT_BASE_URL",
+				type: "Input",
+				description: "Base URL of the AI assistant service, specified as `https://ai-assistant.n8n.io`. Required if you self-host n8n and want to enable the AI Assistant."
+			},
+			{
+				name: "N8N_AI_ALLOW_SENDING_PARAMETER_VALUES",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether workflow and node parameter values may be sent to AI providers. When false, only structure or placeholders are sent."
+			},
+			{
+				name: "N8N_AI_AGENT_MAX_PASSTHROUGH_BINARY_SIZE_BYTES",
+				type: "Number",
+				defaultValue: 52428800,
+				numberMin: 0,
+				description: "Maximum size in bytes of a single binary file (e.g. an image or PDF) that the AI Agent node will pass through to a model. Default: 50 MB (52428800 bytes)."
+			}
+		]
+	},
+	{
+		category: "Nodes",
+		items: [
+			{
+				name: "N8N_COMMUNITY_PACKAGES_ENABLED",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Enables (true) or disables (false) the functionality to install and load community nodes. If set to false, neither verified nor unverified community packages will be available, regardless of their individual settings."
+			},
+			{
+				name: "N8N_COMMUNITY_PACKAGES_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage installed community packages from environment variables. Reconciles installed packages against N8N_COMMUNITY_PACKAGES on startup."
+			},
+			{
+				name: "N8N_COMMUNITY_PACKAGES",
+				type: "Input",
+				description: "JSON array of community packages to install. Each entry is an object with a `name` (required) and optional `version` and `checksum` fields."
+			},
+			{
+				name: "N8N_COMMUNITY_PACKAGES_PREVENT_LOADING",
+				type: "CheckBox",
+				description: "Prevents (true) or allows (false) loading installed community nodes on instance startup. Use this if a faulty node prevents the instance from starting."
+			},
+			{
+				name: "N8N_COMMUNITY_PACKAGES_REGISTRY",
+				type: "Input",
+				defaultValue: "https://registry.npmjs.org",
+				description: "NPM registry URL to pull community packages from (license required)."
+			},
+			{
+				name: "N8N_CUSTOM_EXTENSIONS",
+				type: "Input",
+				description: "Specify the path to directories containing your custom nodes."
+			},
+			{
+				name: "N8N_PYTHON_ENABLED",
+				type: "CheckBox",
+				description: "Whether to enable Python execution on the Code node."
+			},
+			{
+				name: "N8N_UNVERIFIED_PACKAGES_ENABLED",
+				type: "CheckBox",
+				description: "When N8N_COMMUNITY_PACKAGES_ENABLED is true, this variable controls whether to enable the installation and use of unverified community nodes from an NPM registry (true) or not (false)."
+			},
+			{
+				name: "N8N_VERIFIED_PACKAGES_ENABLED",
+				type: "CheckBox",
+				description: "When N8N_COMMUNITY_PACKAGES_ENABLED is true, this variable controls whether to show verified community nodes in the nodes panel for installation and use (true) or to hide them (false)."
+			},
+			{
+				name: "NODE_FUNCTION_ALLOW_BUILTIN",
+				type: "Input",
+				description: "Permit users to import specific built-in modules in the Code node. Use * to allow all. n8n disables importing modules by default."
+			},
+			{
+				name: "NODE_FUNCTION_ALLOW_EXTERNAL",
+				type: "Input",
+				description: "Permit users to import specific external modules (from n8n/node_modules) in the Code node. n8n disables importing modules by default."
+			},
+			{
+				name: "NODES_ERROR_TRIGGER_TYPE",
+				type: "Input",
+				defaultValue: "n8n-nodes-base.errorTrigger",
+				description: "Specify which node type to use as Error Trigger."
+			},
+			{
+				name: "NODES_EXCLUDE",
+				type: "Input",
+				defaultValue: "[\"n8n-nodes-base.executeCommand\", \"n8n-nodes-base.localFileTrigger\"]",
+				description: "Specify which nodes not to load. For example, to block nodes that can be a security risk if users aren't trustworthy: NODES_EXCLUDE: \"[\"n8n-nodes-base.executeCommand\", \"@n8n/n8n-nodes-langchain.lmChatDeepSeek\"]\". To enable all nodes, specify NODES_EXCLUDE: \"[]\"."
+			},
+			{
+				name: "NODES_INCLUDE",
+				type: "Input",
+				description: "Specify which nodes to load."
+			}
+		]
+	},
+	{
+		category: "User Management & Auth",
+		items: [
+			{
+				name: "N8N_INSTANCE_OWNER_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage the instance owner from environment variables. Overwrites instance owner details on startup and locks UI control."
+			},
+			{
+				name: "N8N_INSTANCE_OWNER_EMAIL",
+				type: "Input",
+				description: "Email address for the instance owner."
+			},
+			{
+				name: "N8N_INSTANCE_OWNER_FIRST_NAME",
+				type: "Input",
+				description: "First name for the instance owner."
+			},
+			{
+				name: "N8N_INSTANCE_OWNER_LAST_NAME",
+				type: "Input",
+				description: "Last name for the instance owner."
+			},
+			{
+				name: "N8N_INSTANCE_OWNER_PASSWORD_HASH",
+				type: "Input",
+				description: "Bcrypt hash of the instance owner's password. Setting a plaintext password breaks login."
+			},
+			{
+				name: "N8N_SSO_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage SSO from environment variables. Applies SSO variables on startup and locks matching UI controls."
+			},
+			{
+				name: "N8N_SSO_USER_ROLE_PROVISIONING",
+				type: "DropDown",
+				defaultValue: "disabled",
+				values: [
+					"disabled",
+					"instance_role",
+					"instance_and_project_roles"
+				],
+				description: "How n8n provisions roles for users who sign in through SSO. `disabled` does not provision roles; `instance_role` provisions instance-level role; `instance_and_project_roles` provisions both."
+			},
+			{
+				name: "N8N_SSO_OIDC_LOGIN_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enable OIDC login."
+			},
+			{
+				name: "N8N_SSO_OIDC_CLIENT_ID",
+				type: "Input",
+				description: "OIDC client ID issued by your identity provider."
+			},
+			{
+				name: "N8N_SSO_OIDC_CLIENT_SECRET",
+				type: "Input",
+				description: "OIDC client secret issued by your identity provider."
+			},
+			{
+				name: "N8N_SSO_OIDC_DISCOVERY_ENDPOINT",
+				type: "Input",
+				description: "OIDC discovery endpoint URL (.well-known/openid-configuration)."
+			},
+			{
+				name: "N8N_SSO_OIDC_PROMPT",
+				type: "Input",
+				description: "Optional OIDC prompt parameter to send with the authorization request (e.g. login or consent)."
+			},
+			{
+				name: "N8N_SSO_OIDC_ACR_VALUES",
+				type: "Input",
+				description: "Optional OIDC acr_values parameter to request a specific authentication context."
+			},
+			{
+				name: "N8N_SSO_SAML_LOGIN_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enable SAML login."
+			},
+			{
+				name: "N8N_SSO_SAML_METADATA",
+				type: "Input",
+				description: "SAML identity provider metadata as an XML string. Mutually exclusive with N8N_SSO_SAML_METADATA_URL."
+			},
+			{
+				name: "N8N_SSO_SAML_METADATA_URL",
+				type: "Input",
+				description: "URL to fetch SAML identity provider metadata from. Mutually exclusive with N8N_SSO_SAML_METADATA."
+			},
+			{
+				name: "N8N_EMAIL_MODE",
+				type: "Input",
+				defaultValue: "smtp",
+				description: "Enable emails."
+			},
+			{
+				name: "N8N_SMTP_HOST",
+				type: "Input",
+				description: "your_SMTP_server_name"
+			},
+			{
+				name: "N8N_SMTP_PORT",
+				type: "Number",
+				defaultValue: 587,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "The SMTP port to connect to (e.g. 587 or 465)."
+			},
+			{
+				name: "N8N_SMTP_USER",
+				type: "Input",
+				description: "your_SMTP_username"
+			},
+			{
+				name: "N8N_SMTP_PASS",
+				type: "Input",
+				description: "your_SMTP_password"
+			},
+			{
+				name: "N8N_SMTP_OAUTH_SERVICE_CLIENT",
+				type: "Input",
+				description: "If using 2LO with a service account this is your client ID"
+			},
+			{
+				name: "N8N_SMTP_OAUTH_PRIVATE_KEY",
+				type: "Input",
+				description: "If using 2LO with a service account this is your private key"
+			},
+			{
+				name: "N8N_SMTP_SENDER",
+				type: "Input",
+				description: "Sender email address. You can optionally include the sender name. Example with name: N8N <contact@n8n.com>"
+			},
+			{
+				name: "N8N_SMTP_SSL",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether to use SSL for SMTP (true) or not (false)."
+			},
+			{
+				name: "N8N_SMTP_STARTTLS",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether to use STARTTLS for SMTP (true) or not (false)."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_INVITE",
+				type: "File",
+				description: "Full path to your HTML email template. This overrides the default template for invite emails."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_PWRESET",
+				type: "File",
+				description: "Full path to your HTML email template. This overrides the default template for password reset emails."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_SHARED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that a workflow was shared. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_AUTODEACTIVATED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that a workflow was deactivated. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_FAILURE",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that a workflow execution failed. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_CREDENTIALS_SHARED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that a credential was shared. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_PROJECT_SHARED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that a project was shared. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_API_KEY_REVOKED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that an API key was revoked. Provide the full path to the template."
+			},
+			{
+				name: "N8N_UM_EMAIL_TEMPLATES_MCP_CLIENT_REVOKED",
+				type: "File",
+				description: "Overrides the default HTML template for notifying users that an MCP client was revoked. Provide the full path to the template."
+			},
+			{
+				name: "N8N_USER_MANAGEMENT_JWT_SECRET",
+				type: "Input",
+				description: "Set a specific JWT secret. By default, n8n generates one on start."
+			},
+			{
+				name: "N8N_USER_MANAGEMENT_JWT_DURATION_HOURS",
+				type: "Number",
+				defaultValue: 168,
+				numberMin: 1,
+				description: "Set an expiration date for the JWTs in hours."
+			},
+			{
+				name: "N8N_USER_MANAGEMENT_JWT_REFRESH_TIMEOUT_HOURS",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: -1,
+				description: "How many hours before the JWT expires to automatically refresh it. 0 means 25% of N8N_USER_MANAGEMENT_JWT_DURATION_HOURS. -1 means it will never refresh, which forces users to log in again after the period defined in N8N_USER_MANAGEMENT_JWT_DURATION_HOURS."
+			},
+			{
+				name: "N8N_MFA_ENABLED",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether to enable two-factor authentication (true) or disable (false). n8n ignores this if existing users have 2FA enabled."
+			},
+			{
+				name: "N8N_INVITE_LINKS_EMAIL_ONLY",
+				type: "CheckBox",
+				description: "When set to true, n8n will only deliver invite links via email and will not expose them through the API. This option enhances security by preventing invite URLs from being accessible programmatically, or to high privileged users."
+			}
+		]
+	},
+	{
+		category: "Workflows",
+		sections: [{
+			section: "Workflows",
+			items: [
+				{
+					name: "N8N_ONBOARDING_FLOW_DISABLED",
+					type: "CheckBox",
+					description: "Whether to disable onboarding tips when creating a new workflow (true) or not (false)."
+				},
+				{
+					name: "N8N_WORKFLOW_ACTIVATION_BATCH_SIZE",
+					type: "Number",
+					defaultValue: 1,
+					numberMin: 1,
+					description: "How many workflows to publish simultaneously during startup."
+				},
+				{
+					name: "N8N_WORKFLOW_CALLER_POLICY_DEFAULT_OPTION",
+					type: "DropDown",
+					defaultValue: "workflowsFromSameOwner",
+					values: [
+						"any",
+						"none",
+						"workflowsFromAList",
+						"workflowsFromSameOwner"
+					],
+					description: "Which workflows can call a workflow. Options are: any, none, workflowsFromAList, workflowsFromSameOwner. This feature requires Workflow sharing."
+				},
+				{
+					name: "N8N_WORKFLOW_TAGS_DISABLED",
+					type: "CheckBox",
+					description: "Whether to disable workflow tags (true) or enable tags (false)."
+				},
+				{
+					name: "WORKFLOWS_DEFAULT_NAME",
+					type: "Input",
+					defaultValue: "My workflow",
+					description: "The default name used for new workflows."
+				}
+			]
+		}, {
+			section: "Workflow History",
+			items: [{
+				name: "N8N_WORKFLOW_HISTORY_PRUNE_TIME",
+				type: "Number",
+				defaultValue: -1,
+				numberMin: -1,
+				description: "How long to keep workflow history versions before automatically deleting them (in hours). Set to `-1` to keep all versions indefinitely."
+			}]
+		}]
+	},
+	{
+		category: "Task Runners",
+		items: [
+			{
+				name: "N8N_RUNNERS_ENABLED",
+				type: "CheckBox",
+				description: "Are task runners enabled."
+			},
+			{
+				name: "N8N_RUNNERS_MODE",
+				type: "DropDown",
+				defaultValue: "internal",
+				values: ["internal", "external"],
+				description: "How to launch and run the task runner. `internal` means n8n will launch a task runner as child process. `external` means an external orchestrator will launch the task runner."
+			},
+			{
+				name: "N8N_RUNNERS_AUTH_TOKEN",
+				type: "Input",
+				defaultValue: "Random string",
+				description: "Shared secret used by a task runner to authenticate to n8n. Required when using `external` mode."
+			},
+			{
+				name: "N8N_RUNNERS_BROKER_PORT",
+				type: "Number",
+				defaultValue: 5679,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "Port the task broker listens on for task runner connections."
+			},
+			{
+				name: "N8N_RUNNERS_BROKER_LISTEN_ADDRESS",
+				type: "Input",
+				defaultValue: "127.0.0.1",
+				description: "Address the task broker listens on."
+			},
+			{
+				name: "N8N_RUNNERS_MAX_PAYLOAD",
+				type: "Number",
+				defaultValue: 1073741824,
+				numberMin: 1024,
+				description: "Maximum payload size in bytes for communication between a task broker and a task runner."
+			},
+			{
+				name: "N8N_RUNNERS_MAX_OLD_SPACE_SIZE",
+				type: "Input",
+				description: "The --max-old-space-size option to use for a task runner (in MB). By default, Node.js will set this based on available memory."
+			},
+			{
+				name: "N8N_RUNNERS_MAX_CONCURRENCY",
+				type: "Number",
+				defaultValue: 5,
+				numberMin: 1,
+				description: "The number of concurrent tasks a task runner can execute at a time."
+			},
+			{
+				name: "N8N_RUNNERS_TASK_TIMEOUT",
+				type: "Number",
+				defaultValue: 300,
+				numberMin: 1,
+				description: "The maximum time, in seconds, a task can run before the runner stops it and restarts. This value must be greater than 0."
+			},
+			{
+				name: "N8N_RUNNERS_HEARTBEAT_INTERVAL",
+				type: "Number",
+				defaultValue: 30,
+				numberMin: 1,
+				description: "The interval, in seconds, at which the runner must send a heartbeat to the broker. If the runner doesn't send a heartbeat in time, the task stops and the runner restarts. This value must be greater than 0."
+			},
+			{
+				name: "N8N_RUNNERS_INSECURE_MODE",
+				type: "CheckBox",
+				description: "Whether to disable all security measures in the task runner, for compatibility with modules that rely on insecure JS features. **Discouraged for production use.**"
+			},
+			{
+				name: "N8N_RUNNERS_TASK_REQUEST_TIMEOUT",
+				type: "Number",
+				defaultValue: 20,
+				numberMin: 1,
+				description: "How long (in seconds) a task request can wait for a runner to become available before timing out. This prevents workflows from hanging indefinitely when no runners are available. Must be greater than 0."
+			},
+			{
+				name: "N8N_RUNNERS_LAUNCHER_LOG_LEVEL",
+				type: "DropDown",
+				defaultValue: "info",
+				values: [
+					"debug",
+					"info",
+					"warn",
+					"error"
+				],
+				description: "Which log messages to show."
+			},
+			{
+				name: "N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT",
+				type: "Number",
+				defaultValue: 15,
+				numberMin: 1,
+				description: "The number of seconds to wait before shutting down an idle runner."
+			},
+			{
+				name: "N8N_RUNNERS_TASK_BROKER_URI",
+				type: "Input",
+				defaultValue: "http://127.0.0.1:5679",
+				description: "The URI of the task broker server (n8n instance)."
+			},
+			{
+				name: "N8N_RUNNERS_LAUNCHER_HEALTH_CHECK_PORT",
+				type: "Number",
+				defaultValue: 5680,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "Port for the launcher's health check server."
+			},
+			{
+				name: "NODE_OPTIONS",
+				type: "Input",
+				description: "Options for Node.js."
+			},
+			{
+				name: "N8N_RUNNERS_GRANT_TOKEN",
+				type: "Input",
+				defaultValue: "Random string",
+				description: "Token the runner uses to authenticate with the task broker. This is automatically provided by the launcher."
+			},
+			{
+				name: "N8N_RUNNERS_ALLOW_PROTOTYPE_MUTATION",
+				type: "CheckBox",
+				description: "Whether to allow prototype mutation for external libraries. Set to `true` to allow modules that rely on runtime prototype mutation (for example, `puppeteer`) at the cost of relaxing security."
+			},
+			{
+				name: "N8N_RUNNERS_STDLIB_ALLOW",
+				type: "Input",
+				description: "Python standard library modules that you can use in the Code node, including their submodules. Use `*` to allow all stdlib modules. n8n disables all Python standard library imports by default."
+			},
+			{
+				name: "N8N_RUNNERS_EXTERNAL_ALLOW",
+				type: "Input",
+				description: "Third-party Python modules that are allowed to be used in the Code node, including their submodules. Use `*` to allow all external modules. n8n disables all third-party Python modules by default. Third-party Python modules must be included in the `n8nio/runners` image."
+			},
+			{
+				name: "N8N_RUNNERS_BUILTINS_DENY",
+				type: "Input",
+				defaultValue: "eval,exec,compile,open,input,breakpoint,getattr,object,type,vars,setattr,delattr,hasattr,dir,memoryview,__build_class__,globals,locals",
+				description: "Python built-ins that you can't use in the Code node. Set to an empty string to allow all built-ins."
+			},
+			{
+				name: "N8N_BLOCK_RUNNER_ENV_ACCESS",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether to block access to the runner's environment from within Python code tasks. Set to `false` to enable all Python code node users access to the runner's environment via `os.environ`. For security reasons, environment variable access is blocked by default."
+			}
+		]
+	},
+	{
+		category: "Logs",
+		items: [
+			{
+				name: "N8N_LOG_LEVEL",
+				type: "DropDown",
+				defaultValue: "info",
+				values: [
+					"info",
+					"warn",
+					"error",
+					"debug",
+					"silent"
+				],
+				description: "Log output level. Refer to Log levels for details."
+			},
+			{
+				name: "N8N_LOG_OUTPUT",
+				type: "DropDown",
+				defaultValue: "console",
+				values: ["console", "file"],
+				description: "Where to output logs. Provide multiple values as a comma-separated list."
+			},
+			{
+				name: "N8N_LOG_FORMAT",
+				type: "DropDown",
+				defaultValue: "text",
+				values: ["text", "json"],
+				description: "The log format to use. `text` prints human readable messages. `json` prints one JSON object per line containing the message, level, timestamp, and all metadata. This is useful for production monitoring as well as debugging."
+			},
+			{
+				name: "N8N_LOG_SCOPES",
+				type: "Input",
+				description: "Comma-separated list of scopes to filter logs by (e.g., `license`, `scaling`, `mcp`, `pubsub`, `redis`)."
+			},
+			{
+				name: "N8N_LOG_STREAMING_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage log streaming destinations from environment variables. When `true`, n8n applies log streaming variables on startup and locks UI controls."
+			},
+			{
+				name: "N8N_LOG_STREAMING_DESTINATIONS",
+				type: "Input",
+				description: "JSON array of log streaming destinations (webhook, syslog, or sentry configuration objects)."
+			},
+			{
+				name: "N8N_LOG_CRON_ACTIVE_INTERVAL",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "Interval in minutes to log currently active cron jobs. Set to 0 to disable."
+			},
+			{
+				name: "N8N_LOG_FILE_COUNT_MAX",
+				type: "Number",
+				defaultValue: 100,
+				numberMin: 1,
+				description: "Max number of log files to keep."
+			},
+			{
+				name: "N8N_LOG_FILE_SIZE_MAX",
+				type: "Number",
+				defaultValue: 16,
+				numberMin: 1,
+				description: "Max size of each log file in MB."
+			},
+			{
+				name: "N8N_LOG_FILE_LOCATION",
+				type: "File",
+				defaultValue: "<n8n-directory-path>/logs/n8n.log",
+				description: "Log file location. Requires N8N_LOG_OUTPUT set to `file`."
+			},
+			{
+				name: "DB_LOGGING_ENABLED",
+				type: "CheckBox",
+				description: "Whether to enable database-specific logging."
+			},
+			{
+				name: "DB_LOGGING_OPTIONS",
+				type: "DropDown",
+				defaultValue: "error",
+				values: [
+					"query",
+					"error",
+					"schema",
+					"warn",
+					"info",
+					"log"
+				],
+				description: "Database log output level. To enable all logging, specify `all`. Refer to TypeORM logging options"
+			},
+			{
+				name: "DB_LOGGING_MAX_EXECUTION_TIME",
+				type: "Number",
+				defaultValue: 1e3,
+				numberMin: 0,
+				description: "Maximum execution time (in milliseconds) before n8n logs a warning. Set to 0 to disable long running query warning."
+			},
+			{
+				name: "CODE_ENABLE_STDOUT",
+				type: "CheckBox",
+				description: "Set to `true` to send Code node logs from `console.log` or `print` to the process's stdout, only for production executions."
+			},
+			{
+				name: "NO_COLOR",
+				type: "Input",
+				defaultValue: "undefined",
+				description: "Set to any value to output logs without ANSI colors. For more information, see the no-color.org website."
+			},
+			{
+				name: "N8N_EVENTBUS_CHECKUNSENTINTERVAL",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "How often (in milliseconds) to check for unsent event messages. Can in rare cases send message twice. Set to 0 to disable it."
+			},
+			{
+				name: "N8N_EVENTBUS_LOGWRITER_SYNCFILEACCESS",
+				type: "CheckBox",
+				description: "Whether all file access happens synchronously within the thread (true) or not (false)."
+			},
+			{
+				name: "N8N_EVENTBUS_LOGWRITER_KEEPLOGCOUNT",
+				type: "Number",
+				defaultValue: 3,
+				numberMin: 1,
+				description: "Number of event log files to keep."
+			},
+			{
+				name: "N8N_EVENTBUS_LOGWRITER_MAXFILESIZEINKB",
+				type: "Number",
+				defaultValue: 10240,
+				numberMin: 1,
+				description: "Maximum size (in kilo-bytes) of an event log file before a new one starts."
+			},
+			{
+				name: "N8N_EVENTBUS_LOGWRITER_LOGBASENAME",
+				type: "Input",
+				defaultValue: "n8nEventLog",
+				description: "Basename of the event log file."
+			}
+		]
+	},
+	{
+		category: "License",
+		items: [
+			{
+				name: "N8N_HIDE_USAGE_PAGE",
+				type: "CheckBox",
+				description: "Hide the usage and plans page in the app."
+			},
+			{
+				name: "N8N_LICENSE_ACTIVATION_KEY",
+				type: "Input",
+				defaultValue: "",
+				description: "Activation key to initialize license. Not applicable if the n8n instance was already activated."
+			},
+			{
+				name: "N8N_LICENSE_AUTO_RENEW_ENABLED",
+				type: "CheckBox",
+				description: "Enables (true) or disables (false) autorenewal for licenses. If disabled, you need to manually renew the license every 10 days by navigating to **Settings** > **Usage and plan**, and pressing `F5`. Failure to renew the license will disable all licensed features."
+			},
+			{
+				name: "N8N_LICENSE_DETACH_FLOATING_ON_SHUTDOWN",
+				type: "CheckBox",
+				description: "Controls whether the instance releases floating entitlements back to the pool upon shutdown. Set to `true` to allow other instances to reuse the entitlements, or `false` to retain them. For production instances that must always keep their licensed features, set this to `false`."
+			},
+			{
+				name: "N8N_LICENSE_SERVER_URL",
+				type: "Input",
+				defaultValue: "https://license.n8n.io/v1",
+				description: "Server URL to retrieve license."
+			},
+			{
+				name: "N8N_LICENSE_TENANT_ID",
+				type: "Number",
+				defaultValue: 1,
+				numberMin: 1,
+				description: "Tenant ID associated with the license. Only set this variable if explicitly instructed by n8n."
+			},
+			{
+				name: "https_proxy_license_server",
+				type: "Input",
+				defaultValue: "https://user:pass@proxy:port",
+				description: "Proxy server URL for HTTPS requests to retrieve license. This variable name needs to be lowercase."
+			}
+		]
+	},
+	{
+		category: "Queue Mode",
+		items: [
+			{
+				name: "OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS",
+				type: "CheckBox",
+				description: "Set to `true` if you want manual executions to run on the worker rather than on main."
+			},
+			{
+				name: "QUEUE_BULL_PREFIX",
+				type: "Input",
+				description: "Prefix to use for all queue keys."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_DB",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "The Redis database used."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_HOST",
+				type: "Input",
+				defaultValue: "localhost",
+				description: "The Redis host."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_PORT",
+				type: "Number",
+				defaultValue: 6379,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "The Redis port used."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_USERNAME",
+				type: "Input",
+				description: "The Redis username (needs Redis version 6 or above). Don't define it for Redis < 6 compatibility"
+			},
+			{
+				name: "QUEUE_BULL_REDIS_PASSWORD",
+				type: "Input",
+				description: "The Redis password."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_TIMEOUT_THRESHOLD",
+				type: "Number",
+				defaultValue: 1e4,
+				numberMin: 0,
+				description: "The Redis timeout threshold (in ms)."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_CLUSTER_NODES",
+				type: "Input",
+				description: "Expects a comma-separated list of Redis Cluster nodes in the format `host:port`, for the Redis client to initially connect to. If running in queue mode (`EXECUTIONS_MODE = queue`), setting this variable will create a Redis Cluster client instead of a Redis client, and n8n will ignore `QUEUE_BULL_REDIS_HOST` and `QUEUE_BULL_REDIS_PORT`."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_TLS",
+				type: "CheckBox",
+				description: "Enable TLS on Redis connections."
+			},
+			{
+				name: "QUEUE_BULL_REDIS_DUALSTACK",
+				type: "CheckBox",
+				description: "Enable dual-stack support (IPv4 and IPv6) on Redis connections."
+			},
+			{
+				name: "QUEUE_WORKER_TIMEOUT",
+				type: "Number",
+				defaultValue: 30,
+				numberMin: 1,
+				description: "**Deprecated** Use `N8N_GRACEFUL_SHUTDOWN_TIMEOUT` instead. How long should n8n wait (seconds) for running executions before exiting worker process on shutdown."
+			},
+			{
+				name: "QUEUE_HEALTH_CHECK_ACTIVE",
+				type: "CheckBox",
+				description: "Whether to enable health checks (true) or disable (false)."
+			},
+			{
+				name: "QUEUE_HEALTH_CHECK_PORT",
+				type: "Number",
+				defaultValue: 5678,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "The port to serve health checks on. If you experience a port conflict error when starting a worker server using its default port, change this."
+			},
+			{
+				name: "QUEUE_WORKER_LOCK_DURATION",
+				type: "Number",
+				defaultValue: 6e4,
+				numberMin: 1e3,
+				description: "How long (in ms) is the lease period for a worker to work on a message."
+			},
+			{
+				name: "QUEUE_WORKER_LOCK_RENEW_TIME",
+				type: "Number",
+				defaultValue: 1e4,
+				numberMin: 1e3,
+				description: "How frequently (in ms) should a worker renew the lease time."
+			},
+			{
+				name: "QUEUE_WORKER_STALLED_INTERVAL",
+				type: "Number",
+				defaultValue: 3e4,
+				numberMin: 0,
+				description: "How often should a worker check for stalled jobs (use 0 for never)."
+			},
+			{
+				name: "QUEUE_WORKER_MAX_STALLED_COUNT",
+				type: "Number",
+				defaultValue: 1,
+				numberMin: 0,
+				description: "Maximum amount of times a stalled job will be re-processed."
+			},
+			{
+				name: "N8N_MULTI_MAIN_SETUP_ENABLED",
+				type: "CheckBox",
+				description: "Whether to enable multi-main setup for queue mode (license required)."
+			},
+			{
+				name: "N8N_MULTI_MAIN_SETUP_KEY_TTL",
+				type: "Number",
+				defaultValue: 10,
+				numberMin: 1,
+				description: "Time to live (in seconds) for leader key in multi-main setup."
+			},
+			{
+				name: "N8N_MULTI_MAIN_SETUP_CHECK_INTERVAL",
+				type: "Number",
+				defaultValue: 3,
+				numberMin: 1,
+				description: "Interval (in seconds) for leader check in multi-main setup."
+			}
+		]
+	},
+	{
+		category: "Source Control",
+		items: [{
+			name: "N8N_SOURCECONTROL_DEFAULT_SSH_KEY_TYPE",
+			type: "DropDown",
+			defaultValue: "ed25519",
+			values: ["ed25519", "rsa"],
+			description: "Set to `rsa` to make RSA the default SSH key type for Source control setup."
+		}]
+	},
+	{
+		category: "Timezone & Localization",
+		items: [{
+			name: "GENERIC_TIMEZONE",
+			type: "Input",
+			defaultValue: "America/New_York",
+			description: "The n8n instance timezone. Important for schedule nodes (such as Cron)."
+		}, {
+			name: "N8N_DEFAULT_LOCALE",
+			type: "Input",
+			defaultValue: "en",
+			description: "A locale identifier, compatible with the Accept-Language header. n8n doesn't support regional identifiers, such as `de-AT`. When running in a locale other than the default, n8n displays UI strings in the selected locale, and falls back to `en` for any untranslated strings."
+		}]
+	},
+	{
+		category: "Security",
+		items: [
+			{
+				name: "N8N_SECURITY_POLICY_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage the security policy from environment variables. When `true`, n8n applies security policy variables on startup and locks UI controls."
+			},
+			{
+				name: "N8N_MFA_ENFORCED_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enforce two-factor authentication for all users (`true`) or not (`false`)."
+			},
+			{
+				name: "N8N_PERSONAL_SPACE_PUBLISHING_ENABLED",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether users can publish from their personal space (`true`) or not (`false`)."
+			},
+			{
+				name: "N8N_PERSONAL_SPACE_SHARING_ENABLED",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether users can share resources from their personal space (`true`) or not (`false`)."
+			},
+			{
+				name: "N8N_BLOCK_ENV_ACCESS_IN_NODE",
+				type: "CheckBox",
+				description: "Whether to allow users to access environment variables in expressions and the Code node (false) or not (true)."
+			},
+			{
+				name: "N8N_BLOCK_FILE_ACCESS_TO_N8N_FILES",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Set to `true` to block access to all files in the .n8n directory and user defined configuration files."
+			},
+			{
+				name: "N8N_BLOCK_FILE_PATTERNS",
+				type: "Input",
+				defaultValue: "^(.*/)*\\.git(/.*)*$",
+				description: "Regex patterns for files and folders that ReadWriteFile and ReadBinaryFiles nodes cannot access. Separate multiple patterns with semicolons."
+			},
+			{
+				name: "N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS",
+				type: "CheckBox",
+				description: "Set to `true` to try to set 0600 permissions for the settings file, giving only the owner read and write access."
+			},
+			{
+				name: "N8N_RESTRICT_FILE_ACCESS_TO",
+				type: "Input",
+				defaultValue: "~/.n8n-files",
+				description: "Limits access to files in these directories. Provide multiple files as a semicolon-separated list (\";\")."
+			},
+			{
+				name: "N8N_CONTENT_SECURITY_POLICY",
+				type: "Input",
+				defaultValue: "{}",
+				description: "Set Content-Security-Policy headers as helmet.js nested directives object. For example, `{ \"frame-ancestors\": [\"http://localhost:3000\"] }`"
+			},
+			{
+				name: "N8N_CONTENT_SECURITY_POLICY_REPORT_ONLY",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to set the Content-Security-Policy-Report-Only header instead of Content-Security-Policy."
+			},
+			{
+				name: "N8N_CROSS_ORIGIN_OPENER_POLICY",
+				type: "DropDown",
+				defaultValue: "same-origin-allow-popups",
+				values: ["same-origin", "same-origin-allow-popups"],
+				description: "Configuration for the Cross-Origin-Opener-Policy header."
+			},
+			{
+				name: "N8N_INSECURE_DISABLE_WEBHOOK_IFRAME_SANDBOX",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to disable HTML sandboxing for webhooks."
+			},
+			{
+				name: "N8N_INSECURE_DISABLE_FORM_HTML_SANDBOX",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to disable CSP sandboxing for form pages (Form Trigger, Send and Wait)."
+			},
+			{
+				name: "N8N_GIT_NODE_DISABLE_BARE_REPOS",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Set to `true` to prevent the Git node from working with bare repositories, enhancing security."
+			},
+			{
+				name: "N8N_GIT_NODE_ENABLE_HOOKS",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to allow the Git node to execute Git hooks."
+			},
+			{
+				name: "N8N_GIT_NODE_ENABLE_ALL_CONFIG_KEYS",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enable arbitrary git config keys in the Git node."
+			},
+			{
+				name: "N8N_AWS_SYSTEM_CREDENTIALS_ACCESS_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to allow access to AWS system credentials (e.g. in awsAssumeRole credentials)."
+			},
+			{
+				name: "N8N_AWS_SYSTEM_CREDENTIALS_SDK_SOURCES",
+				type: "Input",
+				defaultValue: "all",
+				description: "Which AWS system-credential sources resolve via the AWS SDK. Accepts `all`, `none`, or a comma-separated subset."
+			},
+			{
+				name: "N8N_SECURITY_AUDIT_DAYS_ABANDONED_WORKFLOW",
+				type: "Number",
+				defaultValue: 90,
+				numberMin: 1,
+				description: "Number of days to consider a workflow abandoned if it's not executed."
+			},
+			{
+				name: "N8N_SECURE_COOKIE",
+				type: "CheckBox",
+				description: "Ensures that cookies are only sent over HTTPS, enhancing security."
+			},
+			{
+				name: "N8N_SAMESITE_COOKIE",
+				type: "DropDown",
+				defaultValue: "lax",
+				values: [
+					"strict",
+					"lax",
+					"none"
+				],
+				description: "Controls cross-site cookie behavior:\n- strict: Sent only for first-party requests.\n- lax (default): Sent with top-level navigation requests.\n- none: Sent in all contexts (requires HTTPS)."
+			}
+		]
+	},
+	{
+		category: "External Hooks & Secrets",
+		sections: [{
+			section: "External Hooks",
+			items: [{
+				name: "EXTERNAL_HOOK_FILES",
+				type: "Input",
+				description: "Files containing backend external hooks. Provide multiple files as a colon-separated list (\":\")."
+			}, {
+				name: "EXTERNAL_FRONTEND_HOOKS_URLS",
+				type: "Input",
+				description: "URLs to files containing frontend external hooks. Provide multiple URLs as a colon-separated list (\":\")."
+			}]
+		}, {
+			section: "External Secrets",
+			items: [{
+				name: "N8N_EXTERNAL_SECRETS_UPDATE_INTERVAL",
+				type: "Number",
+				defaultValue: 300,
+				numberMin: 1,
+				description: "How often (in seconds) to check for secret updates."
+			}]
+		}]
+	},
+	{
+		category: "Deployment",
+		items: [
+			{
+				name: "HTTP_PROXY",
+				type: "Input",
+				description: "A URL to proxy unencrypted HTTP requests through. When set, n8n proxies all unencrypted HTTP traffic from nodes through the proxy URL."
+			},
+			{
+				name: "HTTPS_PROXY",
+				type: "Input",
+				description: "A URL to proxy TLS/SSL encrypted HTTP requests through. When set, n8n proxies all TLS/SSL encrypted HTTP traffic from nodes through the proxy URL."
+			},
+			{
+				name: "ALL_PROXY",
+				type: "Input",
+				description: "A URL to proxy both unencrypted and encrypted HTTP requests through. When set, n8n uses this value when more specific variables (`HTTP_PROXY` or `HTTPS_PROXY`) aren't present."
+			},
+			{
+				name: "NO_PROXY",
+				type: "Input",
+				description: "A comma-separated list of hostnames or URLs that should bypass the proxy. When using `HTTP_PROXY`, `HTTPS_PROXY`, or `ALL_PROXY`, n8n will connect directly to the URLs or hostnames defined here instead of using the proxy."
+			},
+			{
+				name: "N8N_EDITOR_BASE_URL",
+				type: "Input",
+				description: "Public URL where users can access the editor. Also used for emails sent from n8n and the redirect URL for SAML based authentication."
+			},
+			{
+				name: "N8N_WEBHOOK_URL",
+				type: "Input",
+				description: "Public base URL for both test and production webhooks. Successor to the deprecated `WEBHOOK_URL`."
+			},
+			{
+				name: "N8N_CANVAS_ONLY",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enable canvas-only mode, hiding the chrome UI."
+			},
+			{
+				name: "N8N_CONFIG_FILES",
+				type: "File",
+				description: "Use to provide the path to any JSON configuration file."
+			},
+			{
+				name: "N8N_DISABLE_UI",
+				type: "CheckBox",
+				description: "Set to `true` to disable the UI."
+			},
+			{
+				name: "N8N_PREVIEW_MODE",
+				type: "CheckBox",
+				description: "Set to `true` to run in preview mode."
+			},
+			{
+				name: "N8N_TEMPLATES_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Enables workflow templates (true) or disable (false)."
+			},
+			{
+				name: "N8N_TEMPLATES_HOST",
+				type: "Input",
+				defaultValue: "https://api.n8n.io",
+				description: "Change this if creating your own workflow template library. Note that to use your own workflow templates library, your API must provide the same endpoints and response structure as n8n's. Refer to Workflow templates for more information."
+			},
+			{
+				name: "N8N_ENCRYPTION_KEY",
+				type: "Input",
+				defaultValue: "Random key generated by n8n",
+				description: "Provide a custom key used to encrypt credentials in the n8n database. By default n8n generates a random key on first launch."
+			},
+			{
+				name: "N8N_USER_FOLDER",
+				type: "Directory",
+				defaultValue: "user-folder",
+				description: "Provide the path where n8n will create the .n8n folder. This directory stores user-specific data, such as database file and encryption key."
+			},
+			{
+				name: "N8N_PATH",
+				type: "Input",
+				defaultValue: "/",
+				description: "The path n8n deploys to."
+			},
+			{
+				name: "N8N_HOST",
+				type: "Input",
+				defaultValue: "localhost",
+				description: "Host name n8n runs on."
+			},
+			{
+				name: "N8N_PORT",
+				type: "Number",
+				defaultValue: 5678,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "The HTTP port n8n runs on."
+			},
+			{
+				name: "N8N_LISTEN_ADDRESS",
+				type: "Input",
+				defaultValue: "::",
+				description: "The IP address n8n should listen on."
+			},
+			{
+				name: "N8N_PROTOCOL",
+				type: "DropDown",
+				defaultValue: "http",
+				values: ["http", "https"],
+				description: "The protocol used to reach n8n."
+			},
+			{
+				name: "N8N_SSL_KEY",
+				type: "File",
+				description: "The SSL key for HTTPS protocol."
+			},
+			{
+				name: "N8N_SSL_CERT",
+				type: "File",
+				description: "The SSL certificate for HTTPS protocol."
+			},
+			{
+				name: "N8N_PERSONALIZATION_ENABLED",
+				type: "CheckBox",
+				description: "Whether to ask users personalisation questions and then customise n8n accordingly."
+			},
+			{
+				name: "N8N_VERSION_NOTIFICATIONS_ENABLED",
+				type: "CheckBox",
+				description: "When enabled, n8n sends notifications of new versions and security updates."
+			},
+			{
+				name: "N8N_VERSION_NOTIFICATIONS_ENDPOINT",
+				type: "Input",
+				defaultValue: "https://api.n8n.io/versions/",
+				description: "The endpoint to retrieve where version information."
+			},
+			{
+				name: "N8N_VERSION_NOTIFICATIONS_INFO_URL",
+				type: "Input",
+				defaultValue: "https://docs.n8n.io/getting-started/installation/updating.html",
+				description: "The URL displayed in the New Versions panel for more information."
+			},
+			{
+				name: "N8N_DIAGNOSTICS_ENABLED",
+				type: "CheckBox",
+				description: "Whether to share selected, anonymous telemetry with n8n. Note that if you set this to `false`, you can't enable Ask AI in the Code node."
+			},
+			{
+				name: "N8N_DIAGNOSTICS_CONFIG_FRONTEND",
+				type: "Input",
+				defaultValue: "1zPn9bgWPzlQc0p8Gj1uiK6DOTn;https://telemetry.n8n.io",
+				description: "Telemetry configuration for the frontend."
+			},
+			{
+				name: "N8N_DIAGNOSTICS_CONFIG_BACKEND",
+				type: "Input",
+				defaultValue: "1zPn7YoGC3ZXE9zLeTKLuQCB4F6;https://telemetry.n8n.io/v1/batch",
+				description: "Telemetry configuration for the backend."
+			},
+			{
+				name: "N8N_PUSH_BACKEND",
+				type: "DropDown",
+				defaultValue: "websocket",
+				values: ["websocket", "sse"],
+				description: "Choose whether the n8n backend uses server-sent events (`sse`) or WebSockets (`websocket`) to send changes to the UI."
+			},
+			{
+				name: "VUE_APP_URL_BASE_API",
+				type: "Input",
+				defaultValue: "http://localhost:5678/",
+				description: "Used when building the n8n-editor-ui package manually to set how the frontend can reach the backend API. Refer to Configure the Base URL."
+			},
+			{
+				name: "N8N_HIRING_BANNER_ENABLED",
+				type: "CheckBox",
+				description: "Whether to show the n8n hiring banner in the console (true) or not (false)."
+			},
+			{
+				name: "N8N_PUBLIC_API_SWAGGERUI_DISABLED",
+				type: "CheckBox",
+				description: "Whether the Swagger UI (API playground) is disabled (true) or not (false)."
+			},
+			{
+				name: "N8N_PUBLIC_API_DISABLED",
+				type: "CheckBox",
+				description: "Whether to disable the public API (true) or not (false)."
+			},
+			{
+				name: "N8N_PUBLIC_API_ENDPOINT",
+				type: "Input",
+				defaultValue: "api",
+				description: "Path for the public API endpoints."
+			},
+			{
+				name: "N8N_GRACEFUL_SHUTDOWN_TIMEOUT",
+				type: "Number",
+				defaultValue: 30,
+				numberMin: 1,
+				description: "How long should the n8n process wait (in seconds) for components to shut down before exiting the process."
+			},
+			{
+				name: "N8N_DEV_RELOAD",
+				type: "CheckBox",
+				description: "When working on the n8n source code, set this to `true` to automatically reload or restart the application when changes occur in the source code files."
+			},
+			{
+				name: "N8N_REINSTALL_MISSING_PACKAGES",
+				type: "CheckBox",
+				description: "If set to `true`, n8n will automatically attempt to reinstall any missing packages."
+			},
+			{
+				name: "N8N_TUNNEL_SUBDOMAIN",
+				type: "Input",
+				description: "Specifies the subdomain for the n8n tunnel. If not set, n8n generates a random subdomain."
+			},
+			{
+				name: "N8N_PROXY_HOPS",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "Number of reverse-proxies n8n is running behind."
+			}
+		]
+	},
+	{
+		category: "Database",
+		items: [
+			{
+				name: "DB_TYPE",
+				type: "DropDown",
+				defaultValue: "sqlite",
+				values: ["sqlite", "postgresdb"],
+				description: "The database to use."
+			},
+			{
+				name: "DB_TABLE_PREFIX",
+				type: "Input",
+				description: "Prefix to use for table names."
+			},
+			{
+				name: "DB_PING_INTERVAL_SECONDS",
+				type: "Number",
+				defaultValue: 2,
+				numberMin: 1,
+				description: "The interval, in seconds, between pings to the database to check if the connection is still alive."
+			},
+			{
+				name: "DB_POSTGRESDB_DATABASE",
+				type: "Input",
+				defaultValue: "n8n",
+				description: "The name of the PostgreSQL database."
+			},
+			{
+				name: "DB_POSTGRESDB_HOST",
+				type: "Input",
+				defaultValue: "localhost",
+				description: "The PostgreSQL host."
+			},
+			{
+				name: "DB_POSTGRESDB_PORT",
+				type: "Number",
+				defaultValue: 5432,
+				numberMin: 1,
+				numberMax: 65535,
+				description: "The PostgreSQL port."
+			},
+			{
+				name: "DB_POSTGRESDB_USER",
+				type: "Input",
+				defaultValue: "postgres",
+				description: "The PostgreSQL user."
+			},
+			{
+				name: "DB_POSTGRESDB_PASSWORD",
+				type: "Input",
+				description: "The PostgreSQL password."
+			},
+			{
+				name: "DB_POSTGRESDB_POOL_SIZE",
+				type: "Number",
+				defaultValue: 2,
+				numberMin: 1,
+				description: "Control how many parallel open Postgres connections n8n should have. Increasing it may help with resource utilization, but too many connections may degrade performance."
+			},
+			{
+				name: "DB_POSTGRESDB_CONNECTION_TIMEOUT",
+				type: "Number",
+				defaultValue: 2e4,
+				numberMin: 0,
+				description: "Postgres connection timeout (ms)."
+			},
+			{
+				name: "DB_POSTGRESDB_IDLE_CONNECTION_TIMEOUT",
+				type: "Number",
+				defaultValue: 3e4,
+				numberMin: 0,
+				description: "Amount of time before an idle connection is eligible for eviction for being idle."
+			},
+			{
+				name: "DB_POSTGRESDB_SCHEMA",
+				type: "Input",
+				defaultValue: "public",
+				description: "The PostgreSQL schema."
+			},
+			{
+				name: "DB_POSTGRESDB_SSL_ENABLED",
+				type: "CheckBox",
+				description: "Whether to enable SSL. Automatically enabled if DB_POSTGRESDB_SSL_CA, DB_POSTGRESDB_SSL_CERT or DB_POSTGRESDB_SSL_KEY is defined."
+			},
+			{
+				name: "DB_POSTGRESDB_SSL_CA",
+				type: "File",
+				description: "The PostgreSQL SSL certificate authority."
+			},
+			{
+				name: "DB_POSTGRESDB_SSL_CERT",
+				type: "File",
+				description: "The PostgreSQL SSL certificate."
+			},
+			{
+				name: "DB_POSTGRESDB_SSL_KEY",
+				type: "File",
+				description: "The PostgreSQL SSL key."
+			},
+			{
+				name: "DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED",
+				type: "CheckBox",
+				description: "If n8n should reject unauthorized SSL connections (true) or not (false)."
+			},
+			{
+				name: "DB_SQLITE_POOL_SIZE",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "Controls whether to open the SQLite file in WAL mode or rollback journal mode. Uses rollback journal mode when set to zero. When greater than zero, uses WAL mode with the value determining the number of parallel SQL read connections to configure. WAL mode is much more performant and reliable than the rollback journal mode."
+			},
+			{
+				name: "DB_SQLITE_VACUUM_ON_STARTUP",
+				type: "CheckBox",
+				description: "Runs VACUUM operation on startup to rebuild the database. Reduces file size and optimizes indexes. This is a long running blocking operation and increases start-up time."
+			}
+		]
+	},
+	{
+		category: "Executions",
+		items: [
+			{
+				name: "EXECUTIONS_MODE",
+				type: "DropDown",
+				defaultValue: "regular",
+				values: ["regular", "queue"],
+				description: "Whether executions should run directly or using queue."
+			},
+			{
+				name: "EXECUTIONS_TIMEOUT",
+				type: "Number",
+				defaultValue: -1,
+				numberMin: -1,
+				description: "Sets a default timeout (in seconds) to all workflows after which n8n stops their execution. Users can override this for individual workflows up to the duration set in EXECUTIONS_TIMEOUT_MAX. Set EXECUTIONS_TIMEOUT to -1 to disable."
+			},
+			{
+				name: "EXECUTIONS_TIMEOUT_MAX",
+				type: "Number",
+				defaultValue: 3600,
+				numberMin: 1,
+				description: "The maximum execution time (in seconds) that users can set for an individual workflow."
+			},
+			{
+				name: "N8N_AI_TIMEOUT_MAX",
+				type: "Number",
+				defaultValue: 36e5,
+				numberMin: 1e3,
+				description: "Sets the HTTP request timeout in milliseconds for AI and LLM nodes (such as OpenAI, Anthropic, Mistral, and Ollama). This controls how long n8n waits for responses from AI services before timing out. Useful for slower local AI services or complex prompts that require longer processing time."
+			},
+			{
+				name: "EXECUTIONS_DATA_SAVE_ON_ERROR",
+				type: "DropDown",
+				defaultValue: "all",
+				values: ["all", "none"],
+				description: "Whether n8n saves execution data on error."
+			},
+			{
+				name: "EXECUTIONS_DATA_SAVE_ON_SUCCESS",
+				type: "DropDown",
+				defaultValue: "all",
+				values: ["all", "none"],
+				description: "Whether n8n saves execution data on success."
+			},
+			{
+				name: "EXECUTIONS_DATA_SAVE_ON_PROGRESS",
+				type: "CheckBox",
+				description: "Whether to save progress for each node executed (true) or not (false)."
+			},
+			{
+				name: "EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS",
+				type: "CheckBox",
+				description: "Whether to save data of executions when started manually."
+			},
+			{
+				name: "EXECUTIONS_DATA_PRUNE",
+				type: "CheckBox",
+				defaultValue: true,
+				description: "Whether to delete data of past executions on a rolling basis."
+			},
+			{
+				name: "EXECUTIONS_DATA_MAX_AGE",
+				type: "Number",
+				defaultValue: 336,
+				numberMin: 1,
+				description: "The execution age (in hours) before it's deleted."
+			},
+			{
+				name: "EXECUTIONS_DATA_PRUNE_MAX_COUNT",
+				type: "Number",
+				defaultValue: 1e4,
+				numberMin: 0,
+				description: "Maximum number of executions to keep in the database. 0 = no limit"
+			},
+			{
+				name: "EXECUTIONS_DATA_HARD_DELETE_BUFFER",
+				type: "Number",
+				defaultValue: 1,
+				numberMin: 0,
+				description: "How old (hours) the finished execution data has to be to get hard-deleted. By default, this buffer excludes recent executions as the user may need them while building a workflow."
+			},
+			{
+				name: "EXECUTIONS_DATA_PRUNE_HARD_DELETE_INTERVAL",
+				type: "Number",
+				defaultValue: 15,
+				numberMin: 1,
+				description: "How often (minutes) execution data should be hard-deleted."
+			},
+			{
+				name: "EXECUTIONS_DATA_PRUNE_SOFT_DELETE_INTERVAL",
+				type: "Number",
+				defaultValue: 60,
+				numberMin: 1,
+				description: "How often (minutes) execution data should be soft-deleted."
+			},
+			{
+				name: "EXECUTIONS_DATA_MAX_DISPLAY_SIZE",
+				type: "Number",
+				defaultValue: 104857600,
+				numberMin: 0,
+				description: "Max byte size of execution run data to load for display. Executions whose data exceeds this are returned without run data. 0 disables."
+			},
+			{
+				name: "N8N_CONCURRENCY_PRODUCTION_LIMIT",
+				type: "Number",
+				defaultValue: -1,
+				numberMin: -1,
+				description: "Max production executions allowed to run concurrently, in both regular and scaling modes. -1 to disable in regular mode."
+			},
+			{
+				name: "N8N_CONCURRENCY_EVALUATION_LIMIT",
+				type: "Number",
+				defaultValue: -1,
+				numberMin: -1,
+				description: "Max evaluation executions allowed to run concurrently. -1 means unlimited."
+			},
+			{
+				name: "N8N_EXECUTIONS_QUEUE_RECOVERY_INTERVAL",
+				type: "Number",
+				defaultValue: 180,
+				numberMin: 1,
+				description: "How often (in minutes) to check for queue recovery."
+			},
+			{
+				name: "N8N_EXECUTIONS_QUEUE_RECOVERY_BATCH",
+				type: "Number",
+				defaultValue: 100,
+				numberMin: 1,
+				description: "Size of batch of executions to check for queue recovery."
+			},
+			{
+				name: "N8N_EXECUTIONS_QUEUE_KEEP_LAST_COMPLETED",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "How many completed Bull jobs to keep in Redis. 0 removes completed jobs immediately; n keeps the last n."
+			},
+			{
+				name: "N8N_EXECUTIONS_QUEUE_KEEP_LAST_FAILED",
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0,
+				description: "How many failed Bull jobs to keep in Redis. 0 removes failed jobs immediately; n keeps the last n."
+			},
+			{
+				name: "N8N_WORKFLOW_AUTODEACTIVATION_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether workflows are automatically unpublished after repeated crashed executions."
+			},
+			{
+				name: "N8N_WORKFLOW_AUTODEACTIVATION_MAX_LAST_EXECUTIONS",
+				type: "Number",
+				defaultValue: 3,
+				numberMin: 1,
+				description: "Number of crashed executions before unpublishing a workflow."
+			}
+		]
+	},
+	{
+		category: "Credentials",
+		items: [
+			{
+				name: "CREDENTIALS_OVERWRITE_DATA",
+				type: "Input",
+				description: "Overwrites for credentials."
+			},
+			{
+				name: "CREDENTIALS_OVERWRITE_ENDPOINT",
+				type: "Input",
+				description: "The API endpoint to fetch credentials."
+			},
+			{
+				name: "CREDENTIALS_OVERWRITE_PERSISTENCE",
+				type: "CheckBox",
+				description: "Enable database persistence for credential overwrites. Required for multiinstance or queue mode to propagate overwrites to workers through a publish/subscribe approach."
+			},
+			{
+				name: "CREDENTIALS_DEFAULT_NAME",
+				type: "Input",
+				defaultValue: "My credentials",
+				description: "The default name for credentials."
+			}
+		]
+	},
+	{
+		category: "Insights",
+		items: [
+			{
+				name: "N8N_DISABLED_MODULES",
+				type: "Input",
+				description: "Set to `insights` to disable the feature and metrics collection for an instance."
+			},
+			{
+				name: "N8N_INSIGHTS_COMPACTION_BATCH_SIZE",
+				type: "Number",
+				defaultValue: 500,
+				numberMin: 1,
+				description: "The number of raw insights data to compact in a single batch."
+			},
+			{
+				name: "N8N_INSIGHTS_COMPACTION_DAILY_TO_WEEKLY_THRESHOLD_DAYS",
+				type: "Number",
+				defaultValue: 180,
+				numberMin: 1,
+				description: "The maximum age (in days) of daily insights data to compact."
+			},
+			{
+				name: "N8N_INSIGHTS_COMPACTION_HOURLY_TO_DAILY_THRESHOLD_DAYS",
+				type: "Number",
+				defaultValue: 90,
+				numberMin: 1,
+				description: "The maximum age (in days) of hourly insights data to compact."
+			},
+			{
+				name: "N8N_INSIGHTS_COMPACTION_INTERVAL_MINUTES",
+				type: "Number",
+				defaultValue: 60,
+				numberMin: 1,
+				description: "Interval (in minutes) at which compaction should run."
+			},
+			{
+				name: "N8N_INSIGHTS_FLUSH_BATCH_SIZE",
+				type: "Number",
+				defaultValue: 1e3,
+				numberMin: 1,
+				description: "The maximum number of insights data to keep in the buffer before flushing."
+			},
+			{
+				name: "N8N_INSIGHTS_FLUSH_INTERVAL_SECONDS",
+				type: "Number",
+				defaultValue: 30,
+				numberMin: 1,
+				description: "The interval (in seconds) at which the insights data should be flushed to the database."
+			}
+		]
+	},
+	{
+		category: "Binary Data",
+		items: [
+			{
+				name: "N8N_AVAILABLE_BINARY_DATA_MODES",
+				type: "Input",
+				defaultValue: "filesystem",
+				description: "A comma separated list of available binary data modes."
+			},
+			{
+				name: "N8N_BINARY_DATA_STORAGE_PATH",
+				type: "Input",
+				defaultValue: "N8N_USER_FOLDER/binaryData",
+				description: "The path where n8n stores binary data."
+			},
+			{
+				name: "N8N_DEFAULT_BINARY_DATA_MODE",
+				type: "DropDown",
+				defaultValue: "default",
+				values: [
+					"default",
+					"filesystem",
+					"s3",
+					"database"
+				],
+				description: "The default binary data mode. `default` keeps binary data in memory. Set to `filesystem` to use the filesystem, or `s3` to AWS S3, or `database` to use the DB. Note that binary data pruning operates on the active binary data mode. For example, if your instance stored data in S3, and you later switched to filesystem mode, n8n only prunes binary data in the filesystem. This may change in future."
+			}
+		]
+	},
+	{
+		category: "External Storage",
+		items: [
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_HOST",
+				type: "Input",
+				description: "Host of the n8n bucket in S3-compatible external storage. For example, `s3.us-east-1.amazonaws.com`"
+			},
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_BUCKET_NAME",
+				type: "Input",
+				description: "Name of the n8n bucket in S3-compatible external storage."
+			},
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_BUCKET_REGION",
+				type: "Input",
+				description: "Region of the n8n bucket in S3-compatible external storage. For example, `us-east-1`"
+			},
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_ACCESS_KEY",
+				type: "Input",
+				description: "Access key in S3-compatible external storage"
+			},
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_ACCESS_SECRET",
+				type: "Input",
+				description: "Access secret in S3-compatible external storage."
+			},
+			{
+				name: "N8N_EXTERNAL_STORAGE_S3_AUTH_AUTO_DETECT",
+				type: "CheckBox",
+				description: "Use automatic credential detection to authenticate S3 calls for external storage. This will ignore the access key and access secret and use the default credential provider chain."
+			}
+		]
+	},
+	{
+		category: "Endpoints",
+		items: [
+			{
+				name: "N8N_PAYLOAD_SIZE_MAX",
+				type: "Number",
+				defaultValue: 16,
+				numberMin: 1,
+				description: "The maximum payload size in MiB."
+			},
+			{
+				name: "N8N_FORMDATA_FILE_SIZE_MAX",
+				type: "Number",
+				defaultValue: 200,
+				numberMin: 1,
+				description: "Max payload size for files in form-data webhook payloads in MiB."
+			},
+			{
+				name: "N8N_METRICS",
+				type: "CheckBox",
+				description: "Whether to enable the /metrics endpoint."
+			},
+			{
+				name: "N8N_METRICS_PREFIX",
+				type: "Input",
+				defaultValue: "n8n_",
+				description: "Optional prefix for n8n specific metrics names."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_DEFAULT_METRICS",
+				type: "CheckBox",
+				description: "Whether to expose default system and node.js metrics."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_CACHE_METRICS",
+				type: "CheckBox",
+				description: "Whether to include metrics (true) for cache hits and misses, or not include them (false)."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_MESSAGE_EVENT_BUS_METRICS",
+				type: "CheckBox",
+				description: "Whether to include metrics (true) for events, or not include them (false)."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the workflow ID on workflow metrics."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_NODE_TYPE_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the node type on node metrics."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the credential type on credential metrics."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_API_ENDPOINTS",
+				type: "CheckBox",
+				description: "Whether to expose metrics for API endpoints."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_API_PATH_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the path of API invocations."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_API_METHOD_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the HTTP method (GET, POST, ...) of API invocations."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL",
+				type: "CheckBox",
+				description: "Whether to include a label for the HTTP status code (200, 404, ...) of API invocations."
+			},
+			{
+				name: "N8N_METRICS_INCLUDE_QUEUE_METRICS",
+				type: "CheckBox",
+				description: "Whether to include metrics for jobs in scaling mode."
+			},
+			{
+				name: "N8N_METRICS_QUEUE_METRICS_INTERVAL",
+				type: "Number",
+				defaultValue: 20,
+				numberMin: 1,
+				description: "How often (in seconds) to update queue metrics."
+			},
+			{
+				name: "N8N_ENDPOINT_REST",
+				type: "Input",
+				defaultValue: "rest",
+				description: "The path used for REST endpoint."
+			},
+			{
+				name: "N8N_ENDPOINT_WEBHOOK",
+				type: "Input",
+				defaultValue: "webhook",
+				description: "The path used for webhook endpoint."
+			},
+			{
+				name: "N8N_ENDPOINT_WEBHOOK_TEST",
+				type: "Input",
+				defaultValue: "webhook-test",
+				description: "The path used for test-webhook endpoint."
+			},
+			{
+				name: "N8N_ENDPOINT_WEBHOOK_WAIT",
+				type: "Input",
+				defaultValue: "webhook-waiting",
+				description: "The path used for waiting-webhook endpoint."
+			},
+			{
+				name: "WEBHOOK_URL",
+				type: "Input",
+				description: "Used to manually provide the Webhook URL when running n8n behind a reverse proxy."
+			},
+			{
+				name: "N8N_DISABLE_PRODUCTION_MAIN_PROCESS",
+				type: "CheckBox",
+				description: "Disable production webhooks from main process. This helps ensure no HTTP traffic load to main process when using webhook-specific processes."
+			}
+		]
+	},
+	{
+		category: "Model Context Protocol (MCP)",
+		items: [
+			{
+				name: "N8N_MCP_MANAGED_BY_ENV",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Set to `true` to manage MCP settings from environment variables. When `true`, n8n applies the MCP variables on every startup and locks the matching UI controls."
+			},
+			{
+				name: "N8N_MCP_ACCESS_ENABLED",
+				type: "CheckBox",
+				defaultValue: false,
+				description: "Whether to enable instance-level MCP access (`true`) or not (`false`)."
+			},
+			{
+				name: "N8N_MCP_SERVER_SESSION_IDLE_TTL_MS",
+				type: "Number",
+				defaultValue: 9e5,
+				numberMin: 1e3,
+				description: "Time in milliseconds an MCP server session may stay idle before it is evicted and its resources released. Default: 15 minutes (900000 ms)."
+			},
+			{
+				name: "N8N_MCP_SERVER_SESSION_SWEEP_INTERVAL_MS",
+				type: "Number",
+				defaultValue: 3e5,
+				numberMin: 1e3,
+				description: "Interval in milliseconds between sweeps that evict idle MCP server sessions. Default: 5 minutes (300000 ms)."
+			},
+			{
+				name: "N8N_MCP_CLIENT_CACHE_TTL_MS",
+				type: "Number",
+				defaultValue: 3e5,
+				numberMin: 1e3,
+				description: "Time in milliseconds a cached MCP client is kept alive after its last use before being evicted. Default: 5 minutes (300000 ms)."
+			},
+			{
+				name: "N8N_MCP_CLIENT_CACHE_MAX_SIZE",
+				type: "Number",
+				defaultValue: 500,
+				numberMin: 1,
+				description: "Maximum number of MCP clients kept in the in-memory session cache. Default: 500."
+			}
+		]
+	}
+];
+//#endregion
+//#region module/src/containers/agent/N8N/RendererMethods.ts
+const INSTALL_TIME_KEY$2 = "install-time-n8n";
+const UPDATE_TIME_KEY$2 = "update-time-n8n";
+const UPDATE_AVAILABLE_KEY$1 = "update-available-version-n8n";
+function checkLinuxArgLine$3(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	for (const arg of n8nArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
+}
+function parseArgsToString$18(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let argResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else if (getArgumentType(arg.name, n8nArguments) === "CheckBox") {
+			const eWinResult = `set ${arg.name}=true\n`;
+			const eResult = `export ${arg.name}="true"\n`;
+			result += isWin ? eWinResult : eResult;
+		} else {
+			const eWinResult = `set ${arg.name}=${arg.value}\n`;
+			const eResult = `export ${arg.name}="${arg.value}"\n`;
+			result += isWin ? eWinResult : eResult;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? `\nn8n start` : `\nn8n start ${argResult}`;
+	return result;
+}
+function parseStringToArgs$18(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		const lineType = checkLinuxArgLine$3(line);
+		if (lineType === "export" || lineType === "set") {
+			let [name, value] = line.replace(`${lineType} `, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, n8nArguments)) argResult.push({
+				name,
+				value
+			});
+		} else if (checkLinuxArgLine$3(line) === "var") {
+			let [name, value] = line.split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, n8nArguments)) argResult.push({
+				name,
+				value
+			});
+		}
+	});
+	return argResult;
+}
+function startInstall$17(stepper) {
+	stepper.initialSteps([
+		"Getting Started",
+		"Checking NodeJS",
+		"Detect Existing",
+		"Install N8N",
+		"All Done!"
+	]);
+	stepper.starterStep({ disableSelectDir: true }).then(() => {
+		stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking if NPM is installed...");
+			stepper.ipc.invoke("is_n8n_npm_available").then((isNpmInstalled) => {
+				if (isNpmInstalled) stepper.nextStep().then(() => {
+					stepper.progressBar(true, "Checking for existing N8N installation...");
+					stepper.ipc.invoke("is_n8n_installed").then((isN8nInstalled) => {
+						if (isN8nInstalled) {
+							stepper.setInstalled();
+							const currentDate = /* @__PURE__ */ new Date();
+							stepper.storage.set(INSTALL_TIME_KEY$2, currentDate.toLocaleString());
+							stepper.showFinalStep("success", "You're All Set!", "N8N is already installed. You're good to go!");
+						} else stepper.nextStep().then(() => {
+							stepper.ipc.invoke("is_n8n_npm_version_above_12").then((isAbove12) => {
+								const flags = isAbove12 ? " --allow-remote=all --dangerously-allow-all-scripts" : "";
+								stepper.executeTerminalCommands(`npm i -g n8n${flags}`).then(() => {
+									stepper.setInstalled();
+									const currentDate = /* @__PURE__ */ new Date();
+									stepper.storage.set(INSTALL_TIME_KEY$2, currentDate.toLocaleString());
+									stepper.showFinalStep("success", "Installation Complete!", "Your N8N environment is ready. Enjoy!");
+								});
+							});
+						});
+					});
+				});
+				else stepper.showFinalStep("error", "NodeJs is not installed!", "N8N need NPM! Please install NodeJs then try again.");
+			});
+		});
+	});
+}
+function startUpdate$5(stepper) {
+	stepper.initialSteps(["Update N8N", "Complete Update"]);
+	stepper.executeTerminalCommands("npm -g update n8n").then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(UPDATE_TIME_KEY$2, currentDate.toLocaleString());
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "N8N Updated Successfully!", `N8N has been updated to the latest version. You can now enjoy the new features and improvements.`);
+	});
+}
+async function cardInfo$17(api, callback) {
+	callback.setOpenFolders(void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INSTALL_TIME_KEY$2).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(UPDATE_TIME_KEY$2).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("current_n8n_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(UPDATE_AVAILABLE_KEY$1).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+const N8N_RM = {
+	catchAddress: catchAddress$5,
+	cardInfo: cardInfo$17,
+	parseStringToArgs: parseStringToArgs$18,
+	parseArgsToString: parseArgsToString$18,
+	manager: {
+		startInstall: startInstall$17,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$5
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/audio/AudioCppWebui/Arguments.ts
+const audioCppArguments = [
+	{
+		category: "Launch Mode",
+		sections: [{
+			section: "Execution Target",
+			items: [{
+				name: "AUDIOCPP_LAUNCH_MODE",
+				description: "Choose launch mode: Python/Gradio WebUI (full task UI), Native WebUI (C++ upstream UI), or API Server.",
+				type: "DropDown",
+				defaultValue: "webui",
+				values: [
+					"webui",
+					"native_webui",
+					"server"
+				]
+			}]
+		}]
+	},
+	{
+		category: "Server & Network Settings",
+		sections: [{
+			section: "Host and Port",
+			items: [
+				{
+					name: "AUDIOCPP_HOST",
+					description: "Hostname or IP address to bind server / WebUI to. Default: 127.0.0.1.",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "AUDIOCPP_NATIVE_PORT",
+					description: "Port for the native WebUI server. Default: 8080.",
+					type: "Number",
+					defaultValue: 8080,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "AUDIOCPP_PORT",
+					description: "Port for API server mode. Default: 8088.",
+					type: "Number",
+					defaultValue: 8088,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "AUDIOCPP_NO_BROWSER",
+					description: "Do not automatically launch system default browser (LynxHub opens inside app tabs).",
+					type: "CheckBox",
+					defaultValue: true
+				}
+			]
+		}]
+	},
+	{
+		category: "Hardware & Inference Settings",
+		sections: [{
+			section: "Compute Acceleration",
+			items: [
+				{
+					name: "AUDIOCPP_BACKEND",
+					description: "Inference backend. Auto chooses GPU if NVIDIA driver/build available, else CPU.",
+					type: "DropDown",
+					defaultValue: "auto",
+					values: [
+						"auto",
+						"gpu",
+						"cpu"
+					]
+				},
+				{
+					name: "AUDIOCPP_DEVICE",
+					description: "CUDA GPU device index (default: 0).",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "AUDIOCPP_THREADS",
+					description: "Number of compute threads for ggml audio inference backend.",
+					type: "Number",
+					numberMin: 1
+				},
+				{
+					name: "AUDIOCPP_LOAD_TIMEOUT",
+					description: "Seconds to wait for a model to finish loading before timeout (default: 300).",
+					type: "Number",
+					defaultValue: 300,
+					numberMin: 10
+				}
+			]
+		}]
+	},
+	{
+		category: "Server Mode Options",
+		sections: [{
+			section: "Model & Voice Configuration",
+			items: [
+				{
+					name: "AUDIOCPP_MODEL_ID",
+					description: "Model ID from models_catalog.json to serve in server mode (e.g., qwen3-tts, qwen3-asr, vibevoice, supertonic).",
+					type: "Input",
+					defaultValue: "qwen3-tts"
+				},
+				{
+					name: "AUDIOCPP_MODE",
+					description: "Model inference mode in server (offline or streaming).",
+					type: "DropDown",
+					defaultValue: "offline",
+					values: ["offline", "streaming"]
+				},
+				{
+					name: "AUDIOCPP_VOICE_REF",
+					description: "Path to reference voice WAV file for baked-in default voice cloning.",
+					type: "File"
+				},
+				{
+					name: "AUDIOCPP_REF_TEXT",
+					description: "Transcript text of the reference audio (required for some models like Qwen3-TTS).",
+					type: "Input"
+				}
+			]
+		}]
+	}
+];
+//#endregion
+//#region module/src/containers/audio/AudioCppWebui/utils/github.ts
+const AUDIOCPP_RELEASES_URL = "https://api.github.com/repos/kigner/audio.cpp-webui/releases";
+const AUDIOCPP_INSTALL_TIME_KEY = "install-time-audioCppWebui";
+const AUDIOCPP_INSTALL_DIR_KEY = "install-dir-audioCppWebui";
+const AUDIOCPP_UPDATE_TIME_KEY = "update-time-audioCppWebui";
+const AUDIOCPP_PLATFORM_KEY = "platform-audioCppWebui";
+const AUDIOCPP_VERSION_KEY = "version-audioCppWebui";
+const AUDIOCPP_PLATFORM_OPTIONS = [
+	{
+		label: "Windows Portable (CUDA GPU - Recommended)",
+		key: "cuda"
+	},
+	{
+		label: "Windows Portable (CPU)",
+		key: "cpu"
+	},
+	{
+		label: "Git Clone (Source Repository)",
+		key: "git"
+	}
+];
+function detectDefaultPlatform() {
+	if (isWin) return "cuda";
+	if (isMac || isLinux) return "git";
+	return "cpu";
+}
+async function fetchAudioCppReleases() {
+	try {
+		const response = await fetch(AUDIOCPP_RELEASES_URL, { headers: {
+			"User-Agent": "LynxHub-Desktop",
+			Accept: "application/vnd.github.v3+json"
+		} });
+		if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
+		return (await response.json()).filter((r) => !r.draft && Boolean(r.assets?.some((a) => a.name.endsWith(".zip") || a.name.endsWith(".tar.gz"))));
+	} catch (error) {
+		console.error("Failed to fetch audio.cpp-webui releases from GitHub:", error);
+		return [];
+	}
+}
+async function getLatestAudioCppTag() {
+	return (await fetchAudioCppReleases())[0]?.tag_name || "unknown";
+}
+function findAppAsset(assets) {
+	return assets.find((a) => a.name.toLowerCase().includes("app") && a.name.endsWith(".zip"));
+}
+function findCoreAsset(assets, backend) {
+	if (backend === "cuda") return assets.find((a) => a.name.toLowerCase().includes("core-cuda") || a.name.toLowerCase().includes("cuda") && a.name.endsWith(".zip"));
+	return assets.find((a) => a.name.toLowerCase().includes("core-cpu") || a.name.toLowerCase().includes("cpu") && a.name.endsWith(".zip"));
+}
+//#endregion
+//#region module/src/containers/audio/AudioCppWebui/RendererMethods.ts
+const REPO_URL = "https://github.com/kigner/audio.cpp-webui";
+function parseArgsToString$17(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let launchMode = "webui";
+	let serverModel = "qwen3-tts";
+	let serverPort = "8088";
+	let serverDevice = "0";
+	let voiceRef = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const customRes = parseCustomArg(arg);
+			if (customRes?.line) lines += customRes.line + "\n";
+		} else {
+			if (arg.name === "AUDIOCPP_LAUNCH_MODE") {
+				launchMode = String(arg.value || "webui");
+				return;
+			}
+			if (arg.name === "AUDIOCPP_MODEL_ID") {
+				serverModel = String(arg.value || "qwen3-tts");
+				return;
+			}
+			if (arg.name === "AUDIOCPP_PORT") {
+				serverPort = String(arg.value || "8088");
+				lines += isWin ? `set AUDIOCPP_PORT=${serverPort}\n` : `export AUDIOCPP_PORT="${serverPort}"\n`;
+				return;
+			}
+			if (arg.name === "AUDIOCPP_DEVICE") {
+				serverDevice = String(arg.value || "0");
+				lines += isWin ? `set AUDIOCPP_DEVICE=${serverDevice}\n` : `export AUDIOCPP_DEVICE="${serverDevice}"\n`;
+				return;
+			}
+			if (arg.name === "AUDIOCPP_VOICE_REF") {
+				voiceRef = String(arg.value || "");
+				if (voiceRef) lines += isWin ? `set AUDIOCPP_VOICE_REF=${voiceRef}\n` : `export AUDIOCPP_VOICE_REF="${voiceRef}"\n`;
+				return;
+			}
+			if (getArgumentType(arg.name, audioCppArguments) === "CheckBox") {
+				if (arg.value !== "false" && arg.value !== false && arg.value !== "0") lines += isWin ? `set ${arg.name}=1\n` : `export ${arg.name}="1"\n`;
+			} else if (arg.value !== void 0 && arg.value !== null && String(arg.value).trim() !== "") {
+				if (arg.name === "AUDIOCPP_BACKEND" && arg.value === "auto") return;
+				lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+			}
+		}
+	});
+	if (lines) result += lines + "\n";
+	if (isWin) {
+		if (launchMode === "native_webui") result += "call run_native_webui.bat\n";
+		else if (launchMode === "server") result += `call run_server.bat ${serverModel} ${serverPort} ${serverDevice}${voiceRef ? ` "${voiceRef}"` : ""}\n`;
+		else result += "if exist \"%~dp0venv\\Scripts\\python.exe\" (\n  \"%~dp0venv\\Scripts\\python.exe\" webui\\webui.py\n) else (\n  python webui\\webui.py\n)\n";
+	} else if (launchMode === "server") result += `python tools/server.py --model ${serverModel} --port ${serverPort}\n`;
+	else result += "if [ -f \"./venv/bin/python\" ]; then\n  ./venv/bin/python webui/webui.py\nelse\n  python webui/webui.py\nfi\n";
+	return result;
+}
+function parseStringToArgs$17(args) {
+	const argResult = [];
+	args.split("\n").forEach((rawLine) => {
+		const line = rawLine.trim();
+		if (!line || line.startsWith("#") || line.startsWith("@echo") || line.startsWith("REM")) return;
+		if (line.includes("run_native_webui.bat")) {
+			argResult.push({
+				name: "AUDIOCPP_LAUNCH_MODE",
+				value: "native_webui"
+			});
+			return;
+		}
+		if (line.includes("run_server.bat")) {
+			argResult.push({
+				name: "AUDIOCPP_LAUNCH_MODE",
+				value: "server"
+			});
+			const parts = line.replace("call run_server.bat", "").trim().split(" ").filter(Boolean);
+			if (parts[0]) argResult.push({
+				name: "AUDIOCPP_MODEL_ID",
+				value: parts[0]
+			});
+			if (parts[1]) argResult.push({
+				name: "AUDIOCPP_PORT",
+				value: parts[1]
+			});
+			if (parts[2]) argResult.push({
+				name: "AUDIOCPP_DEVICE",
+				value: parts[2]
+			});
+			if (parts[3]) argResult.push({
+				name: "AUDIOCPP_VOICE_REF",
+				value: parts[3].replace(/"/g, "")
+			});
+			return;
+		}
+		if (line.includes("run_webui.bat") || line.includes("webui/webui.py") || line.includes("webui\\webui.py")) {
+			argResult.push({
+				name: "AUDIOCPP_LAUNCH_MODE",
+				value: "webui"
+			});
+			return;
+		}
+		if (line.startsWith("set ") || line.startsWith("export ")) {
+			const prefix = line.startsWith("set ") ? "set " : "export ";
+			const [varName, ...valueParts] = line.slice(prefix.length).split("=");
+			const name = removeEscapes((varName || "").trim());
+			let value = removeEscapes(valueParts.join("=").trim());
+			if (value.startsWith("\"") && value.endsWith("\"")) value = value.slice(1, -1);
+			if (isValidArg(name, audioCppArguments)) argResult.push({
+				name,
+				value
+			});
+		}
+	});
+	return argResult;
+}
+function startInstall$16(stepper) {
+	stepper.initialSteps([
+		"audio.cpp WebUI",
+		"Setup Options",
+		"Download & Install",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (targetDirectory && chosen !== "install") {
+			stepper.ipc.invoke("validate_audiocpp_install_dir", targetDirectory).then((isValid) => {
+				if (isValid) {
+					stepper.setInstalled(targetDirectory);
+					stepper.storage.set(AUDIOCPP_INSTALL_TIME_KEY, (/* @__PURE__ */ new Date()).toLocaleString());
+					stepper.storage.set(AUDIOCPP_INSTALL_DIR_KEY, targetDirectory);
+					stepper.showFinalStep("success", "audio.cpp WebUI located successfully!", "Detected an existing installation of audio.cpp WebUI. Your environment is ready for use.");
+				} else stepper.showFinalStep("error", "Unable to locate audio.cpp WebUI!", "Please select a valid folder containing audio.cpp WebUI launcher scripts or binaries.");
+			}).catch((err) => {
+				stepper.showFinalStep("error", "Validation Error", `Failed to validate folder: ${err?.message || err}`);
+			});
+			return;
+		}
+		stepper.nextStep().then(() => {
+			const defaultPlatformKey = detectDefaultPlatform();
+			const platformLabels = AUDIOCPP_PLATFORM_OPTIONS.map((opt) => opt.label);
+			const defaultPlatformLabel = AUDIOCPP_PLATFORM_OPTIONS.find((opt) => opt.key === defaultPlatformKey)?.label || platformLabels[0];
+			const methodFields = [{
+				id: "install_method",
+				label: "Installation Method / Acceleration",
+				type: "select",
+				selectOptions: platformLabels,
+				defaultValue: defaultPlatformLabel,
+				isRequired: true
+			}];
+			stepper.collectUserInput(methodFields, "Select Installation Method").then((methodResults) => {
+				const selectedMethodLabel = methodResults.find((r) => r.id === "install_method")?.result || defaultPlatformLabel;
+				const selectedPlatformOption = AUDIOCPP_PLATFORM_OPTIONS.find((opt) => opt.label === selectedMethodLabel) || AUDIOCPP_PLATFORM_OPTIONS[0];
+				if (selectedPlatformOption.key === "git") {
+					stepper.nextStep().then(() => {
+						stepper.cloneRepository(REPO_URL).then((clonedDir) => {
+							stepper.progressBar(true, "Installing WebUI dependencies with pip...");
+							const pipCmd = getPythonCommandByOs().pip;
+							stepper.executeTerminalCommands(`${pipCmd} install -r webui/requirements.txt`, clonedDir).then(() => {
+								stepper.setInstalled(clonedDir);
+								const now = (/* @__PURE__ */ new Date()).toLocaleString();
+								stepper.storage.set(AUDIOCPP_INSTALL_TIME_KEY, now);
+								stepper.storage.set(AUDIOCPP_INSTALL_DIR_KEY, clonedDir);
+								stepper.storage.set(AUDIOCPP_PLATFORM_KEY, "git");
+								stepper.storage.set(AUDIOCPP_VERSION_KEY, "git-source");
+								stepper.showFinalStep("success", "audio.cpp WebUI Ready!", `Successfully cloned audio.cpp-webui and initialized environment in ${clonedDir}.`);
+							}).catch(() => {
+								stepper.setInstalled(clonedDir);
+								const now = (/* @__PURE__ */ new Date()).toLocaleString();
+								stepper.storage.set(AUDIOCPP_INSTALL_TIME_KEY, now);
+								stepper.storage.set(AUDIOCPP_INSTALL_DIR_KEY, clonedDir);
+								stepper.storage.set(AUDIOCPP_PLATFORM_KEY, "git");
+								stepper.storage.set(AUDIOCPP_VERSION_KEY, "git-source");
+								stepper.showFinalStep("warning", "Repository Cloned with Warnings", "Cloned repository successfully, but some Python dependencies could not be installed automatically. You can install them via the Dependencies menu option.");
+							});
+						}).catch((err) => {
+							stepper.showFinalStep("error", "Clone Failed", `Failed to clone repository: ${err?.message || err}`);
+						});
+					});
+					return;
+				}
+				stepper.nextStep().then(() => {
+					stepper.progressBar(true, "Fetching release information from GitHub...");
+					stepper.ipc.invoke("fetch_audiocpp_releases").then((releases) => {
+						const versionOptions = releases.map((r) => r.tag_name);
+						const defaultVersion = versionOptions[0] || "latest";
+						const portableFields = [{
+							id: "install_dir",
+							label: "Installation Folder",
+							type: "directory",
+							isRequired: true
+						}, {
+							id: "version",
+							label: "Release Version",
+							type: "select",
+							selectOptions: versionOptions.length > 0 ? versionOptions : ["latest"],
+							defaultValue: defaultVersion,
+							isRequired: true
+						}];
+						stepper.collectUserInput(portableFields, "Portable Release Setup").then((portableResults) => {
+							const installDir = portableResults.find((r) => r.id === "install_dir")?.result || "";
+							const selectedVersionTag = portableResults.find((r) => r.id === "version")?.result || defaultVersion;
+							const chosenRelease = releases.find((r) => r.tag_name === selectedVersionTag) || releases[0];
+							if (!chosenRelease) {
+								stepper.showFinalStep("error", "Download Error", "No matching release found on GitHub.");
+								return;
+							}
+							const appAsset = findAppAsset(chosenRelease.assets);
+							const platformKey = selectedPlatformOption.key === "cpu" ? "cpu" : "cuda";
+							const coreAsset = findCoreAsset(chosenRelease.assets, platformKey);
+							if (!appAsset || !coreAsset) {
+								stepper.showFinalStep("error", "Download Error", "Could not locate app or core binary assets in the selected GitHub release.");
+								return;
+							}
+							stepper.progressBar(true, `Downloading audio.cpp App (${chosenRelease.tag_name})...`);
+							stepper.downloadFileFromUrl(appAsset.browser_download_url).then((downloadedAppZip) => {
+								stepper.progressBar(true, "Decompressing audio.cpp App package with 7z...");
+								stepper.utils.decompressFile(downloadedAppZip).then((extractedAppDir) => {
+									stepper.progressBar(true, "Deploying App files to installation folder...");
+									stepper.ipc.invoke("copy_audiocpp_files", extractedAppDir, installDir).then(() => {
+										const coreName = selectedPlatformOption.key.toUpperCase();
+										stepper.progressBar(true, `Downloading audio.cpp Core ${coreName} binaries...`);
+										stepper.downloadFileFromUrl(coreAsset.browser_download_url).then((downloadedCoreZip) => {
+											stepper.progressBar(true, "Decompressing Core runtime binaries with 7z...");
+											stepper.utils.decompressFile(downloadedCoreZip).then((extractedCoreDir) => {
+												stepper.progressBar(true, "Deploying Core runtime binaries...");
+												stepper.ipc.invoke("copy_audiocpp_files", extractedCoreDir, installDir).then(() => {
+													stepper.progressBar(true, "Installing WebUI dependencies with pip...");
+													const pipCmd = getPythonCommandByOs().pip;
+													stepper.executeTerminalCommands(`${pipCmd} install -r webui/requirements.txt`, installDir).then(() => {
+														stepper.setInstalled(installDir);
+														const now = (/* @__PURE__ */ new Date()).toLocaleString();
+														stepper.storage.set(AUDIOCPP_INSTALL_TIME_KEY, now);
+														stepper.storage.set(AUDIOCPP_INSTALL_DIR_KEY, installDir);
+														stepper.storage.set(AUDIOCPP_PLATFORM_KEY, selectedPlatformOption.key);
+														stepper.storage.set(AUDIOCPP_VERSION_KEY, chosenRelease.tag_name);
+														stepper.showFinalStep("success", "audio.cpp WebUI Ready!", `Installed audio.cpp WebUI ${chosenRelease.tag_name} (${selectedPlatformOption.key.toUpperCase()}) successfully to ${installDir}.`);
+													}).catch(() => {
+														stepper.setInstalled(installDir);
+														const now = (/* @__PURE__ */ new Date()).toLocaleString();
+														stepper.storage.set(AUDIOCPP_INSTALL_TIME_KEY, now);
+														stepper.storage.set(AUDIOCPP_INSTALL_DIR_KEY, installDir);
+														stepper.storage.set(AUDIOCPP_PLATFORM_KEY, selectedPlatformOption.key);
+														stepper.storage.set(AUDIOCPP_VERSION_KEY, chosenRelease.tag_name);
+														const warningMsg = `Installed audio.cpp Core ${selectedPlatformOption.key.toUpperCase()} binaries. Dependencies can be installed via the Dependencies menu option.`;
+														stepper.showFinalStep("warning", "audio.cpp WebUI Installed (Native Ready)", warningMsg);
+													});
+												}).catch((err) => {
+													stepper.showFinalStep("error", "Installation Failed", `Failed to deploy Core binaries: ${err?.message || err}`);
+												});
+											}).catch((err) => {
+												stepper.showFinalStep("error", "Decompression Failed", `Failed to decompress Core package: ${err?.message || err}`);
+											});
+										}).catch((err) => {
+											stepper.showFinalStep("error", "Download Failed", `Failed to download Core runtime: ${err?.message || err}`);
+										});
+									}).catch((err) => {
+										stepper.showFinalStep("error", "Deployment Failed", `Failed to deploy App files: ${err?.message || err}`);
+									});
+								}).catch((err) => {
+									stepper.showFinalStep("error", "Decompression Failed", `Failed to decompress App package: ${err?.message || err}`);
+								});
+							}).catch((err) => {
+								stepper.showFinalStep("error", "Download Failed", `Failed to download App package: ${err?.message || err}`);
+							});
+						}).catch((err) => {
+							stepper.showFinalStep("error", "Setup Error", `Error collecting portable options: ${err?.message || err}`);
+						});
+					}).catch((err) => {
+						stepper.showFinalStep("error", "Fetch Failed", `Failed to fetch releases: ${err?.message || err}`);
+					});
+				});
+			}).catch((err) => {
+				stepper.showFinalStep("error", "Setup Error", `Error selecting method: ${err?.message || err}`);
+			});
+		});
+	}).catch((err) => {
+		stepper.showFinalStep("error", "Setup Failed", `Initialization error: ${err?.message || err}`);
+	});
+}
+function startUpdate$4(stepper, dir) {
+	if (!dir) return;
+	stepper.initialSteps([
+		"Checking Updates",
+		"Updating audio.cpp WebUI",
+		"Finish"
+	]);
+	stepper.utils.validateGitRepository(dir, REPO_URL).then((isGitRepo) => {
+		if (isGitRepo) {
+			stepper.nextStep().then(() => {
+				stepper.progressBar(true, "Pulling latest changes from Git...");
+				stepper.executeTerminalCommands("git pull", dir).then(() => {
+					stepper.setUpdated();
+					stepper.storage.set(AUDIOCPP_UPDATE_TIME_KEY, (/* @__PURE__ */ new Date()).toLocaleString());
+					stepper.showFinalStep("success", "audio.cpp WebUI Updated!", "Successfully pulled latest changes for audio.cpp-webui.");
+				}).catch((err) => {
+					stepper.showFinalStep("error", "Update Failed", `Failed to pull updates: ${err?.message || err}`);
+				});
+			});
+			return;
+		}
+		stepper.storage.get(AUDIOCPP_PLATFORM_KEY).then((savedPlatform) => {
+			const platformKey = savedPlatform === "cpu" ? "cpu" : "cuda";
+			stepper.ipc.invoke("fetch_audiocpp_releases").then((releases) => {
+				const latestRelease = releases[0];
+				if (!latestRelease) {
+					stepper.showFinalStep("error", "Update Failed", "Failed to retrieve latest release information.");
+					return;
+				}
+				const appAsset = findAppAsset(latestRelease.assets);
+				const coreAsset = findCoreAsset(latestRelease.assets, platformKey);
+				if (!appAsset || !coreAsset) {
+					stepper.showFinalStep("error", "Update Failed", "Release packages missing for update.");
+					return;
+				}
+				stepper.nextStep().then(() => {
+					stepper.progressBar(true, `Downloading updated App (${latestRelease.tag_name})...`);
+					stepper.downloadFileFromUrl(appAsset.browser_download_url).then((downloadedAppZip) => {
+						stepper.progressBar(true, "Extracting App updates...");
+						stepper.utils.decompressFile(downloadedAppZip).then((extractedAppDir) => {
+							stepper.ipc.invoke("copy_audiocpp_files", extractedAppDir, dir).then(() => {
+								stepper.progressBar(true, "Downloading updated Core binaries...");
+								stepper.downloadFileFromUrl(coreAsset.browser_download_url).then((downloadedCoreZip) => {
+									stepper.progressBar(true, "Extracting Core binaries...");
+									stepper.utils.decompressFile(downloadedCoreZip).then((extractedCoreDir) => {
+										stepper.ipc.invoke("copy_audiocpp_files", extractedCoreDir, dir).then(() => {
+											stepper.setUpdated();
+											const now = (/* @__PURE__ */ new Date()).toLocaleString();
+											stepper.storage.set(AUDIOCPP_UPDATE_TIME_KEY, now);
+											stepper.storage.set(AUDIOCPP_VERSION_KEY, latestRelease.tag_name);
+											stepper.showFinalStep("success", "audio.cpp WebUI Updated!", `Successfully updated audio.cpp WebUI to version ${latestRelease.tag_name}.`);
+										}).catch((err) => {
+											stepper.showFinalStep("error", "Update Failed", `Failed to deploy Core binaries: ${err?.message || err}`);
+										});
+									}).catch((err) => {
+										stepper.showFinalStep("error", "Update Failed", `Failed to extract Core updates: ${err?.message || err}`);
+									});
+								}).catch((err) => {
+									stepper.showFinalStep("error", "Update Failed", `Failed to download Core updates: ${err?.message || err}`);
+								});
+							}).catch((err) => {
+								stepper.showFinalStep("error", "Update Failed", `Failed to deploy App updates: ${err?.message || err}`);
+							});
+						}).catch((err) => {
+							stepper.showFinalStep("error", "Update Failed", `Failed to extract App updates: ${err?.message || err}`);
+						});
+					}).catch((err) => {
+						stepper.showFinalStep("error", "Update Failed", `Failed to download App updates: ${err?.message || err}`);
+					});
+				});
+			}).catch((err) => {
+				stepper.showFinalStep("error", "Update Failed", `Error fetching releases: ${err?.message || err}`);
+			});
+		}).catch((err) => {
+			stepper.showFinalStep("error", "Storage Error", `Failed to read platform settings: ${err?.message || err}`);
+		});
+	});
+}
+async function cardInfo$16(api, callback) {
+	const dir = api.installationFolder;
+	callback.setOpenFolders(dir ? [dir] : void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Last Updated",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Platform / Backend",
+				result: "loading"
+			},
+			{
+				label: "Latest Release",
+				result: "loading"
+			}
+		]
+	}, {
+		title: "Disk Usage",
+		items: [{
+			label: "Total Size",
+			result: "loading"
+		}]
+	}], callback);
+	api.storage.get(AUDIOCPP_INSTALL_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 0, result || "Not Recorded");
+	}).catch(() => {
+		descManager.updateItem(0, 0, "Not Recorded");
+	});
+	api.storage.get(AUDIOCPP_UPDATE_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 1, result || "Never Updated");
+	}).catch(() => {
+		descManager.updateItem(0, 1, "Never Updated");
+	});
+	api.ipc.invoke("current_audiocpp_version", dir).then((result) => {
+		descManager.updateItem(0, 2, result || "Unknown");
+	}).catch(() => {
+		descManager.updateItem(0, 2, "Unknown");
+	});
+	api.storage.get(AUDIOCPP_PLATFORM_KEY).then((key) => {
+		const opt = AUDIOCPP_PLATFORM_OPTIONS.find((o) => o.key === key);
+		descManager.updateItem(0, 3, opt ? opt.label : key || "Default");
+	}).catch(() => {
+		descManager.updateItem(0, 3, "Default");
+	});
+	api.ipc.invoke("fetch_audiocpp_latest_tag").then((result) => {
+		descManager.updateItem(0, 4, result || "Unknown");
+	}).catch(() => {
+		descManager.updateItem(0, 4, "Unknown");
+	});
+	if (dir) api.getFolderSize(dir).then((result) => {
+		descManager.updateItem(1, 0, formatSize(result));
+	}).catch(() => {
+		descManager.updateItem(1, 0, "Unknown");
+	});
+	else descManager.updateItem(1, 0, void 0);
+}
+const AudioCppWebui_RM = {
+	catchAddress: catchAddress$5,
+	cardInfo: cardInfo$16,
+	parseArgsToString: parseArgsToString$17,
+	parseStringToArgs: parseStringToArgs$17,
+	manager: {
+		startInstall: startInstall$16,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$4
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/audio/AudioGitmylo/Arguments.ts
+const gitmyloArguments = [{
+	category: "Command Line Arguments",
+	sections: [{
+		section: "Install",
+		items: [
+			{
+				name: "--skip-install",
+				description: "Skip installing packages",
+				type: "CheckBox"
+			},
+			{
+				name: "--skip-venv",
+				description: "Skip creating/activating venv, also skips install (for advanced users)",
+				type: "CheckBox"
+			},
+			{
+				name: "--no-data-cache",
+				description: "Don't override the default huggingface_hub cache path.",
+				type: "CheckBox"
+			},
+			{
+				name: "--verbose",
+				description: "Show more info, like logs during installs",
+				type: "CheckBox"
+			}
+		]
+	}, {
+		section: "Gradio",
+		items: [
+			{
+				name: "--share",
+				description: "Share this gradio instance.",
+				type: "CheckBox"
+			},
+			{
+				name: "--username",
+				description: "Gradio username",
+				type: "Input"
+			},
+			{
+				name: "--password",
+				description: "Gradio password (defaults to \"password\")",
+				type: "Input",
+				defaultValue: "password"
+			},
+			{
+				name: "--theme",
+				description: "Gradio theme",
+				type: "Input",
+				defaultValue: "gradio/soft"
+			},
+			{
+				name: "--listen",
+				description: "Listen on 0.0.0.0",
+				type: "CheckBox"
+			},
+			{
+				name: "--port",
+				description: "Use a different port, automatic when not set.",
+				type: "Number",
+				numberMin: 1,
+				numberMax: 65535
+			},
+			{
+				name: "--launch",
+				description: "Automatically open a browser window when the webui launches.",
+				type: "CheckBox"
+			}
+		]
+	}]
+}];
+//#endregion
+//#region module/src/containers/audio/AudioGitmylo/RendererMethods.ts
+const shellCommand$5 = isWin ? "call run.bat" : "bash ./run.sh";
+const URL$5 = "https://github.com/gitmylo/audio-webui";
+function parseArgsToString$16(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let argResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else {
+			const argType = getArgumentType(arg.name, gitmyloArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? shellCommand$5 : `${shellCommand$5} ${argResult}`;
+	return result;
+}
+function parseStringToArgs$16(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (!line.startsWith(shellCommand$5)) return;
+		const clArgs = line.split(`${shellCommand$5} `)[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, gitmyloArguments)) {
+				if (getArgumentType(value.name, gitmyloArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$15(stepper) {
+	GitInstaller("Audio Generation", URL$5, stepper, [isWin ? "run.bat" : "run.sh"]);
+}
+async function cardInfo$15(api, callback) {
+	return CardInfo(URL$5, "/extensions", api, callback);
+}
+const AG_RM = {
+	catchAddress: catchAddress$5,
+	parseArgsToString: parseArgsToString$16,
+	parseStringToArgs: parseStringToArgs$16,
+	cardInfo: cardInfo$15,
+	manager: {
+		startInstall: startInstall$15,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/audio/VoiceStudio/Arguments.ts
+const voiceStudioArguments = [{
+	category: "Environment Variables",
+	sections: [
+		{
+			section: "General & Server",
+			items: [
+				{
+					name: "PORT",
+					description: "Server listening port (default: 3900)",
+					type: "Number",
+					defaultValue: 3900,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "OMNIVOICE_DATA_DIR",
+					description: "Custom path for models, voices, and projects storage",
+					type: "Directory"
+				},
+				{
+					name: "OMNIVOICE_SERVER_MODE",
+					description: "Run server in headless/server mode (disables local origin restriction)",
+					type: "CheckBox"
+				},
+				{
+					name: "OMNIVOICE_PUBLIC_API_BASE",
+					description: "Public API base URL when behind a reverse proxy",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_ALLOWED_ORIGINS",
+					description: "Comma-separated allowed web origins for cross-origin requests",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_ALLOWED_HOSTS",
+					description: "Comma-separated allowed HTTP Host headers when behind reverse proxies",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_ALLOW_PRIVATE_URL_IMPORTS",
+					description: "Allow importing media files from private or local network IP addresses",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "OMNIVOICE_MCP_DISABLE",
+					description: "Disable embedded Model Context Protocol (MCP) server at /mcp",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "OMNIVOICE_JSON_LOGS",
+					description: "Enable single-line JSON log formatting for log shippers",
+					type: "CheckBox",
+					defaultValue: false
+				},
+				{
+					name: "OMNIVOICE_TRUSTED_NETWORKS",
+					description: "Comma-separated trusted network CIDRs for remote access",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_LOG_LEVEL",
+					description: "Log verbosity level (INFO, DEBUG, WARNING, ERROR)",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"INFO",
+						"DEBUG",
+						"WARNING",
+						"ERROR"
+					]
+				}
+			]
+		},
+		{
+			section: "Hardware & Compute",
+			items: [
+				{
+					name: "TORCH_COMPILE_DISABLE",
+					description: "Disable torch.compile / Triton compilation (fixes Windows OOM issues)",
+					type: "CheckBox"
+				},
+				{
+					name: "OMNIVOICE_TORCH_VARIANT",
+					description: "PyTorch variant selection (cuda, rocm, cpu)",
+					type: "DropDown",
+					defaultValue: "cuda",
+					values: [
+						"cuda",
+						"rocm",
+						"cpu"
+					]
+				},
+				{
+					name: "ASR_COMPUTE_TYPE",
+					description: "Precision for ASR engines (WhisperX, Faster-Whisper)",
+					type: "DropDown",
+					defaultValue: "float16",
+					values: [
+						"float16",
+						"int8",
+						"float32"
+					]
+				},
+				{
+					name: "HSA_OVERRIDE_GFX_VERSION",
+					description: "AMD GPU architecture override for ROCm (e.g. 11.0.0 for consumer RDNA3 cards)",
+					type: "Input"
+				}
+			]
+		},
+		{
+			section: "HuggingFace & Downloads",
+			items: [
+				{
+					name: "HF_TOKEN",
+					description: "HuggingFace user access token for diarization & heavy models",
+					type: "Input"
+				},
+				{
+					name: "OMNIVOICE_CACHE_DIR",
+					description: "Directory path to route all HF and PyTorch model weight caches",
+					type: "Directory"
+				},
+				{
+					name: "UV_HTTP_TIMEOUT",
+					description: "HTTP timeout in seconds for uv package downloads (default: 120)",
+					type: "Number",
+					defaultValue: 120,
+					numberMin: 1
+				},
+				{
+					name: "HF_HUB_DOWNLOAD_TIMEOUT",
+					description: "Per-read timeout in seconds for HuggingFace model chunk downloads (default: 30)",
+					type: "Number",
+					defaultValue: 30,
+					numberMin: 5
+				}
+			]
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [{
+		section: "Backend Flags",
+		items: [
+			{
+				name: "--host",
+				description: "Host interface to bind (e.g. 127.0.0.1 or 0.0.0.0)",
+				type: "Input",
+				defaultValue: "127.0.0.1"
+			},
+			{
+				name: "--port",
+				description: "Port number to listen on",
+				type: "Number",
+				defaultValue: 3900,
+				numberMin: 1,
+				numberMax: 65535
+			},
+			{
+				name: "--diagnose",
+				description: "Run self-check diagnostics on startup",
+				type: "CheckBox"
+			}
+		]
+	}]
+}];
+//#endregion
+//#region module/src/containers/audio/VoiceStudio/RendererMethods.ts
+const VOICE_STUDIO_URL = "https://github.com/debpalash/VoiceStudio";
+const BUN_WIN_INSTALL = "powershell -c \"irm bun.sh/install.ps1|iex\"";
+const BUN_UNIX_INSTALL = "curl -fsSL https://bun.com/install | bash";
+function isEnvironmentVariable$2(name) {
+	for (const arg of voiceStudioArguments) if (arg.category === "Environment Variables") {
+		if ("sections" in arg) return arg.sections.some((section) => section.items.some((item) => item.name === name));
+	}
+	return false;
+}
+function parseArgsToString$15(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let argResult = "";
+	let lines = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const customRes = parseCustomArg(arg);
+			if (!customRes) return;
+			if (customRes.line) lines += customRes.line + "\n";
+			if (customRes.commandArg) argResult += customRes.commandArg + " ";
+		} else if (isEnvironmentVariable$2(arg.name)) {
+			if (getArgumentType(arg.name, voiceStudioArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=1\n` : `export ${arg.name}="1"\n`;
+			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		} else {
+			const argType = getArgumentType(arg.name, voiceStudioArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? "bun run desktop-prod:run" : `bun run desktop-prod:run ${argResult}`;
+	return result;
+}
+function parseStringToArgs$15(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		if (line.startsWith("export ") || line.startsWith("set ")) {
+			const prefix = line.startsWith("export ") ? "export " : "set ";
+			let [name, value] = line.replace(prefix, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, voiceStudioArguments) && isEnvironmentVariable$2(name)) argResult.push({
+				name,
+				value
+			});
+			return;
+		}
+		if (!line.includes("bun run desktop-prod:run")) return;
+		const clArgs = line.split("bun run desktop-prod:run ")[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, voiceStudioArguments)) {
+				if (getArgumentType(value.name, voiceStudioArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$14(stepper) {
+	const cloneAndInstall = () => {
+		stepper.nextStep().then(() => {
+			stepper.cloneRepository(VOICE_STUDIO_URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.executeTerminalCommands("bun install", dir).then(() => {
+						stepper.nextStep().then(() => {
+							stepper.executeTerminalCommands("bun run desktop-prod", dir).then(() => {
+								stepper.setInstalled(dir);
+								stepper.showFinalStep("success", "VoiceStudio installation complete!", "All installation steps completed successfully. Your VoiceStudio environment is ready for use.");
+							});
+						});
+					});
+				});
+			});
+		});
+	};
+	stepper.initialSteps([
+		"VoiceStudio",
+		"Check Bun",
+		"Clone VoiceStudio",
+		"Install Dependencies",
+		"Build Studio",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Checking if Bun is installed...");
+			stepper.ipc.invoke("is_voicestudio_bun_available").then((isBunInstalled) => {
+				if (isBunInstalled) cloneAndInstall();
+				else {
+					stepper.progressBar(true, "Installing Bun runtime...");
+					const installCmd = isWin ? BUN_WIN_INSTALL : BUN_UNIX_INSTALL;
+					stepper.executeTerminalCommands(installCmd).then(() => {
+						stepper.showFinalStep("success", "Bun Installed Successfully!", "Bun has been installed. To use it, please restart LynxHub and start the installation again.");
+					});
+				}
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, VOICE_STUDIO_URL).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "VoiceStudio located successfully!", "Pre-installed VoiceStudio detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, ["package.json", "backend/main.py"]).then((filesExist) => {
+				if (filesExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.showFinalStep("success", "VoiceStudio located successfully!", "Detected a manual installation of VoiceStudio.");
+				} else stepper.showFinalStep("error", "Unable to locate VoiceStudio!", "Please ensure you have selected the correct folder containing the VoiceStudio installation.");
+			});
+		});
+	});
+}
+function startUpdate$3(stepper, dir) {
+	stepper.initialSteps([
+		"Fetch Changes",
+		"Install Dependencies",
+		"Build Studio",
+		"Completed"
+	]);
+	stepper.executeTerminalCommands([
+		"git pull",
+		"bun install",
+		"bun run desktop-prod"
+	], dir).then(() => {
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "VoiceStudio Updated Successfully!", "VoiceStudio has been updated to the latest version.");
+	});
+}
+async function cardInfo$14(api, callback) {
+	return CardInfo(VOICE_STUDIO_URL, void 0, api, callback);
+}
+const VOICE_STUDIO_RM = {
+	catchAddress: catchAddress$5,
+	parseArgsToString: parseArgsToString$15,
+	parseStringToArgs: parseStringToArgs$15,
+	cardInfo: cardInfo$14,
+	manager: {
+		startInstall: startInstall$14,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$3
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/image/Automatic1111Sd/Arguments.ts
+const automatic1111Arguments = [{
+	category: "Command Line Arguments",
+	condition: "COMMANDLINE_ARGS",
+	sections: [
+		{
+			items: [
+				{
+					defaultValue: false,
+					description: "Show this help message and exit.",
+					name: "--help",
+					type: "CheckBox"
+				},
+				{
+					description: "Terminate after installation",
+					name: "--exit",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: "./",
+					description: "base path where all user data is stored",
+					name: "--data-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: "configs/stable-diffusion/v1-inference.yaml",
+					description: "Path to config which constructs model.",
+					name: "--config",
+					type: "File"
+				},
+				{
+					defaultValue: "model.ckpt",
+					description: "Path to checkpoint of Stable Diffusion model; if specified, this checkpoint will be added to the list of checkpoints and loaded.",
+					name: "--ckpt",
+					type: "File"
+				},
+				{
+					description: "Path to directory with Stable Diffusion checkpoints.",
+					name: "--ckpt-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: false,
+					description: "Don't download SD1.5 model even if no model is found.",
+					name: "--no-download-sd-model",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "do not download CLIP model even if it's not included in the checkpoint",
+					name: "--do-not-download-clip",
+					type: "CheckBox"
+				},
+				{
+					description: "Path to Variational Autoencoders model | disables all settings related to VAE.",
+					name: "--vae-dir",
+					type: "Directory"
+				},
+				{
+					description: "Checkpoint to use as VAE; setting this argument",
+					name: "--vae-path",
+					type: "File"
+				},
+				{
+					defaultValue: "GFPGAN/",
+					description: "GFPGAN directory.",
+					name: "--gfpgan-dir",
+					type: "Directory"
+				},
+				{
+					description: "GFPGAN model file name.",
+					name: "--gfpgan-model",
+					type: "File"
+				},
+				{
+					defaultValue: "models/Codeformer/",
+					description: "Path to directory with codeformer model file(s).",
+					name: "--codeformer-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/GFPGAN",
+					description: "Path to directory with GFPGAN model file(s).",
+					name: "--gfpgan-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/ESRGAN",
+					description: "Path to directory with ESRGAN model file(s).",
+					name: "--esrgan-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/BSRGAN",
+					description: "Path to directory with BSRGAN model file(s).",
+					name: "--bsrgan-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/RealESRGAN",
+					description: "Path to directory with RealESRGAN model file(s).",
+					name: "--realesrgan-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/ScuNET",
+					description: "Path to directory with ScuNET model file(s).",
+					name: "--scunet-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/SwinIR",
+					description: "Path to directory with SwinIR and SwinIR v2 model file(s).",
+					name: "--swinir-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/LDSR",
+					description: "Path to directory with LDSR model file(s).",
+					name: "--ldsr-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/DAT",
+					description: "Path to directory with DAT model file(s).",
+					name: "--dat-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/Lora",
+					description: "Path to directory with Lora networks.",
+					name: "--lora-dir",
+					type: "Directory"
+				},
+				{
+					description: "Path to directory with CLIP model file(s).",
+					name: "--clip-models-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: "embeddings/",
+					description: "Embeddings directory for textual inversion (default: embeddings).",
+					name: "--embeddings-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: "textual_inversion_templates",
+					description: "Directory with textual inversion templates.",
+					name: "--textual-inversion-templates-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: "models/hypernetworks/",
+					description: "hypernetwork directory.",
+					name: "--hypernetwork-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: "localizations/",
+					description: "Localizations directory.",
+					name: "--localizations-dir",
+					type: "Directory"
+				},
+				{
+					defaultValue: "styles.csv",
+					description: "Path or wildcard path of styles files, allow multiple entries.",
+					name: "--styles-file",
+					type: "File"
+				},
+				{
+					defaultValue: "ui-config.json",
+					description: "Filename to use for UI configuration.",
+					name: "--ui-config-file",
+					type: "File"
+				},
+				{
+					defaultValue: false,
+					description: "Do not hide progress bar in gradio UI (we hide it because it slows down ML if you have hardware acceleration in browser).",
+					name: "--no-progressbar-hiding",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: 16,
+					description: "Maximum batch count value for the UI.",
+					name: "--max-batch-count",
+					type: "Number",
+					numberMin: 1
+				},
+				{
+					defaultValue: "config.json",
+					description: "Filename to use for UI settings.",
+					name: "--ui-settings-file",
+					type: "File"
+				},
+				{
+					defaultValue: false,
+					description: "Allow custom script execution from web UI.",
+					name: "--allow-code",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Use `share=True` for gradio and make the UI accessible through their site.",
+					name: "--share",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Launch gradio with 0.0.0.0 as server name, allowing to respond to network requests.",
+					name: "--listen",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: 7860,
+					description: "Launch gradio with given server port, you need root/admin rights for ports < 1024; defaults to 7860 if available.",
+					name: "--port",
+					type: "Number",
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					defaultValue: false,
+					description: "Hide directory configuration from web UI.",
+					name: "--hide-ui-dir-config",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable editing of all settings globally",
+					name: "--freeze-settings",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable editing settings in specific sections of the settings page by specifying a comma-delimited list such like \"saving-images,upscaling\". The list of setting names can be found in the modules/shared_options.py file",
+					name: "--freeze-settings-in-sections",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable editing of individual settings by specifying a comma-delimited list like \"samples_save,samples_format\". The list of setting names can be found in the config.json file",
+					name: "--freeze-specific-settings",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable extensions tab regardless of other options.",
+					name: "--enable-insecure-extension-access",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Launch gradio with `--debug` option.",
+					name: "--gradio-debug",
+					type: "CheckBox"
+				},
+				{
+					description: "Set gradio authentication like `username:password`; or comma-delimit multiple like `u1:p1,u2:p2,u3:p3`.",
+					name: "--gradio-auth",
+					type: "Input"
+				},
+				{
+					description: "Set gradio authentication file path ex. `/path/to/auth/file` same auth format as `--gradio-auth`.",
+					name: "--gradio-auth-path",
+					type: "File"
+				},
+				{
+					defaultValue: false,
+					description: "Do not output progress bars to console.",
+					name: "--disable-console-progressbars",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Print prompts to console when generating with txt2img and img2img.",
+					name: "--enable-console-prompts",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Launch web UI with API.",
+					name: "--api",
+					type: "CheckBox"
+				},
+				{
+					description: "Set authentication for API like `username:password`; or comma-delimit multiple like `u1:p1,u2:p2,u3:p3`.",
+					name: "--api-auth",
+					type: "Input"
+				},
+				{
+					defaultValue: false,
+					description: "Enable logging of all API requests.",
+					name: "--api-log",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Only launch the API, without the UI.",
+					name: "--nowebui",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Don't load model to quickly launch UI.",
+					name: "--ui-debug-mode",
+					type: "CheckBox"
+				},
+				{
+					description: "Select the default CUDA device to use (export `CUDA_VISIBLE_DEVICES=0,1` etc might be needed before).",
+					name: "--device-id",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					defaultValue: false,
+					description: "Administrator privileges.",
+					name: "--administrator",
+					type: "CheckBox"
+				},
+				{
+					description: "Allowed CORS origin(s) in the form of a comma-separated list (no spaces).",
+					name: "--cors-allow-origins",
+					type: "Input"
+				},
+				{
+					description: "Allowed CORS origin(s) in the form of a single regular expression.",
+					name: "--cors-allow-origins-regex",
+					type: "Input"
+				},
+				{
+					description: "Partially enables TLS, requires `--tls-certfile` to fully function.",
+					name: "--tls-keyfile",
+					type: "File"
+				},
+				{
+					description: "Partially enables TLS, requires `--tls-keyfile` to fully function.",
+					name: "--tls-certfile",
+					type: "File"
+				},
+				{
+					defaultValue: false,
+					description: "When passed, enables the use of self-signed certificates.",
+					name: "--disable-tls-verify",
+					type: "CheckBox"
+				},
+				{
+					description: "Sets hostname of server.",
+					name: "--server-name",
+					type: "Input"
+				},
+				{
+					defaultValue: false,
+					description: "Disables gradio queue; causes the webpage to use http requests instead of websockets; was the default in earlier versions.",
+					name: "--no-gradio-queue",
+					type: "CheckBox"
+				},
+				{
+					description: "Add path to Gradio's `allowed_paths`; make it possible to serve files from it.",
+					name: "--gradio-allowed-path",
+					type: "Directory"
+				},
+				{
+					defaultValue: false,
+					description: "Disable SHA-256 hashing of checkpoints to help loading performance.",
+					name: "--no-hashing",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not check versions of torch and xformers.",
+					name: "--skip-version-check",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not check versions of Python.",
+					name: "--skip-python-version-check",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not check if CUDA is able to work properly.",
+					name: "--skip-torch-cuda-test",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Skip installation of packages.",
+					name: "--skip-install",
+					type: "CheckBox"
+				},
+				{
+					description: "log level; one of: CRITICAL, ERROR, WARNING, INFO, DEBUG",
+					name: "--loglevel",
+					type: "DropDown",
+					values: [
+						"CRITICAL",
+						"ERROR",
+						"WARNING",
+						"INFO",
+						"DEBUG"
+					]
+				},
+				{
+					defaultValue: false,
+					description: "launch.py argument: print a detailed log of what's happening at startup",
+					name: "--log-startup",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "enable server stop/restart/kill via api",
+					name: "--api-server-stop",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: 30,
+					description: "set timeout_keep_alive for uvicorn",
+					name: "--timeout-keep-alive",
+					type: "Number",
+					numberMin: 1
+				}
+			],
+			section: "Configuration"
+		},
+		{
+			items: [
+				{
+					defaultValue: false,
+					description: "Enable xformers for cross attention layers.",
+					name: "--xformers",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable xformers for cross attention layers regardless of whether the checking code thinks you can run it; ***do not make bug reports if this fails to work***.",
+					name: "--force-enable-xformers",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable xformers with Flash Attention to improve reproducibility (supported for SD2.x or variant only).",
+					name: "--xformers-flash-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable scaled dot product cross-attention layer optimization; requires PyTorch 2.*",
+					name: "--opt-sdp-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable scaled dot product cross-attention layer optimization without memory efficient attention, makes image generation deterministic; requires PyTorch 2.*",
+					name: "--opt-sdp-no-mem-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Force-enables Doggettx's cross-attention layer optimization. By default, it's on for CUDA-enabled systems.",
+					name: "--opt-split-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Force-enables InvokeAI's cross-attention layer optimization. By default, it's on when CUDA is unavailable.",
+					name: "--opt-split-attention-invokeai",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable older version of split attention optimization that does not consume all VRAM available.",
+					name: "--opt-split-attention-v1",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable memory efficient sub-quadratic cross-attention layer optimization.",
+					name: "--opt-sub-quad-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: 1024,
+					description: "Query chunk size for the sub-quadratic cross-attention layer optimization to use.",
+					name: "--sub-quad-q-chunk-size",
+					type: "Number",
+					numberMin: 1
+				},
+				{
+					description: "KV chunk size for the sub-quadratic cross-attention layer optimization to use.",
+					name: "--sub-quad-kv-chunk-size",
+					type: "Number",
+					numberMin: 1
+				},
+				{
+					description: "The percentage of VRAM threshold for the sub-quadratic cross-attention layer optimization to use chunking.",
+					name: "--sub-quad-chunk-threshold",
+					type: "Number",
+					numberMin: 1,
+					numberMax: 100
+				},
+				{
+					defaultValue: false,
+					description: "Enable alternative layout for 4d tensors, may result in faster inference **only** on Nvidia cards with Tensor cores (16xx and higher).",
+					name: "--opt-channelslast",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Force-disables cross-attention layer optimization.",
+					name: "--disable-opt-split-attention",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not check if produced images/latent spaces have nans; useful for running without a checkpoint in CI.",
+					name: "--disable-nan-check",
+					type: "CheckBox"
+				},
+				{
+					description: "Use CPU as torch device for specified modules.",
+					name: "--use-cpu",
+					type: "DropDown",
+					values: [
+						"all",
+						"sd",
+						"interrogate",
+						"gfpgan",
+						"bsrgan",
+						"esrgan",
+						"scunet",
+						"codeformer"
+					]
+				},
+				{
+					defaultValue: false,
+					description: "Use Intel XPU as torch device",
+					name: "--use-ipex",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not switch the model to 16-bit floats.",
+					name: "--no-half",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: "autocast",
+					description: "Evaluate at this precision.",
+					name: "--precision",
+					type: "DropDown",
+					values: ["full", "autocast"]
+				},
+				{
+					defaultValue: false,
+					description: "Do not switch the VAE model to 16-bit floats.",
+					name: "--no-half-vae",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Upcast sampling. No effect with `--no-half`. Usually produces similar results to `--no-half` with better performance while using less memory.",
+					name: "--upcast-sampling",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable Stable Diffusion model optimizations for sacrificing a some performance for low VRAM usage.",
+					name: "--medvram",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "enable `--medvram` optimization just for SDXL models",
+					name: "--medvram-sdxl",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Enable Stable Diffusion model optimizations for sacrificing a lot of speed for very low VRAM usage.",
+					name: "--lowvram",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Load Stable Diffusion checkpoint weights to VRAM instead of RAM.",
+					name: "--lowram",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable an optimization that reduces RAM use when loading a model",
+					name: "--disable-model-loading-ram-optimization",
+					type: "CheckBox"
+				}
+			],
+			section: "Performance"
+		},
+		{
+			items: [
+				{
+					defaultValue: false,
+					description: "Open the web UI URL in the system's default browser upon launch.",
+					name: "--autolaunch",
+					type: "CheckBox"
+				},
+				{
+					description: "Open the web UI with the specified theme (`light` or `dark`). If not specified, uses the default browser theme.",
+					name: "--theme",
+					type: "DropDown",
+					values: ["dark", "light"]
+				},
+				{
+					defaultValue: false,
+					description: "Use textbox for seeds in UI (no up/down, but possible to input long seeds).",
+					name: "--use-textbox-seed",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Disable checking PyTorch models for malicious code.",
+					name: "--disable-safe-unpickle",
+					type: "CheckBox"
+				},
+				{
+					description: "ngrok authtoken, alternative to gradio `--share`.",
+					name: "--ngrok",
+					type: "Input"
+				},
+				{
+					defaultValue: "us",
+					description: "The region in which ngrok should start.",
+					name: "--ngrok-region",
+					type: "Input"
+				},
+				{
+					description: "The options to pass to ngrok in JSON format, e.g.: `{\"authtoken_from_env\":true, \"basic_auth\":\"user:password\", \"oauth_provider\":\"google\", \"oauth_allow_emails\":\"user@asdf.com\"}`",
+					name: "--ngrok-options",
+					type: "Input"
+				},
+				{
+					description: "On startup, notifies whether or not your web UI version (commit) is up-to-date with the current master branch.",
+					name: "--update-check",
+					type: "CheckBox"
+				},
+				{
+					description: "On startup, it pulls the latest updates for all extensions you have installed.",
+					name: "--update-all-extensions",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Force-reinstall xformers. Useful for upgrading - but remove it after upgrading or you'll reinstall xformers perpetually.",
+					name: "--reinstall-xformers",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Force-reinstall torch. Useful for upgrading - but remove it after upgrading or you'll reinstall torch perpetually.",
+					name: "--reinstall-torch",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Run test to validate web UI functionality, see wiki topic for more details.",
+					name: "--tests",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "Do not run tests even if `--tests` option is specified.",
+					name: "--no-tests",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "launch.py argument: dump limited sysinfo file (without information about extensions, options) to disk and quit",
+					name: "--dump-sysinfo",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable all non-built-in extensions from running",
+					name: "--disable-all-extensions",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "disable all extensions from running",
+					name: "--disable-extra-extensions",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "if load a model at web start, only take effect when --nowebui",
+					name: "--skip-load-model-at-start",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: false,
+					description: "allow any symbols except '/' in filenames. May conflict with your browser and file system",
+					name: "--unix-filenames-sanitization",
+					type: "CheckBox"
+				},
+				{
+					defaultValue: 128,
+					description: "maximal length of filenames of saved images, longer filenames will be truncated. if overridden it can potentially cause issues with the file system",
+					name: "--filenames-max-length",
+					type: "Number",
+					numberMin: 1
+				},
+				{
+					defaultValue: false,
+					description: "disable read prompt from last generation feature; disables `--data-path/params.txt`",
+					name: "--no-prompt-history",
+					type: "CheckBox"
+				}
+			],
+			section: "Features"
+		}
+	]
+}];
+const winEV = {
+	category: "Environment Variables",
+	items: [
+		{
+			description: "Sets a custom path for Python executable.",
+			name: "PYTHON",
+			type: "File"
+		},
+		{
+			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
+			name: "VENV_DIR",
+			type: "Directory"
+		},
+		{
+			description: "Additional commandline arguments for the main program.",
+			name: "COMMANDLINE_ARGS",
+			type: "CheckBox"
+		},
+		{
+			description: "Set to anything to make the program not exit with an error if an unexpected commandline argument is encountered.",
+			name: "IGNORE_CMD_ARGS_ERRORS",
+			type: "CheckBox"
+		},
+		{
+			description: "Name of requirements.txt file with dependencies that will be installed when launch.py is run. Defaults to requirements_versions.txt.",
+			name: "REQS_FILE",
+			type: "Input"
+		},
+		{
+			description: "Command for installing PyTorch.",
+			name: "TORCH_COMMAND",
+			type: "Input"
+		},
+		{
+			description: "`--index-url` parameter for pip.",
+			name: "INDEX_URL",
+			type: "Input"
+		},
+		{
+			description: "Path to where transformers library will download and keep its files related to the CLIP model.",
+			name: "TRANSFORMERS_CACHE",
+			type: "Directory"
+		},
+		{
+			description: "Select GPU to use for your instance on a system with multiple GPUs. For example, if you want to use secondary GPU, put \"1\".\n(add a new line to webui-user.bat not in COMMANDLINE_ARGS): `set CUDA_VISIBLE_DEVICES=0`\nAlternatively, just use `--device-id` flag in `COMMANDLINE_ARGS`.",
+			name: "CUDA_VISIBLE_DEVICES",
+			type: "Input"
+		},
+		{
+			description: "Log verbosity. Supports any valid logging level supported by Python's built-in `logging` module. Defaults to `INFO` if not set.",
+			name: "SD_WEBUI_LOG_LEVEL",
+			type: "DropDown",
+			defaultValue: "INFO",
+			values: [
+				"DEBUG",
+				"INFO",
+				"WARNING",
+				"ERROR",
+				"CRITICAL"
+			]
+		},
+		{
+			description: "Cache file path. Defaults to `cache.json` in the root directory if not set.",
+			name: "SD_WEBUI_CACHE_FILE",
+			type: "File"
+		},
+		{
+			description: "A value set by `launcher script` (like webui.bat webui.sh) informing Webui that restart function is available",
+			name: "SD_WEBUI_RESTAR",
+			type: "CheckBox"
+		},
+		{
+			description: "A internal value signifying if webui is currently restarting or reloading, used for disabling certain actions asuch as auto launching browser.\nset to `1` disables auto launching browser\nset to `0` enables auto launch even when restarting\nCertain extensions might use this value for similar purpose.",
+			name: "SD_WEBUI_RESTARTING",
+			type: "CheckBox"
+		}
+	]
+};
+const linEV = {
+	category: "Environment",
+	sections: [{
+		section: "Variables",
+		items: [
+			{
+				description: "Install directory without trailing slash",
+				name: "install_dir",
+				type: "Input",
+				defaultValue: "/home/$(whoami)"
+			},
+			{
+				description: "Name of the subdirectory",
+				name: "clone_dir",
+				type: "Input",
+				defaultValue: "stable-diffusion-webui"
+			},
+			{
+				description: "python3 executable",
+				name: "python_cmd",
+				type: "Input",
+				defaultValue: "python3"
+			},
+			{
+				description: "python3 venv without trailing slash (defaults to ${install_dir}/${clone_dir}/venv)",
+				name: "venv_dir",
+				type: "Input",
+				defaultValue: "venv"
+			}
+		]
+	}, {
+		section: "Arguments",
+		items: [
+			{
+				description: "Commandline arguments for webui.py",
+				name: "COMMANDLINE_ARGS",
+				type: "CheckBox"
+			},
+			{
+				description: "Script to launch to start the app",
+				name: "LAUNCH_SCRIPT",
+				type: "Input",
+				defaultValue: "launch.py"
+			},
+			{
+				description: "Install command for torch",
+				name: "TORCH_COMMAND",
+				type: "Input",
+				defaultValue: `${getPythonCommandByOs().pip} install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113`
+			},
+			{
+				description: "Requirements file to use for stable-diffusion-webui",
+				name: "REQS_FILE",
+				type: "Input",
+				defaultValue: "requirements_versions.txt"
+			},
+			{
+				description: "Fixed git repo for K_DIFFUSION_PACKAGE",
+				name: "K_DIFFUSION_PACKAGE",
+				type: "Input",
+				defaultValue: ""
+			},
+			{
+				description: "Fixed git repo for GFPGAN_PACKAGE",
+				name: "GFPGAN_PACKAGE",
+				type: "Input",
+				defaultValue: ""
+			},
+			{
+				description: "Fixed git commit for Stable Diffusion",
+				name: "STABLE_DIFFUSION_COMMIT_HASH",
+				type: "Input",
+				defaultValue: ""
+			},
+			{
+				description: "Fixed git commit for CodeFormer",
+				name: "CODEFORMER_COMMIT_HASH",
+				type: "Input",
+				defaultValue: ""
+			},
+			{
+				description: "Fixed git commit for BLIP",
+				name: "BLIP_COMMIT_HASH",
+				type: "Input",
+				defaultValue: ""
+			},
+			{
+				description: "Enable accelerated launch",
+				name: "ACCELERATE",
+				type: "CheckBox",
+				defaultValue: false
+			},
+			{
+				description: "Disable TCMalloc",
+				name: "NO_TCMALLOC",
+				type: "CheckBox",
+				defaultValue: false
+			}
+		]
+	}]
+};
+automatic1111Arguments.unshift(isWin ? winEV : linEV);
+//#endregion
+//#region module/src/containers/image/Automatic1111Sd/SharedRenderer.ts
+async function fetchExtensionList$2() {
+	try {
+		return (await (await fetch("https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui-extensions/master/index.json")).json()).extensions.map((extension) => ({
+			title: extension.name,
+			description: extension.description,
+			url: extension.url,
+			stars: extension.stars
+		}));
+	} catch (e) {
+		console.error(e);
+		return [];
+	}
+}
+function getTypeByCategoryName$1(category) {
+	switch (category) {
+		case "Command Line Arguments": return "cl";
+		case "Environment":
+		case "Environment Variables": return "env";
+		default: return;
+	}
+}
+function getCategoryType$3(name) {
+	if (!name) return void 0;
+	for (const argument of automatic1111Arguments) if ("sections" in argument) {
+		for (const section of argument.sections) if (section.items.some((item) => item.name === name)) {
+			if (section.section === "Variables") return "envVar";
+			return getTypeByCategoryName$1(argument.category);
+		}
+	} else if (argument.items.some((item) => item.name === name)) return getTypeByCategoryName$1(argument.category);
+}
+function parseArgsToString$14(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let clResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) clResult += result.commandArg + " ";
+		} else {
+			const cat = getCategoryType$3(arg.name);
+			if (cat !== "cl") {
+				const eWinResult = `set ${arg.name}=${arg.value}\n`;
+				const eResult = cat === "env" ? `export ${arg.name}="${arg.value}"\n` : `${arg.name}="${arg.value}"\n`;
+				if (arg.name !== "COMMANDLINE_ARGS") result += isWin ? eWinResult : eResult;
+			} else if (cat === "cl") {
+				const argType = getArgumentType(arg.name, automatic1111Arguments);
+				if (argType === "CheckBox") clResult += `${arg.name} `;
+				else if (argType === "File" || argType === "Directory") clResult += isWin ? `${arg.name} "${arg.value}" ` : `${arg.name} ${arg.value} `;
+				else clResult += `${arg.name} ${arg.value} `;
+			}
+		}
+	});
+	if (lines) result += lines + "\n";
+	if (!isEmpty(clResult)) result += isWin ? `set COMMANDLINE_ARGS=${clResult}\n` : `export COMMANDLINE_ARGS=${clResult}\n`;
+	result += isWin ? `\ncall webui.bat` : ``;
+	return result;
+}
+function checkLinuxArgLine$2(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	for (const arg of automatic1111Arguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
+}
+function parseStringToArgs$14(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		else if (line.startsWith(`${isWin ? "set" : "export"} COMMANDLINE_ARGS=`)) {
+			argResult.push({
+				name: "COMMANDLINE_ARGS",
+				value: ""
+			});
+			const clArgs = line.split("=")[1];
+			if (!clArgs) return;
+			clArgs.split("--").filter(Boolean).map((arg) => {
+				const [id, ...value] = arg.trim().split(" ");
+				return {
+					name: `--${id}`,
+					value: value.join(" ").replace(/"/g, "")
+				};
+			}).forEach((value) => {
+				if (isValidArg(value.name, automatic1111Arguments)) {
+					if (getArgumentType(value.name, automatic1111Arguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
+			});
+		} else {
+			const lineType = checkLinuxArgLine$2(line);
+			if (lineType === "export" || lineType === "set") {
+				let [name, value] = line.replace(`${lineType} `, "").split("=");
+				name = removeEscapes(name.trim());
+				value = removeEscapes(value.trim());
+				if (isValidArg(name, automatic1111Arguments)) argResult.push({
+					name,
+					value
+				});
+			} else if (checkLinuxArgLine$2(line) === "var") {
+				let [name, value] = line.split("=");
+				name = removeEscapes(name.trim());
+				value = removeEscapes(value.trim());
+				if (isValidArg(name, automatic1111Arguments)) argResult.push({
+					name,
+					value
+				});
+			}
+		}
+	});
+	return argResult;
+}
+//#endregion
+//#region module/src/containers/image/ComfyUi/Arguments.ts
+const comfyuiArguments = [{
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Number",
+					defaultValue: 8188,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Number",
+					defaultValue: 100,
+					numberMin: 1
+				},
+				{
+					name: "--oneapi-device-selector",
+					description: "Sets the oneAPI device(s) this instance will use.",
+					type: "Input"
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API.",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				},
+				{
+					name: "--front-end-version",
+					description: "Specifies the version of the frontend to be used (format: [repoOwner]/[repoName]@[version]).",
+					type: "Input",
+					defaultValue: "comfyanonymous/ComfyUI@latest"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--cuda-malloc",
+					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-cuda-malloc",
+					description: "Disable cudaMallocAsync.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e8m0fnu-unet",
+					description: "Store unet weights in fp8_e8m0fnu.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-intermediates",
+					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--force-channels-last",
+					description: "Force channels last format when inferencing the models.",
+					type: "CheckBox"
+				},
+				{
+					name: "--directml",
+					description: "Use torch-directml.",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "none"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Number",
+					defaultValue: 512,
+					numberMin: 64,
+					numberStep: 64
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-ram",
+					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
+					type: "Input"
+				},
+				{
+					name: "--high-ram",
+					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-split-cross-attention",
+					description: "Use the split cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-ck-attention",
+					description: "Use Comfy Kitchen attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-xformers",
+					description: "Disable xformers.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-upcast-attention",
+					description: "Force enable attention upcasting, please report if it fixes black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-upcast-attention",
+					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-non-blocking",
+					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast",
+					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: fp16_accumulation fp8_matrix_mult cublas_ops autotune",
+					type: "DropDown",
+					values: [
+						"",
+						"fp16_accumulation",
+						"fp8_matrix_mult",
+						"cublas_ops",
+						"autotune"
+					],
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--default-hashing-function",
+					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
+					type: "DropDown",
+					defaultValue: "sha256",
+					values: [
+						"md5",
+						"sha1",
+						"sha256",
+						"sha512"
+					]
+				},
+				{
+					name: "--deterministic",
+					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
+					type: "CheckBox"
+				},
+				{
+					name: "--mmap-torch-files",
+					description: "Use mmap when loading ckpt/pt files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-mmap",
+					description: "Don't use mmap when loading safetensors.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-print-server",
+					description: "Don't print server output.",
+					type: "CheckBox"
+				},
+				{
+					name: "--debug-hang",
+					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
+					type: "CheckBox"
+				},
+				{
+					name: "--quick-test-for-ci",
+					description: "Quick test for CI.",
+					type: "CheckBox"
+				},
+				{
+					name: "--windows-standalone-build",
+					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-metadata",
+					description: "Disable saving prompt metadata in files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-all-custom-nodes",
+					description: "Disable loading all custom nodes.",
+					type: "CheckBox"
+				},
+				{
+					name: "--whitelist-custom-nodes",
+					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
+					type: "Input"
+				},
+				{
+					name: "--disabled-nodes-config",
+					description: "Path to a YAML file listing node IDs to disable.",
+					type: "File"
+				},
+				{
+					name: "--disable-partner-nodes",
+					description: "Disable loading partner nodes (the paid API nodes). The frontend keeps its internet access.",
+					type: "CheckBox"
+				},
+				{
+					name: "--offline",
+					description: "Prevent the frontend from communicating with the internet by setting a restrictive Content-Security-Policy header. Also disables partner nodes.",
+					type: "CheckBox"
+				},
+				{
+					name: "--multi-user",
+					description: "Enables per-user storage.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				},
+				{
+					name: "--log-stdout",
+					description: "Send normal process output to stdout instead of stderr (default).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-assets",
+					description: "Disable the assets system (API routes, database synchronization, and background scanning).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-assets",
+					description: "Deprecated: the assets system is on by default. Use --disable-assets to turn it off.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-asset-hashing",
+					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
+					type: "CheckBox"
+				},
+				{
+					name: "--feature-flag",
+					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted. Examples: --feature-flag show_signin_button=true or --feature-flag show_signin_button",
+					type: "Input"
+				},
+				{
+					name: "--list-feature-flags",
+					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--reserve-vram",
+					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--vram-headroom",
+					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--disable-nvml-pressure",
+					description: "Use CUDA instead of NVML for DynamicVRAM memory pressure.",
+					type: "CheckBox"
+				},
+				{
+					name: "--async-offload",
+					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
+					type: "Number",
+					defaultValue: 2,
+					numberMin: 1
+				},
+				{
+					name: "--disable-async-offload",
+					description: "Disable async weight offloading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-dynamic-vram",
+					description: "Disable dynamic VRAM and use estimate based model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-dynamic-vram",
+					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast-disk",
+					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-fast-disk",
+					description: "Disable disk-backed dynamic loading and offload over unpinned RAM. Overrides --fast-disk.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-cuda-graphs",
+					description: "Disable CUDA graphs.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-comfy-compiler",
+					description: "Disable the Comfy model compiler, including its CUDA graph subfeature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--assert-graph-breaks",
+					description: "Fail on Comfy model compiler graph breaks.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				},
+				{
+					name: "--database-url",
+					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
+					type: "Input"
+				}
+			]
+		}
+	]
+}, {
+	category: "Environment Variables",
+	items: [
+		{
+			name: "HSA_OVERRIDE_GFX_VERSION",
+			description: "Override GFX version for unsupported AMD GPUs. Use \"10.3.0\" for 6700, 6600 and other RDNA2 or older cards. Use \"11.0.0\" for 7600 and other RDNA3 cards.",
+			type: "Input",
+			defaultValue: "11.0.0"
+		},
+		{
+			name: "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL",
+			description: "Enable experimental memory efficient attention on AMD GPUs. Should already be enabled by default on RDNA3.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch tunable operations which might speed things up at the cost of a very slow initial run.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "Set the MIOpen find mode to accelerate find API calls. NORMAL: Full find (benchmarks all solvers). FAST: Uses FindDb or fallback (fast startup, may reduce performance). HYBRID: Uses FindDb or full find on miss (balanced). DYNAMIC_HYBRID: Uses FindDb or find skipping non-dynamic kernels (faster than hybrid, default). TRUST_VERIFY: Uses FindDb with verification and constrained tuning. TRUST_VERIFY_FULL: Same as TRUST_VERIFY with no tuning time limits.",
+			type: "DropDown",
+			values: [
+				"NORMAL",
+				"FAST",
+				"HYBRID",
+				"DYNAMIC_HYBRID",
+				"TRUST_VERIFY",
+				"TRUST_VERIFY_FULL"
+			],
+			defaultValue: "DYNAMIC_HYBRID"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "Controls verbosity of MIOpen internal operation logging. 0: Default (level 4 for release, level 5 for debug). 1: Quiet (no logging). 3: Errors including fatal errors. 4: All errors and warnings. 5: Info level debugging. 6: Detailed debugging. 7: Trace level with additional details.",
+			type: "DropDown",
+			values: [
+				"0",
+				"1",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7"
+			],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_ENABLE_LOGGING",
+			description: "Prints basic layer-by-layer MIOpen API call information with parameters and configurations.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_ENABLE_LOGGING_CMD",
+			description: "Outputs associated MIOpenDriver command lines to console for debugging.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_FIND_ENFORCE",
+			description: "Controls auto-tune behavior and database updates. NONE: No change in default behavior. DB_UPDATE: Always perform auto-tune and update PerfDb. SEARCH: Auto-tune even if not requested via API. SEARCH_DB_UPDATE: Combination of DB_UPDATE and SEARCH. DB_CLEAN: Remove optimized values from User PerfDb.",
+			type: "DropDown",
+			values: [
+				"NONE",
+				"DB_UPDATE",
+				"SEARCH",
+				"SEARCH_DB_UPDATE",
+				"DB_CLEAN"
+			],
+			defaultValue: "NONE"
+		},
+		{
+			name: "MIOPEN_DEBUG_DISABLE_FIND_DB",
+			description: "Disables FindDb functionality. Set to 1 to disable, 0 or unset to enable.",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		},
+		{
+			name: "MIOPEN_COMPILE_PARALLEL_LEVEL",
+			description: "Controls parallel compilation thread count for Find() calls. Default: 1 when using COMGR, otherwise half the number of available hardware threads. Set to 1 to disable multi-threaded compilation.",
+			type: "Number",
+			numberMin: 1
+		},
+		{
+			name: "MIOPEN_DEBUG_CONVOLUTION_DETERMINISTIC",
+			description: "Controls deterministic convolution behavior. Set to 1 to enable deterministic algorithms (slower but reproducible results).",
+			type: "DropDown",
+			values: ["0", "1"],
+			defaultValue: "0"
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/ComfyUi/RendererMethods.ts
+const COMFYUI_URL = "https://github.com/Comfy-Org/ComfyUI";
+function isEnvironmentVariable$1(name) {
+	for (const arg of comfyuiArguments) if (arg.category === "Environment Variables") {
+		if ("items" in arg) return arg.items.some((item) => item.name === name);
+	}
+	return false;
+}
+function parseArgsToString$13(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let argResult = "";
+	let lines = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else if (isEnvironmentVariable$1(arg.name)) {
+			if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
+			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
+		} else {
+			const argType = getArgumentType(arg.name, comfyuiArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	const pythonCommand = getPythonCommandByOs().python;
+	result += isEmpty(argResult) ? `${pythonCommand} main.py` : `${pythonCommand} main.py ${argResult}`;
+	return result;
+}
+function parseStringToArgs$13(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		if (line.startsWith("export ") || line.startsWith("set ")) {
+			const prefix = line.startsWith("export ") ? "export " : "set ";
+			let [name, value] = line.replace(prefix, "").split("=");
+			name = removeEscapes(name.trim());
+			value = removeEscapes(value.trim());
+			if (isValidArg(name, comfyuiArguments) && isEnvironmentVariable$1(name)) argResult.push({
+				name,
+				value
+			});
+			return;
+		}
+		const pythonCommand = getPythonCommandByOs().python;
+		if (!line.startsWith(`${pythonCommand} main.py`)) return;
+		const clArgs = line.split(`${pythonCommand} main.py `)[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, comfyuiArguments)) {
+				if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$13(stepper) {
+	const selectOptions = [
+		"NONE",
+		"NVIDIA CU130",
+		"NVIDIA CU132 Nightly",
+		"AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)",
+		"AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)",
+		"AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)",
+		"AMD GPUs (Linux only) ROCm 7.2",
+		"AMD GPUs (Linux only) ROCm 7.2 Nightly",
+		"Mac Apple silicon",
+		"Mac Apple silicon (Conda)",
+		"Mac x86 (Conda)",
+		"Intel GPUs (Windows and Linux)",
+		"Intel GPUs Nightly (Windows and Linux)"
+	];
+	const getPyTorchInstallCommand = (selectedOption) => {
+		switch (selectedOption) {
+			case "Mac Apple silicon": return "pip3 install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu";
+			case "Mac Apple silicon (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
+			case "Mac x86 (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
+			case "AMD GPUs (Linux only) ROCm 7.2": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.2";
+			case "AMD GPUs (Linux only) ROCm 7.2 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.2";
+			case "AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx110X-all/";
+			case "AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx1151/";
+			case "AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx120X-all/";
+			case "Intel GPUs (Windows and Linux)": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/xpu";
+			case "Intel GPUs Nightly (Windows and Linux)": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu";
+			default:
+			case "NVIDIA CU130": return "pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130";
+			case "NVIDIA CU132 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu132";
+		}
+	};
+	const installReqs = (dir) => {
+		stepper.executeTerminalCommands(["pip install -r requirements.txt", "pip install -r manager_requirements.txt"], dir).then(() => {
+			stepper.setInstalled(dir);
+			stepper.postInstall.config({ customArguments: {
+				presetName: "Lynx Config",
+				customArguments: [{
+					name: "--enable-manager",
+					value: ""
+				}]
+			} });
+			stepper.showFinalStep("success", "ComfyUI installation complete!", "All installation steps completed successfully. Your ComfyUI environment is now ready for use.");
+		});
+	};
+	const getMacCondaInstallCommand = (selectedOption) => {
+		switch (selectedOption) {
+			case "Mac x86 (Conda)": return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh", "sh Miniconda3-latest-MacOSX-x86_64.sh"];
+			default: return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh", "sh Miniconda3-latest-MacOSX-arm64.sh"];
+		}
+	};
+	stepper.initialSteps([
+		"ComfyUI",
+		"Clone",
+		"PyTorch Version",
+		"Install PyTorch",
+		"Install Dependencies",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.cloneRepository(COMFYUI_URL).then((dir) => {
+				stepper.nextStep().then(() => {
+					stepper.collectUserInput([{
+						id: "gpu_type",
+						type: "select",
+						label: "Please Select PyTorch Version (Gpu)",
+						selectOptions,
+						defaultValue: selectOptions[0],
+						isRequired: true
+					}]).then((result) => {
+						const selectedOption = result[0].result;
+						if (selectedOption === "NONE") stepper.nextStep().then(() => {
+							stepper.nextStep().then(() => {
+								installReqs(dir);
+							});
+						});
+						else if (selectedOption === "Mac x86 (Conda)" || selectedOption === "Mac Apple silicon (Conda)") stepper.ipc.invoke("Comfy_isCondaInstalled").then((isInstalled) => {
+							if (isInstalled) stepper.nextStep().then(() => {
+								stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+									stepper.nextStep().then(() => {
+										installReqs(dir);
+									});
+								});
+							});
+							else {
+								stepper.initialSteps([
+									"ComfyUI",
+									"Clone",
+									"PyTorch Version",
+									"Conda",
+									"Install PyTorch",
+									"Dependencies",
+									"Finish"
+								]);
+								stepper.nextStep().then(() => {
+									stepper.executeTerminalCommands(getMacCondaInstallCommand(selectedOption), dir).then(() => {
+										stepper.nextStep().then(() => {
+											stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+												stepper.nextStep().then(() => {
+													installReqs(dir);
+												});
+											});
+										});
+									});
+								});
+							}
+						});
+						else stepper.nextStep().then(() => {
+							stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
+								stepper.nextStep().then(() => {
+									installReqs(dir);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, COMFYUI_URL).then((isValid) => {
+			if (isValid) {
+				stepper.setInstalled(targetDirectory);
+				stepper.showFinalStep("success", "ComfyUI located successfully!", "Pre-installed ComfyUI detected. Installation skipped as your existing setup is ready to use.");
+			} else stepper.utils.verifyFilesExist(targetDirectory, ["comfy", "main.py"]).then((filesExist) => {
+				if (filesExist) {
+					stepper.setInstalled(targetDirectory);
+					stepper.showFinalStep("success", `ComfyUI located successfully!`, "Detected a manual installation of ComfyUI. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
+				} else stepper.showFinalStep("error", "Unable to locate ComfyUI!", "Please ensure you have selected the correct folder containing the ComfyUI installation ");
+			});
+		});
+	});
+}
+async function cardInfo$13(api, callback) {
+	return CardInfo(COMFYUI_URL, "/custom_nodes", api, callback);
+}
+const COMFYUI_RM = {
+	catchAddress: catchAddress$5,
+	parseArgsToString: parseArgsToString$13,
+	parseStringToArgs: parseStringToArgs$13,
+	cardInfo: cardInfo$13,
+	manager: {
+		startInstall: startInstall$13,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/image/ComfyUiRocm/Arguments.ts
+const comfyRocmArguments = [{
+	category: "Environment Variables",
+	items: [
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "MIOpen find mode for AMD GPUs.",
+			type: "Input",
+			defaultValue: "2"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "MIOpen log level for AMD GPUs.",
+			type: "Input",
+			defaultValue: "0"
+		},
+		{
+			name: "PYTHON",
+			description: "Sets a custom path for Python executable.",
+			type: "File",
+			defaultValue: "\"%~dp0/python_env/python.exe\""
+		},
+		{
+			name: "GIT",
+			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
+			type: "File",
+			defaultValue: ""
+		},
+		{
+			name: "VENV_DIR",
+			description: "Specifies the path for the virtual environment/python directory.",
+			type: "Directory",
+			defaultValue: "./python_env"
+		},
+		{
+			name: "TRITON_OVERRIDE_ARCH",
+			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1100). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
+			type: "Input",
+			defaultValue: ""
+		},
+		{
+			name: "COMFYUI_ENABLE_MIOPEN",
+			description: "Enable MIOpen in ComfyUI.",
+			type: "Input",
+			defaultValue: "0"
+		},
+		{
+			name: "FLASH_ATTENTION_TRITON_AMD_ENABLE",
+			description: "Enable Flash Attention Triton AMD backend.",
+			type: "Input",
+			defaultValue: "TRUE"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch TunableOp optimization.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_VERBOSE",
+			description: "Enable verbose logging for PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
+			description: "Enable hipBLASLt in PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "0"
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Number",
+					defaultValue: 8188,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Number",
+					defaultValue: 100,
+					numberMin: 1
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Number",
+					numberMin: 0
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Number",
+					defaultValue: 512,
+					numberMin: 64,
+					numberStep: 64
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/ComfyUiZluda/Arguments.ts
+const comfyuizludaArguments = [{
+	category: "Environment Variables",
+	items: [
+		{
+			name: "MIOPEN_FIND_MODE",
+			description: "MIOpen find mode for AMD GPUs.",
+			type: "Input",
+			defaultValue: "2"
+		},
+		{
+			name: "MIOPEN_LOG_LEVEL",
+			description: "MIOpen log level for AMD GPUs.",
+			type: "Input",
+			defaultValue: "3"
+		},
+		{
+			name: "PYTHON",
+			description: "Sets a custom path for Python executable.",
+			type: "File",
+			defaultValue: "\"%~dp0/venv/Scripts/python.exe\""
+		},
+		{
+			name: "GIT",
+			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
+			type: "File",
+			defaultValue: ""
+		},
+		{
+			name: "VENV_DIR",
+			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
+			type: "Directory",
+			defaultValue: "./venv"
+		},
+		{
+			name: "TRITON_OVERRIDE_ARCH",
+			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1031). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
+			type: "Input",
+			defaultValue: ""
+		},
+		{
+			name: "ZLUDA_COMGR_LOG_LEVEL",
+			description: "Zluda log level",
+			type: "Number",
+			defaultValue: 1,
+			numberMin: 0
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_ENABLED",
+			description: "Enable PyTorch TunableOp optimization.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_VERBOSE",
+			description: "Enable verbose logging for PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "1"
+		},
+		{
+			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
+			description: "Enable hipBLASLt in PyTorch TunableOp.",
+			type: "Input",
+			defaultValue: "0"
+		}
+	]
+}, {
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Network",
+			items: [
+				{
+					name: "--listen",
+					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
+					type: "Input",
+					defaultValue: "127.0.0.1"
+				},
+				{
+					name: "--port",
+					description: "Set the listen port.",
+					type: "Number",
+					defaultValue: 8188,
+					numberMin: 1,
+					numberMax: 65535
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
+					type: "File"
+				},
+				{
+					name: "--enable-cors-header",
+					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
+					type: "Input"
+				},
+				{
+					name: "--max-upload-size",
+					description: "Set the maximum upload size in MB.",
+					type: "Number",
+					defaultValue: 100,
+					numberMin: 1
+				},
+				{
+					name: "--oneapi-device-selector",
+					description: "Sets the oneAPI device(s) this instance will use.",
+					type: "Input"
+				},
+				{
+					name: "--supports-fp8-compute",
+					description: "ComfyUI will act like if the device supports fp8 compute.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-api-nodes",
+					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-compress-response-body",
+					description: "Enable compressing response body.",
+					type: "CheckBox"
+				},
+				{
+					name: "--comfy-api-base",
+					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
+					type: "Input",
+					defaultValue: "https://api.comfy.org"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--base-directory",
+					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
+					type: "Directory"
+				},
+				{
+					name: "--extra-model-paths-config",
+					description: "Load one or more extra_model_paths.yaml files.",
+					type: "File"
+				},
+				{
+					name: "--output-directory",
+					description: "Set the ComfyUI output directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--temp-directory",
+					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--input-directory",
+					description: "Set the ComfyUI input directory. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--user-directory",
+					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--models-directory",
+					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
+					type: "Directory"
+				},
+				{
+					name: "--front-end-root",
+					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
+					type: "Directory"
+				}
+			]
+		},
+		{
+			section: "Execution",
+			items: [
+				{
+					name: "--auto-launch",
+					description: "Automatically launch ComfyUI in the default browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-auto-launch",
+					description: "Disable auto launching the browser.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cuda-device",
+					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
+					type: "Input"
+				},
+				{
+					name: "--default-device",
+					description: "Set the id of the default device, all other devices will stay visible.",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--cuda-malloc",
+					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-cuda-malloc",
+					description: "Disable cudaMallocAsync.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Precision",
+			items: [
+				{
+					name: "--force-fp32",
+					description: "Force fp32 (If this makes your GPU work better please report it).",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-fp16",
+					description: "Force fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-unet",
+					description: "Run the diffusion model in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp64-unet",
+					description: "Run the diffusion model in fp64.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-unet",
+					description: "Run the diffusion model in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-unet",
+					description: "Run the diffusion model in fp16",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-unet",
+					description: "Store unet weights in fp8_e4m3fn.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-unet",
+					description: "Store unet weights in fp8_e5m2.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e8m0fnu-unet",
+					description: "Store unet weights in fp8_e8m0fnu.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-vae",
+					description: "Run the VAE in fp16, might cause black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-vae",
+					description: "Run the VAE in full precision fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-vae",
+					description: "Run the VAE in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu-vae",
+					description: "Run the VAE on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e4m3fn-text-enc",
+					description: "Store text encoder weights in fp8 (e4m3fn variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp8_e5m2-text-enc",
+					description: "Store text encoder weights in fp8 (e5m2 variant).",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-text-enc",
+					description: "Store text encoder weights in fp16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp32-text-enc",
+					description: "Store text encoder weights in fp32.",
+					type: "CheckBox"
+				},
+				{
+					name: "--bf16-text-enc",
+					description: "Store text encoder weights in bf16.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fp16-intermediates",
+					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Optimizations",
+			items: [
+				{
+					name: "--force-channels-last",
+					description: "Force channels last format when inferencing the models.",
+					type: "CheckBox"
+				},
+				{
+					name: "--directml",
+					description: "Use torch-directml.",
+					type: "Input"
+				},
+				{
+					name: "--enable-triton-backend",
+					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-triton-backend",
+					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
+					type: "CheckBox"
+				},
+				{
+					name: "--preview-method",
+					description: "Default preview method for sampler nodes.",
+					type: "DropDown",
+					values: [
+						"none",
+						"auto",
+						"latent2rgb",
+						"taesd"
+					],
+					defaultValue: "auto"
+				},
+				{
+					name: "--preview-size",
+					description: "Sets the maximum preview size for sampler nodes.",
+					type: "Number",
+					defaultValue: 512,
+					numberMin: 64,
+					numberStep: 64
+				},
+				{
+					name: "--cache-classic",
+					description: "Use the old style (aggressive) caching.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-lru",
+					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--cache-none",
+					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cache-ram",
+					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
+					type: "Input",
+					defaultValue: 0
+				},
+				{
+					name: "--use-split-cross-attention",
+					description: "Use the split cross attention optimization. Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-quad-cross-attention",
+					description: "Use the sub-quadratic cross attention optimization . Ignored when xformers is used.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-pytorch-cross-attention",
+					description: "Use the new pytorch 2.0 cross attention function.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-sage-attention",
+					description: "Use sage attention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-flash-attention",
+					description: "Use FlashAttention.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-xformers",
+					description: "Disable xformers.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-upcast-attention",
+					description: "Force enable attention upcasting, please report if it fixes black images.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-upcast-attention",
+					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
+					type: "CheckBox"
+				},
+				{
+					name: "--force-non-blocking",
+					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
+					type: "CheckBox"
+				},
+				{
+					name: "--fast",
+					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}",
+					type: "DropDown",
+					values: [
+						"",
+						"fp16_accumulation",
+						"fp8_matrix_mult",
+						"cublas_ops",
+						"autotune"
+					],
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Memory Management",
+			items: [
+				{
+					name: "--gpu-only",
+					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
+					type: "CheckBox"
+				},
+				{
+					name: "--highvram",
+					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
+					type: "CheckBox"
+				},
+				{
+					name: "--novram",
+					description: "When lowvram isn't enough.",
+					type: "CheckBox"
+				},
+				{
+					name: "--cpu",
+					description: "To use the CPU for everything (slow).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-dynamic-vram",
+					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-dynamic-vram",
+					description: "Disable dynamic VRAM and use estimate based model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--vram-headroom",
+					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--fast-disk",
+					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
+					type: "CheckBox"
+				},
+				{
+					name: "--high-ram",
+					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--reserve-vram",
+					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--async-offload",
+					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
+					type: "Number",
+					defaultValue: 2,
+					numberMin: 1
+				},
+				{
+					name: "--disable-async-offload",
+					description: "Disable async weight offloading.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-smart-memory",
+					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-pinned-memory",
+					description: "Disable pinned memory use.",
+					type: "CheckBox"
+				},
+				{
+					name: "--database-url",
+					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
+					type: "Input",
+					defaultValue: ""
+				}
+			]
+		},
+		{
+			section: "Miscellaneous",
+			items: [
+				{
+					name: "--enable-manager",
+					description: "Enable the ComfyUI-Manager feature.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-manager-ui",
+					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-manager-legacy-ui",
+					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-assets",
+					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
+					type: "CheckBox"
+				},
+				{
+					name: "--enable-asset-hashing",
+					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
+					type: "CheckBox"
+				},
+				{
+					name: "--feature-flag",
+					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted.",
+					type: "Input"
+				},
+				{
+					name: "--list-feature-flags",
+					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
+					type: "CheckBox"
+				},
+				{
+					name: "--debug-hang",
+					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
+					type: "CheckBox"
+				},
+				{
+					name: "--front-end-version",
+					description: "Specifies the version of the frontend to be used. (default: comfyanonymous/ComfyUI@latest)",
+					type: "Input",
+					defaultValue: "comfyanonymous/ComfyUI@latest"
+				},
+				{
+					name: "--default-hashing-function",
+					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
+					type: "DropDown",
+					defaultValue: "sha256",
+					values: [
+						"md5",
+						"sha1",
+						"sha256",
+						"sha512"
+					]
+				},
+				{
+					name: "--deterministic",
+					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
+					type: "CheckBox"
+				},
+				{
+					name: "--mmap-torch-files",
+					description: "Use mmap when loading ckpt/pt files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-mmap",
+					description: "Don't use mmap when loading safetensors.",
+					type: "CheckBox"
+				},
+				{
+					name: "--dont-print-server",
+					description: "Don't print server output.",
+					type: "CheckBox"
+				},
+				{
+					name: "--quick-test-for-ci",
+					description: "Quick test for CI.",
+					type: "CheckBox"
+				},
+				{
+					name: "--windows-standalone-build",
+					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-metadata",
+					description: "Disable saving prompt metadata in files.",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-all-custom-nodes",
+					description: "Disable loading all custom nodes.",
+					type: "CheckBox"
+				},
+				{
+					name: "--whitelist-custom-nodes",
+					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
+					type: "Input",
+					defaultValue: "[]"
+				},
+				{
+					name: "--multi-user",
+					description: "Enables per-user storage.",
+					type: "CheckBox"
+				},
+				{
+					name: "--verbose",
+					description: "Set the logging level",
+					type: "DropDown",
+					defaultValue: "INFO",
+					values: [
+						"DEBUG",
+						"INFO",
+						"WARNING",
+						"ERROR",
+						"CRITICAL"
+					]
+				},
+				{
+					name: "--log-stdout",
+					description: "Send normal process output to stdout instead of stderr (default).",
+					type: "CheckBox"
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/InvokeAi/utils/constants.ts
+const Invoke_Command_CreateVenv = "uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed .venv";
+const Invoke_Command_ActivateVenv = isWin ? ".venv\\Scripts\\activate" : "source .venv/bin/activate";
+const Invoke_Command_InstallPip = `${getPythonCommandByOs().python} -m ensurepip --upgrade`;
+const Invoke_Command_InstallUV = isWin ? "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"" : "wget -qO- https://astral.sh/uv/install.sh | sh";
+const getTorchBackendForVersion = (version) => {
+	const [major, minor] = version.split(".").map(Number);
+	if (major >= 6) return {
+		cuda: "cu128",
+		rocm: "rocm7.1"
+	};
+	if (major === 5 && minor >= 12) return {
+		cuda: "cu128",
+		rocm: "rocm6.3"
+	};
+	if (major === 5 && minor >= 10 && minor <= 11) return {
+		cuda: "cu126",
+		rocm: "rocm6.2.4"
+	};
+	if (major === 5 && minor >= 0 && minor <= 9) return {
+		cuda: "cu124",
+		rocm: "rocm6.1"
+	};
+	if (major === 4) return {
+		cuda: "cu124",
+		rocm: "rocm5.2"
+	};
+	return {
+		cuda: "cu128",
+		rocm: "rocm7.1"
+	};
+};
+const Invoke_PyPI = {
+	cuda: "Windows or Linux with an Nvidia GPU",
+	rocm: "Linux with an AMD GPU",
+	cpu: "No GPU"
+};
+const Invoke_PackageSpec = {
+	invokeai: "invokeai: Nvidia 30xx series GPU or newer, or do not have an Nvidia GPU",
+	invokeaiXformers: "invokeai[xformers]:  Nvidia 20xx series GPU or older"
+};
+const INVOKEAI_INSTALL_TIME_KEY = "install-time-invokeai";
+const INVOKEAI_INSTALL_DIR_KEY = "install-dir-invokeai";
+const INVOKEAI_UPDATE_TIME_KEY = "update-time-invokeai";
+const INVOKEAI_UPDATE_AVAILABLE_KEY = "update-version-invokeai";
+const invokeGetInputFields = async (ipc) => {
+	const releases = await ipc.invoke("invoke_latest_versions");
+	return [
+		{
+			label: "Installation Directory",
+			id: "install_dir",
+			type: "directory",
+			isRequired: true
+		},
+		{
+			label: "InvokeAI Version",
+			id: "invoke_version",
+			type: "select",
+			selectOptions: releases,
+			defaultValue: releases[0],
+			isRequired: true
+		},
+		{
+			label: "Package Specifier",
+			id: "package_spec",
+			type: "select",
+			selectOptions: [Invoke_PackageSpec.invokeai, Invoke_PackageSpec.invokeaiXformers],
+			defaultValue: Invoke_PackageSpec.invokeai,
+			isRequired: true
+		},
+		{
+			label: "Torch Backend",
+			id: "torch_backend",
+			type: "select",
+			selectOptions: [
+				Invoke_PyPI.cuda,
+				Invoke_PyPI.rocm,
+				Invoke_PyPI.cpu,
+				"Others"
+			],
+			defaultValue: Invoke_PyPI.cuda,
+			isRequired: true
+		}
+	];
+};
+const invokeGetInputResults = (items) => {
+	let installDirResult = "";
+	let packageSpecResult = "";
+	let torchBackendResult = "";
+	let version = "";
+	let torchBackendChoice = "";
+	items.forEach((item) => {
+		if (item.id === "install_dir") installDirResult = item.result;
+		else if (item.id === "invoke_version") version = item.result;
+		else if (item.id === "package_spec") switch (item.result) {
+			case Invoke_PackageSpec.invokeaiXformers:
+				packageSpecResult = "invokeai[xformers]";
+				break;
+			case Invoke_PackageSpec.invokeai:
+			default: packageSpecResult = "invokeai";
+		}
+		else if (item.id === "torch_backend") torchBackendChoice = item.result;
+	});
+	console.log("the invoke version is", version);
+	if (torchBackendChoice) {
+		const backends = getTorchBackendForVersion(version);
+		switch (torchBackendChoice) {
+			case Invoke_PyPI.rocm:
+				torchBackendResult = backends.rocm;
+				break;
+			case Invoke_PyPI.cuda:
+				torchBackendResult = backends.cuda;
+				break;
+			case Invoke_PyPI.cpu:
+				torchBackendResult = "cpu";
+				break;
+			default:
+			case "Others": torchBackendResult = "";
+		}
+	}
+	console.log("the torchBackendResult is", torchBackendResult);
+	return {
+		installDirResult,
+		version,
+		packageSpecResult,
+		torchBackendResult
+	};
+};
+const invokeGetInstallCommand = (items) => {
+	const { version, torchBackendResult, packageSpecResult } = invokeGetInputResults(items);
+	return `uv pip install ${packageSpecResult}==${version} --python 3.12 --python-preference only-managed${torchBackendResult ? ` --torch-backend=${torchBackendResult}` : ""} --force-reinstall`;
+};
+//#endregion
+//#region module/src/containers/image/InvokeAi/RendererMethods.ts
+function parseArgsToString$12(args) {
+	let result = "schema_version: 4.0.2\n\n";
+	const argResult = args.map((arg) => {
+		return `${arg.name}: ${arg.value}`;
+	}).join("\n");
+	result += argResult;
+	return result;
+}
+function parseStringToArgs$12(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("schema_version") || line.startsWith("#") || isEmpty(line.trim())) return;
+		const [name, value] = line.split(`: `);
+		argResult.push({
+			name,
+			value
+		});
+	});
+	return argResult;
+}
+function startInstall$12(stepper) {
+	stepper.initialSteps([
+		"InvokeAI",
+		"UV",
+		"Config",
+		"Install",
+		"Finish"
+	]);
+	stepper.starterStep().then(({ targetDirectory, chosen }) => {
+		if (chosen === "install") stepper.nextStep().then(() => {
+			stepper.progressBar(true, "Detecting UV installation...");
+			stepper.ipc.invoke("is_uv_installed").then((isUvInstalled) => {
+				if (!isUvInstalled) stepper.executeTerminalCommands(Invoke_Command_InstallUV).then(() => {
+					stepper.showFinalStep("success", "UV Package Manager Installation Complete.", "Restart LynxHub and run the installer again to continue installation.");
+				});
+				else stepper.nextStep().then(() => {
+					stepper.progressBar(true, "Fetching the latest InvokeAI versions...");
+					invokeGetInputFields(stepper.ipc).then((fields) => {
+						stepper.collectUserInput(fields).then((result) => {
+							const { installDirResult } = invokeGetInputResults(result);
+							const installCommand = invokeGetInstallCommand(result);
+							stepper.nextStep().then(() => {
+								stepper.executeTerminalCommands([
+									Invoke_Command_CreateVenv,
+									Invoke_Command_ActivateVenv,
+									Invoke_Command_InstallPip,
+									installCommand
+								], installDirResult).then(() => {
+									stepper.setInstalled(installDirResult);
+									const currentDate = /* @__PURE__ */ new Date();
+									stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
+									stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, installDirResult);
+									stepper.showFinalStep("success", "InvokeAI Installation Complete.", "Your InvokeAI environment is ready. Enjoy!");
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+		else stepper.ipc.invoke("validate_install_dir", targetDirectory).then((isValid) => {
+			if (isValid === true) {
+				stepper.setInstalled(targetDirectory);
+				const currentDate = /* @__PURE__ */ new Date();
+				stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
+				stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, targetDirectory);
+				stepper.showFinalStep("success", "InvokeAI Environment Found.", "Location validated successfully.");
+			} else {
+				const description = typeof isValid === "string" ? isValid : "Could not find InvokeAI installation in the selected directory.";
+				stepper.showFinalStep("error", "Invalid Environment!", description);
+			}
+		});
+	});
+}
+function startUpdate$2(stepper, dir) {
+	if (!dir) return;
+	const pythonPath = getVenvPythonPath(isWin ? `${dir}\\.venv` : `${dir}/.venv`);
+	stepper.initialSteps(["Updating", "Done"]);
+	stepper.executeTerminalCommands(`${isWin ? "&" : "."} "${pythonPath}" -m pip install --upgrade "invokeai"`, dir).then(() => {
+		const currentDate = /* @__PURE__ */ new Date();
+		stepper.storage.set(INVOKEAI_UPDATE_TIME_KEY, currentDate);
+		stepper.setUpdated();
+		stepper.showFinalStep("success", "InvokeAI Updated Successfully!", `InvokeAI has been updated to the latest version. You can now enjoy the new features and improvements.`);
+	});
+}
+async function cardInfo$12(api, callback) {
+	const dir = api.installationFolder;
+	callback.setOpenFolders(dir ? [dir] : void 0);
+	const descManager = new DescriptionManager([{
+		title: "Installation Data",
+		items: [
+			{
+				label: "Install Date",
+				result: "loading"
+			},
+			{
+				label: "Update Date",
+				result: "loading"
+			},
+			{
+				label: "Current Version",
+				result: "loading"
+			},
+			{
+				label: "Latest Version",
+				result: "loading"
+			}
+		]
+	}], callback);
+	api.storage.get(INVOKEAI_INSTALL_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 0, result);
+	});
+	api.storage.get(INVOKEAI_UPDATE_TIME_KEY).then((result) => {
+		descManager.updateItem(0, 1, result);
+	});
+	api.ipc.invoke("invoke_current_version").then((result) => {
+		descManager.updateItem(0, 2, result);
+	});
+	api.storage.get(INVOKEAI_UPDATE_AVAILABLE_KEY).then((result) => {
+		descManager.updateItem(0, 3, result);
+	});
+}
+const INVOKE_RM = {
+	catchAddress: catchAddress$5,
+	cardInfo: cardInfo$12,
+	parseArgsToString: parseArgsToString$12,
+	parseStringToArgs: parseStringToArgs$12,
+	manager: {
+		startInstall: startInstall$12,
+		updater: {
+			updateType: "stepper",
+			startUpdate: startUpdate$2
+		}
+	}
+};
+//#endregion
+//#region module/src/containers/image/SdAmdgpu/Arguments.ts
+const lshqqytigerArguments = cloneDeep(automatic1111Arguments);
+const newSection = {
+	section: "AmdGPU",
+	items: [
+		{
+			description: "Skip installation of onnxruntime; ONNX and Olive will be unavailable",
+			name: "--skip-ort",
+			type: "CheckBox"
+		},
+		{
+			description: "use torch built with cpu",
+			name: "--use-cpu-torch",
+			type: "CheckBox"
+		},
+		{
+			description: "use DirectML device as torch device",
+			name: "--use-directml",
+			type: "CheckBox"
+		},
+		{
+			description: "use ZLUDA device as torch device",
+			name: "--use-zluda",
+			type: "CheckBox"
+		},
+		{
+			description: "override torch version",
+			name: "--override-torch",
+			type: "Input"
+		}
+	]
+};
+const commandLineArgsIndex = lshqqytigerArguments.findIndex((arg) => arg.category === "Command Line Arguments");
+if (commandLineArgsIndex !== -1 && lshqqytigerArguments[commandLineArgsIndex].sections) lshqqytigerArguments[commandLineArgsIndex].sections.unshift(newSection);
+//#endregion
+//#region module/src/containers/image/SdAmdgpu/RendererMethods.ts
+const SdAMD_URL = "https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu";
+function startInstall$11(stepper) {
+	GitInstaller("Stable Diffusion AMDGPU", SdAMD_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
+}
+async function cardInfo$11(api, callback) {
+	return CardInfo(SdAMD_URL, "/extensions", api, callback);
+}
+function getTypeByCategoryName(category) {
+	switch (category) {
+		case "Command Line Arguments": return "cl";
+		case "Environment":
+		case "Environment Variables": return "env";
+		default: return;
+	}
+}
+function getCategoryType$2(name) {
+	if (!name) return void 0;
+	for (const argument of lshqqytigerArguments) if ("sections" in argument) {
+		for (const section of argument.sections) if (section.items.some((item) => item.name === name)) {
+			if (section.section === "Variables") return "envVar";
+			return getTypeByCategoryName(argument.category);
+		}
+	} else if (argument.items.some((item) => item.name === name)) return getTypeByCategoryName(argument.category);
+}
+function parseArgsToString$11(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let clResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) clResult += result.commandArg + " ";
+		} else {
+			const cat = getCategoryType$2(arg.name);
+			if (cat !== "cl") {
+				const eWinResult = `set ${arg.name}=${arg.value}\n`;
+				const eResult = cat === "env" ? `export ${arg.name}="${arg.value}"\n` : `${arg.name}="${arg.value}"\n`;
+				if (arg.name !== "COMMANDLINE_ARGS") result += isWin ? eWinResult : eResult;
+			} else if (cat === "cl") {
+				const argType = getArgumentType(arg.name, lshqqytigerArguments);
+				if (argType === "CheckBox") clResult += `${arg.name} `;
+				else if (argType === "File" || argType === "Directory") clResult += isWin ? `${arg.name} "${arg.value}" ` : `${arg.name} ${arg.value} `;
+				else clResult += `${arg.name} ${arg.value} `;
+			}
+		}
+	});
+	if (lines) result += lines + "\n";
+	if (!isEmpty(clResult)) result += isWin ? `set COMMANDLINE_ARGS=${clResult}\n` : `export COMMANDLINE_ARGS=${clResult}\n`;
+	result += isWin ? `\ncall webui.bat` : ``;
+	return result;
+}
+function checkLinuxArgLine$1(line) {
+	if (isWin && line.startsWith("set ")) return "set";
+	if (line.startsWith("export ")) return "export";
+	for (const arg of lshqqytigerArguments) if (arg.category === "Environment") {
+		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
+		else return;
+	}
+}
+function parseStringToArgs$11(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (line.startsWith("#")) return;
+		else if (line.startsWith(`${isWin ? "set" : "export"} COMMANDLINE_ARGS=`)) {
+			argResult.push({
+				name: "COMMANDLINE_ARGS",
+				value: ""
+			});
+			const clArgs = line.split("=")[1];
+			if (!clArgs) return;
+			clArgs.split("--").filter(Boolean).map((arg) => {
+				const [id, ...value] = arg.trim().split(" ");
+				return {
+					name: `--${id}`,
+					value: value.join(" ").replace(/"/g, "")
+				};
+			}).forEach((value) => {
+				if (isValidArg(value.name, lshqqytigerArguments)) {
+					if (getArgumentType(value.name, lshqqytigerArguments) === "CheckBox") argResult.push({
+						name: value.name,
+						value: ""
+					});
+					else argResult.push({
+						name: value.name,
+						value: value.value
+					});
+				}
+			});
+		} else {
+			const lineType = checkLinuxArgLine$1(line);
+			if (lineType === "export" || lineType === "set") {
+				let [name, value] = line.replace(`${lineType} `, "").split("=");
+				name = removeEscapes(name.trim());
+				value = removeEscapes(value.trim());
+				if (isValidArg(name, lshqqytigerArguments)) argResult.push({
+					name,
+					value
+				});
+			} else if (checkLinuxArgLine$1(line) === "var") {
+				let [name, value] = line.split("=");
+				name = removeEscapes(name.trim());
+				value = removeEscapes(value.trim());
+				if (isValidArg(name, lshqqytigerArguments)) argResult.push({
+					name,
+					value
+				});
+			}
+		}
+	});
+	return argResult;
+}
+const SD_AMD_RM = {
+	catchAddress: catchAddress$5,
+	fetchExtensionList: fetchExtensionList$2,
+	parseArgsToString: parseArgsToString$11,
+	parseStringToArgs: parseStringToArgs$11,
+	cardInfo: cardInfo$11,
+	manager: {
+		startInstall: startInstall$11,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/image/SdNext/Arguments.ts
+const vladmandicArguments = [{
+	category: "Environment Variables",
+	items: [{
+		description: "Sets a custom path for Python executable.",
+		name: "PYTHON",
+		type: "File"
+	}, {
+		description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
+		name: "VENV_DIR",
+		type: "Directory"
+	}]
+}, {
+	category: "Command Line Arguments",
+	sections: [
+		{
+			section: "Configuration",
+			items: [
+				{
+					name: "--config",
+					description: "Use specific server configuration file, default: config.json",
+					type: "File"
+				},
+				{
+					name: "--ui-config",
+					description: "Use specific UI configuration file, default: ui-config.json",
+					type: "File"
+				},
+				{
+					name: "--medvram",
+					description: "Split model stages and keep only active part in VRAM",
+					type: "CheckBox"
+				},
+				{
+					name: "--lowvram",
+					description: "Split model components and keep only active part in VRAM",
+					type: "CheckBox"
+				},
+				{
+					name: "--freeze",
+					description: "Disable editing settings",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Paths",
+			items: [
+				{
+					name: "--ckpt",
+					description: "Path to model checkpoint to load immediately",
+					type: "File"
+				},
+				{
+					name: "--data-dir",
+					description: "Base path where all user data is stored",
+					type: "Directory"
+				},
+				{
+					name: "--models-dir",
+					description: "Base path where all models are stored",
+					type: "Directory"
+				},
+				{
+					name: "--embeddings-dir",
+					description: "Base path where all embeddings are stored",
+					type: "Directory"
+				},
+				{
+					name: "--vae-dir",
+					description: "Base path where all VAEs are stored",
+					type: "Directory"
+				},
+				{
+					name: "--lora-dir",
+					description: "Base path where all LoRAs are stored",
+					type: "Directory"
+				},
+				{
+					name: "--extensions-dir",
+					description: "Base path where all extensions are stored",
+					type: "Directory"
+				},
+				{
+					name: "--allowed-paths",
+					description: "Add additional paths to paths allowed for web access",
+					type: "Input"
+				}
+			]
+		},
+		{
+			section: "Diagnostics",
+			items: [
+				{
+					name: "--no-hashing",
+					description: "Disable hashing of checkpoints",
+					type: "CheckBox"
+				},
+				{
+					name: "--no-metadata",
+					description: "Disable reading of metadata from models",
+					type: "CheckBox"
+				},
+				{
+					name: "--disable-queue",
+					description: "Disable queues",
+					type: "CheckBox"
+				},
+				{
+					name: "--device-id",
+					description: "Select the default CUDA device to use",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				}
+			]
+		},
+		{
+			section: "HTTP",
+			items: [
+				{
+					name: "--server-name",
+					description: "Sets hostname of server",
+					type: "Input"
+				},
+				{
+					name: "--tls-keyfile",
+					description: "Enable TLS and specify key file",
+					type: "File"
+				},
+				{
+					name: "--tls-certfile",
+					description: "Enable TLS and specify cert file",
+					type: "File"
+				},
+				{
+					name: "--tls-selfsign",
+					description: "Enable TLS with self-signed certificates",
+					type: "CheckBox"
+				},
+				{
+					name: "--cors-origins",
+					description: "Allowed CORS origins as comma-separated list",
+					type: "Input"
+				},
+				{
+					name: "--cors-regex",
+					description: "Allowed CORS origins as regular expression",
+					type: "Input"
+				},
+				{
+					name: "--subpath",
+					description: "Customize the URL subpath for usage with reverse proxy",
+					type: "Input"
+				},
+				{
+					name: "--autolaunch",
+					description: "Open the UI URL in the system's default browser upon launch",
+					type: "CheckBox"
+				},
+				{
+					name: "--auth",
+					description: "Set access authentication like \"user:pwd,user:pwd\"",
+					type: "Input"
+				},
+				{
+					name: "--auth-file",
+					description: "Set access authentication using file",
+					type: "File"
+				},
+				{
+					name: "--api-only",
+					description: "Run in API only mode without starting UI",
+					type: "CheckBox"
+				},
+				{
+					name: "--share",
+					description: "Enable UI accessible through Gradio site",
+					type: "CheckBox"
+				},
+				{
+					name: "--insecure",
+					description: "Enable extensions tab regardless of other options",
+					type: "CheckBox"
+				},
+				{
+					name: "--listen",
+					description: "Launch web server using public IP address",
+					type: "CheckBox"
+				},
+				{
+					name: "--port",
+					description: "Launch web server with given server port",
+					type: "Number",
+					defaultValue: 7860,
+					numberMin: 1,
+					numberMax: 65535
+				}
+			]
+		},
+		{
+			section: "Setup",
+			items: [
+				{
+					name: "--reset",
+					description: "Reset main repository to latest version",
+					type: "CheckBox"
+				},
+				{
+					name: "--upgrade",
+					description: "Upgrade main repository to latest version",
+					type: "CheckBox"
+				},
+				{
+					name: "--requirements",
+					description: "Force re-check of requirements",
+					type: "CheckBox"
+				},
+				{
+					name: "--reinstall",
+					description: "Force reinstallation of all requirements",
+					type: "CheckBox"
+				},
+				{
+					name: "--uv",
+					description: "Use uv instead of pip to install the packages",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Startup",
+			items: [
+				{
+					name: "--quick",
+					description: "Bypass version checks",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-requirements",
+					description: "Skips checking and installing requirements",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-extensions",
+					description: "Skips running individual extension installers",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-git",
+					description: "Skips running all GIT operations",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-torch",
+					description: "Skips running Torch checks",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-all",
+					description: "Skips running all checks",
+					type: "CheckBox"
+				},
+				{
+					name: "--skip-env",
+					description: "Skips setting of env variables during startup",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Compute Engine",
+			items: [
+				{
+					name: "--use-directml",
+					description: "Use DirectML if no compatible GPU is detected",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-openvino",
+					description: "Use Intel OpenVINO backend",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-ipex",
+					description: "Force use Intel OneAPI XPU backend",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-cuda",
+					description: "Force use nVidia CUDA backend",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-rocm",
+					description: "Force use AMD ROCm backend",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-zluda",
+					description: "Force use ZLUDA, AMD GPUs only",
+					type: "CheckBox"
+				},
+				{
+					name: "--use-xformers",
+					description: "Force use xFormers cross-optimization",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Diagnostics",
+			items: [
+				{
+					name: "--safe",
+					description: "Run in safe mode with no user extensions",
+					type: "CheckBox"
+				},
+				{
+					name: "--experimental",
+					description: "Allow unsupported versions of libraries",
+					type: "CheckBox"
+				},
+				{
+					name: "--test",
+					description: "Run test only and exit",
+					type: "CheckBox"
+				},
+				{
+					name: "--version",
+					description: "Print version information",
+					type: "CheckBox"
+				},
+				{
+					name: "--ignore",
+					description: "Ignore any errors and attempt to continue",
+					type: "CheckBox"
+				}
+			]
+		},
+		{
+			section: "Logging",
+			items: [
+				{
+					name: "--log",
+					description: "Set log file",
+					type: "File"
+				},
+				{
+					name: "--debug",
+					description: "Run installer with debug logging",
+					type: "CheckBox"
+				},
+				{
+					name: "--profile",
+					description: "Run profiler",
+					type: "CheckBox"
+				},
+				{
+					name: "--monitor",
+					description: "Monitor load and log in specific periods",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--status",
+					description: "Run server is-alive status interval in seconds (default: -1)",
+					type: "Number",
+					defaultValue: -1,
+					numberMin: -1
+				},
+				{
+					name: "--docs",
+					description: "Mount API docs",
+					type: "CheckBox"
+				},
+				{
+					name: "--api-log",
+					description: "Enable logging of all API requests",
+					type: "CheckBox"
+				}
+			]
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/SdNext/RendererMethods.ts
+const shellCommand$4 = isWin ? "call webui.bat" : "bash ./webui.sh";
+const URL$4 = "https://github.com/vladmandic/sdnext";
+function parseArgsToString$10(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let argResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else {
+			const argType = getArgumentType(arg.name, vladmandicArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? shellCommand$4 : `${shellCommand$4} ${argResult}`;
+	return result;
+}
+function parseStringToArgs$10(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (!line.startsWith(shellCommand$4)) return;
+		const clArgs = line.split(`${shellCommand$4} `)[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, vladmandicArguments)) {
+				if (getArgumentType(value.name, vladmandicArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+function startInstall$10(stepper) {
+	GitInstaller("SD Next", URL$4, stepper, [isWin ? "webui.bat" : "webui.sh"]);
+}
+async function cardInfo$10(api, callback) {
+	return CardInfo(URL$4, "/extensions", api, callback);
+}
+const SD_NEXT_RM = {
+	catchAddress: catchAddress$5,
+	fetchExtensionList: fetchExtensionList$2,
+	parseArgsToString: parseArgsToString$10,
+	parseStringToArgs: parseStringToArgs$10,
+	cardInfo: cardInfo$10,
+	manager: {
+		startInstall: startInstall$10,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/image/SwarmUi/Arguments.ts
+const mcMonkeyArguments = [{
+	category: "Command Line Arguments",
+	items: [
+		{
+			name: "--data_dir",
+			description: "Override the default data directory.",
+			type: "Directory",
+			defaultValue: "Data"
+		},
+		{
+			name: "--settings_file",
+			description: "If your settings file is anywhere other than the default, you must specify as a command line arg.",
+			type: "File",
+			defaultValue: "Data/Settings.fds"
+		},
+		{
+			name: "--backends_file",
+			description: "If your backends file is anywhere other than the default, you must specify as a command line arg.",
+			type: "File",
+			defaultValue: "Data/Backends.fds"
+		},
+		{
+			name: "--environment",
+			description: "Can be `development` or `production` to set what ASP.NET Web Environment to use. `Development` gives detailed debug logs and errors, while `Production` is optimized for normal usage.",
+			type: "DropDown",
+			defaultValue: "Production",
+			values: ["development", "production"]
+		},
+		{
+			name: "--host",
+			description: "Can be used to override the 'Network.Host' server setting.",
+			type: "Input",
+			defaultValue: "localhost"
+		},
+		{
+			name: "--port",
+			description: "Can be used to override the 'Network.Port' server setting.",
+			type: "Number",
+			defaultValue: 7801,
+			numberMin: 1,
+			numberMax: 65535
+		},
+		{
+			name: "--asp_loglevel",
+			description: "Sets the minimum log level for ASP.NET web logger, as any of: `Trace`, `Debug`, `Information`, `Warning`, `Error`, `Critical`, `None`. Note 'information' here spams debug output.",
+			type: "DropDown",
+			defaultValue: "warning",
+			values: [
+				"Trace",
+				"Debug",
+				"Information",
+				"Warning",
+				"Error",
+				"Critical",
+				"None"
+			]
+		},
+		{
+			name: "--loglevel",
+			description: "Minimum SwarmUI log level, as any of: `Debug`, `Info`, `Init`, `Warning`, `Error`, `None`. 'Info' here is the normal usage data.",
+			type: "DropDown",
+			defaultValue: "Info",
+			values: [
+				"Debug",
+				"Info",
+				"Init",
+				"Warning",
+				"Error",
+				"None"
+			]
+		},
+		{
+			name: "--user_id",
+			description: "Set the local user's default UserID (for running in single-user mode, not useful in shared mode).",
+			type: "Input",
+			defaultValue: "local"
+		},
+		{
+			name: "--lock_settings",
+			description: "If enabled, blocks in-UI editing of server settings by admins. Settings cannot be modified in this mode without editing the settings file and restarting the server.",
+			type: "CheckBox"
+		},
+		{
+			name: "--ngrok-path",
+			description: "If specified, will be used as the path to an `ngrok` executable, and will automatically load and configure ngrok when launching, to share your UI instance on a publicly accessible URL.",
+			type: "File"
+		},
+		{
+			name: "--cloudflared-path",
+			description: "If specified, will be used as the path to an `cloudflared` executable, and will automatically load and configure TryCloudflare when launching, to share your UI instance on a publicly accessible URL.",
+			type: "File"
+		},
+		{
+			name: "--proxy-region",
+			description: "If specified, sets the proxy (ngrok/cloudflared) region. If unspecified, defaults to closest.",
+			type: "Input"
+		},
+		{
+			name: "--proxy-added-args",
+			description: "If specified, adds additional args to the proxy launch. Use a `.` as the first symbol (parser hackaround). For example, `--proxy-added-args \".--my-arg --arg -argy arg\"`",
+			type: "Input"
+		},
+		{
+			name: "--ngrok-basic-auth",
+			description: "If specified, sets an ngrok basic-auth requirement to access.",
+			type: "Input"
+		},
+		{
+			name: "--launch_mode",
+			description: "Can be used to override the 'LaunchMode' server setting.",
+			type: "Input",
+			defaultValue: "none"
+		},
+		{
+			name: "--require_control_within",
+			description: "If specified, give a number of minutes within which a remote API server must send a `AdminTakeControl` API request, or presume the launch is bad. This is useful for auto-managed instances.",
+			type: "Number",
+			numberMin: 1
+		},
+		{
+			name: "--no_persist",
+			description: "If enabled, tells most systems in Swarm to avoid saving data (eg session handler will not save session data). Useful for instances with overlapping data storage especially.",
+			type: "CheckBox"
+		},
+		{
+			name: "--help",
+			description: "Displays an in-CLI shortlist of CLI args and some usage hints.",
+			type: "CheckBox"
+		}
+	]
+}];
+//#endregion
+//#region module/src/containers/image/SwarmUi/RendererMethods.ts
+const shellCommand$3 = isWin ? "call launch-windows.bat" : "bash ./launch-linux.sh";
+const URL$3 = "https://github.com/mcmonkeyprojects/SwarmUI";
+function parseArgsToString$9(args) {
+	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
+	let lines = "";
+	let argResult = "";
+	args.forEach((arg) => {
+		if (arg.custom) {
+			const result = parseCustomArg(arg);
+			if (!result) return;
+			if (result.line) lines += result.line + "\n";
+			if (result.commandArg) argResult += result.commandArg + " ";
+		} else {
+			const argType = getArgumentType(arg.name, mcMonkeyArguments);
+			if (argType === "CheckBox") argResult += `${arg.name} `;
+			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
+			else argResult += `${arg.name} ${arg.value} `;
+		}
+	});
+	if (lines) result += lines + "\n";
+	result += isEmpty(argResult) ? shellCommand$3 : `${shellCommand$3} ${argResult}`;
+	return result;
+}
+function parseStringToArgs$9(args) {
+	const argResult = [];
+	args.split("\n").forEach((line) => {
+		if (!line.startsWith(shellCommand$3)) return;
+		const clArgs = line.split(`${shellCommand$3} `)[1];
+		if (!clArgs) return;
+		clArgs.split("--").filter(Boolean).map((arg) => {
+			const [id, ...value] = arg.trim().split(" ");
+			return {
+				name: `--${id}`,
+				value: value.join(" ").replace(/"/g, "")
+			};
+		}).forEach((value) => {
+			if (isValidArg(value.name, mcMonkeyArguments)) {
+				if (getArgumentType(value.name, mcMonkeyArguments) === "CheckBox") argResult.push({
+					name: value.name,
+					value: ""
+				});
+				else argResult.push({
+					name: value.name,
+					value: value.value
+				});
+			}
+		});
+	});
+	return argResult;
+}
+async function fetchExtensionList$1() {
+	return [
+		{
+			url: "https://github.com/Quaggles/SwarmUI-FaceTools",
+			title: "SwarmUI-FaceTools",
+			description: "A SwarmUI extension that adds parameters for ReActor and FaceRestoreCF nodes to the the generate tab.",
+			stars: 8
+		},
+		{
+			url: "https://github.com/mcmonkey4eva/SwarmComfyDeployBackendExt",
+			title: "Swarm ComfyDeploy Backend Extension",
+			description: "An extension for SwarmUI to use ComfyDeploy as a backend.",
+			stars: 1
+		},
+		{
+			url: "https://github.com/kalebbroo/SwarmUI-MagicPromptExtension",
+			title: "SwarmUI MagicPrompt Extension",
+			description: "The MagicPrompt Extension provides a simple and intuitive way directly in SwarmUI to generate text prompts for Stable Diffusion images. This uses your local Ollama LLMs.",
+			stars: 7
+		},
+		{
+			url: "https://github.com/Quaggles/SwarmUI-FaceTools",
+			title: "SwarmUI-FaceTools",
+			description: "A SwarmUI extension that adds parameters for ReActor and FaceRestoreCF nodes to the the generate tab.",
+			stars: 8
+		}
+	];
+}
+function startInstall$9(stepper) {
+	GitInstaller("SwarmUI", URL$3, stepper, [isWin ? "launch-windows.bat" : "launch-linux.sh"]);
+}
+async function cardInfo$9(api, callback) {
+	return CardInfo(URL$3, "/src/Extensions", api, callback);
+}
+const SWARM_RM = {
+	catchAddress: catchAddress$5,
+	fetchExtensionList: fetchExtensionList$1,
+	parseArgsToString: parseArgsToString$9,
+	parseStringToArgs: parseStringToArgs$9,
+	cardInfo: cardInfo$9,
+	manager: {
+		startInstall: startInstall$9,
+		updater: { updateType: "git" }
+	}
+};
+//#endregion
+//#region module/src/containers/text/LlamaCpp/utils/github.ts
+const LLAMA_CPP_RELEASES_URL = "https://api.github.com/repos/ggml-org/llama.cpp/releases";
+const LLAMA_CPP_INSTALL_TIME_KEY = "install-time-llamaCpp";
+const LLAMA_CPP_INSTALL_DIR_KEY = "install-dir-llamaCpp";
+const LLAMA_CPP_UPDATE_TIME_KEY = "update-time-llamaCpp";
+const LLAMA_CPP_PLATFORM_KEY = "platform-llamaCpp";
+const LLAMA_PLATFORM_OPTIONS = [
+	{
+		label: "Windows x64 (CUDA 12)",
+		key: "win-cuda12-x64",
+		pattern: /^(?!.*cudart).*bin-win-cuda-12.*-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (CUDA 13)",
+		key: "win-cuda13-x64",
+		pattern: /^(?!.*cudart).*bin-win-cuda-13.*-x64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (CUDA 13) (preview)",
+		key: "win-cuda13-arm64",
+		pattern: /^(?!.*cudart).*bin-win-cuda-13.*-arm64\.zip$/i
+	},
+	{
+		label: "Windows x64 (CPU)",
+		key: "win-cpu-x64",
+		pattern: /^(?!.*cudart).*bin-win-cpu-x64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (CPU)",
+		key: "win-cpu-arm64",
+		pattern: /^(?!.*cudart).*bin-win-cpu-arm64\.zip$/i
+	},
+	{
+		label: "Windows arm64 (OpenCL Adreno)",
+		key: "win-opencl-adreno-arm64",
+		pattern: /^(?!.*cudart).*bin-win-opencl-adreno-arm64\.zip$/i
+	},
+	{
+		label: "Windows x64 (Vulkan)",
+		key: "win-vulkan-x64",
+		pattern: /^(?!.*cudart).*bin-win-vulkan-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (OpenVINO)",
+		key: "win-openvino-x64",
+		pattern: /^(?!.*cudart).*bin-win-openvino.*-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (SYCL)",
+		key: "win-sycl-x64",
+		pattern: /^(?!.*cudart).*bin-win-sycl-x64\.zip$/i
+	},
+	{
+		label: "Windows x64 (ROCm)",
+		key: "win-rocm-x64",
+		pattern: /^(?!.*cudart).*bin-win-rocm.*-x64\.zip$/i
+	},
+	{
+		label: "macOS Apple Silicon (arm64)",
+		key: "macos-arm64",
+		pattern: /bin-macos-arm64\.tar\.gz$/i
+	},
+	{
+		label: "macOS Intel (x64)",
+		key: "macos-x64",
+		pattern: /bin-macos-x64\.tar\.gz$/i
+	},
+	{
+		label: "iOS XCFramework",
+		key: "ios-xcframework",
+		pattern: /xcframework\.zip$/i
+	},
+	{
+		label: "Ubuntu x64 (CPU)",
+		key: "ubuntu-cpu-x64",
+		pattern: /bin-ubuntu-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu arm64 (CPU)",
+		key: "ubuntu-cpu-arm64",
+		pattern: /bin-ubuntu-arm64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu s390x (CPU)",
+		key: "ubuntu-cpu-s390x",
+		pattern: /bin-ubuntu-s390x\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (Vulkan)",
+		key: "ubuntu-vulkan-x64",
+		pattern: /bin-ubuntu-vulkan-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu arm64 (Vulkan)",
+		key: "ubuntu-vulkan-arm64",
+		pattern: /bin-ubuntu-vulkan-arm64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (ROCm)",
+		key: "ubuntu-rocm-x64",
+		pattern: /bin-ubuntu-rocm.*-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (OpenVINO)",
+		key: "ubuntu-openvino-x64",
+		pattern: /bin-ubuntu-openvino.*-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (SYCL FP32)",
+		key: "ubuntu-sycl-fp32-x64",
+		pattern: /bin-ubuntu-sycl-fp32-x64\.tar\.gz$/i
+	},
+	{
+		label: "Ubuntu x64 (SYCL FP16)",
+		key: "ubuntu-sycl-fp16-x64",
+		pattern: /bin-ubuntu-sycl-fp16-x64\.tar\.gz$/i
+	},
+	{
+		label: "Android arm64 (CPU)",
+		key: "android-arm64",
+		pattern: /bin-android-arm64\.tar\.gz$/i
+	}
+];
+function detectDefaultPlatformKey() {
+	if (isWin) return "win-cuda12-x64";
+	if (isMac) return "macos-arm64";
+	if (isLinux) return "ubuntu-cpu-x64";
+	return "win-cpu-x64";
+}
+async function fetchLlamaCppReleases() {
+	try {
+		const response = await fetch(LLAMA_CPP_RELEASES_URL, { headers: {
+			"User-Agent": "LynxHub-Desktop",
+			Accept: "application/vnd.github.v3+json"
+		} });
+		if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
+		return (await response.json()).filter((r) => !r.draft && Boolean(r.assets?.some((a) => a.name.endsWith(".zip") || a.name.endsWith(".tar.gz"))));
+	} catch (error) {
+		console.error("Failed to fetch llama.cpp releases from GitHub:", error);
+		return [];
+	}
+}
+function findAssetUrlForPlatform(assets, platformKey) {
+	const option = LLAMA_PLATFORM_OPTIONS.find((opt) => opt.key === platformKey);
+	if (!option) return assets.find((a) => !a.name.startsWith("cudart-") && (a.name.endsWith(".zip") || a.name.endsWith(".tar.gz")))?.browser_download_url;
+	const matchedAsset = assets.find((a) => option.pattern.test(a.name));
+	if (matchedAsset) return matchedAsset.browser_download_url;
+	return assets.find((a) => {
+		if (a.name.startsWith("cudart-")) return false;
+		if (platformKey.startsWith("win-") && a.name.includes("win")) return true;
+		if (platformKey.startsWith("ubuntu-") && a.name.includes("ubuntu")) return true;
+		if (platformKey.startsWith("macos-") && a.name.includes("macos")) return true;
+		return false;
+	})?.browser_download_url || assets[0]?.browser_download_url;
+}
+function findCudartAssetUrlForPlatform(assets, platformKey) {
+	if (platformKey === "win-cuda12-x64") return assets.find((a) => /cudart-.*bin-win-cuda-12.*-x64\.zip$/i.test(a.name))?.browser_download_url;
+	if (platformKey === "win-cuda13-x64") return assets.find((a) => /cudart-.*bin-win-cuda-13.*-x64\.zip$/i.test(a.name))?.browser_download_url;
+	if (platformKey === "win-cuda13-arm64") return assets.find((a) => /cudart-.*bin-win-cuda-13.*-arm64\.zip$/i.test(a.name))?.browser_download_url;
+}
+async function getLatestLlamaCppTag() {
+	return (await fetchLlamaCppReleases())[0]?.tag_name || "unknown";
+}
 //#endregion
 //#region module/src/containers/text/OpenWebUi/Arguments/index.ts
 const openArguments = [
@@ -4669,8 +15551,9 @@ const openArguments = [
 					{
 						name: "THREAD_POOL_SIZE",
 						description: "Sets the thread pool size for FastAPI/AnyIO blocking calls. By default (when set to `0`) FastAPI/AnyIO use `40` threads. In case of large instances and many concurrent users, it may be needed to increase `THREAD_POOL_SIZE` to prevent blocking.",
-						type: "Input",
-						defaultValue: 0
+						type: "Number",
+						defaultValue: 0,
+						numberMin: 0
 					},
 					{
 						name: "ENABLE_CUSTOM_MODEL_FALLBACK",
@@ -4782,8 +15665,10 @@ const openArguments = [
 					{
 						name: "PORT",
 						description: "Sets the port to run Open WebUI from.",
-						type: "Input",
-						defaultValue: 8080
+						type: "Number",
+						defaultValue: 8080,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "ENABLE_REALTIME_CHAT_SAVE",
@@ -5511,8 +16396,10 @@ const openArguments = [
 					{
 						name: "CHROMA_HTTP_PORT",
 						description: "Specifies the port of a remote ChromaDB Server.",
-						type: "Input",
-						defaultValue: 8e3
+						type: "Number",
+						defaultValue: 8e3,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "CHROMA_HTTP_HEADERS",
@@ -5813,14 +16700,17 @@ const openArguments = [
 					{
 						name: "QDRANT_GRPC_PORT",
 						description: "Sets the gRPC port number for Qdrant.",
-						type: "Input",
-						defaultValue: 6334
+						type: "Number",
+						defaultValue: 6334,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "QDRANT_TIMEOUT",
 						description: "Sets the timeout in seconds for all requests made to the Qdrant server, helping to prevent long-running queries from stalling the application.",
-						type: "Input",
-						defaultValue: 5
+						type: "Number",
+						defaultValue: 5,
+						numberMin: 0
 					},
 					{
 						name: "QDRANT_HNSW_M",
@@ -5902,14 +16792,18 @@ const openArguments = [
 					{
 						name: "WEAVIATE_HTTP_PORT",
 						description: "Specifies the HTTP port for connecting to the Weaviate server.",
-						type: "Input",
-						defaultValue: 8080
+						type: "Number",
+						defaultValue: 8080,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "WEAVIATE_GRPC_PORT",
 						description: "Specifies the gRPC port for connecting to the Weaviate server.",
-						type: "Input",
-						defaultValue: 50051
+						type: "Number",
+						defaultValue: 50051,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "WEAVIATE_API_KEY",
@@ -7978,8 +18872,10 @@ const openArguments = [
 			{
 				name: "LDAP_SERVER_PORT",
 				description: "Sets the port number of the LDAP server.",
-				type: "Input",
-				defaultValue: 389
+				type: "Number",
+				defaultValue: 389,
+				numberMin: 1,
+				numberMax: 65535
 			},
 			{
 				name: "LDAP_ATTRIBUTE_FOR_MAIL",
@@ -8599,7 +19495,9 @@ const openArguments = [
 					{
 						name: "DATABASE_PORT",
 						description: "Specifies the port number on which the database server is listening.",
-						type: "Input"
+						type: "Number",
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "DATABASE_NAME",
@@ -8635,8 +19533,10 @@ const openArguments = [
 					{
 						name: "REDIS_SENTINEL_PORT",
 						description: "Sentinel port for app state Redis.",
-						type: "Input",
-						defaultValue: 26379
+						type: "Number",
+						defaultValue: 26379,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "REDIS_CLUSTER",
@@ -8653,8 +19553,9 @@ const openArguments = [
 					{
 						name: "REDIS_SOCKET_CONNECT_TIMEOUT",
 						description: "Sets the timeout in seconds for establishing a connection to Redis. If the connection cannot be established within this time, the operation will fail.",
-						type: "Input",
-						defaultValue: 5
+						type: "Number",
+						defaultValue: 5,
+						numberMin: 0
 					},
 					{
 						name: "ENABLE_STAR_SESSIONS_MIDDLEWARE",
@@ -8688,8 +19589,10 @@ const openArguments = [
 					{
 						name: "WEBSOCKET_SENTINEL_PORT",
 						description: "Sentinel port for websocket Redis.",
-						type: "Input",
-						defaultValue: 26379
+						type: "Number",
+						defaultValue: 26379,
+						numberMin: 1,
+						numberMax: 65535
 					},
 					{
 						name: "WEBSOCKET_REDIS_CLUSTER",
@@ -9046,8943 +19949,6 @@ const openArguments = [
 	}
 ];
 //#endregion
-//#region module/src/containers/agent/GeminiCli/Arguments.ts
-const geminiCliArguments = [
-	{
-		category: "LynxHub Configuration",
-		items: [{
-			name: "Settings File Location",
-			description: "!!Please backup your existing settings.json, this will overwrite it!!. Choose a custom location to save your `settings.json` configuration file.",
-			type: "File"
-		}]
-	},
-	{
-		category: "Environment Variables",
-		sections: [
-			{
-				section: "Authentication & API",
-				items: [
-					{
-						name: "GEMINI_API_KEY",
-						description: "Your API key for the Gemini API.",
-						type: "Input"
-					},
-					{
-						name: "GOOGLE_API_KEY",
-						description: "Your Google Cloud API key, required for using Vertex AI in express mode.",
-						type: "Input"
-					},
-					{
-						name: "GOOGLE_CLOUD_PROJECT",
-						description: "Your Google Cloud Project ID, required for using Code Assist or Vertex AI.",
-						type: "Input"
-					},
-					{
-						name: "GOOGLE_APPLICATION_CREDENTIALS",
-						description: "The path to your Google Application Credentials JSON file.",
-						type: "File"
-					},
-					{
-						name: "GOOGLE_CLOUD_LOCATION",
-						description: "Your Google Cloud Project Location (e.g., us-central1), required for using Vertex AI in non-express mode.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Configuration",
-				items: [
-					{
-						name: "GEMINI_MODEL",
-						description: "Specifies the default Gemini model to use.",
-						type: "Input"
-					},
-					{
-						name: "GEMINI_SANDBOX",
-						description: "Alternative to the `sandbox` setting. Accepts true, false, docker, podman, or a custom command string.",
-						type: "Input"
-					},
-					{
-						name: "SEATBELT_PROFILE",
-						description: "Switches the Seatbelt (`sandbox-exec`) profile on macOS.",
-						type: "DropDown",
-						defaultValue: "permissive-open",
-						values: ["permissive-open", "strict"]
-					},
-					{
-						name: "CLI_TITLE",
-						description: "Set a custom title for the CLI window.",
-						type: "Input"
-					},
-					{
-						name: "CODE_ASSIST_ENDPOINT",
-						description: "Specifies the endpoint for the code assist server.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Telemetry",
-				items: [{
-					name: "OTLP_GOOGLE_CLOUD_PROJECT",
-					description: "Your Google Cloud Project ID for Telemetry in Google Cloud.",
-					type: "Input"
-				}]
-			},
-			{
-				section: "Debugging & Display",
-				items: [
-					{
-						name: "DEBUG",
-						description: "Set to true or 1 to enable verbose debug logging.",
-						type: "Input"
-					},
-					{
-						name: "DEBUG_MODE",
-						description: "Set to true or 1 to enable verbose debug logging.",
-						type: "Input"
-					},
-					{
-						name: "NO_COLOR",
-						description: "Set to any value to disable all color output in the CLI.",
-						type: "Input"
-					}
-				]
-			}
-		]
-	},
-	{
-		category: "Command Line Arguments",
-		sections: [
-			{
-				section: "Core Functionality",
-				items: [
-					{
-						name: "--model <model_name>",
-						description: "Specifies the Gemini model to use for this session.",
-						type: "Input"
-					},
-					{
-						name: "--prompt <your_prompt>",
-						description: "Pass a prompt directly to the command for non-interactive mode.",
-						type: "Input"
-					},
-					{
-						name: "--prompt-interactive <your_prompt>",
-						description: "Starts an interactive session with the provided prompt as the initial input.",
-						type: "Input"
-					},
-					{
-						name: "--all-files",
-						description: "Recursively includes all files within the current directory as context.",
-						type: "CheckBox"
-					},
-					{
-						name: "--include-directories <dir1,dir2,...>",
-						description: "Includes additional directories in the workspace for multi-directory support.",
-						type: "Directory"
-					}
-				]
-			},
-			{
-				section: "Tool & Sandbox Control",
-				items: [
-					{
-						name: "--sandbox",
-						description: "Enables sandbox mode for this session.",
-						type: "CheckBox"
-					},
-					{
-						name: "--sandbox-image",
-						description: "Sets the sandbox image URI.",
-						type: "Input"
-					},
-					{
-						name: "--yolo",
-						description: "Enables YOLO mode, which automatically approves all tool calls.",
-						type: "CheckBox"
-					},
-					{
-						name: "--approval-mode <mode>",
-						description: "Sets the approval mode for tool calls.",
-						type: "DropDown",
-						values: [
-							"default",
-							"auto_edit",
-							"yolo"
-						]
-					},
-					{
-						name: "--allowed-tools <tool1,tool2,...>",
-						description: "A comma-separated list of tool names that will bypass the confirmation dialog.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Telemetry & Checkpointing",
-				items: [
-					{
-						name: "--telemetry",
-						description: "Enables telemetry.",
-						type: "CheckBox"
-					},
-					{
-						name: "--telemetry-target",
-						description: "Sets the telemetry target.",
-						type: "Input"
-					},
-					{
-						name: "--telemetry-otlp-endpoint",
-						description: "Sets the OTLP endpoint for telemetry.",
-						type: "Input"
-					},
-					{
-						name: "--telemetry-otlp-protocol",
-						description: "Sets the OTLP protocol for telemetry.",
-						type: "DropDown",
-						defaultValue: "grpc",
-						values: ["grpc", "http"]
-					},
-					{
-						name: "--telemetry-log-prompts",
-						description: "Enables logging of prompts for telemetry.",
-						type: "CheckBox"
-					},
-					{
-						name: "--checkpointing",
-						description: "Enables checkpointing.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "Extensions & Display",
-				items: [
-					{
-						name: "--extensions <extension_name ...>",
-						description: "Specifies a list of extensions to use for the session.",
-						type: "Input"
-					},
-					{
-						name: "--list-extensions",
-						description: "Lists all available extensions and exits.",
-						type: "CheckBox"
-					},
-					{
-						name: "--proxy",
-						description: "Sets the proxy for the CLI.",
-						type: "Input"
-					},
-					{
-						name: "--screen-reader",
-						description: "Enables screen reader mode for better TUI compatibility.",
-						type: "CheckBox"
-					},
-					{
-						name: "--show-memory-usage",
-						description: "Displays the current memory usage.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "Help & Version",
-				items: [
-					{
-						name: "--debug",
-						description: "Enables debug mode for this session, providing more verbose output.",
-						type: "CheckBox"
-					},
-					{
-						name: "--help",
-						description: "Displays help information about command-line arguments.",
-						type: "CheckBox"
-					},
-					{
-						name: "--version",
-						description: "Displays the version of the CLI.",
-						type: "CheckBox"
-					}
-				]
-			}
-		]
-	},
-	{
-		category: "Settings",
-		condition: "Settings File Location",
-		sections: [
-			{
-				section: "general",
-				items: [
-					{
-						name: "general.preferredEditor",
-						description: "The preferred editor to open files in.",
-						type: "Input"
-					},
-					{
-						name: "general.vimMode",
-						description: "Enable Vim keybindings.",
-						type: "CheckBox"
-					},
-					{
-						name: "general.disableAutoUpdate",
-						description: "Disable automatic updates.",
-						type: "CheckBox"
-					},
-					{
-						name: "general.disableUpdateNag",
-						description: "Disable update notification prompts.",
-						type: "CheckBox"
-					},
-					{
-						name: "general.checkpointing.enabled",
-						description: "Enable session checkpointing for recovery.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "ui",
-				items: [
-					{
-						name: "ui.theme",
-						description: "The color theme for the UI.",
-						type: "DropDown",
-						values: [
-							"ANSI",
-							"ANSI Light",
-							"Atom One",
-							"Ayu",
-							"Ayu Light",
-							"Default",
-							"Default Light",
-							"Dracula",
-							"GitHub",
-							"GitHub Light",
-							"Google Code",
-							"Xcode"
-						],
-						defaultValue: "Default"
-					},
-					{
-						name: "ui.customThemes",
-						description: "Custom theme definitions.",
-						type: "Input",
-						defaultValue: {}
-					},
-					{
-						name: "ui.hideWindowTitle",
-						description: "Hide the window title bar.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.hideTips",
-						description: "Hide helpful tips in the UI.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.hideBanner",
-						description: "Hide the application banner.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.hideFooter",
-						description: "Hide the footer from the UI.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.showMemoryUsage",
-						description: "Display memory usage information in the UI.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.showLineNumbers",
-						description: "Show line numbers in the chat.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.showCitations",
-						description: "Show citations for generated text in the chat.",
-						type: "CheckBox"
-					},
-					{
-						name: "ui.accessibility.disableLoadingPhrases",
-						description: "Disable loading phrases for accessibility.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "ide",
-				items: [{
-					name: "ide.enabled",
-					description: "Enable IDE integration mode.",
-					type: "CheckBox"
-				}, {
-					name: "ide.hasSeenNudge",
-					description: "Whether the user has seen the IDE integration nudge.",
-					type: "CheckBox"
-				}]
-			},
-			{
-				section: "privacy",
-				items: [{
-					name: "privacy.usageStatisticsEnabled",
-					description: "Enable collection of usage statistics.",
-					type: "CheckBox"
-				}]
-			},
-			{
-				section: "model",
-				items: [
-					{
-						name: "model.name",
-						description: "The Gemini model to use for conversations.",
-						type: "Input"
-					},
-					{
-						name: "model.maxSessionTurns",
-						description: "Maximum number of user/model/tool turns to keep in a session. -1 means unlimited.",
-						type: "Input",
-						defaultValue: -1
-					},
-					{
-						name: "model.summarizeToolOutput",
-						description: "Enables or disables the summarization of tool output.",
-						type: "Input"
-					},
-					{
-						name: "model.chatCompression.contextPercentageThreshold",
-						description: "Sets the threshold for chat history compression as a percentage of the model's total token limit.",
-						type: "Input",
-						defaultValue: .7
-					},
-					{
-						name: "model.skipNextSpeakerCheck",
-						description: "Skip the next speaker check.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "context",
-				items: [
-					{
-						name: "context.fileName",
-						description: "The name of the context file(s).",
-						type: "File"
-					},
-					{
-						name: "context.importFormat",
-						description: "The format to use when importing memory.",
-						type: "Input"
-					},
-					{
-						name: "context.discoveryMaxDirs",
-						description: "Maximum number of directories to search for memory.",
-						type: "Input",
-						defaultValue: 200
-					},
-					{
-						name: "context.includeDirectories",
-						description: "Additional directories to include in the workspace context.",
-						type: "Directory",
-						defaultValue: []
-					},
-					{
-						name: "context.loadFromIncludeDirectories",
-						description: "If true, /memory refresh loads GEMINI.md from all added directories.",
-						type: "CheckBox"
-					},
-					{
-						name: "context.fileFiltering.respectGitIgnore",
-						description: "Respect .gitignore files when searching.",
-						type: "CheckBox"
-					},
-					{
-						name: "context.fileFiltering.respectGeminiIgnore",
-						description: "Respect .geminiignore files when searching.",
-						type: "CheckBox"
-					},
-					{
-						name: "context.fileFiltering.enableRecursiveFileSearch",
-						description: "Enable searching recursively for filenames when completing @ prefixes.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "tools",
-				items: [
-					{
-						name: "tools.sandbox",
-						description: "Sandbox execution environment (can be a boolean or a path string).",
-						type: "Input"
-					},
-					{
-						name: "tools.usePty",
-						description: "Use node-pty for shell command execution.",
-						type: "CheckBox"
-					},
-					{
-						name: "tools.core",
-						description: "Restricts the set of built-in tools with an allowlist.",
-						type: "Input"
-					},
-					{
-						name: "tools.exclude",
-						description: "Tool names to exclude from discovery.",
-						type: "Input"
-					},
-					{
-						name: "tools.allowed",
-						description: "A list of tool names that will bypass the confirmation dialog.",
-						type: "Input"
-					},
-					{
-						name: "tools.discoveryCommand",
-						description: "Command to run for tool discovery.",
-						type: "Input"
-					},
-					{
-						name: "tools.callCommand",
-						description: "Defines a custom shell command for calling a specific tool.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "mcp",
-				items: [
-					{
-						name: "mcp.serverCommand",
-						description: "Command to start an MCP server.",
-						type: "Input"
-					},
-					{
-						name: "mcp.allowed",
-						description: "An allowlist of MCP servers to allow.",
-						type: "Input"
-					},
-					{
-						name: "mcp.excluded",
-						description: "A denylist of MCP servers to exclude.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "security",
-				items: [
-					{
-						name: "security.folderTrust.enabled",
-						description: "Setting to track whether Folder trust is enabled.",
-						type: "CheckBox"
-					},
-					{
-						name: "security.auth.selectedType",
-						description: "The currently selected authentication type.",
-						type: "Input"
-					},
-					{
-						name: "security.auth.enforcedType",
-						description: "The required auth type (useful for enterprises).",
-						type: "Input"
-					},
-					{
-						name: "security.auth.useExternal",
-						description: "Whether to use an external authentication flow.",
-						type: "CheckBox"
-					}
-				]
-			},
-			{
-				section: "advanced",
-				items: [
-					{
-						name: "advanced.autoConfigureMemory",
-						description: "Automatically configure Node.js memory limits.",
-						type: "CheckBox"
-					},
-					{
-						name: "advanced.dnsResolutionOrder",
-						description: "The DNS resolution order.",
-						type: "Input"
-					},
-					{
-						name: "advanced.excludedEnvVars",
-						description: "Environment variables to exclude from project context.",
-						type: "Input",
-						defaultValue: ["DEBUG", "DEBUG_MODE"]
-					},
-					{
-						name: "advanced.bugCommand",
-						description: "Configuration for the bug report command.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "telemetry",
-				items: [
-					{
-						name: "telemetry.enabled",
-						description: "Whether or not telemetry is enabled.",
-						type: "CheckBox"
-					},
-					{
-						name: "telemetry.target",
-						description: "The destination for collected telemetry.",
-						type: "DropDown",
-						values: ["local", "gcp"]
-					},
-					{
-						name: "telemetry.otlpEndpoint",
-						description: "The endpoint for the OTLP Exporter.",
-						type: "Input"
-					},
-					{
-						name: "telemetry.otlpProtocol",
-						description: "The protocol for the OTLP Exporter.",
-						type: "DropDown",
-						values: ["grpc", "http"]
-					},
-					{
-						name: "telemetry.logPrompts",
-						description: "Whether or not to include the content of user prompts in the logs.",
-						type: "CheckBox"
-					},
-					{
-						name: "telemetry.outfile",
-						description: "The file to write telemetry to when target is local.",
-						type: "File"
-					}
-				]
-			}
-		]
-	}
-];
-//#endregion
-//#region module/src/containers/agent/GeminiCli/RendererMethods.ts
-const INSTALL_TIME_KEY$5 = "install-time-geminiCli";
-const UPDATE_TIME_KEY$5 = "update-time-geminiCli";
-const UPDATE_AVAILABLE_KEY$4 = "update-available-version-geminiCli";
-function checkLinuxArgLine$5(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	for (const arg of geminiCliArguments) if (arg.category === "Environment") {
-		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-		else return;
-	}
-}
-/**
-* Finds the category and type of a given argument name.
-* @param argName The name of the argument to look up.
-* @returns An object with the category and type, or undefined if not found.
-*/
-function getArgumentInfo$1(argName) {
-	for (const data of geminiCliArguments) if ("sections" in data) {
-		for (const section of data.sections) for (const item of section.items) if (item.name.split(" ")[0] === argName) return {
-			category: data.category,
-			type: item.type
-		};
-	}
-}
-function parseArgsToFiles$2(args) {
-	const executeCommand = "gemini";
-	const envArgs = [];
-	const cliArgs = [];
-	const settingsArgs = [];
-	args.forEach((arg) => {
-		const info = getArgumentInfo$1(arg.name);
-		if (info) switch (info.category) {
-			case "Environment Variables":
-				envArgs.push(arg);
-				break;
-			case "Command Line Arguments":
-				cliArgs.push(arg);
-				break;
-			case "Settings": settingsArgs.push(arg);
-		}
-	});
-	let scriptString = "";
-	if (envArgs.length > 0) {
-		envArgs.forEach((arg) => {
-			scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		});
-		scriptString += "\n\n";
-	}
-	scriptString += executeCommand;
-	cliArgs.forEach((arg) => {
-		if (getArgumentInfo$1(arg.name)?.type === "CheckBox") {
-			if (arg.value === "true") scriptString += ` ${arg.name}`;
-		} else scriptString += ` ${arg.name} "${arg.value}"`;
-	});
-	scriptString += "\n";
-	let settingsString = "";
-	const settingsJson = {};
-	if (settingsArgs.length > 0) {
-		settingsArgs.forEach((arg) => {
-			const keys = arg.name.split(".");
-			let current = settingsJson;
-			keys.slice(0, -1).forEach((key) => {
-				current[key] = current[key] || {};
-				current = current[key];
-			});
-			let value = arg.value;
-			if (value === "true") value = true;
-			else if (value === "false") value = false;
-			else if (!isNaN(Number(value)) && value.trim() !== "" && !isNaN(parseFloat(value))) value = Number(value);
-			current[keys[keys.length - 1]] = value;
-		});
-		settingsString += JSON.stringify(settingsJson, null, 2);
-	}
-	return {
-		scriptData: scriptString,
-		settingsData: settingsString
-	};
-}
-function parseArgsToString$20(args) {
-	const { settingsData, scriptData } = parseArgsToFiles$2(args);
-	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
-	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command lines configured.\n";
-	const settingsTitle = "Settings File (settings.json)";
-	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
-	if (isMultiFilePreviewSupported) return [{
-		title: scriptTitle,
-		data: scriptContent
-	}, {
-		title: settingsTitle,
-		data: settingsContent
-	}];
-	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
-}
-function parseFilesToArgs$2(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$20(scriptContent);
-	const settingsArgs = [];
-	if (settingsContent) try {
-		const settingsJson = JSON.parse(settingsContent);
-		const flatten = (obj, path = "") => {
-			let result = [];
-			for (const key in obj) if (Object.prototype.hasOwnProperty.call(obj, key)) {
-				const newPath = path ? `${path}.${key}` : key;
-				if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) result = result.concat(flatten(obj[key], newPath));
-				else result.push({
-					name: newPath,
-					value: String(obj[key])
-				});
-			}
-			return result;
-		};
-		flatten(settingsJson).forEach((arg) => {
-			if (isValidArg(arg.name, geminiCliArguments)) settingsArgs.push(arg);
-		});
-	} catch (error) {
-		console.error("Error parsing settings.json content:", error);
-	}
-	const combinedArgs = /* @__PURE__ */ new Map();
-	scriptArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
-	settingsArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
-	return Array.from(combinedArgs, ([name, value]) => ({
-		name,
-		value
-	}));
-}
-function parseStringToArgs$20(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		if (line.startsWith("gemini")) {
-			const clArg = line.split("gemini ")[1];
-			if (!clArg) return;
-			clArg.split("--").filter(Boolean).map((arg) => {
-				const [id, ...value] = arg.trim().split(" ");
-				return {
-					name: `${id}`.toUpperCase(),
-					value: value.join(" ").replace(/"/g, "")
-				};
-			}).forEach((value) => {
-				if (isValidArg(value.name, openArguments)) {
-					if (getArgumentType(value.name, openArguments) === "CheckBox") argResult.push({
-						name: value.name,
-						value: ""
-					});
-					else argResult.push({
-						name: value.name,
-						value: value.value
-					});
-				}
-			});
-		}
-		const lineType = checkLinuxArgLine$5(line);
-		if (lineType === "export" || lineType === "set") {
-			let [name, value] = line.replace(`${lineType} `, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, openArguments)) argResult.push({
-				name,
-				value
-			});
-		} else if (checkLinuxArgLine$5(line) === "var") {
-			let [name, value] = line.split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, openArguments)) argResult.push({
-				name,
-				value
-			});
-		}
-	});
-	return argResult;
-}
-function startInstall$19(stepper) {
-	stepper.initialSteps([
-		"Getting Started",
-		"NodeJS",
-		"Detect Existing",
-		"Gemini Cli",
-		"All Done!"
-	]);
-	stepper.starterStep({ disableSelectDir: true }).then(() => {
-		stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Checking if NPM is installed...");
-			stepper.ipc.invoke("is_gemini_npm_available").then((isNpmInstalled) => {
-				if (isNpmInstalled) stepper.nextStep().then(() => {
-					stepper.progressBar(true, "Checking for existing Gemini Cli installation...");
-					stepper.ipc.invoke("is_geminiCli_installed").then((isGeminiCliInstalled) => {
-						if (isGeminiCliInstalled) {
-							stepper.setInstalled();
-							const currentDate = /* @__PURE__ */ new Date();
-							stepper.storage.set(INSTALL_TIME_KEY$5, currentDate.toLocaleString());
-							stepper.showFinalStep("success", "You're All Set!", "Gemini Cli is already installed. You're good to go!");
-						} else stepper.nextStep().then(() => {
-							stepper.ipc.invoke("is_gemini_npm_version_above_12").then((isAbove12) => {
-								const flags = isAbove12 ? " --allow-remote=all --dangerously-allow-all-scripts" : "";
-								stepper.executeTerminalCommands(`npm i -g @google/gemini-cli${flags}`).then(() => {
-									stepper.setInstalled();
-									const currentDate = /* @__PURE__ */ new Date();
-									stepper.storage.set(INSTALL_TIME_KEY$5, currentDate.toLocaleString());
-									stepper.showFinalStep("success", "Installation Complete!", "Your Gemini Cli environment is ready. Enjoy!");
-								});
-							});
-						});
-					});
-				});
-				else stepper.showFinalStep("error", "NodeJs is not installed!", "Gemini Cli need NPM! Please install NodeJs then try again.");
-			});
-		});
-	});
-}
-function startUpdate$7(stepper) {
-	stepper.initialSteps(["Update Gemini Cli", "Complete Update"]);
-	stepper.executeTerminalCommands("npm -g update @google/gemini-cli").then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(UPDATE_TIME_KEY$5, currentDate.toLocaleString());
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "Gemini Cli Updated Successfully!", `Gemini Cli has been updated to the latest version. You can now enjoy the new features and improvements.`);
-	});
-}
-async function cardInfo$19(api, callback) {
-	callback.setOpenFolders(void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INSTALL_TIME_KEY$5).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(UPDATE_TIME_KEY$5).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("current_geminiCli_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(UPDATE_AVAILABLE_KEY$4).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-const GeminiCli_RM = {
-	cardInfo: cardInfo$19,
-	parseStringToArgs: parseStringToArgs$20,
-	parseArgsToString: parseArgsToString$20,
-	manager: {
-		startInstall: startInstall$19,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$7
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/agent/HermesAgent/Arguments.ts
-const hermesAgentArguments = [
-	{
-		category: "LynxHub Configuration",
-		items: [{
-			name: "Settings File Location",
-			description: "Optional path to a config.yaml or settings file. If set, LynxHub writes settings here from the Settings section.",
-			type: "File"
-		}]
-	},
-	{
-		category: "Environment Variables",
-		sections: [
-			{
-				section: "API & Provider Options",
-				items: [
-					{
-						name: "NOUS_API_KEY",
-						description: "API key for Nous Portal / Nous Research API.",
-						type: "Input"
-					},
-					{
-						name: "OPENROUTER_API_KEY",
-						description: "API key for OpenRouter provider (recommended for multi-model access).",
-						type: "Input"
-					},
-					{
-						name: "OPENAI_API_KEY",
-						description: "API key for OpenAI or custom OpenAI-compatible endpoints.",
-						type: "Input"
-					},
-					{
-						name: "OPENAI_BASE_URL",
-						description: "Base URL for custom OpenAI-compatible endpoints (vLLM, SGLang, Ollama, etc.).",
-						type: "Input"
-					},
-					{
-						name: "ANTHROPIC_API_KEY",
-						description: "API key for Anthropic Console / Claude provider.",
-						type: "Input"
-					},
-					{
-						name: "ANTHROPIC_BASE_URL",
-						description: "Override base URL for Anthropic-compatible endpoints.",
-						type: "Input"
-					},
-					{
-						name: "GOOGLE_API_KEY",
-						description: "API key for Google AI Studio / Gemini provider (alias: GEMINI_API_KEY).",
-						type: "Input"
-					},
-					{
-						name: "DEEPSEEK_API_KEY",
-						description: "API key for direct DeepSeek access.",
-						type: "Input"
-					},
-					{
-						name: "FIREWORKS_API_KEY",
-						description: "API key for Fireworks AI provider.",
-						type: "Input"
-					},
-					{
-						name: "GLM_API_KEY",
-						description: "API key for z.ai / ZhipuAI GLM provider (alias: ZAI_API_KEY).",
-						type: "Input"
-					},
-					{
-						name: "KIMI_API_KEY",
-						description: "API key for Kimi / Moonshot AI provider.",
-						type: "Input"
-					},
-					{
-						name: "DASHSCOPE_API_KEY",
-						description: "API key for Qwen Cloud (Alibaba DashScope) provider.",
-						type: "Input"
-					},
-					{
-						name: "MINIMAX_API_KEY",
-						description: "API key for MiniMax provider.",
-						type: "Input"
-					},
-					{
-						name: "XAI_API_KEY",
-						description: "API key for xAI (Grok) provider.",
-						type: "Input"
-					},
-					{
-						name: "MISTRAL_API_KEY",
-						description: "API key for Mistral provider (Voxtral STT & TTS).",
-						type: "Input"
-					},
-					{
-						name: "OLLAMA_API_KEY",
-						description: "API key for Ollama Cloud provider.",
-						type: "Input"
-					},
-					{
-						name: "OLLAMA_BASE_URL",
-						description: "Base URL for local or remote Ollama server (default: http://localhost:11434).",
-						type: "Input"
-					},
-					{
-						name: "NVIDIA_API_KEY",
-						description: "API key for NVIDIA NIM provider.",
-						type: "Input"
-					},
-					{
-						name: "COPILOT_GITHUB_TOKEN",
-						description: "GitHub token for GitHub Copilot API integration.",
-						type: "Input"
-					},
-					{
-						name: "AZURE_FOUNDRY_API_KEY",
-						description: "API key for Microsoft Azure Foundry / Azure OpenAI.",
-						type: "Input"
-					},
-					{
-						name: "HERMES_YOLO_MODE",
-						description: "Set to 1 or true to enable auto-approval of all command prompts.",
-						type: "Input"
-					},
-					{
-						name: "HERMES_MODEL",
-						description: "Override default model name at process level.",
-						type: "Input"
-					},
-					{
-						name: "HERMES_HOME",
-						description: "Override Hermes config and state directory (default: ~/.hermes).",
-						type: "Directory"
-					}
-				]
-			},
-			{
-				section: "Tool & Integration APIs",
-				items: [
-					{
-						name: "FIRECRAWL_API_KEY",
-						description: "API key for Firecrawl web scraping, search, and cloud browser.",
-						type: "Input"
-					},
-					{
-						name: "FIRECRAWL_API_URL",
-						description: "Custom Firecrawl API endpoint for self-hosted instances.",
-						type: "Input"
-					},
-					{
-						name: "PARALLEL_API_KEY",
-						description: "API key for Parallel AI search.",
-						type: "Input"
-					},
-					{
-						name: "TAVILY_API_KEY",
-						description: "API key for Tavily AI web search.",
-						type: "Input"
-					},
-					{
-						name: "SEARXNG_URL",
-						description: "SearXNG instance URL for free self-hosted web search.",
-						type: "Input"
-					},
-					{
-						name: "EXA_API_KEY",
-						description: "API key for Exa AI search.",
-						type: "Input"
-					},
-					{
-						name: "BRAVE_SEARCH_API_KEY",
-						description: "API key for Brave Search.",
-						type: "Input"
-					},
-					{
-						name: "BROWSERBASE_API_KEY",
-						description: "API key for Browserbase cloud browser.",
-						type: "Input"
-					},
-					{
-						name: "BROWSER_USE_API_KEY",
-						description: "API key for Browser Use cloud browser.",
-						type: "Input"
-					},
-					{
-						name: "FAL_KEY",
-						description: "API key for FAL image generation.",
-						type: "Input"
-					},
-					{
-						name: "KREA_API_KEY",
-						description: "API key for Krea 2 image generation.",
-						type: "Input"
-					},
-					{
-						name: "GROQ_API_KEY",
-						description: "API key for Groq Whisper speech-to-text.",
-						type: "Input"
-					},
-					{
-						name: "ELEVENLABS_API_KEY",
-						description: "API key for ElevenLabs premium TTS voices.",
-						type: "Input"
-					},
-					{
-						name: "HONCHO_API_KEY",
-						description: "API key for Honcho user modeling memory system.",
-						type: "Input"
-					},
-					{
-						name: "SUPERMEMORY_API_KEY",
-						description: "API key for Supermemory semantic long-term memory.",
-						type: "Input"
-					},
-					{
-						name: "DAYTONA_API_KEY",
-						description: "API key for Daytona cloud sandboxes.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Messaging Platforms",
-				items: [
-					{
-						name: "TELEGRAM_BOT_TOKEN",
-						description: "Bot token from @BotFather for Telegram gateway.",
-						type: "Input"
-					},
-					{
-						name: "TELEGRAM_ALLOWED_USERS",
-						description: "Comma-separated list of allowed Telegram user IDs.",
-						type: "Input"
-					},
-					{
-						name: "DISCORD_BOT_TOKEN",
-						description: "Bot token for Discord gateway.",
-						type: "Input"
-					},
-					{
-						name: "DISCORD_ALLOWED_USERS",
-						description: "Comma-separated list of allowed Discord user IDs.",
-						type: "Input"
-					},
-					{
-						name: "SLACK_BOT_TOKEN",
-						description: "Bot token (xoxb-...) for Slack gateway.",
-						type: "Input"
-					},
-					{
-						name: "SLACK_APP_TOKEN",
-						description: "App-level token (xapp-...) for Slack Socket Mode.",
-						type: "Input"
-					},
-					{
-						name: "SLACK_ALLOWED_USERS",
-						description: "Comma-separated list of allowed Slack user IDs.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Networking & Proxy",
-				items: [
-					{
-						name: "HTTPS_PROXY",
-						description: "HTTPS proxy URL for network traffic.",
-						type: "Input"
-					},
-					{
-						name: "HTTP_PROXY",
-						description: "HTTP proxy URL for network traffic.",
-						type: "Input"
-					},
-					{
-						name: "NO_PROXY",
-						description: "Comma-separated domain or IP list to bypass proxy.",
-						type: "Input"
-					}
-				]
-			}
-		]
-	},
-	{
-		category: "Command Line Arguments",
-		sections: [
-			{
-				section: "Subcommands & Execution Modes",
-				items: [{
-					name: "Subcommand",
-					description: "Select top-level Hermes command to execute (e.g. chat, dashboard, gateway, setup, doctor).",
-					type: "DropDown",
-					defaultValue: "None / Default",
-					values: [
-						"None / Default",
-						"chat",
-						"dashboard",
-						"gateway",
-						"profile",
-						"setup",
-						"doctor",
-						"status",
-						"auth",
-						"cron",
-						"skills",
-						"memory",
-						"mcp",
-						"plugins",
-						"portal",
-						"send",
-						"kanban",
-						"project",
-						"security audit",
-						"logs",
-						"config",
-						"insights",
-						"version",
-						"lsp",
-						"secrets",
-						"proxy",
-						"egress",
-						"pets",
-						"computer-use",
-						"whatsapp",
-						"slack",
-						"migrate",
-						"serve",
-						"desktop",
-						"completion",
-						"uninstall"
-					]
-				}, {
-					name: "gateway subcommand",
-					description: "Subcommand action when running hermes gateway (run, start, stop, restart, status, list, install).",
-					type: "DropDown",
-					defaultValue: "None / Default",
-					values: [
-						"None / Default",
-						"run",
-						"start",
-						"stop",
-						"restart",
-						"status",
-						"list",
-						"install",
-						"uninstall",
-						"setup"
-					]
-				}]
-			},
-			{
-				section: "Core Execution Options",
-				items: [
-					{
-						name: "--model <model_name>",
-						description: "Specify LLM provider and model (e.g. openrouter:anthropic/claude-sonnet-4).",
-						type: "Input"
-					},
-					{
-						name: "--provider <provider_name>",
-						description: "Force a specific provider (openrouter, nous, anthropic, openai-api, gemini, etc.).",
-						type: "Input"
-					},
-					{
-						name: "-q <prompt>",
-						description: "Run a single prompt non-interactively and exit.",
-						type: "Input"
-					},
-					{
-						name: "-p <prompt>",
-						description: "Run a single prompt non-interactively and exit.",
-						type: "Input"
-					},
-					{
-						name: "-z <prompt>",
-						description: "Scripted one-shot mode (single prompt in, plain response text out, no banner/spinner).",
-						type: "Input"
-					},
-					{
-						name: "--image <path>",
-						description: "Attach a local image file to a single query.",
-						type: "File"
-					},
-					{
-						name: "--usage-file <path>",
-						description: "Write a JSON usage report after a scripted one-shot run.",
-						type: "File"
-					},
-					{
-						name: "--yolo",
-						description: "Bypass all approval prompts and auto-approve command executions.",
-						type: "CheckBox"
-					},
-					{
-						name: "--portal",
-						description: "Use Nous Portal subscription setup for models and tool gateway.",
-						type: "CheckBox"
-					},
-					{
-						name: "--toolsets <toolsets>",
-						description: "Enable a comma-separated set of toolsets (e.g. web,terminal,skills).",
-						type: "Input"
-					},
-					{
-						name: "--skills <skills>",
-						description: "Preload one or more skills for the session (comma-separated).",
-						type: "Input"
-					},
-					{
-						name: "--resume <session_id>",
-						description: "Resume a previous session by ID or title.",
-						type: "Input"
-					},
-					{
-						name: "--continue [name]",
-						description: "Resume the most recent session, or session matching title.",
-						type: "Input"
-					},
-					{
-						name: "--in <dir>",
-						description: "Change into directory before starting or resuming.",
-						type: "Directory"
-					},
-					{
-						name: "--worktree",
-						description: "Start in an isolated git worktree for parallel-agent workflows.",
-						type: "CheckBox"
-					},
-					{
-						name: "--checkpoints",
-						description: "Enable filesystem checkpoints before destructive file changes.",
-						type: "CheckBox"
-					},
-					{
-						name: "--pass-session-id",
-						description: "Include the session ID in the agent system prompt.",
-						type: "CheckBox"
-					},
-					{
-						name: "--ignore-user-config",
-						description: "Ignore ~/.hermes/config.yaml and fall back to built-in defaults.",
-						type: "CheckBox"
-					},
-					{
-						name: "--ignore-rules",
-						description: "Skip auto-injection of AGENTS.md, SOUL.md, .cursorrules, memory, and skills.",
-						type: "CheckBox"
-					},
-					{
-						name: "--safe-mode",
-						description: "Troubleshooting mode: disable ALL user config, rules, plugins, shell hooks, and MCP servers.",
-						type: "CheckBox"
-					},
-					{
-						name: "--tui",
-						description: "Launch the TUI interface instead of classic CLI REPL.",
-						type: "CheckBox"
-					},
-					{
-						name: "--cli",
-						description: "Force classic prompt_toolkit REPL interface.",
-						type: "CheckBox"
-					},
-					{
-						name: "--source <source>",
-						description: "Session source tag for filtering (default: cli).",
-						type: "Input"
-					},
-					{
-						name: "--max-turns <turns>",
-						description: "Maximum tool-calling iterations per turn.",
-						type: "Number"
-					},
-					{
-						name: "--profile <profile_name>",
-						description: "Select which Hermes profile to use for this invocation.",
-						type: "Input"
-					}
-				]
-			},
-			{
-				section: "Subcommand Specific Flags",
-				items: [
-					{
-						name: "--all",
-						description: "Act on all profiles for gateway, status, or list commands.",
-						type: "CheckBox"
-					},
-					{
-						name: "--json",
-						description: "Emit machine-readable JSON output instead of plain text.",
-						type: "CheckBox"
-					},
-					{
-						name: "--deep",
-						description: "Run deeper diagnostic and status checks.",
-						type: "CheckBox"
-					},
-					{
-						name: "--fail-on <level>",
-						description: "Exit non-zero when security audit finds vulnerabilities at or above severity (low, moderate, high, critical).",
-						type: "DropDown",
-						defaultValue: "critical",
-						values: [
-							"low",
-							"moderate",
-							"high",
-							"critical"
-						]
-					}
-				]
-			},
-			{
-				section: "Display & Help Options",
-				items: [
-					{
-						name: "-v",
-						description: "Enable verbose logging output.",
-						type: "CheckBox"
-					},
-					{
-						name: "-Q",
-						description: "Programmatic quiet mode: suppress banner, spinner, and tool previews.",
-						type: "CheckBox"
-					},
-					{
-						name: "--debug",
-						description: "Enable verbose debug logging.",
-						type: "CheckBox"
-					},
-					{
-						name: "--help",
-						description: "Displays help information about Hermes Agent commands.",
-						type: "CheckBox"
-					},
-					{
-						name: "--version",
-						description: "Displays the version of Hermes Agent.",
-						type: "CheckBox"
-					}
-				]
-			}
-		]
-	},
-	{
-		category: "Settings",
-		condition: "Settings File Location",
-		sections: [
-			{
-				section: "General & Learning",
-				items: [
-					{
-						name: "learning.enabled",
-						description: "Enable autonomous skill creation and procedural memory learning loop.",
-						type: "CheckBox"
-					},
-					{
-						name: "learning.autoSaveSkills",
-						description: "Automatically save skills generated during task execution.",
-						type: "CheckBox"
-					},
-					{
-						name: "telemetry.enabled",
-						description: "Permit metric collection and crash log streaming.",
-						type: "CheckBox"
-					},
-					{
-						name: "updates.pre_update_backup",
-						description: "Pre-update safety backup mode before running hermes update.",
-						type: "DropDown",
-						defaultValue: "quick",
-						values: [
-							"quick",
-							"full",
-							"off"
-						]
-					}
-				]
-			},
-			{
-				section: "Terminal Environment & Sandboxing",
-				items: [
-					{
-						name: "terminal.backend",
-						description: "Execution backend for terminal commands (local, docker, ssh, modal, daytona, singularity).",
-						type: "DropDown",
-						defaultValue: "local",
-						values: [
-							"local",
-							"docker",
-							"ssh",
-							"modal",
-							"daytona",
-							"singularity"
-						]
-					},
-					{
-						name: "terminal.timeout",
-						description: "Per-command execution timeout in seconds.",
-						type: "Number",
-						defaultValue: 180
-					},
-					{
-						name: "terminal.home_mode",
-						description: "Subprocess HOME directory policy for launched tools.",
-						type: "DropDown",
-						defaultValue: "auto",
-						values: [
-							"auto",
-							"real",
-							"profile"
-						]
-					},
-					{
-						name: "terminal.persistent_shell",
-						description: "Maintain a long-lived bash shell process across commands (default true for SSH).",
-						type: "CheckBox",
-						defaultValue: false
-					},
-					{
-						name: "terminal.docker_image",
-						description: "Docker container image for Docker terminal backend.",
-						type: "Input",
-						defaultValue: "nikolaik/python-nodejs:python3.11-nodejs20"
-					},
-					{
-						name: "terminal.docker_run_as_host_user",
-						description: "Run Docker container as host UID:GID to avoid root file ownership issues.",
-						type: "CheckBox",
-						defaultValue: false
-					},
-					{
-						name: "terminal.docker_network",
-						description: "Enable network access inside Docker container (false = air-gap with --network=none).",
-						type: "CheckBox",
-						defaultValue: true
-					}
-				]
-			},
-			{
-				section: "Memory & Context Controls",
-				items: [
-					{
-						name: "memory.memory_enabled",
-						description: "Enable persistent long-term memory system.",
-						type: "CheckBox",
-						defaultValue: true
-					},
-					{
-						name: "memory.user_profile_enabled",
-						description: "Enable automatic user profile modeling across sessions.",
-						type: "CheckBox",
-						defaultValue: true
-					},
-					{
-						name: "memory.write_approval",
-						description: "Require user approval before staging or writing memory entries.",
-						type: "CheckBox",
-						defaultValue: false
-					},
-					{
-						name: "skills.guard_agent_created",
-						description: "Scan agent-created skills for dangerous keyword patterns.",
-						type: "CheckBox",
-						defaultValue: false
-					},
-					{
-						name: "skills.write_approval",
-						description: "Gate all agent skill creations and modifications behind explicit review.",
-						type: "CheckBox",
-						defaultValue: false
-					},
-					{
-						name: "context_file_max_chars",
-						description: "Maximum character limit for loaded context files (SOUL.md, AGENTS.md, etc.).",
-						type: "Number",
-						defaultValue: 2e4
-					},
-					{
-						name: "file_read_max_chars",
-						description: "Maximum character limit per single read_file tool call.",
-						type: "Number",
-						defaultValue: 1e5
-					},
-					{
-						name: "worktree",
-						description: "Automatically run in an isolated git worktree per session.",
-						type: "CheckBox",
-						defaultValue: false
-					}
-				]
-			},
-			{
-				section: "Tool Output Truncation",
-				items: [
-					{
-						name: "tool_output.max_bytes",
-						description: "Maximum character cap for terminal tool output before truncation.",
-						type: "Number",
-						defaultValue: 5e4
-					},
-					{
-						name: "tool_output.max_lines",
-						description: "Maximum line limit for read_file pagination.",
-						type: "Number",
-						defaultValue: 2e3
-					},
-					{
-						name: "tool_output.max_line_length",
-						description: "Maximum character length per line in line-numbered read_file views.",
-						type: "Number",
-						defaultValue: 2e3
-					}
-				]
-			}
-		]
-	}
-];
-//#endregion
-//#region module/src/containers/agent/HermesAgent/RendererMethods.ts
-const INSTALL_TIME_KEY$4 = "install-time-hermesAgent";
-const UPDATE_TIME_KEY$4 = "update-time-hermesAgent";
-const UPDATE_AVAILABLE_KEY$3 = "update-available-version-hermesAgent";
-const KNOWN_SUBCOMMANDS = [
-	"chat",
-	"dashboard",
-	"gateway",
-	"profile",
-	"setup",
-	"doctor",
-	"status",
-	"auth",
-	"cron",
-	"skills",
-	"memory",
-	"mcp",
-	"plugins",
-	"portal",
-	"send",
-	"kanban",
-	"project",
-	"security audit",
-	"security",
-	"logs",
-	"config",
-	"insights",
-	"version",
-	"lsp",
-	"secrets",
-	"proxy",
-	"egress",
-	"pets",
-	"computer-use",
-	"whatsapp",
-	"slack",
-	"migrate",
-	"serve",
-	"desktop",
-	"completion",
-	"uninstall"
-];
-const KNOWN_GATEWAY_SUBCOMMANDS = [
-	"run",
-	"start",
-	"stop",
-	"restart",
-	"status",
-	"list",
-	"install",
-	"uninstall",
-	"setup"
-];
-function checkEnvLine(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	const varName = line.split("=")[0].trim();
-	for (const arg of hermesAgentArguments) if (arg.category === "Environment Variables" && "sections" in arg) {
-		for (const section of arg.sections) if (section.items.some((item) => item.name === varName)) return "var";
-	}
-}
-function getArgumentInfo(argName) {
-	for (const data of hermesAgentArguments) if ("sections" in data) {
-		for (const section of data.sections) for (const item of section.items) if (item.name.split(" ")[0] === argName) return {
-			category: data.category,
-			type: item.type,
-			name: item.name
-		};
-	}
-}
-function parseArgsToFiles$1(args) {
-	const executeCommand = "hermes";
-	const envArgs = [];
-	const cliArgs = [];
-	const settingsArgs = [];
-	const customLines = [];
-	let subcommandStr = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (result) {
-				if (result.line) customLines.push(result.line);
-				if (result.commandArg) subcommandStr += ` ${result.commandArg}`;
-			}
-			return;
-		}
-		if (arg.name === "Subcommand" && arg.value && arg.value !== "None / Default") {
-			subcommandStr += ` ${arg.value}`;
-			return;
-		}
-		if (arg.name === "gateway subcommand" && arg.value && arg.value !== "None / Default") {
-			subcommandStr += ` ${arg.value}`;
-			return;
-		}
-		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
-		if (info) switch (info.category) {
-			case "Environment Variables":
-				envArgs.push(arg);
-				break;
-			case "Command Line Arguments":
-				cliArgs.push(arg);
-				break;
-			case "Settings": settingsArgs.push(arg);
-		}
-	});
-	let scriptString = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	if (envArgs.length > 0) envArgs.forEach((arg) => {
-		scriptString += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-	});
-	if (customLines.length > 0) customLines.forEach((line) => {
-		scriptString += `${line}\n`;
-	});
-	if (envArgs.length > 0 || customLines.length > 0) scriptString += "\n";
-	scriptString += `${executeCommand}${subcommandStr}`;
-	cliArgs.forEach((arg) => {
-		const info = getArgumentInfo(arg.name.split(" ")[0]) || getArgumentInfo(arg.name);
-		if (!info) return;
-		const flagName = info.name.split(" ")[0];
-		if (info.type === "CheckBox") {
-			if (arg.value !== "false" && arg.value !== false && arg.value !== 0 && String(arg.value) !== "0") scriptString += ` ${flagName}`;
-		} else if (arg.value !== void 0 && arg.value !== null && String(arg.value).trim() !== "") scriptString += ` ${flagName} "${arg.value}"`;
-	});
-	scriptString += "\n";
-	let settingsString = "";
-	const settingsJson = {};
-	if (settingsArgs.length > 0) {
-		settingsArgs.forEach((arg) => {
-			const keys = arg.name.split(".");
-			let current = settingsJson;
-			keys.slice(0, -1).forEach((key) => {
-				current[key] = current[key] || {};
-				current = current[key];
-			});
-			let value = arg.value;
-			if (String(value) === "true") value = true;
-			else if (String(value) === "false") value = false;
-			else if (typeof value === "string" && !isNaN(Number(value)) && value.trim() !== "" && !isNaN(parseFloat(value))) value = Number(value);
-			current[keys[keys.length - 1]] = value;
-		});
-		if (!isEmpty(settingsJson)) settingsString = JSON.stringify(settingsJson, null, 2);
-	}
-	return {
-		scriptData: scriptString,
-		settingsData: settingsString
-	};
-}
-function parseArgsToString$19(args) {
-	const { settingsData, scriptData } = parseArgsToFiles$1(args);
-	const scriptTitle = `Script File Preview (${isWin ? ".bat" : ".sh"})`;
-	const scriptContent = !isEmpty(scriptData) ? scriptData : "# No environment variables or command line arguments configured.\n";
-	const settingsTitle = "Settings File (config.yaml)";
-	const settingsContent = !isEmpty(settingsData) ? settingsData : "{\n  // No settings configured.\n}";
-	if (isMultiFilePreviewSupported) return [{
-		title: scriptTitle,
-		data: scriptContent
-	}, {
-		title: settingsTitle,
-		data: settingsContent
-	}];
-	return `${`-------------${scriptTitle}-------------\n${scriptContent}`}${`---------------- ${settingsTitle} ----------------\n${settingsContent}`}`;
-}
-function parseFilesToArgs$1(scriptContent, settingsContent) {
-	const scriptArgs = parseStringToArgs$19(scriptContent);
-	const settingsArgs = [];
-	if (settingsContent) try {
-		const settingsJson = JSON.parse(settingsContent);
-		const flatten = (obj, path = "") => {
-			let result = [];
-			for (const key in obj) if (Object.prototype.hasOwnProperty.call(obj, key)) {
-				const newPath = path ? `${path}.${key}` : key;
-				if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) result = result.concat(flatten(obj[key], newPath));
-				else {
-					const value = typeof obj[key] === "string" ? obj[key] : JSON.stringify(obj[key]);
-					result.push({
-						name: newPath,
-						value
-					});
-				}
-			}
-			return result;
-		};
-		flatten(settingsJson).forEach((arg) => {
-			if (isValidArg(arg.name, hermesAgentArguments)) settingsArgs.push(arg);
-		});
-	} catch (error) {
-		console.error("Error parsing settings content for Hermes Agent:", error);
-	}
-	const combinedArgs = /* @__PURE__ */ new Map();
-	scriptArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
-	settingsArgs.forEach((arg) => combinedArgs.set(arg.name, arg.value));
-	return Array.from(combinedArgs, ([name, value]) => ({
-		name,
-		value
-	}));
-}
-function parseStringToArgs$19(data) {
-	const argResult = [];
-	data.split("\n").forEach((line) => {
-		const trimmedLine = line.trim();
-		if (trimmedLine.startsWith("#") || trimmedLine.startsWith("REM") || trimmedLine === "@echo off") return;
-		if (trimmedLine.startsWith("hermes")) {
-			const clArg = trimmedLine.substring(6).trim();
-			if (!clArg) return;
-			const tokenRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
-			const tokens = [];
-			let tokenMatch;
-			while ((tokenMatch = tokenRegex.exec(clArg)) !== null) tokens.push(tokenMatch[1] ?? tokenMatch[2] ?? tokenMatch[3]);
-			for (let i = 0; i < tokens.length; i++) {
-				const token = tokens[i];
-				if (KNOWN_SUBCOMMANDS.includes(token)) {
-					argResult.push({
-						name: "Subcommand",
-						value: token
-					});
-					continue;
-				}
-				if (KNOWN_GATEWAY_SUBCOMMANDS.includes(token)) {
-					argResult.push({
-						name: "gateway subcommand",
-						value: token
-					});
-					continue;
-				}
-				if (token.startsWith("-")) {
-					const info = getArgumentInfo(token);
-					if (info) {
-						if (getArgumentType(info.name, hermesAgentArguments) === "CheckBox") argResult.push({
-							name: info.name,
-							value: "true"
-						});
-						else {
-							const nextToken = tokens[i + 1];
-							if (nextToken && !nextToken.startsWith("-")) {
-								argResult.push({
-									name: info.name,
-									value: nextToken.replace(/"/g, "")
-								});
-								i++;
-							} else argResult.push({
-								name: info.name,
-								value: ""
-							});
-						}
-					} else {
-						const nextToken = tokens[i + 1];
-						if (nextToken && !nextToken.startsWith("-")) {
-							argResult.push({
-								name: token,
-								value: nextToken.replace(/"/g, ""),
-								custom: {
-									kind: "commandLine",
-									type: "Input"
-								}
-							});
-							i++;
-						} else argResult.push({
-							name: token,
-							value: "true",
-							custom: {
-								kind: "commandLine",
-								type: "CheckBox"
-							}
-						});
-					}
-				} else argResult.push({
-					name: token,
-					value: token,
-					custom: {
-						kind: "commandLine",
-						type: "Input"
-					}
-				});
-			}
-		}
-		const lineType = checkEnvLine(line);
-		if (lineType === "export" || lineType === "set") {
-			let [name, value] = line.replace(`${lineType} `, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes((value || "").trim());
-			if (isValidArg(name, hermesAgentArguments)) argResult.push({
-				name,
-				value
-			});
-			else argResult.push({
-				name,
-				value,
-				custom: {
-					kind: "envVar",
-					type: "Input"
-				}
-			});
-		} else if (checkEnvLine(line) === "var") {
-			let [name, value] = line.split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes((value || "").trim());
-			if (isValidArg(name, hermesAgentArguments)) argResult.push({
-				name,
-				value
-			});
-			else argResult.push({
-				name,
-				value,
-				custom: {
-					kind: "envVar",
-					type: "Input"
-				}
-			});
-		}
-	});
-	return argResult;
-}
-function startInstall$18(stepper) {
-	stepper.initialSteps([
-		"Getting Started",
-		"Detect Existing",
-		"Hermes Agent",
-		"All Done!"
-	]);
-	stepper.starterStep({ disableSelectDir: true }).then(() => {
-		stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Checking for existing Hermes Agent installation...");
-			stepper.ipc.invoke("is_hermes_agent_installed").then((isInstalled) => {
-				if (isInstalled) {
-					stepper.setInstalled();
-					const currentDate = /* @__PURE__ */ new Date();
-					stepper.storage.set(INSTALL_TIME_KEY$4, currentDate.toLocaleString());
-					stepper.showFinalStep("success", "You're All Set!", "Hermes Agent is already installed and ready to use.");
-				} else stepper.nextStep().then(() => {
-					const installCommand = isWin ? "iex (irm https://hermes-agent.nousresearch.com/install.ps1)" : "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash";
-					stepper.executeTerminalCommands(installCommand).then(() => {
-						stepper.setInstalled();
-						const currentDate = /* @__PURE__ */ new Date();
-						stepper.storage.set(INSTALL_TIME_KEY$4, currentDate.toLocaleString());
-						stepper.showFinalStep("success", "Installation Complete!", "Hermes Agent has been installed successfully.");
-					});
-				});
-			});
-		});
-	});
-}
-function startUpdate$6(stepper) {
-	stepper.initialSteps(["Update Hermes Agent", "Complete Update"]);
-	stepper.executeTerminalCommands("hermes update").then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(UPDATE_TIME_KEY$4, currentDate.toLocaleString());
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "Hermes Agent Updated Successfully!", "Hermes Agent has been updated to the latest available version.");
-	});
-}
-async function cardInfo$18(api, callback) {
-	callback.setOpenFolders(void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INSTALL_TIME_KEY$4).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(UPDATE_TIME_KEY$4).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("current_hermes_agent_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(UPDATE_AVAILABLE_KEY$3).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-const HermesAgent_RM = {
-	catchAddress: catchAddress$5,
-	cardInfo: cardInfo$18,
-	parseStringToArgs: parseStringToArgs$19,
-	parseArgsToString: parseArgsToString$19,
-	manager: {
-		startInstall: startInstall$18,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$6
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/agent/Langflow/Arguments.ts
-const langflowArguments = [{
-	category: "General",
-	sections: [
-		{
-			section: "Basic Configuration",
-			items: [
-				{
-					name: "PORT",
-					description: "The HTTP port Langflow runs on",
-					type: "Input",
-					defaultValue: 7860
-				},
-				{
-					name: "HOST",
-					description: "The host address to bind the server to",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "LANGFLOW_AUTO_LOGIN",
-					description: "Enable automatic login without credentials",
-					type: "CheckBox",
-					defaultValue: true
-				},
-				{
-					name: "--open-browser",
-					description: "Open the browser automatically after starting the server",
-					type: "CheckBox",
-					defaultValue: true
-				},
-				{
-					name: "--backend-only",
-					description: "Run only the backend server without serving frontend assets",
-					type: "CheckBox",
-					defaultValue: false
-				},
-				{
-					name: "--frontend-path",
-					description: "Path to custom frontend directory containing build files",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Logging & Environment",
-			items: [
-				{
-					name: "LANGFLOW_LOG_LEVEL",
-					description: "Set logging level for Langflow backend",
-					type: "DropDown",
-					values: [
-						"debug",
-						"info",
-						"warning",
-						"error",
-						"critical"
-					],
-					defaultValue: "info"
-				},
-				{
-					name: "LANGFLOW_ENV_FILE",
-					description: "Path to custom .env file",
-					type: "File"
-				},
-				{
-					name: "LANGFLOW_COMPONENTS_PATH",
-					description: "Path to custom components directory",
-					type: "Directory"
-				},
-				{
-					name: "--log-file",
-					description: "Path to the log file",
-					type: "File"
-				},
-				{
-					name: "--log-rotation",
-					description: "Log rotation rule (Time/Size)",
-					type: "Input"
-				},
-				{
-					name: "DO_NOT_TRACK",
-					description: "Opt out of anonymous telemetry usage data collection",
-					type: "CheckBox",
-					defaultValue: false
-				}
-			]
-		},
-		{
-			section: "Performance & SSL",
-			items: [
-				{
-					name: "--workers",
-					description: "Number of worker processes",
-					type: "Input"
-				},
-				{
-					name: "--worker-timeout",
-					description: "Worker process timeout in seconds",
-					type: "Input"
-				},
-				{
-					name: "--ssl-cert-file-path",
-					description: "Defines the SSL certificate file path",
-					type: "File"
-				},
-				{
-					name: "--ssl-key-file-path",
-					description: "Defines the SSL key file path",
-					type: "File"
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/agent/Langflow/RendererMethods.ts
-const INSTALL_TIME_KEY$3 = "install-time-langflow";
-const UPDATE_TIME_KEY$3 = "update-time-langflow";
-const UPDATE_AVAILABLE_KEY$2 = "update-available-version-langflow";
-function checkLinuxArgLine$4(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	for (const arg of langflowArguments) if (arg.category === "General") {
-		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-	}
-}
-function parseArgsToString$18(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let cmArgs = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const res = parseCustomArg(arg);
-			if (!res) return;
-			if (res.line) lines += res.line + "\n";
-			if (res.commandArg) cmArgs += res.commandArg + " ";
-		} else {
-			if (arg.name === "PORT") {
-				cmArgs += `--port ${arg.value} `;
-				return;
-			}
-			if (arg.name === "HOST") {
-				cmArgs += `--host ${arg.value} `;
-				return;
-			}
-			if (arg.name.startsWith("--")) {
-				if (getArgumentType(arg.name, langflowArguments) === "CheckBox") {
-					if (arg.value !== "false") cmArgs += `${arg.name} `;
-				} else cmArgs += `${arg.name} ${arg.value} `;
-				return;
-			}
-			if (getArgumentType(arg.name, langflowArguments) === "CheckBox") {
-				const eWinResult = `set ${arg.name}=true\n`;
-				const eResult = `export ${arg.name}="true"\n`;
-				result += isWin ? eWinResult : eResult;
-			} else {
-				const eWinResult = `set ${arg.name}=${arg.value}\n`;
-				const eResult = `export ${arg.name}="${arg.value}"\n`;
-				result += isWin ? eWinResult : eResult;
-			}
-		}
-	});
-	if (lines) result += lines + "\n";
-	cmArgs = cmArgs.trim();
-	result += `langflow run${cmArgs ? " " + cmArgs : ""}`;
-	return result;
-}
-function parseStringToArgs$18(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#") || line.startsWith("REM") || line.startsWith("@echo")) return;
-		if (line.includes("langflow run")) {
-			const clArg = line.split("langflow run")[1]?.trim();
-			if (!clArg) return;
-			clArg.split("--").filter(Boolean).forEach((arg) => {
-				const [id, ...valueParts] = arg.trim().split(" ");
-				const name = `--${id}`;
-				const value = valueParts.join(" ").replace(/"/g, "");
-				if (isValidArg(name, langflowArguments)) {
-					if (getArgumentType(name, langflowArguments) === "CheckBox") argResult.push({
-						name,
-						value: ""
-					});
-					else argResult.push({
-						name,
-						value
-					});
-				} else if (isValidArg(id.toUpperCase(), langflowArguments)) argResult.push({
-					name: id.toUpperCase(),
-					value
-				});
-			});
-		}
-		const lineType = checkLinuxArgLine$4(line);
-		if (lineType === "export" || lineType === "set") {
-			let [name, value] = line.replace(`${lineType} `, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes((value || "").trim());
-			if (isValidArg(name, langflowArguments)) argResult.push({
-				name,
-				value
-			});
-		}
-	});
-	return argResult;
-}
-function startInstall$17(stepper) {
-	const pipCommand = getPythonCommandByOs().pip;
-	stepper.initialSteps([
-		"Getting Started",
-		"Detect Existing",
-		"Install Langflow",
-		"All Done!"
-	]);
-	stepper.starterStep({ disableSelectDir: true }).then(() => {
-		stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Checking for existing Langflow installation...");
-			stepper.ipc.invoke("is_langflow_installed").then((isInstalled) => {
-				if (isInstalled) {
-					stepper.setInstalled();
-					const currentDate = /* @__PURE__ */ new Date();
-					stepper.storage.set(INSTALL_TIME_KEY$3, currentDate.toLocaleString());
-					stepper.showFinalStep("success", "You're All Set!", "Langflow is already installed. You're good to go!");
-				} else stepper.nextStep().then(() => {
-					stepper.executeTerminalCommands([`${pipCommand} install uv`, "uv pip install langflow"]).then(() => {
-						stepper.setInstalled();
-						const currentDate = /* @__PURE__ */ new Date();
-						stepper.storage.set(INSTALL_TIME_KEY$3, currentDate.toLocaleString());
-						stepper.showFinalStep("success", "Installation Complete!", "Your Langflow environment is ready. Enjoy!");
-					});
-				});
-			});
-		});
-	});
-}
-function startUpdate$5(stepper) {
-	stepper.initialSteps(["Update Langflow", "Complete Update"]);
-	stepper.executeTerminalCommands("pip install --upgrade langflow").then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(UPDATE_TIME_KEY$3, currentDate.toLocaleString());
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "Langflow Updated Successfully!", "Langflow has been updated to the latest version. You can now enjoy the new features and improvements.");
-	});
-}
-async function cardInfo$17(api, callback) {
-	callback.setOpenFolders(void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INSTALL_TIME_KEY$3).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(UPDATE_TIME_KEY$3).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("current_langflow_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(UPDATE_AVAILABLE_KEY$2).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-function catchAddress$3(input) {
-	const cleanInput = input.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, "");
-	if (cleanInput.toLowerCase().includes("[OK] Open Langflow".toLowerCase())) return void 0;
-	if (cleanInput.toLowerCase().includes("Uvicorn running on".toLowerCase())) {
-		const match = cleanInput.match(/Uvicorn running on\s+([^\s)]+)/i);
-		if (match) {
-			let url = match[1].replace(/[.,;:)]+$/, "");
-			if (!/^https?:\/\//i.test(url)) url = `http://${url}`;
-			return replaceAddress(url);
-		}
-	}
-	for (const pattern of [
-		/https?:\/\/localhost(?::\d+)?/i,
-		/https?:\/\/127\.0\.0\.1(?::\d+)?/i,
-		/https?:\/\/0\.0\.0\.0(?::\d+)?/i,
-		/https?:\/\/\[::1](?::\d+)?/i,
-		/https?:\/\/(?:[\w-]+\.)*localhost(?::\d+)?/i
-	]) {
-		const match = cleanInput.match(pattern);
-		if (match) return replaceAddress(match[0]);
-	}
-}
-const Langflow_RM = {
-	catchAddress: catchAddress$3,
-	cardInfo: cardInfo$17,
-	parseStringToArgs: parseStringToArgs$18,
-	parseArgsToString: parseArgsToString$18,
-	manager: {
-		startInstall: startInstall$17,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$5
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/agent/N8N/Arguments/index.ts
-const n8nArguments = [
-	{
-		category: "AI Assistant",
-		items: [
-			{
-				name: "N8N_AI_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether AI features (such as AI nodes and AI assistant) are enabled globally."
-			},
-			{
-				name: "N8N_AI_ASSISTANT_BASE_URL",
-				type: "Input",
-				description: "Base URL of the AI assistant service, specified as `https://ai-assistant.n8n.io`. Required if you self-host n8n and want to enable the AI Assistant."
-			},
-			{
-				name: "N8N_AI_ALLOW_SENDING_PARAMETER_VALUES",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether workflow and node parameter values may be sent to AI providers. When false, only structure or placeholders are sent."
-			},
-			{
-				name: "N8N_AI_AGENT_MAX_PASSTHROUGH_BINARY_SIZE_BYTES",
-				type: "Input",
-				defaultValue: 52428800,
-				description: "Maximum size in bytes of a single binary file (e.g. an image or PDF) that the AI Agent node will pass through to a model. Default: 50 MB (52428800 bytes)."
-			}
-		]
-	},
-	{
-		category: "Nodes",
-		items: [
-			{
-				name: "N8N_COMMUNITY_PACKAGES_ENABLED",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Enables (true) or disables (false) the functionality to install and load community nodes. If set to false, neither verified nor unverified community packages will be available, regardless of their individual settings."
-			},
-			{
-				name: "N8N_COMMUNITY_PACKAGES_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage installed community packages from environment variables. Reconciles installed packages against N8N_COMMUNITY_PACKAGES on startup."
-			},
-			{
-				name: "N8N_COMMUNITY_PACKAGES",
-				type: "Input",
-				description: "JSON array of community packages to install. Each entry is an object with a `name` (required) and optional `version` and `checksum` fields."
-			},
-			{
-				name: "N8N_COMMUNITY_PACKAGES_PREVENT_LOADING",
-				type: "CheckBox",
-				description: "Prevents (true) or allows (false) loading installed community nodes on instance startup. Use this if a faulty node prevents the instance from starting."
-			},
-			{
-				name: "N8N_COMMUNITY_PACKAGES_REGISTRY",
-				type: "Input",
-				defaultValue: "https://registry.npmjs.org",
-				description: "NPM registry URL to pull community packages from (license required)."
-			},
-			{
-				name: "N8N_CUSTOM_EXTENSIONS",
-				type: "Input",
-				description: "Specify the path to directories containing your custom nodes."
-			},
-			{
-				name: "N8N_PYTHON_ENABLED",
-				type: "CheckBox",
-				description: "Whether to enable Python execution on the Code node."
-			},
-			{
-				name: "N8N_UNVERIFIED_PACKAGES_ENABLED",
-				type: "CheckBox",
-				description: "When N8N_COMMUNITY_PACKAGES_ENABLED is true, this variable controls whether to enable the installation and use of unverified community nodes from an NPM registry (true) or not (false)."
-			},
-			{
-				name: "N8N_VERIFIED_PACKAGES_ENABLED",
-				type: "CheckBox",
-				description: "When N8N_COMMUNITY_PACKAGES_ENABLED is true, this variable controls whether to show verified community nodes in the nodes panel for installation and use (true) or to hide them (false)."
-			},
-			{
-				name: "NODE_FUNCTION_ALLOW_BUILTIN",
-				type: "Input",
-				description: "Permit users to import specific built-in modules in the Code node. Use * to allow all. n8n disables importing modules by default."
-			},
-			{
-				name: "NODE_FUNCTION_ALLOW_EXTERNAL",
-				type: "Input",
-				description: "Permit users to import specific external modules (from n8n/node_modules) in the Code node. n8n disables importing modules by default."
-			},
-			{
-				name: "NODES_ERROR_TRIGGER_TYPE",
-				type: "Input",
-				defaultValue: "n8n-nodes-base.errorTrigger",
-				description: "Specify which node type to use as Error Trigger."
-			},
-			{
-				name: "NODES_EXCLUDE",
-				type: "Input",
-				defaultValue: "[\"n8n-nodes-base.executeCommand\", \"n8n-nodes-base.localFileTrigger\"]",
-				description: "Specify which nodes not to load. For example, to block nodes that can be a security risk if users aren't trustworthy: NODES_EXCLUDE: \"[\"n8n-nodes-base.executeCommand\", \"@n8n/n8n-nodes-langchain.lmChatDeepSeek\"]\". To enable all nodes, specify NODES_EXCLUDE: \"[]\"."
-			},
-			{
-				name: "NODES_INCLUDE",
-				type: "Input",
-				description: "Specify which nodes to load."
-			}
-		]
-	},
-	{
-		category: "User Management & Auth",
-		items: [
-			{
-				name: "N8N_INSTANCE_OWNER_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage the instance owner from environment variables. Overwrites instance owner details on startup and locks UI control."
-			},
-			{
-				name: "N8N_INSTANCE_OWNER_EMAIL",
-				type: "Input",
-				description: "Email address for the instance owner."
-			},
-			{
-				name: "N8N_INSTANCE_OWNER_FIRST_NAME",
-				type: "Input",
-				description: "First name for the instance owner."
-			},
-			{
-				name: "N8N_INSTANCE_OWNER_LAST_NAME",
-				type: "Input",
-				description: "Last name for the instance owner."
-			},
-			{
-				name: "N8N_INSTANCE_OWNER_PASSWORD_HASH",
-				type: "Input",
-				description: "Bcrypt hash of the instance owner's password. Setting a plaintext password breaks login."
-			},
-			{
-				name: "N8N_SSO_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage SSO from environment variables. Applies SSO variables on startup and locks matching UI controls."
-			},
-			{
-				name: "N8N_SSO_USER_ROLE_PROVISIONING",
-				type: "DropDown",
-				defaultValue: "disabled",
-				values: [
-					"disabled",
-					"instance_role",
-					"instance_and_project_roles"
-				],
-				description: "How n8n provisions roles for users who sign in through SSO. `disabled` does not provision roles; `instance_role` provisions instance-level role; `instance_and_project_roles` provisions both."
-			},
-			{
-				name: "N8N_SSO_OIDC_LOGIN_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enable OIDC login."
-			},
-			{
-				name: "N8N_SSO_OIDC_CLIENT_ID",
-				type: "Input",
-				description: "OIDC client ID issued by your identity provider."
-			},
-			{
-				name: "N8N_SSO_OIDC_CLIENT_SECRET",
-				type: "Input",
-				description: "OIDC client secret issued by your identity provider."
-			},
-			{
-				name: "N8N_SSO_OIDC_DISCOVERY_ENDPOINT",
-				type: "Input",
-				description: "OIDC discovery endpoint URL (.well-known/openid-configuration)."
-			},
-			{
-				name: "N8N_SSO_OIDC_PROMPT",
-				type: "Input",
-				description: "Optional OIDC prompt parameter to send with the authorization request (e.g. login or consent)."
-			},
-			{
-				name: "N8N_SSO_OIDC_ACR_VALUES",
-				type: "Input",
-				description: "Optional OIDC acr_values parameter to request a specific authentication context."
-			},
-			{
-				name: "N8N_SSO_SAML_LOGIN_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enable SAML login."
-			},
-			{
-				name: "N8N_SSO_SAML_METADATA",
-				type: "Input",
-				description: "SAML identity provider metadata as an XML string. Mutually exclusive with N8N_SSO_SAML_METADATA_URL."
-			},
-			{
-				name: "N8N_SSO_SAML_METADATA_URL",
-				type: "Input",
-				description: "URL to fetch SAML identity provider metadata from. Mutually exclusive with N8N_SSO_SAML_METADATA."
-			},
-			{
-				name: "N8N_EMAIL_MODE",
-				type: "Input",
-				defaultValue: "smtp",
-				description: "Enable emails."
-			},
-			{
-				name: "N8N_SMTP_HOST",
-				type: "Input",
-				description: "your_SMTP_server_name"
-			},
-			{
-				name: "N8N_SMTP_PORT",
-				type: "Input",
-				description: "your_SMTP_server_port"
-			},
-			{
-				name: "N8N_SMTP_USER",
-				type: "Input",
-				description: "your_SMTP_username"
-			},
-			{
-				name: "N8N_SMTP_PASS",
-				type: "Input",
-				description: "your_SMTP_password"
-			},
-			{
-				name: "N8N_SMTP_OAUTH_SERVICE_CLIENT",
-				type: "Input",
-				description: "If using 2LO with a service account this is your client ID"
-			},
-			{
-				name: "N8N_SMTP_OAUTH_PRIVATE_KEY",
-				type: "Input",
-				description: "If using 2LO with a service account this is your private key"
-			},
-			{
-				name: "N8N_SMTP_SENDER",
-				type: "Input",
-				description: "Sender email address. You can optionally include the sender name. Example with name: N8N <contact@n8n.com>"
-			},
-			{
-				name: "N8N_SMTP_SSL",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether to use SSL for SMTP (true) or not (false)."
-			},
-			{
-				name: "N8N_SMTP_STARTTLS",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether to use STARTTLS for SMTP (true) or not (false)."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_INVITE",
-				type: "Input",
-				description: "Full path to your HTML email template. This overrides the default template for invite emails."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_PWRESET",
-				type: "Input",
-				description: "Full path to your HTML email template. This overrides the default template for password reset emails."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_SHARED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that a workflow was shared. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_AUTODEACTIVATED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that a workflow was deactivated. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_WORKFLOW_FAILURE",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that a workflow execution failed. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_CREDENTIALS_SHARED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that a credential was shared. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_PROJECT_SHARED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that a project was shared. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_API_KEY_REVOKED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that an API key was revoked. Provide the full path to the template."
-			},
-			{
-				name: "N8N_UM_EMAIL_TEMPLATES_MCP_CLIENT_REVOKED",
-				type: "Input",
-				description: "Overrides the default HTML template for notifying users that an MCP client was revoked. Provide the full path to the template."
-			},
-			{
-				name: "N8N_USER_MANAGEMENT_JWT_SECRET",
-				type: "Input",
-				description: "Set a specific JWT secret. By default, n8n generates one on start."
-			},
-			{
-				name: "N8N_USER_MANAGEMENT_JWT_DURATION_HOURS",
-				type: "Input",
-				defaultValue: 168,
-				description: "Set an expiration date for the JWTs in hours."
-			},
-			{
-				name: "N8N_USER_MANAGEMENT_JWT_REFRESH_TIMEOUT_HOURS",
-				type: "Input",
-				defaultValue: 0,
-				description: "How many hours before the JWT expires to automatically refresh it. 0 means 25% of N8N_USER_MANAGEMENT_JWT_DURATION_HOURS. -1 means it will never refresh, which forces users to log in again after the period defined in N8N_USER_MANAGEMENT_JWT_DURATION_HOURS."
-			},
-			{
-				name: "N8N_MFA_ENABLED",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether to enable two-factor authentication (true) or disable (false). n8n ignores this if existing users have 2FA enabled."
-			},
-			{
-				name: "N8N_INVITE_LINKS_EMAIL_ONLY",
-				type: "CheckBox",
-				description: "When set to true, n8n will only deliver invite links via email and will not expose them through the API. This option enhances security by preventing invite URLs from being accessible programmatically, or to high privileged users."
-			}
-		]
-	},
-	{
-		category: "Workflows",
-		sections: [{
-			section: "Workflows",
-			items: [
-				{
-					name: "N8N_ONBOARDING_FLOW_DISABLED",
-					type: "CheckBox",
-					description: "Whether to disable onboarding tips when creating a new workflow (true) or not (false)."
-				},
-				{
-					name: "N8N_WORKFLOW_ACTIVATION_BATCH_SIZE",
-					type: "Input",
-					defaultValue: 1,
-					description: "How many workflows to publish simultaneously during startup."
-				},
-				{
-					name: "N8N_WORKFLOW_CALLER_POLICY_DEFAULT_OPTION",
-					type: "Input",
-					defaultValue: "workflowsFromSameOwner",
-					description: "Which workflows can call a workflow. Options are: any, none, workflowsFromAList, workflowsFromSameOwner. This feature requires Workflow sharing."
-				},
-				{
-					name: "N8N_WORKFLOW_TAGS_DISABLED",
-					type: "CheckBox",
-					description: "Whether to disable workflow tags (true) or enable tags (false)."
-				},
-				{
-					name: "WORKFLOWS_DEFAULT_NAME",
-					type: "Input",
-					defaultValue: "My workflow",
-					description: "The default name used for new workflows."
-				}
-			]
-		}, {
-			section: "Workflow History",
-			items: [{
-				name: "N8N_WORKFLOW_HISTORY_PRUNE_TIME",
-				type: "Input",
-				defaultValue: -1,
-				description: "How long to keep workflow history versions before automatically deleting them (in hours). Set to `-1` to keep all versions indefinitely."
-			}]
-		}]
-	},
-	{
-		category: "Task Runners",
-		items: [
-			{
-				name: "N8N_RUNNERS_ENABLED",
-				type: "CheckBox",
-				description: "Are task runners enabled."
-			},
-			{
-				name: "N8N_RUNNERS_MODE",
-				type: "DropDown",
-				defaultValue: "internal",
-				values: ["internal", "external"],
-				description: "How to launch and run the task runner. `internal` means n8n will launch a task runner as child process. `external` means an external orchestrator will launch the task runner."
-			},
-			{
-				name: "N8N_RUNNERS_AUTH_TOKEN",
-				type: "Input",
-				defaultValue: "Random string",
-				description: "Shared secret used by a task runner to authenticate to n8n. Required when using `external` mode."
-			},
-			{
-				name: "N8N_RUNNERS_BROKER_PORT",
-				type: "Input",
-				defaultValue: 5679,
-				description: "Port the task broker listens on for task runner connections."
-			},
-			{
-				name: "N8N_RUNNERS_BROKER_LISTEN_ADDRESS",
-				type: "Input",
-				defaultValue: "127.0.0.1",
-				description: "Address the task broker listens on."
-			},
-			{
-				name: "N8N_RUNNERS_MAX_PAYLOAD",
-				type: "Input",
-				defaultValue: 1073741824,
-				description: "Maximum payload size in bytes for communication between a task broker and a task runner."
-			},
-			{
-				name: "N8N_RUNNERS_MAX_OLD_SPACE_SIZE",
-				type: "Input",
-				description: "The --max-old-space-size option to use for a task runner (in MB). By default, Node.js will set this based on available memory."
-			},
-			{
-				name: "N8N_RUNNERS_MAX_CONCURRENCY",
-				type: "Input",
-				defaultValue: 5,
-				description: "The number of concurrent tasks a task runner can execute at a time."
-			},
-			{
-				name: "N8N_RUNNERS_TASK_TIMEOUT",
-				type: "Input",
-				defaultValue: 300,
-				description: "The maximum time, in seconds, a task can run before the runner stops it and restarts. This value must be greater than 0."
-			},
-			{
-				name: "N8N_RUNNERS_HEARTBEAT_INTERVAL",
-				type: "Input",
-				defaultValue: 30,
-				description: "The interval, in seconds, at which the runner must send a heartbeat to the broker. If the runner doesn't send a heartbeat in time, the task stops and the runner restarts. This value must be greater than 0."
-			},
-			{
-				name: "N8N_RUNNERS_INSECURE_MODE",
-				type: "CheckBox",
-				description: "Whether to disable all security measures in the task runner, for compatibility with modules that rely on insecure JS features. **Discouraged for production use.**"
-			},
-			{
-				name: "N8N_RUNNERS_TASK_REQUEST_TIMEOUT",
-				type: "Input",
-				defaultValue: 20,
-				description: "How long (in seconds) a task request can wait for a runner to become available before timing out. This prevents workflows from hanging indefinitely when no runners are available. Must be greater than 0."
-			},
-			{
-				name: "N8N_RUNNERS_LAUNCHER_LOG_LEVEL",
-				type: "DropDown",
-				defaultValue: "info",
-				values: [
-					"debug",
-					"info",
-					"warn",
-					"error"
-				],
-				description: "Which log messages to show."
-			},
-			{
-				name: "N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT",
-				type: "Input",
-				defaultValue: 15,
-				description: "The number of seconds to wait before shutting down an idle runner."
-			},
-			{
-				name: "N8N_RUNNERS_TASK_BROKER_URI",
-				type: "Input",
-				defaultValue: "http://127.0.0.1:5679",
-				description: "The URI of the task broker server (n8n instance)."
-			},
-			{
-				name: "N8N_RUNNERS_LAUNCHER_HEALTH_CHECK_PORT",
-				type: "Input",
-				defaultValue: 5680,
-				description: "Port for the launcher's health check server."
-			},
-			{
-				name: "NODE_OPTIONS",
-				type: "Input",
-				description: "Options for Node.js."
-			},
-			{
-				name: "N8N_RUNNERS_GRANT_TOKEN",
-				type: "Input",
-				defaultValue: "Random string",
-				description: "Token the runner uses to authenticate with the task broker. This is automatically provided by the launcher."
-			},
-			{
-				name: "N8N_RUNNERS_ALLOW_PROTOTYPE_MUTATION",
-				type: "CheckBox",
-				description: "Whether to allow prototype mutation for external libraries. Set to `true` to allow modules that rely on runtime prototype mutation (for example, `puppeteer`) at the cost of relaxing security."
-			},
-			{
-				name: "N8N_RUNNERS_STDLIB_ALLOW",
-				type: "Input",
-				description: "Python standard library modules that you can use in the Code node, including their submodules. Use `*` to allow all stdlib modules. n8n disables all Python standard library imports by default."
-			},
-			{
-				name: "N8N_RUNNERS_EXTERNAL_ALLOW",
-				type: "Input",
-				description: "Third-party Python modules that are allowed to be used in the Code node, including their submodules. Use `*` to allow all external modules. n8n disables all third-party Python modules by default. Third-party Python modules must be included in the `n8nio/runners` image."
-			},
-			{
-				name: "N8N_RUNNERS_BUILTINS_DENY",
-				type: "Input",
-				defaultValue: "eval,exec,compile,open,input,breakpoint,getattr,object,type,vars,setattr,delattr,hasattr,dir,memoryview,__build_class__,globals,locals",
-				description: "Python built-ins that you can't use in the Code node. Set to an empty string to allow all built-ins."
-			},
-			{
-				name: "N8N_BLOCK_RUNNER_ENV_ACCESS",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether to block access to the runner's environment from within Python code tasks. Set to `false` to enable all Python code node users access to the runner's environment via `os.environ`. For security reasons, environment variable access is blocked by default."
-			}
-		]
-	},
-	{
-		category: "Logs",
-		items: [
-			{
-				name: "N8N_LOG_LEVEL",
-				type: "DropDown",
-				defaultValue: "info",
-				values: [
-					"info",
-					"warn",
-					"error",
-					"debug",
-					"silent"
-				],
-				description: "Log output level. Refer to Log levels for details."
-			},
-			{
-				name: "N8N_LOG_OUTPUT",
-				type: "DropDown",
-				defaultValue: "console",
-				values: ["console", "file"],
-				description: "Where to output logs. Provide multiple values as a comma-separated list."
-			},
-			{
-				name: "N8N_LOG_FORMAT",
-				type: "DropDown",
-				defaultValue: "text",
-				values: ["text", "json"],
-				description: "The log format to use. `text` prints human readable messages. `json` prints one JSON object per line containing the message, level, timestamp, and all metadata. This is useful for production monitoring as well as debugging."
-			},
-			{
-				name: "N8N_LOG_SCOPES",
-				type: "Input",
-				description: "Comma-separated list of scopes to filter logs by (e.g., `license`, `scaling`, `mcp`, `pubsub`, `redis`)."
-			},
-			{
-				name: "N8N_LOG_STREAMING_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage log streaming destinations from environment variables. When `true`, n8n applies log streaming variables on startup and locks UI controls."
-			},
-			{
-				name: "N8N_LOG_STREAMING_DESTINATIONS",
-				type: "Input",
-				description: "JSON array of log streaming destinations (webhook, syslog, or sentry configuration objects)."
-			},
-			{
-				name: "N8N_LOG_CRON_ACTIVE_INTERVAL",
-				type: "Input",
-				defaultValue: 0,
-				description: "Interval in minutes to log currently active cron jobs. Set to 0 to disable."
-			},
-			{
-				name: "N8N_LOG_FILE_COUNT_MAX",
-				type: "Input",
-				defaultValue: 100,
-				description: "Max number of log files to keep."
-			},
-			{
-				name: "N8N_LOG_FILE_SIZE_MAX",
-				type: "Input",
-				defaultValue: 16,
-				description: "Max size of each log file in MB."
-			},
-			{
-				name: "N8N_LOG_FILE_LOCATION",
-				type: "Input",
-				defaultValue: "<n8n-directory-path>/logs/n8n.log",
-				description: "Log file location. Requires N8N_LOG_OUTPUT set to `file`."
-			},
-			{
-				name: "DB_LOGGING_ENABLED",
-				type: "CheckBox",
-				description: "Whether to enable database-specific logging."
-			},
-			{
-				name: "DB_LOGGING_OPTIONS",
-				type: "DropDown",
-				defaultValue: "error",
-				values: [
-					"query",
-					"error",
-					"schema",
-					"warn",
-					"info",
-					"log"
-				],
-				description: "Database log output level. To enable all logging, specify `all`. Refer to TypeORM logging options"
-			},
-			{
-				name: "DB_LOGGING_MAX_EXECUTION_TIME",
-				type: "Input",
-				defaultValue: 1e3,
-				description: "Maximum execution time (in milliseconds) before n8n logs a warning. Set to 0 to disable long running query warning."
-			},
-			{
-				name: "CODE_ENABLE_STDOUT",
-				type: "CheckBox",
-				description: "Set to `true` to send Code node logs from `console.log` or `print` to the process's stdout, only for production executions."
-			},
-			{
-				name: "NO_COLOR",
-				type: "Input",
-				defaultValue: "undefined",
-				description: "Set to any value to output logs without ANSI colors. For more information, see the no-color.org website."
-			},
-			{
-				name: "N8N_EVENTBUS_CHECKUNSENTINTERVAL",
-				type: "Input",
-				defaultValue: 0,
-				description: "How often (in milliseconds) to check for unsent event messages. Can in rare cases send message twice. Set to 0 to disable it."
-			},
-			{
-				name: "N8N_EVENTBUS_LOGWRITER_SYNCFILEACCESS",
-				type: "CheckBox",
-				description: "Whether all file access happens synchronously within the thread (true) or not (false)."
-			},
-			{
-				name: "N8N_EVENTBUS_LOGWRITER_KEEPLOGCOUNT",
-				type: "Input",
-				defaultValue: 3,
-				description: "Number of event log files to keep."
-			},
-			{
-				name: "N8N_EVENTBUS_LOGWRITER_MAXFILESIZEINKB",
-				type: "Input",
-				defaultValue: 10240,
-				description: "Maximum size (in kilo-bytes) of an event log file before a new one starts."
-			},
-			{
-				name: "N8N_EVENTBUS_LOGWRITER_LOGBASENAME",
-				type: "Input",
-				defaultValue: "n8nEventLog",
-				description: "Basename of the event log file."
-			}
-		]
-	},
-	{
-		category: "License",
-		items: [
-			{
-				name: "N8N_HIDE_USAGE_PAGE",
-				type: "CheckBox",
-				description: "Hide the usage and plans page in the app."
-			},
-			{
-				name: "N8N_LICENSE_ACTIVATION_KEY",
-				type: "Input",
-				defaultValue: "",
-				description: "Activation key to initialize license. Not applicable if the n8n instance was already activated."
-			},
-			{
-				name: "N8N_LICENSE_AUTO_RENEW_ENABLED",
-				type: "CheckBox",
-				description: "Enables (true) or disables (false) autorenewal for licenses. If disabled, you need to manually renew the license every 10 days by navigating to **Settings** > **Usage and plan**, and pressing `F5`. Failure to renew the license will disable all licensed features."
-			},
-			{
-				name: "N8N_LICENSE_DETACH_FLOATING_ON_SHUTDOWN",
-				type: "CheckBox",
-				description: "Controls whether the instance releases floating entitlements back to the pool upon shutdown. Set to `true` to allow other instances to reuse the entitlements, or `false` to retain them. For production instances that must always keep their licensed features, set this to `false`."
-			},
-			{
-				name: "N8N_LICENSE_SERVER_URL",
-				type: "Input",
-				defaultValue: "https://license.n8n.io/v1",
-				description: "Server URL to retrieve license."
-			},
-			{
-				name: "N8N_LICENSE_TENANT_ID",
-				type: "Input",
-				defaultValue: 1,
-				description: "Tenant ID associated with the license. Only set this variable if explicitly instructed by n8n."
-			},
-			{
-				name: "https_proxy_license_server",
-				type: "Input",
-				defaultValue: "https://user:pass@proxy:port",
-				description: "Proxy server URL for HTTPS requests to retrieve license. This variable name needs to be lowercase."
-			}
-		]
-	},
-	{
-		category: "Queue Mode",
-		items: [
-			{
-				name: "OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS",
-				type: "CheckBox",
-				description: "Set to `true` if you want manual executions to run on the worker rather than on main."
-			},
-			{
-				name: "QUEUE_BULL_PREFIX",
-				type: "Input",
-				description: "Prefix to use for all queue keys."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_DB",
-				type: "Input",
-				defaultValue: 0,
-				description: "The Redis database used."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_HOST",
-				type: "Input",
-				defaultValue: "localhost",
-				description: "The Redis host."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_PORT",
-				type: "Input",
-				defaultValue: 6379,
-				description: "The Redis port used."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_USERNAME",
-				type: "Input",
-				description: "The Redis username (needs Redis version 6 or above). Don't define it for Redis < 6 compatibility"
-			},
-			{
-				name: "QUEUE_BULL_REDIS_PASSWORD",
-				type: "Input",
-				description: "The Redis password."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_TIMEOUT_THRESHOLD",
-				type: "Input",
-				defaultValue: 1e4,
-				description: "The Redis timeout threshold (in ms)."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_CLUSTER_NODES",
-				type: "Input",
-				description: "Expects a comma-separated list of Redis Cluster nodes in the format `host:port`, for the Redis client to initially connect to. If running in queue mode (`EXECUTIONS_MODE = queue`), setting this variable will create a Redis Cluster client instead of a Redis client, and n8n will ignore `QUEUE_BULL_REDIS_HOST` and `QUEUE_BULL_REDIS_PORT`."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_TLS",
-				type: "CheckBox",
-				description: "Enable TLS on Redis connections."
-			},
-			{
-				name: "QUEUE_BULL_REDIS_DUALSTACK",
-				type: "CheckBox",
-				description: "Enable dual-stack support (IPv4 and IPv6) on Redis connections."
-			},
-			{
-				name: "QUEUE_WORKER_TIMEOUT",
-				type: "Input",
-				defaultValue: 30,
-				description: "**Deprecated** Use `N8N_GRACEFUL_SHUTDOWN_TIMEOUT` instead. How long should n8n wait (seconds) for running executions before exiting worker process on shutdown."
-			},
-			{
-				name: "QUEUE_HEALTH_CHECK_ACTIVE",
-				type: "CheckBox",
-				description: "Whether to enable health checks (true) or disable (false)."
-			},
-			{
-				name: "QUEUE_HEALTH_CHECK_PORT",
-				type: "Input",
-				defaultValue: 5678,
-				description: "The port to serve health checks on. If you experience a port conflict error when starting a worker server using its default port, change this."
-			},
-			{
-				name: "QUEUE_WORKER_LOCK_DURATION",
-				type: "Input",
-				defaultValue: 6e4,
-				description: "How long (in ms) is the lease period for a worker to work on a message."
-			},
-			{
-				name: "QUEUE_WORKER_LOCK_RENEW_TIME",
-				type: "Input",
-				defaultValue: 1e4,
-				description: "How frequently (in ms) should a worker renew the lease time."
-			},
-			{
-				name: "QUEUE_WORKER_STALLED_INTERVAL",
-				type: "Input",
-				defaultValue: 3e4,
-				description: "How often should a worker check for stalled jobs (use 0 for never)."
-			},
-			{
-				name: "QUEUE_WORKER_MAX_STALLED_COUNT",
-				type: "Input",
-				defaultValue: 1,
-				description: "Maximum amount of times a stalled job will be re-processed."
-			},
-			{
-				name: "N8N_MULTI_MAIN_SETUP_ENABLED",
-				type: "CheckBox",
-				description: "Whether to enable multi-main setup for queue mode (license required)."
-			},
-			{
-				name: "N8N_MULTI_MAIN_SETUP_KEY_TTL",
-				type: "Input",
-				defaultValue: 10,
-				description: "Time to live (in seconds) for leader key in multi-main setup."
-			},
-			{
-				name: "N8N_MULTI_MAIN_SETUP_CHECK_INTERVAL",
-				type: "Input",
-				defaultValue: 3,
-				description: "Interval (in seconds) for leader check in multi-main setup."
-			}
-		]
-	},
-	{
-		category: "Source Control",
-		items: [{
-			name: "N8N_SOURCECONTROL_DEFAULT_SSH_KEY_TYPE",
-			type: "Input",
-			defaultValue: "ed25519",
-			description: "Set to `rsa` to make RSA the default SSH key type for Source control setup."
-		}]
-	},
-	{
-		category: "Timezone & Localization",
-		items: [{
-			name: "GENERIC_TIMEZONE",
-			type: "Input",
-			defaultValue: "America/New_York",
-			description: "The n8n instance timezone. Important for schedule nodes (such as Cron)."
-		}, {
-			name: "N8N_DEFAULT_LOCALE",
-			type: "Input",
-			defaultValue: "en",
-			description: "A locale identifier, compatible with the Accept-Language header. n8n doesn't support regional identifiers, such as `de-AT`. When running in a locale other than the default, n8n displays UI strings in the selected locale, and falls back to `en` for any untranslated strings."
-		}]
-	},
-	{
-		category: "Security",
-		items: [
-			{
-				name: "N8N_SECURITY_POLICY_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage the security policy from environment variables. When `true`, n8n applies security policy variables on startup and locks UI controls."
-			},
-			{
-				name: "N8N_MFA_ENFORCED_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enforce two-factor authentication for all users (`true`) or not (`false`)."
-			},
-			{
-				name: "N8N_PERSONAL_SPACE_PUBLISHING_ENABLED",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether users can publish from their personal space (`true`) or not (`false`)."
-			},
-			{
-				name: "N8N_PERSONAL_SPACE_SHARING_ENABLED",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether users can share resources from their personal space (`true`) or not (`false`)."
-			},
-			{
-				name: "N8N_BLOCK_ENV_ACCESS_IN_NODE",
-				type: "CheckBox",
-				description: "Whether to allow users to access environment variables in expressions and the Code node (false) or not (true)."
-			},
-			{
-				name: "N8N_BLOCK_FILE_ACCESS_TO_N8N_FILES",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Set to `true` to block access to all files in the .n8n directory and user defined configuration files."
-			},
-			{
-				name: "N8N_BLOCK_FILE_PATTERNS",
-				type: "Input",
-				defaultValue: "^(.*/)*\\.git(/.*)*$",
-				description: "Regex patterns for files and folders that ReadWriteFile and ReadBinaryFiles nodes cannot access. Separate multiple patterns with semicolons."
-			},
-			{
-				name: "N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS",
-				type: "CheckBox",
-				description: "Set to `true` to try to set 0600 permissions for the settings file, giving only the owner read and write access."
-			},
-			{
-				name: "N8N_RESTRICT_FILE_ACCESS_TO",
-				type: "Input",
-				defaultValue: "~/.n8n-files",
-				description: "Limits access to files in these directories. Provide multiple files as a semicolon-separated list (\";\")."
-			},
-			{
-				name: "N8N_CONTENT_SECURITY_POLICY",
-				type: "Input",
-				defaultValue: "{}",
-				description: "Set Content-Security-Policy headers as helmet.js nested directives object. For example, `{ \"frame-ancestors\": [\"http://localhost:3000\"] }`"
-			},
-			{
-				name: "N8N_CONTENT_SECURITY_POLICY_REPORT_ONLY",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to set the Content-Security-Policy-Report-Only header instead of Content-Security-Policy."
-			},
-			{
-				name: "N8N_CROSS_ORIGIN_OPENER_POLICY",
-				type: "DropDown",
-				defaultValue: "same-origin-allow-popups",
-				values: ["same-origin", "same-origin-allow-popups"],
-				description: "Configuration for the Cross-Origin-Opener-Policy header."
-			},
-			{
-				name: "N8N_INSECURE_DISABLE_WEBHOOK_IFRAME_SANDBOX",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to disable HTML sandboxing for webhooks."
-			},
-			{
-				name: "N8N_INSECURE_DISABLE_FORM_HTML_SANDBOX",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to disable CSP sandboxing for form pages (Form Trigger, Send and Wait)."
-			},
-			{
-				name: "N8N_GIT_NODE_DISABLE_BARE_REPOS",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Set to `true` to prevent the Git node from working with bare repositories, enhancing security."
-			},
-			{
-				name: "N8N_GIT_NODE_ENABLE_HOOKS",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to allow the Git node to execute Git hooks."
-			},
-			{
-				name: "N8N_GIT_NODE_ENABLE_ALL_CONFIG_KEYS",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enable arbitrary git config keys in the Git node."
-			},
-			{
-				name: "N8N_AWS_SYSTEM_CREDENTIALS_ACCESS_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to allow access to AWS system credentials (e.g. in awsAssumeRole credentials)."
-			},
-			{
-				name: "N8N_AWS_SYSTEM_CREDENTIALS_SDK_SOURCES",
-				type: "Input",
-				defaultValue: "all",
-				description: "Which AWS system-credential sources resolve via the AWS SDK. Accepts `all`, `none`, or a comma-separated subset."
-			},
-			{
-				name: "N8N_SECURITY_AUDIT_DAYS_ABANDONED_WORKFLOW",
-				type: "Input",
-				defaultValue: 90,
-				description: "Number of days to consider a workflow abandoned if it's not executed."
-			},
-			{
-				name: "N8N_SECURE_COOKIE",
-				type: "CheckBox",
-				description: "Ensures that cookies are only sent over HTTPS, enhancing security."
-			},
-			{
-				name: "N8N_SAMESITE_COOKIE",
-				type: "DropDown",
-				defaultValue: "lax",
-				values: [
-					"strict",
-					"lax",
-					"none"
-				],
-				description: "Controls cross-site cookie behavior:\n- strict: Sent only for first-party requests.\n- lax (default): Sent with top-level navigation requests.\n- none: Sent in all contexts (requires HTTPS)."
-			}
-		]
-	},
-	{
-		category: "External Hooks & Secrets",
-		sections: [{
-			section: "External Hooks",
-			items: [{
-				name: "EXTERNAL_HOOK_FILES",
-				type: "Input",
-				description: "Files containing backend external hooks. Provide multiple files as a colon-separated list (\":\")."
-			}, {
-				name: "EXTERNAL_FRONTEND_HOOKS_URLS",
-				type: "Input",
-				description: "URLs to files containing frontend external hooks. Provide multiple URLs as a colon-separated list (\":\")."
-			}]
-		}, {
-			section: "External Secrets",
-			items: [{
-				name: "N8N_EXTERNAL_SECRETS_UPDATE_INTERVAL",
-				type: "Input",
-				defaultValue: 300,
-				description: "How often (in seconds) to check for secret updates."
-			}]
-		}]
-	},
-	{
-		category: "Deployment",
-		items: [
-			{
-				name: "HTTP_PROXY",
-				type: "Input",
-				description: "A URL to proxy unencrypted HTTP requests through. When set, n8n proxies all unencrypted HTTP traffic from nodes through the proxy URL."
-			},
-			{
-				name: "HTTPS_PROXY",
-				type: "Input",
-				description: "A URL to proxy TLS/SSL encrypted HTTP requests through. When set, n8n proxies all TLS/SSL encrypted HTTP traffic from nodes through the proxy URL."
-			},
-			{
-				name: "ALL_PROXY",
-				type: "Input",
-				description: "A URL to proxy both unencrypted and encrypted HTTP requests through. When set, n8n uses this value when more specific variables (`HTTP_PROXY` or `HTTPS_PROXY`) aren't present."
-			},
-			{
-				name: "NO_PROXY",
-				type: "Input",
-				description: "A comma-separated list of hostnames or URLs that should bypass the proxy. When using `HTTP_PROXY`, `HTTPS_PROXY`, or `ALL_PROXY`, n8n will connect directly to the URLs or hostnames defined here instead of using the proxy."
-			},
-			{
-				name: "N8N_EDITOR_BASE_URL",
-				type: "Input",
-				description: "Public URL where users can access the editor. Also used for emails sent from n8n and the redirect URL for SAML based authentication."
-			},
-			{
-				name: "N8N_WEBHOOK_URL",
-				type: "Input",
-				description: "Public base URL for both test and production webhooks. Successor to the deprecated `WEBHOOK_URL`."
-			},
-			{
-				name: "N8N_CANVAS_ONLY",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enable canvas-only mode, hiding the chrome UI."
-			},
-			{
-				name: "N8N_CONFIG_FILES",
-				type: "Input",
-				description: "Use to provide the path to any JSON configuration file."
-			},
-			{
-				name: "N8N_DISABLE_UI",
-				type: "CheckBox",
-				description: "Set to `true` to disable the UI."
-			},
-			{
-				name: "N8N_PREVIEW_MODE",
-				type: "CheckBox",
-				description: "Set to `true` to run in preview mode."
-			},
-			{
-				name: "N8N_TEMPLATES_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Enables workflow templates (true) or disable (false)."
-			},
-			{
-				name: "N8N_TEMPLATES_HOST",
-				type: "Input",
-				defaultValue: "https://api.n8n.io",
-				description: "Change this if creating your own workflow template library. Note that to use your own workflow templates library, your API must provide the same endpoints and response structure as n8n's. Refer to Workflow templates for more information."
-			},
-			{
-				name: "N8N_ENCRYPTION_KEY",
-				type: "Input",
-				defaultValue: "Random key generated by n8n",
-				description: "Provide a custom key used to encrypt credentials in the n8n database. By default n8n generates a random key on first launch."
-			},
-			{
-				name: "N8N_USER_FOLDER",
-				type: "Input",
-				defaultValue: "user-folder",
-				description: "Provide the path where n8n will create the .n8n folder. This directory stores user-specific data, such as database file and encryption key."
-			},
-			{
-				name: "N8N_PATH",
-				type: "Input",
-				defaultValue: "/",
-				description: "The path n8n deploys to."
-			},
-			{
-				name: "N8N_HOST",
-				type: "Input",
-				defaultValue: "localhost",
-				description: "Host name n8n runs on."
-			},
-			{
-				name: "N8N_PORT",
-				type: "Input",
-				defaultValue: 5678,
-				description: "The HTTP port n8n runs on."
-			},
-			{
-				name: "N8N_LISTEN_ADDRESS",
-				type: "Input",
-				defaultValue: "::",
-				description: "The IP address n8n should listen on."
-			},
-			{
-				name: "N8N_PROTOCOL",
-				type: "DropDown",
-				defaultValue: "http",
-				values: ["http", "https"],
-				description: "The protocol used to reach n8n."
-			},
-			{
-				name: "N8N_SSL_KEY",
-				type: "Input",
-				description: "The SSL key for HTTPS protocol."
-			},
-			{
-				name: "N8N_SSL_CERT",
-				type: "Input",
-				description: "The SSL certificate for HTTPS protocol."
-			},
-			{
-				name: "N8N_PERSONALIZATION_ENABLED",
-				type: "CheckBox",
-				description: "Whether to ask users personalisation questions and then customise n8n accordingly."
-			},
-			{
-				name: "N8N_VERSION_NOTIFICATIONS_ENABLED",
-				type: "CheckBox",
-				description: "When enabled, n8n sends notifications of new versions and security updates."
-			},
-			{
-				name: "N8N_VERSION_NOTIFICATIONS_ENDPOINT",
-				type: "Input",
-				defaultValue: "https://api.n8n.io/versions/",
-				description: "The endpoint to retrieve where version information."
-			},
-			{
-				name: "N8N_VERSION_NOTIFICATIONS_INFO_URL",
-				type: "Input",
-				defaultValue: "https://docs.n8n.io/getting-started/installation/updating.html",
-				description: "The URL displayed in the New Versions panel for more information."
-			},
-			{
-				name: "N8N_DIAGNOSTICS_ENABLED",
-				type: "CheckBox",
-				description: "Whether to share selected, anonymous telemetry with n8n. Note that if you set this to `false`, you can't enable Ask AI in the Code node."
-			},
-			{
-				name: "N8N_DIAGNOSTICS_CONFIG_FRONTEND",
-				type: "Input",
-				defaultValue: "1zPn9bgWPzlQc0p8Gj1uiK6DOTn;https://telemetry.n8n.io",
-				description: "Telemetry configuration for the frontend."
-			},
-			{
-				name: "N8N_DIAGNOSTICS_CONFIG_BACKEND",
-				type: "Input",
-				defaultValue: "1zPn7YoGC3ZXE9zLeTKLuQCB4F6;https://telemetry.n8n.io/v1/batch",
-				description: "Telemetry configuration for the backend."
-			},
-			{
-				name: "N8N_PUSH_BACKEND",
-				type: "Input",
-				defaultValue: "websocket",
-				description: "Choose whether the n8n backend uses server-sent events (`sse`) or WebSockets (`websocket`) to send changes to the UI."
-			},
-			{
-				name: "VUE_APP_URL_BASE_API",
-				type: "Input",
-				defaultValue: "http://localhost:5678/",
-				description: "Used when building the n8n-editor-ui package manually to set how the frontend can reach the backend API. Refer to Configure the Base URL."
-			},
-			{
-				name: "N8N_HIRING_BANNER_ENABLED",
-				type: "CheckBox",
-				description: "Whether to show the n8n hiring banner in the console (true) or not (false)."
-			},
-			{
-				name: "N8N_PUBLIC_API_SWAGGERUI_DISABLED",
-				type: "CheckBox",
-				description: "Whether the Swagger UI (API playground) is disabled (true) or not (false)."
-			},
-			{
-				name: "N8N_PUBLIC_API_DISABLED",
-				type: "CheckBox",
-				description: "Whether to disable the public API (true) or not (false)."
-			},
-			{
-				name: "N8N_PUBLIC_API_ENDPOINT",
-				type: "Input",
-				defaultValue: "api",
-				description: "Path for the public API endpoints."
-			},
-			{
-				name: "N8N_GRACEFUL_SHUTDOWN_TIMEOUT",
-				type: "Input",
-				defaultValue: 30,
-				description: "How long should the n8n process wait (in seconds) for components to shut down before exiting the process."
-			},
-			{
-				name: "N8N_DEV_RELOAD",
-				type: "CheckBox",
-				description: "When working on the n8n source code, set this to `true` to automatically reload or restart the application when changes occur in the source code files."
-			},
-			{
-				name: "N8N_REINSTALL_MISSING_PACKAGES",
-				type: "CheckBox",
-				description: "If set to `true`, n8n will automatically attempt to reinstall any missing packages."
-			},
-			{
-				name: "N8N_TUNNEL_SUBDOMAIN",
-				type: "Input",
-				description: "Specifies the subdomain for the n8n tunnel. If not set, n8n generates a random subdomain."
-			},
-			{
-				name: "N8N_PROXY_HOPS",
-				type: "Input",
-				defaultValue: 0,
-				description: "Number of reverse-proxies n8n is running behind."
-			}
-		]
-	},
-	{
-		category: "Database",
-		items: [
-			{
-				name: "DB_TYPE",
-				type: "DropDown",
-				defaultValue: "sqlite",
-				values: ["sqlite", "postgresdb"],
-				description: "The database to use."
-			},
-			{
-				name: "DB_TABLE_PREFIX",
-				type: "Input",
-				description: "Prefix to use for table names."
-			},
-			{
-				name: "DB_PING_INTERVAL_SECONDS",
-				type: "Input",
-				defaultValue: 2,
-				description: "The interval, in seconds, between pings to the database to check if the connection is still alive."
-			},
-			{
-				name: "DB_POSTGRESDB_DATABASE",
-				type: "Input",
-				defaultValue: "n8n",
-				description: "The name of the PostgreSQL database."
-			},
-			{
-				name: "DB_POSTGRESDB_HOST",
-				type: "Input",
-				defaultValue: "localhost",
-				description: "The PostgreSQL host."
-			},
-			{
-				name: "DB_POSTGRESDB_PORT",
-				type: "Input",
-				defaultValue: 5432,
-				description: "The PostgreSQL port."
-			},
-			{
-				name: "DB_POSTGRESDB_USER",
-				type: "Input",
-				defaultValue: "postgres",
-				description: "The PostgreSQL user."
-			},
-			{
-				name: "DB_POSTGRESDB_PASSWORD",
-				type: "Input",
-				description: "The PostgreSQL password."
-			},
-			{
-				name: "DB_POSTGRESDB_POOL_SIZE",
-				type: "Input",
-				defaultValue: 2,
-				description: "Control how many parallel open Postgres connections n8n should have. Increasing it may help with resource utilization, but too many connections may degrade performance."
-			},
-			{
-				name: "DB_POSTGRESDB_CONNECTION_TIMEOUT",
-				type: "Input",
-				defaultValue: 2e4,
-				description: "Postgres connection timeout (ms)."
-			},
-			{
-				name: "DB_POSTGRESDB_IDLE_CONNECTION_TIMEOUT",
-				type: "Input",
-				defaultValue: 3e4,
-				description: "Amount of time before an idle connection is eligible for eviction for being idle."
-			},
-			{
-				name: "DB_POSTGRESDB_SCHEMA",
-				type: "Input",
-				defaultValue: "public",
-				description: "The PostgreSQL schema."
-			},
-			{
-				name: "DB_POSTGRESDB_SSL_ENABLED",
-				type: "CheckBox",
-				description: "Whether to enable SSL. Automatically enabled if DB_POSTGRESDB_SSL_CA, DB_POSTGRESDB_SSL_CERT or DB_POSTGRESDB_SSL_KEY is defined."
-			},
-			{
-				name: "DB_POSTGRESDB_SSL_CA",
-				type: "Input",
-				description: "The PostgreSQL SSL certificate authority."
-			},
-			{
-				name: "DB_POSTGRESDB_SSL_CERT",
-				type: "Input",
-				description: "The PostgreSQL SSL certificate."
-			},
-			{
-				name: "DB_POSTGRESDB_SSL_KEY",
-				type: "Input",
-				description: "The PostgreSQL SSL key."
-			},
-			{
-				name: "DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED",
-				type: "CheckBox",
-				description: "If n8n should reject unauthorized SSL connections (true) or not (false)."
-			},
-			{
-				name: "DB_SQLITE_POOL_SIZE",
-				type: "Input",
-				defaultValue: 0,
-				description: "Controls whether to open the SQLite file in WAL mode or rollback journal mode. Uses rollback journal mode when set to zero. When greater than zero, uses WAL mode with the value determining the number of parallel SQL read connections to configure. WAL mode is much more performant and reliable than the rollback journal mode."
-			},
-			{
-				name: "DB_SQLITE_VACUUM_ON_STARTUP",
-				type: "CheckBox",
-				description: "Runs VACUUM operation on startup to rebuild the database. Reduces file size and optimizes indexes. This is a long running blocking operation and increases start-up time."
-			}
-		]
-	},
-	{
-		category: "Executions",
-		items: [
-			{
-				name: "EXECUTIONS_MODE",
-				type: "DropDown",
-				defaultValue: "regular",
-				values: ["regular", "queue"],
-				description: "Whether executions should run directly or using queue."
-			},
-			{
-				name: "EXECUTIONS_TIMEOUT",
-				type: "Input",
-				defaultValue: -1,
-				description: "Sets a default timeout (in seconds) to all workflows after which n8n stops their execution. Users can override this for individual workflows up to the duration set in EXECUTIONS_TIMEOUT_MAX. Set EXECUTIONS_TIMEOUT to -1 to disable."
-			},
-			{
-				name: "EXECUTIONS_TIMEOUT_MAX",
-				type: "Input",
-				defaultValue: 3600,
-				description: "The maximum execution time (in seconds) that users can set for an individual workflow."
-			},
-			{
-				name: "N8N_AI_TIMEOUT_MAX",
-				type: "Input",
-				defaultValue: 36e5,
-				description: "Sets the HTTP request timeout in milliseconds for AI and LLM nodes (such as OpenAI, Anthropic, Mistral, and Ollama). This controls how long n8n waits for responses from AI services before timing out. Useful for slower local AI services or complex prompts that require longer processing time."
-			},
-			{
-				name: "EXECUTIONS_DATA_SAVE_ON_ERROR",
-				type: "DropDown",
-				defaultValue: "all",
-				values: ["all", "none"],
-				description: "Whether n8n saves execution data on error."
-			},
-			{
-				name: "EXECUTIONS_DATA_SAVE_ON_SUCCESS",
-				type: "DropDown",
-				defaultValue: "all",
-				values: ["all", "none"],
-				description: "Whether n8n saves execution data on success."
-			},
-			{
-				name: "EXECUTIONS_DATA_SAVE_ON_PROGRESS",
-				type: "CheckBox",
-				description: "Whether to save progress for each node executed (true) or not (false)."
-			},
-			{
-				name: "EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS",
-				type: "CheckBox",
-				description: "Whether to save data of executions when started manually."
-			},
-			{
-				name: "EXECUTIONS_DATA_PRUNE",
-				type: "CheckBox",
-				defaultValue: true,
-				description: "Whether to delete data of past executions on a rolling basis."
-			},
-			{
-				name: "EXECUTIONS_DATA_MAX_AGE",
-				type: "Input",
-				defaultValue: 336,
-				description: "The execution age (in hours) before it's deleted."
-			},
-			{
-				name: "EXECUTIONS_DATA_PRUNE_MAX_COUNT",
-				type: "Input",
-				defaultValue: 1e4,
-				description: "Maximum number of executions to keep in the database. 0 = no limit"
-			},
-			{
-				name: "EXECUTIONS_DATA_HARD_DELETE_BUFFER",
-				type: "Input",
-				defaultValue: 1,
-				description: "How old (hours) the finished execution data has to be to get hard-deleted. By default, this buffer excludes recent executions as the user may need them while building a workflow."
-			},
-			{
-				name: "EXECUTIONS_DATA_PRUNE_HARD_DELETE_INTERVAL",
-				type: "Input",
-				defaultValue: 15,
-				description: "How often (minutes) execution data should be hard-deleted."
-			},
-			{
-				name: "EXECUTIONS_DATA_PRUNE_SOFT_DELETE_INTERVAL",
-				type: "Input",
-				defaultValue: 60,
-				description: "How often (minutes) execution data should be soft-deleted."
-			},
-			{
-				name: "EXECUTIONS_DATA_MAX_DISPLAY_SIZE",
-				type: "Input",
-				defaultValue: 104857600,
-				description: "Max byte size of execution run data to load for display. Executions whose data exceeds this are returned without run data. 0 disables."
-			},
-			{
-				name: "N8N_CONCURRENCY_PRODUCTION_LIMIT",
-				type: "Input",
-				defaultValue: -1,
-				description: "Max production executions allowed to run concurrently, in both regular and scaling modes. -1 to disable in regular mode."
-			},
-			{
-				name: "N8N_CONCURRENCY_EVALUATION_LIMIT",
-				type: "Input",
-				defaultValue: -1,
-				description: "Max evaluation executions allowed to run concurrently. -1 means unlimited."
-			},
-			{
-				name: "N8N_EXECUTIONS_QUEUE_RECOVERY_INTERVAL",
-				type: "Input",
-				defaultValue: 180,
-				description: "How often (in minutes) to check for queue recovery."
-			},
-			{
-				name: "N8N_EXECUTIONS_QUEUE_RECOVERY_BATCH",
-				type: "Input",
-				defaultValue: 100,
-				description: "Size of batch of executions to check for queue recovery."
-			},
-			{
-				name: "N8N_EXECUTIONS_QUEUE_KEEP_LAST_COMPLETED",
-				type: "Input",
-				defaultValue: 0,
-				description: "How many completed Bull jobs to keep in Redis. 0 removes completed jobs immediately; n keeps the last n."
-			},
-			{
-				name: "N8N_EXECUTIONS_QUEUE_KEEP_LAST_FAILED",
-				type: "Input",
-				defaultValue: 0,
-				description: "How many failed Bull jobs to keep in Redis. 0 removes failed jobs immediately; n keeps the last n."
-			},
-			{
-				name: "N8N_WORKFLOW_AUTODEACTIVATION_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether workflows are automatically unpublished after repeated crashed executions."
-			},
-			{
-				name: "N8N_WORKFLOW_AUTODEACTIVATION_MAX_LAST_EXECUTIONS",
-				type: "Input",
-				defaultValue: 3,
-				description: "Number of crashed executions before unpublishing a workflow."
-			}
-		]
-	},
-	{
-		category: "Credentials",
-		items: [
-			{
-				name: "CREDENTIALS_OVERWRITE_DATA",
-				type: "Input",
-				description: "Overwrites for credentials."
-			},
-			{
-				name: "CREDENTIALS_OVERWRITE_ENDPOINT",
-				type: "Input",
-				description: "The API endpoint to fetch credentials."
-			},
-			{
-				name: "CREDENTIALS_OVERWRITE_PERSISTENCE",
-				type: "CheckBox",
-				description: "Enable database persistence for credential overwrites. Required for multiinstance or queue mode to propagate overwrites to workers through a publish/subscribe approach."
-			},
-			{
-				name: "CREDENTIALS_DEFAULT_NAME",
-				type: "Input",
-				defaultValue: "My credentials",
-				description: "The default name for credentials."
-			}
-		]
-	},
-	{
-		category: "Insights",
-		items: [
-			{
-				name: "N8N_DISABLED_MODULES",
-				type: "Input",
-				description: "Set to `insights` to disable the feature and metrics collection for an instance."
-			},
-			{
-				name: "N8N_INSIGHTS_COMPACTION_BATCH_SIZE",
-				type: "Input",
-				defaultValue: 500,
-				description: "The number of raw insights data to compact in a single batch."
-			},
-			{
-				name: "N8N_INSIGHTS_COMPACTION_DAILY_TO_WEEKLY_THRESHOLD_DAYS",
-				type: "Input",
-				defaultValue: 180,
-				description: "The maximum age (in days) of daily insights data to compact."
-			},
-			{
-				name: "N8N_INSIGHTS_COMPACTION_HOURLY_TO_DAILY_THRESHOLD_DAYS",
-				type: "Input",
-				defaultValue: 90,
-				description: "The maximum age (in days) of hourly insights data to compact."
-			},
-			{
-				name: "N8N_INSIGHTS_COMPACTION_INTERVAL_MINUTES",
-				type: "Input",
-				defaultValue: 60,
-				description: "Interval (in minutes) at which compaction should run."
-			},
-			{
-				name: "N8N_INSIGHTS_FLUSH_BATCH_SIZE",
-				type: "Input",
-				defaultValue: 1e3,
-				description: "The maximum number of insights data to keep in the buffer before flushing."
-			},
-			{
-				name: "N8N_INSIGHTS_FLUSH_INTERVAL_SECONDS",
-				type: "Input",
-				defaultValue: 30,
-				description: "The interval (in seconds) at which the insights data should be flushed to the database."
-			}
-		]
-	},
-	{
-		category: "Binary Data",
-		items: [
-			{
-				name: "N8N_AVAILABLE_BINARY_DATA_MODES",
-				type: "Input",
-				defaultValue: "filesystem",
-				description: "A comma separated list of available binary data modes."
-			},
-			{
-				name: "N8N_BINARY_DATA_STORAGE_PATH",
-				type: "Input",
-				defaultValue: "N8N_USER_FOLDER/binaryData",
-				description: "The path where n8n stores binary data."
-			},
-			{
-				name: "N8N_DEFAULT_BINARY_DATA_MODE",
-				type: "Input",
-				defaultValue: "default",
-				description: "The default binary data mode. `default` keeps binary data in memory. Set to `filesystem` to use the filesystem, or `s3` to AWS S3, or `database` to use the DB. Note that binary data pruning operates on the active binary data mode. For example, if your instance stored data in S3, and you later switched to filesystem mode, n8n only prunes binary data in the filesystem. This may change in future."
-			}
-		]
-	},
-	{
-		category: "External Storage",
-		items: [
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_HOST",
-				type: "Input",
-				description: "Host of the n8n bucket in S3-compatible external storage. For example, `s3.us-east-1.amazonaws.com`"
-			},
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_BUCKET_NAME",
-				type: "Input",
-				description: "Name of the n8n bucket in S3-compatible external storage."
-			},
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_BUCKET_REGION",
-				type: "Input",
-				description: "Region of the n8n bucket in S3-compatible external storage. For example, `us-east-1`"
-			},
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_ACCESS_KEY",
-				type: "Input",
-				description: "Access key in S3-compatible external storage"
-			},
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_ACCESS_SECRET",
-				type: "Input",
-				description: "Access secret in S3-compatible external storage."
-			},
-			{
-				name: "N8N_EXTERNAL_STORAGE_S3_AUTH_AUTO_DETECT",
-				type: "CheckBox",
-				description: "Use automatic credential detection to authenticate S3 calls for external storage. This will ignore the access key and access secret and use the default credential provider chain."
-			}
-		]
-	},
-	{
-		category: "Endpoints",
-		items: [
-			{
-				name: "N8N_PAYLOAD_SIZE_MAX",
-				type: "Input",
-				defaultValue: 16,
-				description: "The maximum payload size in MiB."
-			},
-			{
-				name: "N8N_FORMDATA_FILE_SIZE_MAX",
-				type: "Input",
-				defaultValue: 200,
-				description: "Max payload size for files in form-data webhook payloads in MiB."
-			},
-			{
-				name: "N8N_METRICS",
-				type: "CheckBox",
-				description: "Whether to enable the /metrics endpoint."
-			},
-			{
-				name: "N8N_METRICS_PREFIX",
-				type: "Input",
-				defaultValue: "n8n_",
-				description: "Optional prefix for n8n specific metrics names."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_DEFAULT_METRICS",
-				type: "CheckBox",
-				description: "Whether to expose default system and node.js metrics."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_CACHE_METRICS",
-				type: "CheckBox",
-				description: "Whether to include metrics (true) for cache hits and misses, or not include them (false)."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_MESSAGE_EVENT_BUS_METRICS",
-				type: "CheckBox",
-				description: "Whether to include metrics (true) for events, or not include them (false)."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the workflow ID on workflow metrics."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_NODE_TYPE_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the node type on node metrics."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the credential type on credential metrics."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_API_ENDPOINTS",
-				type: "CheckBox",
-				description: "Whether to expose metrics for API endpoints."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_API_PATH_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the path of API invocations."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_API_METHOD_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the HTTP method (GET, POST, ...) of API invocations."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL",
-				type: "CheckBox",
-				description: "Whether to include a label for the HTTP status code (200, 404, ...) of API invocations."
-			},
-			{
-				name: "N8N_METRICS_INCLUDE_QUEUE_METRICS",
-				type: "CheckBox",
-				description: "Whether to include metrics for jobs in scaling mode."
-			},
-			{
-				name: "N8N_METRICS_QUEUE_METRICS_INTERVAL",
-				type: "Input",
-				defaultValue: 20,
-				description: "How often (in seconds) to update queue metrics."
-			},
-			{
-				name: "N8N_ENDPOINT_REST",
-				type: "Input",
-				defaultValue: "rest",
-				description: "The path used for REST endpoint."
-			},
-			{
-				name: "N8N_ENDPOINT_WEBHOOK",
-				type: "Input",
-				defaultValue: "webhook",
-				description: "The path used for webhook endpoint."
-			},
-			{
-				name: "N8N_ENDPOINT_WEBHOOK_TEST",
-				type: "Input",
-				defaultValue: "webhook-test",
-				description: "The path used for test-webhook endpoint."
-			},
-			{
-				name: "N8N_ENDPOINT_WEBHOOK_WAIT",
-				type: "Input",
-				defaultValue: "webhook-waiting",
-				description: "The path used for waiting-webhook endpoint."
-			},
-			{
-				name: "WEBHOOK_URL",
-				type: "Input",
-				description: "Used to manually provide the Webhook URL when running n8n behind a reverse proxy."
-			},
-			{
-				name: "N8N_DISABLE_PRODUCTION_MAIN_PROCESS",
-				type: "CheckBox",
-				description: "Disable production webhooks from main process. This helps ensure no HTTP traffic load to main process when using webhook-specific processes."
-			}
-		]
-	},
-	{
-		category: "Model Context Protocol (MCP)",
-		items: [
-			{
-				name: "N8N_MCP_MANAGED_BY_ENV",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Set to `true` to manage MCP settings from environment variables. When `true`, n8n applies the MCP variables on every startup and locks the matching UI controls."
-			},
-			{
-				name: "N8N_MCP_ACCESS_ENABLED",
-				type: "CheckBox",
-				defaultValue: false,
-				description: "Whether to enable instance-level MCP access (`true`) or not (`false`)."
-			},
-			{
-				name: "N8N_MCP_SERVER_SESSION_IDLE_TTL_MS",
-				type: "Input",
-				defaultValue: 9e5,
-				description: "Time in milliseconds an MCP server session may stay idle before it is evicted and its resources released. Default: 15 minutes (900000 ms)."
-			},
-			{
-				name: "N8N_MCP_SERVER_SESSION_SWEEP_INTERVAL_MS",
-				type: "Input",
-				defaultValue: 3e5,
-				description: "Interval in milliseconds between sweeps that evict idle MCP server sessions. Default: 5 minutes (300000 ms)."
-			},
-			{
-				name: "N8N_MCP_CLIENT_CACHE_TTL_MS",
-				type: "Input",
-				defaultValue: 3e5,
-				description: "Time in milliseconds a cached MCP client is kept alive after its last use before being evicted. Default: 5 minutes (300000 ms)."
-			},
-			{
-				name: "N8N_MCP_CLIENT_CACHE_MAX_SIZE",
-				type: "Input",
-				defaultValue: 500,
-				description: "Maximum number of MCP clients kept in the in-memory session cache. Default: 500."
-			}
-		]
-	}
-];
-//#endregion
-//#region module/src/containers/agent/N8N/RendererMethods.ts
-const INSTALL_TIME_KEY$2 = "install-time-n8n";
-const UPDATE_TIME_KEY$2 = "update-time-n8n";
-const UPDATE_AVAILABLE_KEY$1 = "update-available-version-n8n";
-function checkLinuxArgLine$3(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	for (const arg of n8nArguments) if (arg.category === "Environment") {
-		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-		else return;
-	}
-}
-function parseArgsToString$17(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let argResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (getArgumentType(arg.name, n8nArguments) === "CheckBox") {
-			const eWinResult = `set ${arg.name}=true\n`;
-			const eResult = `export ${arg.name}="true"\n`;
-			result += isWin ? eWinResult : eResult;
-		} else {
-			const eWinResult = `set ${arg.name}=${arg.value}\n`;
-			const eResult = `export ${arg.name}="${arg.value}"\n`;
-			result += isWin ? eWinResult : eResult;
-		}
-	});
-	if (lines) result += lines + "\n";
-	result += isEmpty(argResult) ? `\nn8n start` : `\nn8n start ${argResult}`;
-	return result;
-}
-function parseStringToArgs$17(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		const lineType = checkLinuxArgLine$3(line);
-		if (lineType === "export" || lineType === "set") {
-			let [name, value] = line.replace(`${lineType} `, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, n8nArguments)) argResult.push({
-				name,
-				value
-			});
-		} else if (checkLinuxArgLine$3(line) === "var") {
-			let [name, value] = line.split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, n8nArguments)) argResult.push({
-				name,
-				value
-			});
-		}
-	});
-	return argResult;
-}
-function startInstall$16(stepper) {
-	stepper.initialSteps([
-		"Getting Started",
-		"Checking NodeJS",
-		"Detect Existing",
-		"Install N8N",
-		"All Done!"
-	]);
-	stepper.starterStep({ disableSelectDir: true }).then(() => {
-		stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Checking if NPM is installed...");
-			stepper.ipc.invoke("is_n8n_npm_available").then((isNpmInstalled) => {
-				if (isNpmInstalled) stepper.nextStep().then(() => {
-					stepper.progressBar(true, "Checking for existing N8N installation...");
-					stepper.ipc.invoke("is_n8n_installed").then((isN8nInstalled) => {
-						if (isN8nInstalled) {
-							stepper.setInstalled();
-							const currentDate = /* @__PURE__ */ new Date();
-							stepper.storage.set(INSTALL_TIME_KEY$2, currentDate.toLocaleString());
-							stepper.showFinalStep("success", "You're All Set!", "N8N is already installed. You're good to go!");
-						} else stepper.nextStep().then(() => {
-							stepper.ipc.invoke("is_n8n_npm_version_above_12").then((isAbove12) => {
-								const flags = isAbove12 ? " --allow-remote=all --dangerously-allow-all-scripts" : "";
-								stepper.executeTerminalCommands(`npm i -g n8n${flags}`).then(() => {
-									stepper.setInstalled();
-									const currentDate = /* @__PURE__ */ new Date();
-									stepper.storage.set(INSTALL_TIME_KEY$2, currentDate.toLocaleString());
-									stepper.showFinalStep("success", "Installation Complete!", "Your N8N environment is ready. Enjoy!");
-								});
-							});
-						});
-					});
-				});
-				else stepper.showFinalStep("error", "NodeJs is not installed!", "N8N need NPM! Please install NodeJs then try again.");
-			});
-		});
-	});
-}
-function startUpdate$4(stepper) {
-	stepper.initialSteps(["Update N8N", "Complete Update"]);
-	stepper.executeTerminalCommands("npm -g update n8n").then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(UPDATE_TIME_KEY$2, currentDate.toLocaleString());
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "N8N Updated Successfully!", `N8N has been updated to the latest version. You can now enjoy the new features and improvements.`);
-	});
-}
-async function cardInfo$16(api, callback) {
-	callback.setOpenFolders(void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INSTALL_TIME_KEY$2).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(UPDATE_TIME_KEY$2).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("current_n8n_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(UPDATE_AVAILABLE_KEY$1).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-const N8N_RM = {
-	catchAddress: catchAddress$5,
-	cardInfo: cardInfo$16,
-	parseStringToArgs: parseStringToArgs$17,
-	parseArgsToString: parseArgsToString$17,
-	manager: {
-		startInstall: startInstall$16,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$4
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/audio/AudioGitmylo/Arguments.ts
-const gitmyloArguments = [{
-	category: "Command Line Arguments",
-	sections: [{
-		section: "Install",
-		items: [
-			{
-				name: "--skip-install",
-				description: "Skip installing packages",
-				type: "CheckBox"
-			},
-			{
-				name: "--skip-venv",
-				description: "Skip creating/activating venv, also skips install (for advanced users)",
-				type: "CheckBox"
-			},
-			{
-				name: "--no-data-cache",
-				description: "Don\\'t override the default huggingface_hub cache path.",
-				type: "CheckBox"
-			},
-			{
-				name: "--verbose",
-				description: "Show more info, like logs during installs",
-				type: "CheckBox"
-			}
-		]
-	}, {
-		section: "Gradio",
-		items: [
-			{
-				name: "--share",
-				description: "Share this gradio instance.",
-				type: "CheckBox"
-			},
-			{
-				name: "--username",
-				description: "Gradio username",
-				type: "Input"
-			},
-			{
-				name: "--password",
-				description: "Gradio password (defaults to \"password\")",
-				type: "Input",
-				defaultValue: "password"
-			},
-			{
-				name: "--theme",
-				description: "Gradio theme",
-				type: "Input",
-				defaultValue: "gradio/soft"
-			},
-			{
-				name: "--listen",
-				description: "Listen on 0.0.0.0",
-				type: "CheckBox"
-			},
-			{
-				name: "--port",
-				description: "Use a different port, automatic when not set.",
-				type: "Input"
-			},
-			{
-				name: "--launch",
-				description: "Automatically open a browser window when the webui launches.",
-				type: "CheckBox"
-			}
-		]
-	}]
-}];
-//#endregion
-//#region module/src/containers/audio/AudioGitmylo/RendererMethods.ts
-const shellCommand$5 = isWin ? "call run.bat" : "bash ./run.sh";
-const URL$5 = "https://github.com/gitmylo/audio-webui";
-function parseArgsToString$16(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let argResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else {
-			const argType = getArgumentType(arg.name, gitmyloArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	result += isEmpty(argResult) ? shellCommand$5 : `${shellCommand$5} ${argResult}`;
-	return result;
-}
-function parseStringToArgs$16(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (!line.startsWith(shellCommand$5)) return;
-		const clArgs = line.split(`${shellCommand$5} `)[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, gitmyloArguments)) {
-				if (getArgumentType(value.name, gitmyloArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-function startInstall$15(stepper) {
-	GitInstaller("Audio Generation", URL$5, stepper, [isWin ? "run.bat" : "run.sh"]);
-}
-async function cardInfo$15(api, callback) {
-	return CardInfo(URL$5, "/extensions", api, callback);
-}
-const AG_RM = {
-	catchAddress: catchAddress$5,
-	parseArgsToString: parseArgsToString$16,
-	parseStringToArgs: parseStringToArgs$16,
-	cardInfo: cardInfo$15,
-	manager: {
-		startInstall: startInstall$15,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/containers/audio/VoiceStudio/Arguments.ts
-const voiceStudioArguments = [{
-	category: "Environment Variables",
-	sections: [
-		{
-			section: "General & Server",
-			items: [
-				{
-					name: "PORT",
-					description: "Server listening port (default: 3900)",
-					type: "Input",
-					defaultValue: "3900"
-				},
-				{
-					name: "OMNIVOICE_DATA_DIR",
-					description: "Custom path for models, voices, and projects storage",
-					type: "Directory"
-				},
-				{
-					name: "OMNIVOICE_SERVER_MODE",
-					description: "Run server in headless/server mode (disables local origin restriction)",
-					type: "CheckBox"
-				},
-				{
-					name: "OMNIVOICE_PUBLIC_API_BASE",
-					description: "Public API base URL when behind a reverse proxy",
-					type: "Input"
-				},
-				{
-					name: "OMNIVOICE_TRUSTED_NETWORKS",
-					description: "Comma-separated trusted network CIDRs for remote access",
-					type: "Input"
-				},
-				{
-					name: "OMNIVOICE_LOG_LEVEL",
-					description: "Log verbosity level (INFO, DEBUG, WARNING, ERROR)",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"INFO",
-						"DEBUG",
-						"WARNING",
-						"ERROR"
-					]
-				}
-			]
-		},
-		{
-			section: "Hardware & Compute",
-			items: [
-				{
-					name: "TORCH_COMPILE_DISABLE",
-					description: "Disable torch.compile / Triton compilation (fixes Windows OOM issues)",
-					type: "CheckBox"
-				},
-				{
-					name: "OMNIVOICE_TORCH_VARIANT",
-					description: "PyTorch variant selection (cuda, rocm, cpu)",
-					type: "DropDown",
-					defaultValue: "cuda",
-					values: [
-						"cuda",
-						"rocm",
-						"cpu"
-					]
-				},
-				{
-					name: "ASR_COMPUTE_TYPE",
-					description: "Precision for ASR engines (WhisperX, Faster-Whisper)",
-					type: "DropDown",
-					defaultValue: "float16",
-					values: [
-						"float16",
-						"int8",
-						"float32"
-					]
-				},
-				{
-					name: "HSA_OVERRIDE_GFX_VERSION",
-					description: "AMD GPU architecture override for ROCm (e.g. 11.0.0 for consumer RDNA3 cards)",
-					type: "Input"
-				}
-			]
-		},
-		{
-			section: "HuggingFace & Downloads",
-			items: [
-				{
-					name: "HF_TOKEN",
-					description: "HuggingFace user access token for diarization & heavy models",
-					type: "Input"
-				},
-				{
-					name: "OMNIVOICE_CACHE_DIR",
-					description: "Directory path to route all HF and PyTorch model weight caches",
-					type: "Directory"
-				},
-				{
-					name: "UV_HTTP_TIMEOUT",
-					description: "HTTP timeout in seconds for uv package downloads (default: 120)",
-					type: "Input",
-					defaultValue: "120"
-				}
-			]
-		}
-	]
-}, {
-	category: "Command Line Arguments",
-	sections: [{
-		section: "Backend Flags",
-		items: [
-			{
-				name: "--host",
-				description: "Host interface to bind (e.g. 127.0.0.1 or 0.0.0.0)",
-				type: "Input",
-				defaultValue: "127.0.0.1"
-			},
-			{
-				name: "--port",
-				description: "Port number to listen on",
-				type: "Input",
-				defaultValue: "3900"
-			},
-			{
-				name: "--diagnose",
-				description: "Run self-check diagnostics on startup",
-				type: "CheckBox"
-			}
-		]
-	}]
-}];
-//#endregion
-//#region module/src/containers/audio/VoiceStudio/RendererMethods.ts
-const VOICE_STUDIO_URL = "https://github.com/debpalash/VoiceStudio";
-const BUN_WIN_INSTALL = "powershell -c \"irm bun.sh/install.ps1|iex\"";
-const BUN_UNIX_INSTALL = "curl -fsSL https://bun.com/install | bash";
-function isEnvironmentVariable$2(name) {
-	for (const arg of voiceStudioArguments) if (arg.category === "Environment Variables") {
-		if ("sections" in arg) return arg.sections.some((section) => section.items.some((item) => item.name === name));
-	}
-	return false;
-}
-function parseArgsToString$15(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let argResult = "";
-	let lines = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const customRes = parseCustomArg(arg);
-			if (!customRes) return;
-			if (customRes.line) lines += customRes.line + "\n";
-			if (customRes.commandArg) argResult += customRes.commandArg + " ";
-		} else if (isEnvironmentVariable$2(arg.name)) {
-			if (getArgumentType(arg.name, voiceStudioArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=1\n` : `export ${arg.name}="1"\n`;
-			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		} else {
-			const argType = getArgumentType(arg.name, voiceStudioArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	result += isEmpty(argResult) ? "bun run desktop-prod:run" : `bun run desktop-prod:run ${argResult}`;
-	return result;
-}
-function parseStringToArgs$15(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		if (line.startsWith("export ") || line.startsWith("set ")) {
-			const prefix = line.startsWith("export ") ? "export " : "set ";
-			let [name, value] = line.replace(prefix, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, voiceStudioArguments) && isEnvironmentVariable$2(name)) argResult.push({
-				name,
-				value
-			});
-			return;
-		}
-		if (!line.includes("bun run desktop-prod:run")) return;
-		const clArgs = line.split("bun run desktop-prod:run ")[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, voiceStudioArguments)) {
-				if (getArgumentType(value.name, voiceStudioArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-function startInstall$14(stepper) {
-	const cloneAndInstall = () => {
-		stepper.nextStep().then(() => {
-			stepper.cloneRepository(VOICE_STUDIO_URL).then((dir) => {
-				stepper.nextStep().then(() => {
-					stepper.executeTerminalCommands("bun install", dir).then(() => {
-						stepper.nextStep().then(() => {
-							stepper.executeTerminalCommands("bun run desktop-prod", dir).then(() => {
-								stepper.setInstalled(dir);
-								stepper.showFinalStep("success", "VoiceStudio installation complete!", "All installation steps completed successfully. Your VoiceStudio environment is ready for use.");
-							});
-						});
-					});
-				});
-			});
-		});
-	};
-	stepper.initialSteps([
-		"VoiceStudio",
-		"Check Bun",
-		"Clone VoiceStudio",
-		"Install Dependencies",
-		"Build Studio",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Checking if Bun is installed...");
-			stepper.ipc.invoke("is_voicestudio_bun_available").then((isBunInstalled) => {
-				if (isBunInstalled) cloneAndInstall();
-				else {
-					stepper.progressBar(true, "Installing Bun runtime...");
-					const installCmd = isWin ? BUN_WIN_INSTALL : BUN_UNIX_INSTALL;
-					stepper.executeTerminalCommands(installCmd).then(() => {
-						stepper.showFinalStep("success", "Bun Installed Successfully!", "Bun has been installed. To use it, please restart LynxHub and start the installation again.");
-					});
-				}
-			});
-		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, VOICE_STUDIO_URL).then((isValid) => {
-			if (isValid) {
-				stepper.setInstalled(targetDirectory);
-				stepper.showFinalStep("success", "VoiceStudio located successfully!", "Pre-installed VoiceStudio detected. Installation skipped as your existing setup is ready to use.");
-			} else stepper.utils.verifyFilesExist(targetDirectory, ["package.json", "backend/main.py"]).then((filesExist) => {
-				if (filesExist) {
-					stepper.setInstalled(targetDirectory);
-					stepper.showFinalStep("success", "VoiceStudio located successfully!", "Detected a manual installation of VoiceStudio.");
-				} else stepper.showFinalStep("error", "Unable to locate VoiceStudio!", "Please ensure you have selected the correct folder containing the VoiceStudio installation.");
-			});
-		});
-	});
-}
-function startUpdate$3(stepper, dir) {
-	stepper.initialSteps([
-		"Fetch Changes",
-		"Install Dependencies",
-		"Build Studio",
-		"Completed"
-	]);
-	stepper.executeTerminalCommands([
-		"git pull",
-		"bun install",
-		"bun run desktop-prod"
-	], dir).then(() => {
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "VoiceStudio Updated Successfully!", "VoiceStudio has been updated to the latest version.");
-	});
-}
-async function cardInfo$14(api, callback) {
-	return CardInfo(VOICE_STUDIO_URL, void 0, api, callback);
-}
-const VOICE_STUDIO_RM = {
-	catchAddress: catchAddress$5,
-	parseArgsToString: parseArgsToString$15,
-	parseStringToArgs: parseStringToArgs$15,
-	cardInfo: cardInfo$14,
-	manager: {
-		startInstall: startInstall$14,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$3
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/image/Automatic1111Sd/Arguments.ts
-const automatic1111Arguments = [{
-	category: "Command Line Arguments",
-	condition: "COMMANDLINE_ARGS",
-	sections: [
-		{
-			items: [
-				{
-					defaultValue: false,
-					description: "Show this help message and exit.",
-					name: "--help",
-					type: "CheckBox"
-				},
-				{
-					description: "Terminate after installation",
-					name: "--exit",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: "./",
-					description: "base path where all user data is stored",
-					name: "--data-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "configs/stable-diffusion/v1-inference.yaml",
-					description: "Path to config which constructs model.",
-					name: "--config",
-					type: "File"
-				},
-				{
-					defaultValue: "model.ckpt",
-					description: "Path to checkpoint of Stable Diffusion model; if specified, this checkpoint will be added to the list of checkpoints and loaded.",
-					name: "--ckpt",
-					type: "File"
-				},
-				{
-					description: "Path to directory with Stable Diffusion checkpoints.",
-					name: "--ckpt-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: false,
-					description: "Don't download SD1.5 model even if no model is found.",
-					name: "--no-download-sd-model",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "do not download CLIP model even if it's not included in the checkpoint",
-					name: "--do-not-download-clip",
-					type: "CheckBox"
-				},
-				{
-					description: "Path to Variational Autoencoders model | disables all settings related to VAE.",
-					name: "--vae-dir",
-					type: "Directory"
-				},
-				{
-					description: "Checkpoint to use as VAE; setting this argument",
-					name: "--vae-path",
-					type: "File"
-				},
-				{
-					defaultValue: "GFPGAN/",
-					description: "GFPGAN directory.",
-					name: "--gfpgan-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "GFPGAN model file name.",
-					name: "--gfpgan-model",
-					type: "Input"
-				},
-				{
-					defaultValue: "models/Codeformer/",
-					description: "Path to directory with codeformer model file(s).",
-					name: "--codeformer-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/GFPGAN",
-					description: "Path to directory with GFPGAN model file(s).",
-					name: "--gfpgan-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/ESRGAN",
-					description: "Path to directory with ESRGAN model file(s).",
-					name: "--esrgan-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/BSRGAN",
-					description: "Path to directory with BSRGAN model file(s).",
-					name: "--bsrgan-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/RealESRGAN",
-					description: "Path to directory with RealESRGAN model file(s).",
-					name: "--realesrgan-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/ScuNET",
-					description: "Path to directory with ScuNET model file(s).",
-					name: "--scunet-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/SwinIR",
-					description: "Path to directory with SwinIR and SwinIR v2 model file(s).",
-					name: "--swinir-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/LDSR",
-					description: "Path to directory with LDSR model file(s).",
-					name: "--ldsr-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/DAT",
-					description: "Path to directory with DAT model file(s).",
-					name: "--dat-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/Lora",
-					description: "Path to directory with Lora networks.",
-					name: "--lora-dir",
-					type: "Directory"
-				},
-				{
-					description: "Path to directory with CLIP model file(s).",
-					name: "--clip-models-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: "embeddings/",
-					description: "Embeddings directory for textual inversion (default: embeddings).",
-					name: "--embeddings-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "textual_inversion_templates",
-					description: "Directory with textual inversion templates.",
-					name: "--textual-inversion-templates-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "models/hypernetworks/",
-					description: "hypernetwork directory.",
-					name: "--hypernetwork-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "localizations/",
-					description: "Localizations directory.",
-					name: "--localizations-dir",
-					type: "Directory"
-				},
-				{
-					defaultValue: "styles.csv",
-					description: "Path or wildcard path of styles files, allow multiple entries.",
-					name: "--styles-file",
-					type: "File"
-				},
-				{
-					defaultValue: "ui-config.json",
-					description: "Filename to use for UI configuration.",
-					name: "--ui-config-file",
-					type: "File"
-				},
-				{
-					defaultValue: false,
-					description: "Do not hide progress bar in gradio UI (we hide it because it slows down ML if you have hardware acceleration in browser).",
-					name: "--no-progressbar-hiding",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: 16,
-					description: "Maximum batch count value for the UI.",
-					name: "--max-batch-count",
-					type: "Input"
-				},
-				{
-					defaultValue: "config.json",
-					description: "Filename to use for UI settings.",
-					name: "--ui-settings-file",
-					type: "File"
-				},
-				{
-					defaultValue: false,
-					description: "Allow custom script execution from web UI.",
-					name: "--allow-code",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Use `share=True` for gradio and make the UI accessible through their site.",
-					name: "--share",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Launch gradio with 0.0.0.0 as server name, allowing to respond to network requests.",
-					name: "--listen",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: 7860,
-					description: "Launch gradio with given server port, you need root/admin rights for ports < 1024; defaults to 7860 if available.",
-					name: "--port",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "Hide directory configuration from web UI.",
-					name: "--hide-ui-dir-config",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable editing of all settings globally",
-					name: "--freeze-settings",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable editing settings in specific sections of the settings page by specifying a comma-delimited list such like \"saving-images,upscaling\". The list of setting names can be found in the modules/shared_options.py file",
-					name: "--freeze-settings-in-sections",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable editing of individual settings by specifying a comma-delimited list like \"samples_save,samples_format\". The list of setting names can be found in the config.json file",
-					name: "--freeze-specific-settings",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable extensions tab regardless of other options.",
-					name: "--enable-insecure-extension-access",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Launch gradio with `--debug` option.",
-					name: "--gradio-debug",
-					type: "CheckBox"
-				},
-				{
-					description: "Set gradio authentication like `username:password`; or comma-delimit multiple like `u1:p1,u2:p2,u3:p3`.",
-					name: "--gradio-auth",
-					type: "Input"
-				},
-				{
-					description: "Set gradio authentication file path ex. `/path/to/auth/file` same auth format as `--gradio-auth`.",
-					name: "--gradio-auth-path",
-					type: "File"
-				},
-				{
-					defaultValue: false,
-					description: "Do not output progress bars to console.",
-					name: "--disable-console-progressbars",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Print prompts to console when generating with txt2img and img2img.",
-					name: "--enable-console-prompts",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Launch web UI with API.",
-					name: "--api",
-					type: "CheckBox"
-				},
-				{
-					description: "Set authentication for API like `username:password`; or comma-delimit multiple like `u1:p1,u2:p2,u3:p3`.",
-					name: "--api-auth",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "Enable logging of all API requests.",
-					name: "--api-log",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Only launch the API, without the UI.",
-					name: "--nowebui",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Don't load model to quickly launch UI.",
-					name: "--ui-debug-mode",
-					type: "CheckBox"
-				},
-				{
-					description: "Select the default CUDA device to use (export `CUDA_VISIBLE_DEVICES=0,1` etc might be needed before).",
-					name: "--device-id",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "Administrator privileges.",
-					name: "--administrator",
-					type: "CheckBox"
-				},
-				{
-					description: "Allowed CORS origin(s) in the form of a comma-separated list (no spaces).",
-					name: "--cors-allow-origins",
-					type: "Input"
-				},
-				{
-					description: "Allowed CORS origin(s) in the form of a single regular expression.",
-					name: "--cors-allow-origins-regex",
-					type: "Input"
-				},
-				{
-					description: "Partially enables TLS, requires `--tls-certfile` to fully function.",
-					name: "--tls-keyfile",
-					type: "File"
-				},
-				{
-					description: "Partially enables TLS, requires `--tls-keyfile` to fully function.",
-					name: "--tls-certfile",
-					type: "File"
-				},
-				{
-					defaultValue: false,
-					description: "When passed, enables the use of self-signed certificates.",
-					name: "--disable-tls-verify",
-					type: "CheckBox"
-				},
-				{
-					description: "Sets hostname of server.",
-					name: "--server-name",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "Disables gradio queue; causes the webpage to use http requests instead of websockets; was the default in earlier versions.",
-					name: "--no-gradio-queue",
-					type: "CheckBox"
-				},
-				{
-					description: "Add path to Gradio's `allowed_paths`; make it possible to serve files from it.",
-					name: "--gradio-allowed-path",
-					type: "Directory"
-				},
-				{
-					defaultValue: false,
-					description: "Disable SHA-256 hashing of checkpoints to help loading performance.",
-					name: "--no-hashing",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not check versions of torch and xformers.",
-					name: "--skip-version-check",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not check versions of Python.",
-					name: "--skip-python-version-check",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not check if CUDA is able to work properly.",
-					name: "--skip-torch-cuda-test",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Skip installation of packages.",
-					name: "--skip-install",
-					type: "CheckBox"
-				},
-				{
-					description: "log level; one of: CRITICAL, ERROR, WARNING, INFO, DEBUG",
-					name: "--loglevel",
-					type: "DropDown",
-					values: [
-						"CRITICAL",
-						"ERROR",
-						"WARNING",
-						"INFO",
-						"DEBUG"
-					]
-				},
-				{
-					defaultValue: false,
-					description: "launch.py argument: print a detailed log of what's happening at startup",
-					name: "--log-startup",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "enable server stop/restart/kill via api",
-					name: "--api-server-stop",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: 30,
-					description: "set timeout_keep_alive for uvicorn",
-					name: "--timeout-keep-alive",
-					type: "Input"
-				}
-			],
-			section: "Configuration"
-		},
-		{
-			items: [
-				{
-					defaultValue: false,
-					description: "Enable xformers for cross attention layers.",
-					name: "--xformers",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable xformers for cross attention layers regardless of whether the checking code thinks you can run it; ***do not make bug reports if this fails to work***.",
-					name: "--force-enable-xformers",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable xformers with Flash Attention to improve reproducibility (supported for SD2.x or variant only).",
-					name: "--xformers-flash-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable scaled dot product cross-attention layer optimization; requires PyTorch 2.*",
-					name: "--opt-sdp-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable scaled dot product cross-attention layer optimization without memory efficient attention, makes image generation deterministic; requires PyTorch 2.*",
-					name: "--opt-sdp-no-mem-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Force-enables Doggettx's cross-attention layer optimization. By default, it's on for CUDA-enabled systems.",
-					name: "--opt-split-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Force-enables InvokeAI's cross-attention layer optimization. By default, it's on when CUDA is unavailable.",
-					name: "--opt-split-attention-invokeai",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable older version of split attention optimization that does not consume all VRAM available.",
-					name: "--opt-split-attention-v1",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable memory efficient sub-quadratic cross-attention layer optimization.",
-					name: "--opt-sub-quad-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: 1024,
-					description: "Query chunk size for the sub-quadratic cross-attention layer optimization to use.",
-					name: "--sub-quad-q-chunk-size",
-					type: "Input"
-				},
-				{
-					description: "KV chunk size for the sub-quadratic cross-attention layer optimization to use.",
-					name: "--sub-quad-kv-chunk-size",
-					type: "Input"
-				},
-				{
-					description: "The percentage of VRAM threshold for the sub-quadratic cross-attention layer optimization to use chunking.",
-					name: "--sub-quad-chunk-threshold",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "Enable alternative layout for 4d tensors, may result in faster inference **only** on Nvidia cards with Tensor cores (16xx and higher).",
-					name: "--opt-channelslast",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Force-disables cross-attention layer optimization.",
-					name: "--disable-opt-split-attention",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not check if produced images/latent spaces have nans; useful for running without a checkpoint in CI.",
-					name: "--disable-nan-check",
-					type: "CheckBox"
-				},
-				{
-					description: "Use CPU as torch device for specified modules.",
-					name: "--use-cpu",
-					type: "DropDown",
-					values: [
-						"all",
-						"sd",
-						"interrogate",
-						"gfpgan",
-						"bsrgan",
-						"esrgan",
-						"scunet",
-						"codeformer"
-					]
-				},
-				{
-					defaultValue: false,
-					description: "Use Intel XPU as torch device",
-					name: "--use-ipex",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not switch the model to 16-bit floats.",
-					name: "--no-half",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: "autocast",
-					description: "Evaluate at this precision.",
-					name: "--precision",
-					type: "DropDown",
-					values: ["full", "autocast"]
-				},
-				{
-					defaultValue: false,
-					description: "Do not switch the VAE model to 16-bit floats.",
-					name: "--no-half-vae",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Upcast sampling. No effect with `--no-half`. Usually produces similar results to `--no-half` with better performance while using less memory.",
-					name: "--upcast-sampling",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable Stable Diffusion model optimizations for sacrificing a some performance for low VRAM usage.",
-					name: "--medvram",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "enable `--medvram` optimization just for SDXL models",
-					name: "--medvram-sdxl",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Enable Stable Diffusion model optimizations for sacrificing a lot of speed for very low VRAM usage.",
-					name: "--lowvram",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Load Stable Diffusion checkpoint weights to VRAM instead of RAM.",
-					name: "--lowram",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable an optimization that reduces RAM use when loading a model",
-					name: "--disable-model-loading-ram-optimization",
-					type: "CheckBox"
-				}
-			],
-			section: "Performance"
-		},
-		{
-			items: [
-				{
-					defaultValue: false,
-					description: "Open the web UI URL in the system's default browser upon launch.",
-					name: "--autolaunch",
-					type: "CheckBox"
-				},
-				{
-					description: "Open the web UI with the specified theme (`light` or `dark`). If not specified, uses the default browser theme.",
-					name: "--theme",
-					type: "DropDown"
-				},
-				{
-					defaultValue: false,
-					description: "Use textbox for seeds in UI (no up/down, but possible to input long seeds).",
-					name: "--use-textbox-seed",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Disable checking PyTorch models for malicious code.",
-					name: "--disable-safe-unpickle",
-					type: "CheckBox"
-				},
-				{
-					description: "ngrok authtoken, alternative to gradio `--share`.",
-					name: "--ngrok",
-					type: "Input"
-				},
-				{
-					defaultValue: "us",
-					description: "The region in which ngrok should start.",
-					name: "--ngrok-region",
-					type: "Input"
-				},
-				{
-					description: "The options to pass to ngrok in JSON format, e.g.: `{\"authtoken_from_env\":true, \"basic_auth\":\"user:password\", \"oauth_provider\":\"google\", \"oauth_allow_emails\":\"user@asdf.com\"}`",
-					name: "--ngrok-options",
-					type: "Input"
-				},
-				{
-					description: "On startup, notifies whether or not your web UI version (commit) is up-to-date with the current master branch.",
-					name: "--update-check",
-					type: "CheckBox"
-				},
-				{
-					description: "On startup, it pulls the latest updates for all extensions you have installed.",
-					name: "--update-all-extensions",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Force-reinstall xformers. Useful for upgrading - but remove it after upgrading or you'll reinstall xformers perpetually.",
-					name: "--reinstall-xformers",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Force-reinstall torch. Useful for upgrading - but remove it after upgrading or you'll reinstall torch perpetually.",
-					name: "--reinstall-torch",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Run test to validate web UI functionality, see wiki topic for more details.",
-					name: "--tests",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "Do not run tests even if `--tests` option is specified.",
-					name: "--no-tests",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "launch.py argument: dump limited sysinfo file (without information about extensions, options) to disk and quit",
-					name: "--dump-sysinfo",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable all non-built-in extensions from running",
-					name: "--disable-all-extensions",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "disable all extensions from running",
-					name: "--disable-extra-extensions",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "if load a model at web start, only take effect when --nowebui",
-					name: "--skip-load-model-at-start",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: false,
-					description: "allow any symbols except '/' in filenames. May conflict with your browser and file system",
-					name: "--unix-filenames-sanitization",
-					type: "CheckBox"
-				},
-				{
-					defaultValue: 128,
-					description: "maximal length of filenames of saved images, longer filenames will be truncated. if overridden it can potentially cause issues with the file system",
-					name: "--filenames-max-length",
-					type: "Input"
-				},
-				{
-					defaultValue: false,
-					description: "disable read prompt from last generation feature; disables `--data-path/params.txt`",
-					name: "--no-prompt-history",
-					type: "CheckBox"
-				}
-			],
-			section: "Features"
-		}
-	]
-}];
-const winEV = {
-	category: "Environment Variables",
-	items: [
-		{
-			description: "Sets a custom path for Python executable.",
-			name: "PYTHON",
-			type: "File"
-		},
-		{
-			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
-			name: "VENV_DIR",
-			type: "Directory"
-		},
-		{
-			description: "Additional commandline arguments for the main program.",
-			name: "COMMANDLINE_ARGS",
-			type: "CheckBox"
-		},
-		{
-			description: "Set to anything to make the program not exit with an error if an unexpected commandline argument is encountered.",
-			name: "IGNORE_CMD_ARGS_ERRORS",
-			type: "CheckBox"
-		},
-		{
-			description: "Name of requirements.txt file with dependencies that will be installed when launch.py is run. Defaults to requirements_versions.txt.",
-			name: "REQS_FILE",
-			type: "Input"
-		},
-		{
-			description: "Command for installing PyTorch.",
-			name: "TORCH_COMMAND",
-			type: "Input"
-		},
-		{
-			description: "`--index-url` parameter for pip.",
-			name: "INDEX_URL",
-			type: "Input"
-		},
-		{
-			description: "Path to where transformers library will download and keep its files related to the CLIP model.",
-			name: "TRANSFORMERS_CACHE",
-			type: "Directory"
-		},
-		{
-			description: "Select GPU to use for your instance on a system with multiple GPUs. For example, if you want to use secondary GPU, put \"1\".\n(add a new line to webui-user.bat not in COMMANDLINE_ARGS): `set CUDA_VISIBLE_DEVICES=0`\nAlternatively, just use `--device-id` flag in `COMMANDLINE_ARGS`.",
-			name: "CUDA_VISIBLE_DEVICES",
-			type: "Input"
-		},
-		{
-			description: "Log verbosity. Supports any valid logging level supported by Python's built-in `logging` module. Defaults to `INFO` if not set.",
-			name: "SD_WEBUI_LOG_LEVEL",
-			type: "Input"
-		},
-		{
-			description: "Cache file path. Defaults to `cache.json` in the root directory if not set.",
-			name: "SD_WEBUI_CACHE_FILE",
-			type: "File"
-		},
-		{
-			description: "A value set by `launcher script` (like webui.bat webui.sh) informing Webui that restart function is available",
-			name: "SD_WEBUI_RESTAR",
-			type: "CheckBox"
-		},
-		{
-			description: "A internal value signifying if webui is currently restarting or reloading, used for disabling certain actions asuch as auto launching browser.\nset to `1` disables auto launching browser\nset to `0` enables auto launch even when restarting\nCertain extensions might use this value for similar purpose.",
-			name: "SD_WEBUI_RESTARTING",
-			type: "CheckBox"
-		}
-	]
-};
-const linEV = {
-	category: "Environment",
-	sections: [{
-		section: "Variables",
-		items: [
-			{
-				description: "Install directory without trailing slash",
-				name: "install_dir",
-				type: "Input",
-				defaultValue: "/home/$(whoami)"
-			},
-			{
-				description: "Name of the subdirectory",
-				name: "clone_dir",
-				type: "Input",
-				defaultValue: "stable-diffusion-webui"
-			},
-			{
-				description: "python3 executable",
-				name: "python_cmd",
-				type: "Input",
-				defaultValue: "python3"
-			},
-			{
-				description: "python3 venv without trailing slash (defaults to ${install_dir}/${clone_dir}/venv)",
-				name: "venv_dir",
-				type: "Input",
-				defaultValue: "venv"
-			}
-		]
-	}, {
-		section: "Arguments",
-		items: [
-			{
-				description: "Commandline arguments for webui.py",
-				name: "COMMANDLINE_ARGS",
-				type: "CheckBox"
-			},
-			{
-				description: "Script to launch to start the app",
-				name: "LAUNCH_SCRIPT",
-				type: "Input",
-				defaultValue: "launch.py"
-			},
-			{
-				description: "Install command for torch",
-				name: "TORCH_COMMAND",
-				type: "Input",
-				defaultValue: `${getPythonCommandByOs().pip} install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113`
-			},
-			{
-				description: "Requirements file to use for stable-diffusion-webui",
-				name: "REQS_FILE",
-				type: "Input",
-				defaultValue: "requirements_versions.txt"
-			},
-			{
-				description: "Fixed git repo for K_DIFFUSION_PACKAGE",
-				name: "K_DIFFUSION_PACKAGE",
-				type: "Input",
-				defaultValue: ""
-			},
-			{
-				description: "Fixed git repo for GFPGAN_PACKAGE",
-				name: "GFPGAN_PACKAGE",
-				type: "Input",
-				defaultValue: ""
-			},
-			{
-				description: "Fixed git commit for Stable Diffusion",
-				name: "STABLE_DIFFUSION_COMMIT_HASH",
-				type: "Input",
-				defaultValue: ""
-			},
-			{
-				description: "Fixed git commit for CodeFormer",
-				name: "CODEFORMER_COMMIT_HASH",
-				type: "Input",
-				defaultValue: ""
-			},
-			{
-				description: "Fixed git commit for BLIP",
-				name: "BLIP_COMMIT_HASH",
-				type: "Input",
-				defaultValue: ""
-			},
-			{
-				description: "Enable accelerated launch",
-				name: "ACCELERATE",
-				type: "CheckBox",
-				defaultValue: false
-			},
-			{
-				description: "Disable TCMalloc",
-				name: "NO_TCMALLOC",
-				type: "CheckBox",
-				defaultValue: false
-			}
-		]
-	}]
-};
-automatic1111Arguments.unshift(isWin ? winEV : linEV);
-//#endregion
-//#region module/src/containers/image/Automatic1111Sd/SharedRenderer.ts
-async function fetchExtensionList$2() {
-	try {
-		return (await (await fetch("https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui-extensions/master/index.json")).json()).extensions.map((extension) => ({
-			title: extension.name,
-			description: extension.description,
-			url: extension.url,
-			stars: extension.stars
-		}));
-	} catch (e) {
-		console.error(e);
-		return [];
-	}
-}
-function getTypeByCategoryName$1(category) {
-	switch (category) {
-		case "Command Line Arguments": return "cl";
-		case "Environment":
-		case "Environment Variables": return "env";
-		default: return;
-	}
-}
-function getCategoryType$3(name) {
-	if (!name) return void 0;
-	for (const argument of automatic1111Arguments) if ("sections" in argument) {
-		for (const section of argument.sections) if (section.items.some((item) => item.name === name)) {
-			if (section.section === "Variables") return "envVar";
-			return getTypeByCategoryName$1(argument.category);
-		}
-	} else if (argument.items.some((item) => item.name === name)) return getTypeByCategoryName$1(argument.category);
-}
-function parseArgsToString$14(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let clResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) clResult += result.commandArg + " ";
-		} else {
-			const cat = getCategoryType$3(arg.name);
-			if (cat !== "cl") {
-				const eWinResult = `set ${arg.name}=${arg.value}\n`;
-				const eResult = cat === "env" ? `export ${arg.name}="${arg.value}"\n` : `${arg.name}="${arg.value}"\n`;
-				if (arg.name !== "COMMANDLINE_ARGS") result += isWin ? eWinResult : eResult;
-			} else if (cat === "cl") {
-				const argType = getArgumentType(arg.name, automatic1111Arguments);
-				if (argType === "CheckBox") clResult += `${arg.name} `;
-				else if (argType === "File" || argType === "Directory") clResult += isWin ? `${arg.name} "${arg.value}" ` : `${arg.name} ${arg.value} `;
-				else clResult += `${arg.name} ${arg.value} `;
-			}
-		}
-	});
-	if (lines) result += lines + "\n";
-	if (!isEmpty(clResult)) result += isWin ? `set COMMANDLINE_ARGS=${clResult}\n` : `export COMMANDLINE_ARGS=${clResult}\n`;
-	result += isWin ? `\ncall webui.bat` : ``;
-	return result;
-}
-function checkLinuxArgLine$2(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	for (const arg of automatic1111Arguments) if (arg.category === "Environment") {
-		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-		else return;
-	}
-}
-function parseStringToArgs$14(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		else if (line.startsWith(`${isWin ? "set" : "export"} COMMANDLINE_ARGS=`)) {
-			argResult.push({
-				name: "COMMANDLINE_ARGS",
-				value: ""
-			});
-			const clArgs = line.split("=")[1];
-			if (!clArgs) return;
-			clArgs.split("--").filter(Boolean).map((arg) => {
-				const [id, ...value] = arg.trim().split(" ");
-				return {
-					name: `--${id}`,
-					value: value.join(" ").replace(/"/g, "")
-				};
-			}).forEach((value) => {
-				if (isValidArg(value.name, automatic1111Arguments)) {
-					if (getArgumentType(value.name, automatic1111Arguments) === "CheckBox") argResult.push({
-						name: value.name,
-						value: ""
-					});
-					else argResult.push({
-						name: value.name,
-						value: value.value
-					});
-				}
-			});
-		} else {
-			const lineType = checkLinuxArgLine$2(line);
-			if (lineType === "export" || lineType === "set") {
-				let [name, value] = line.replace(`${lineType} `, "").split("=");
-				name = removeEscapes(name.trim());
-				value = removeEscapes(value.trim());
-				if (isValidArg(name, automatic1111Arguments)) argResult.push({
-					name,
-					value
-				});
-			} else if (checkLinuxArgLine$2(line) === "var") {
-				let [name, value] = line.split("=");
-				name = removeEscapes(name.trim());
-				value = removeEscapes(value.trim());
-				if (isValidArg(name, automatic1111Arguments)) argResult.push({
-					name,
-					value
-				});
-			}
-		}
-	});
-	return argResult;
-}
-//#endregion
-//#region module/src/containers/image/ComfyUi/Arguments.ts
-const comfyuiArguments = [{
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--oneapi-device-selector",
-					description: "Sets the oneAPI device(s) this instance will use.",
-					type: "Input"
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API.",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				},
-				{
-					name: "--front-end-version",
-					description: "Specifies the version of the frontend to be used (format: [repoOwner]/[repoName]@[version]).",
-					type: "Input",
-					defaultValue: "comfyanonymous/ComfyUI@latest"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				},
-				{
-					name: "--cuda-malloc",
-					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-cuda-malloc",
-					description: "Disable cudaMallocAsync.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e8m0fnu-unet",
-					description: "Store unet weights in fp8_e8m0fnu.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-intermediates",
-					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--force-channels-last",
-					description: "Force channels last format when inferencing the models.",
-					type: "CheckBox"
-				},
-				{
-					name: "--directml",
-					description: "Use torch-directml.",
-					type: "Input"
-				},
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "none"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-ram",
-					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
-					type: "Input"
-				},
-				{
-					name: "--high-ram",
-					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-split-cross-attention",
-					description: "Use the split cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-xformers",
-					description: "Disable xformers.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-upcast-attention",
-					description: "Force enable attention upcasting, please report if it fixes black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-upcast-attention",
-					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-non-blocking",
-					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast",
-					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: fp16_accumulation fp8_matrix_mult cublas_ops autotune",
-					type: "DropDown",
-					values: [
-						"",
-						"fp16_accumulation",
-						"fp8_matrix_mult",
-						"cublas_ops",
-						"autotune"
-					],
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--default-hashing-function",
-					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
-					type: "DropDown",
-					defaultValue: "sha256",
-					values: [
-						"md5",
-						"sha1",
-						"sha256",
-						"sha512"
-					]
-				},
-				{
-					name: "--deterministic",
-					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
-					type: "CheckBox"
-				},
-				{
-					name: "--mmap-torch-files",
-					description: "Use mmap when loading ckpt/pt files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-mmap",
-					description: "Don't use mmap when loading safetensors.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-print-server",
-					description: "Don't print server output.",
-					type: "CheckBox"
-				},
-				{
-					name: "--debug-hang",
-					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
-					type: "CheckBox"
-				},
-				{
-					name: "--quick-test-for-ci",
-					description: "Quick test for CI.",
-					type: "CheckBox"
-				},
-				{
-					name: "--windows-standalone-build",
-					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-metadata",
-					description: "Disable saving prompt metadata in files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-all-custom-nodes",
-					description: "Disable loading all custom nodes.",
-					type: "CheckBox"
-				},
-				{
-					name: "--whitelist-custom-nodes",
-					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
-					type: "Input"
-				},
-				{
-					name: "--multi-user",
-					description: "Enables per-user storage.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				},
-				{
-					name: "--log-stdout",
-					description: "Send normal process output to stdout instead of stderr (default).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-assets",
-					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-asset-hashing",
-					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
-					type: "CheckBox"
-				},
-				{
-					name: "--feature-flag",
-					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted. Examples: --feature-flag show_signin_button=true or --feature-flag show_signin_button",
-					type: "Input"
-				},
-				{
-					name: "--list-feature-flags",
-					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--reserve-vram",
-					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
-					type: "Input"
-				},
-				{
-					name: "--vram-headroom",
-					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--async-offload",
-					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
-					type: "Input"
-				},
-				{
-					name: "--disable-async-offload",
-					description: "Disable async weight offloading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-dynamic-vram",
-					description: "Disable dynamic VRAM and use estimate based model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-dynamic-vram",
-					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast-disk",
-					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				},
-				{
-					name: "--database-url",
-					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
-					type: "Input"
-				}
-			]
-		}
-	]
-}, {
-	category: "Environment Variables",
-	items: [
-		{
-			name: "HSA_OVERRIDE_GFX_VERSION",
-			description: "Override GFX version for unsupported AMD GPUs. Use \"10.3.0\" for 6700, 6600 and other RDNA2 or older cards. Use \"11.0.0\" for 7600 and other RDNA3 cards.",
-			type: "Input",
-			defaultValue: "11.0.0"
-		},
-		{
-			name: "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL",
-			description: "Enable experimental memory efficient attention on AMD GPUs. Should already be enabled by default on RDNA3.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch tunable operations which might speed things up at the cost of a very slow initial run.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "Set the MIOpen find mode to accelerate find API calls. NORMAL: Full find (benchmarks all solvers). FAST: Uses FindDb or fallback (fast startup, may reduce performance). HYBRID: Uses FindDb or full find on miss (balanced). DYNAMIC_HYBRID: Uses FindDb or find skipping non-dynamic kernels (faster than hybrid, default). TRUST_VERIFY: Uses FindDb with verification and constrained tuning. TRUST_VERIFY_FULL: Same as TRUST_VERIFY with no tuning time limits.",
-			type: "DropDown",
-			values: [
-				"NORMAL",
-				"FAST",
-				"HYBRID",
-				"DYNAMIC_HYBRID",
-				"TRUST_VERIFY",
-				"TRUST_VERIFY_FULL"
-			],
-			defaultValue: "DYNAMIC_HYBRID"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "Controls verbosity of MIOpen internal operation logging. 0: Default (level 4 for release, level 5 for debug). 1: Quiet (no logging). 3: Errors including fatal errors. 4: All errors and warnings. 5: Info level debugging. 6: Detailed debugging. 7: Trace level with additional details.",
-			type: "DropDown",
-			values: [
-				"0",
-				"1",
-				"3",
-				"4",
-				"5",
-				"6",
-				"7"
-			],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_ENABLE_LOGGING",
-			description: "Prints basic layer-by-layer MIOpen API call information with parameters and configurations.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_ENABLE_LOGGING_CMD",
-			description: "Outputs associated MIOpenDriver command lines to console for debugging.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_FIND_ENFORCE",
-			description: "Controls auto-tune behavior and database updates. NONE: No change in default behavior. DB_UPDATE: Always perform auto-tune and update PerfDb. SEARCH: Auto-tune even if not requested via API. SEARCH_DB_UPDATE: Combination of DB_UPDATE and SEARCH. DB_CLEAN: Remove optimized values from User PerfDb.",
-			type: "DropDown",
-			values: [
-				"NONE",
-				"DB_UPDATE",
-				"SEARCH",
-				"SEARCH_DB_UPDATE",
-				"DB_CLEAN"
-			],
-			defaultValue: "NONE"
-		},
-		{
-			name: "MIOPEN_DEBUG_DISABLE_FIND_DB",
-			description: "Disables FindDb functionality. Set to 1 to disable, 0 or unset to enable.",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		},
-		{
-			name: "MIOPEN_COMPILE_PARALLEL_LEVEL",
-			description: "Controls parallel compilation thread count for Find() calls. Default: 1 when using COMGR, otherwise half the number of available hardware threads. Set to 1 to disable multi-threaded compilation.",
-			type: "Input"
-		},
-		{
-			name: "MIOPEN_DEBUG_CONVOLUTION_DETERMINISTIC",
-			description: "Controls deterministic convolution behavior. Set to 1 to enable deterministic algorithms (slower but reproducible results).",
-			type: "DropDown",
-			values: ["0", "1"],
-			defaultValue: "0"
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/image/ComfyUi/RendererMethods.ts
-const COMFYUI_URL = "https://github.com/Comfy-Org/ComfyUI";
-function isEnvironmentVariable$1(name) {
-	for (const arg of comfyuiArguments) if (arg.category === "Environment Variables") {
-		if ("items" in arg) return arg.items.some((item) => item.name === name);
-	}
-	return false;
-}
-function parseArgsToString$13(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let argResult = "";
-	let lines = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (isEnvironmentVariable$1(arg.name)) {
-			if (getArgumentType(arg.name, comfyuiArguments) === "CheckBox") lines += isWin ? `set ${arg.name}=true\n` : `export ${arg.name}="true"\n`;
-			else lines += isWin ? `set ${arg.name}=${arg.value}\n` : `export ${arg.name}="${arg.value}"\n`;
-		} else {
-			const argType = getArgumentType(arg.name, comfyuiArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	const pythonCommand = getPythonCommandByOs().python;
-	result += isEmpty(argResult) ? `${pythonCommand} main.py` : `${pythonCommand} main.py ${argResult}`;
-	return result;
-}
-function parseStringToArgs$13(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		if (line.startsWith("export ") || line.startsWith("set ")) {
-			const prefix = line.startsWith("export ") ? "export " : "set ";
-			let [name, value] = line.replace(prefix, "").split("=");
-			name = removeEscapes(name.trim());
-			value = removeEscapes(value.trim());
-			if (isValidArg(name, comfyuiArguments) && isEnvironmentVariable$1(name)) argResult.push({
-				name,
-				value
-			});
-			return;
-		}
-		const pythonCommand = getPythonCommandByOs().python;
-		if (!line.startsWith(`${pythonCommand} main.py`)) return;
-		const clArgs = line.split(`${pythonCommand} main.py `)[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, comfyuiArguments)) {
-				if (getArgumentType(value.name, comfyuiArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-function startInstall$13(stepper) {
-	const selectOptions = [
-		"NONE",
-		"NVIDIA CU130",
-		"NVIDIA CU132 Nightly",
-		"AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)",
-		"AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)",
-		"AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)",
-		"AMD GPUs (Linux only) ROCm 7.2",
-		"AMD GPUs (Linux only) ROCm 7.2 Nightly",
-		"Mac Apple silicon",
-		"Mac Apple silicon (Conda)",
-		"Mac x86 (Conda)",
-		"Intel GPUs (Windows and Linux)",
-		"Intel GPUs Nightly (Windows and Linux)"
-	];
-	const getPyTorchInstallCommand = (selectedOption) => {
-		switch (selectedOption) {
-			case "Mac Apple silicon": return "pip3 install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu";
-			case "Mac Apple silicon (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
-			case "Mac x86 (Conda)": return "conda install pytorch torchvision torchaudio -c pytorch-nightly";
-			case "AMD GPUs (Linux only) ROCm 7.2": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm7.2";
-			case "AMD GPUs (Linux only) ROCm 7.2 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.2";
-			case "AMD GPUs (Windows and Linux) RDNA 3 (RX 7000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx110X-all/";
-			case "AMD GPUs (Windows and Linux) RDNA 3.5 (Strix halo/Ryzen AI Max+ 365)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx1151/";
-			case "AMD GPUs (Windows and Linux) RDNA 4 (RX 9000 series)": return "pip install --pre torch torchvision torchaudio --index-url https://rocm.nightlies.amd.com/v2/gfx120X-all/";
-			case "Intel GPUs (Windows and Linux)": return "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/xpu";
-			case "Intel GPUs Nightly (Windows and Linux)": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu";
-			default:
-			case "NVIDIA CU130": return "pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130";
-			case "NVIDIA CU132 Nightly": return "pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu132";
-		}
-	};
-	const installReqs = (dir) => {
-		stepper.executeTerminalCommands(["pip install -r requirements.txt", "pip install -r manager_requirements.txt"], dir).then(() => {
-			stepper.setInstalled(dir);
-			stepper.postInstall.config({ customArguments: {
-				presetName: "Lynx Config",
-				customArguments: [{
-					name: "--enable-manager",
-					value: ""
-				}]
-			} });
-			stepper.showFinalStep("success", "ComfyUI installation complete!", "All installation steps completed successfully. Your ComfyUI environment is now ready for use.");
-		});
-	};
-	const getMacCondaInstallCommand = (selectedOption) => {
-		switch (selectedOption) {
-			case "Mac x86 (Conda)": return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh", "sh Miniconda3-latest-MacOSX-x86_64.sh"];
-			default: return ["curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh", "sh Miniconda3-latest-MacOSX-arm64.sh"];
-		}
-	};
-	stepper.initialSteps([
-		"ComfyUI",
-		"Clone",
-		"PyTorch Version",
-		"Install PyTorch",
-		"Install Dependencies",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.cloneRepository(COMFYUI_URL).then((dir) => {
-				stepper.nextStep().then(() => {
-					stepper.collectUserInput([{
-						id: "gpu_type",
-						type: "select",
-						label: "Please Select PyTorch Version (Gpu)",
-						selectOptions,
-						defaultValue: selectOptions[0],
-						isRequired: true
-					}]).then((result) => {
-						const selectedOption = result[0].result;
-						if (selectedOption === "NONE") stepper.nextStep().then(() => {
-							stepper.nextStep().then(() => {
-								installReqs(dir);
-							});
-						});
-						else if (selectedOption === "Mac x86 (Conda)" || selectedOption === "Mac Apple silicon (Conda)") stepper.ipc.invoke("Comfy_isCondaInstalled").then((isInstalled) => {
-							if (isInstalled) stepper.nextStep().then(() => {
-								stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-									stepper.nextStep().then(() => {
-										installReqs(dir);
-									});
-								});
-							});
-							else {
-								stepper.initialSteps([
-									"ComfyUI",
-									"Clone",
-									"PyTorch Version",
-									"Conda",
-									"Install PyTorch",
-									"Dependencies",
-									"Finish"
-								]);
-								stepper.nextStep().then(() => {
-									stepper.executeTerminalCommands(getMacCondaInstallCommand(selectedOption), dir).then(() => {
-										stepper.nextStep().then(() => {
-											stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-												stepper.nextStep().then(() => {
-													installReqs(dir);
-												});
-											});
-										});
-									});
-								});
-							}
-						});
-						else stepper.nextStep().then(() => {
-							stepper.executeTerminalCommands(getPyTorchInstallCommand(selectedOption), dir).then(() => {
-								stepper.nextStep().then(() => {
-									installReqs(dir);
-								});
-							});
-						});
-					});
-				});
-			});
-		});
-		else if (targetDirectory) stepper.utils.validateGitRepository(targetDirectory, COMFYUI_URL).then((isValid) => {
-			if (isValid) {
-				stepper.setInstalled(targetDirectory);
-				stepper.showFinalStep("success", "ComfyUI located successfully!", "Pre-installed ComfyUI detected. Installation skipped as your existing setup is ready to use.");
-			} else stepper.utils.verifyFilesExist(targetDirectory, ["comfy", "main.py"]).then((filesExist) => {
-				if (filesExist) {
-					stepper.setInstalled(targetDirectory);
-					stepper.showFinalStep("success", `ComfyUI located successfully!`, "Detected a manual installation of ComfyUI. Note: Because this is not a Git repository, automatic updates and certain version-dependent features may not work as expected.");
-				} else stepper.showFinalStep("error", "Unable to locate ComfyUI!", "Please ensure you have selected the correct folder containing the ComfyUI installation ");
-			});
-		});
-	});
-}
-async function cardInfo$13(api, callback) {
-	return CardInfo(COMFYUI_URL, "/custom_nodes", api, callback);
-}
-const COMFYUI_RM = {
-	catchAddress: catchAddress$5,
-	parseArgsToString: parseArgsToString$13,
-	parseStringToArgs: parseStringToArgs$13,
-	cardInfo: cardInfo$13,
-	manager: {
-		startInstall: startInstall$13,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/containers/image/ComfyUiRocm/Arguments.ts
-const comfyRocmArguments = [{
-	category: "Environment Variables",
-	items: [
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "MIOpen find mode for AMD GPUs.",
-			type: "Input",
-			defaultValue: "2"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "MIOpen log level for AMD GPUs.",
-			type: "Input",
-			defaultValue: "0"
-		},
-		{
-			name: "PYTHON",
-			description: "Sets a custom path for Python executable.",
-			type: "File",
-			defaultValue: "\"%~dp0/python_env/python.exe\""
-		},
-		{
-			name: "GIT",
-			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
-			type: "File",
-			defaultValue: ""
-		},
-		{
-			name: "VENV_DIR",
-			description: "Specifies the path for the virtual environment/python directory.",
-			type: "Directory",
-			defaultValue: "./python_env"
-		},
-		{
-			name: "TRITON_OVERRIDE_ARCH",
-			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1100). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
-			type: "Input",
-			defaultValue: ""
-		},
-		{
-			name: "COMFYUI_ENABLE_MIOPEN",
-			description: "Enable MIOpen in ComfyUI.",
-			type: "Input",
-			defaultValue: "0"
-		},
-		{
-			name: "FLASH_ATTENTION_TRITON_AMD_ENABLE",
-			description: "Enable Flash Attention Triton AMD backend.",
-			type: "Input",
-			defaultValue: "TRUE"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch TunableOp optimization.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_VERBOSE",
-			description: "Enable verbose logging for PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
-			description: "Enable hipBLASLt in PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "0"
-		}
-	]
-}, {
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "auto"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/image/ComfyUiZluda/Arguments.ts
-const comfyuizludaArguments = [{
-	category: "Environment Variables",
-	items: [
-		{
-			name: "MIOPEN_FIND_MODE",
-			description: "MIOpen find mode for AMD GPUs.",
-			type: "Input",
-			defaultValue: "2"
-		},
-		{
-			name: "MIOPEN_LOG_LEVEL",
-			description: "MIOpen log level for AMD GPUs.",
-			type: "Input",
-			defaultValue: "3"
-		},
-		{
-			name: "PYTHON",
-			description: "Sets a custom path for Python executable.",
-			type: "File",
-			defaultValue: "\"%~dp0/venv/Scripts/python.exe\""
-		},
-		{
-			name: "GIT",
-			description: "Sets a custom path for Git executable. Leave empty to use system Git.",
-			type: "File",
-			defaultValue: ""
-		},
-		{
-			name: "VENV_DIR",
-			description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
-			type: "Directory",
-			defaultValue: "./venv"
-		},
-		{
-			name: "TRITON_OVERRIDE_ARCH",
-			description: "Override GPU architecture for Triton (e.g., gfx1030, gfx1031). Find yours at https://llvm.org/docs/AMDGPUUsage.html#processors",
-			type: "Input",
-			defaultValue: ""
-		},
-		{
-			name: "ZLUDA_COMGR_LOG_LEVEL",
-			description: "Zluda log level",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_ENABLED",
-			description: "Enable PyTorch TunableOp optimization.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_VERBOSE",
-			description: "Enable verbose logging for PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "1"
-		},
-		{
-			name: "PYTORCH_TUNABLEOP_HIPBLASLT_ENABLED",
-			description: "Enable hipBLASLt in PyTorch TunableOp.",
-			type: "Input",
-			defaultValue: "0"
-		}
-	]
-}, {
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Network",
-			items: [
-				{
-					name: "--listen",
-					description: "Specify the IP address to listen on (default: 127.0.0.1). You can give a list of ip addresses by separating them with a comma like: 127.2.2.2,127.3.3.3 If --listen is provided without an argument, it defaults to 0.0.0.0,:: (listens on all ipv4 and ipv6)",
-					type: "Input",
-					defaultValue: "127.0.0.1"
-				},
-				{
-					name: "--port",
-					description: "Set the listen port.",
-					type: "Input",
-					defaultValue: 8188
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Path to TLS (SSL) key file. Enables TLS, makes app accessible at https://... requires --tls-certfile to function",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Path to TLS (SSL) certificate file. Enables TLS, makes app accessible at https://... requires --tls-keyfile to function",
-					type: "File"
-				},
-				{
-					name: "--enable-cors-header",
-					description: "Enable CORS (Cross-Origin Resource Sharing) with optional origin or allow all with default '*'.",
-					type: "Input"
-				},
-				{
-					name: "--max-upload-size",
-					description: "Set the maximum upload size in MB.",
-					type: "Input",
-					defaultValue: 100
-				},
-				{
-					name: "--oneapi-device-selector",
-					description: "Sets the oneAPI device(s) this instance will use.",
-					type: "Input"
-				},
-				{
-					name: "--supports-fp8-compute",
-					description: "ComfyUI will act like if the device supports fp8 compute.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-api-nodes",
-					description: "Disable loading all api nodes. Also prevents the frontend from communicating with the internet.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-compress-response-body",
-					description: "Enable compressing response body.",
-					type: "CheckBox"
-				},
-				{
-					name: "--comfy-api-base",
-					description: "Set the base URL for the ComfyUI API. (default: https://api.comfy.org)",
-					type: "Input",
-					defaultValue: "https://api.comfy.org"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--base-directory",
-					description: "Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.",
-					type: "Directory"
-				},
-				{
-					name: "--extra-model-paths-config",
-					description: "Load one or more extra_model_paths.yaml files.",
-					type: "File"
-				},
-				{
-					name: "--output-directory",
-					description: "Set the ComfyUI output directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--temp-directory",
-					description: "Set the ComfyUI temp directory (default is in the ComfyUI directory). Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--input-directory",
-					description: "Set the ComfyUI input directory. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--user-directory",
-					description: "Set the ComfyUI user directory with an absolute path. Overrides --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--models-directory",
-					description: "Set the ComfyUI models directory. Overrides the models folder in --base-directory.",
-					type: "Directory"
-				},
-				{
-					name: "--front-end-root",
-					description: "The local filesystem path to the directory where the frontend is located. Overrides --front-end-version.",
-					type: "Directory"
-				}
-			]
-		},
-		{
-			section: "Execution",
-			items: [
-				{
-					name: "--auto-launch",
-					description: "Automatically launch ComfyUI in the default browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-auto-launch",
-					description: "Disable auto launching the browser.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cuda-device",
-					description: "Set the ids of cuda devices this instance will use, as a comma-separated list (e.g. '0' or '0,1'). All other devices will not be visible.",
-					type: "Input"
-				},
-				{
-					name: "--default-device",
-					description: "Set the id of the default device, all other devices will stay visible.",
-					type: "Input"
-				},
-				{
-					name: "--cuda-malloc",
-					description: "Enable cudaMallocAsync (enabled by default for torch 2.0 and up).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-cuda-malloc",
-					description: "Disable cudaMallocAsync.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Precision",
-			items: [
-				{
-					name: "--force-fp32",
-					description: "Force fp32 (If this makes your GPU work better please report it).",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-fp16",
-					description: "Force fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-unet",
-					description: "Run the diffusion model in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp64-unet",
-					description: "Run the diffusion model in fp64.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-unet",
-					description: "Run the diffusion model in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-unet",
-					description: "Run the diffusion model in fp16",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-unet",
-					description: "Store unet weights in fp8_e4m3fn.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-unet",
-					description: "Store unet weights in fp8_e5m2.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e8m0fnu-unet",
-					description: "Store unet weights in fp8_e8m0fnu.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-vae",
-					description: "Run the VAE in fp16, might cause black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-vae",
-					description: "Run the VAE in full precision fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-vae",
-					description: "Run the VAE in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu-vae",
-					description: "Run the VAE on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e4m3fn-text-enc",
-					description: "Store text encoder weights in fp8 (e4m3fn variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp8_e5m2-text-enc",
-					description: "Store text encoder weights in fp8 (e5m2 variant).",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-text-enc",
-					description: "Store text encoder weights in fp16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp32-text-enc",
-					description: "Store text encoder weights in fp32.",
-					type: "CheckBox"
-				},
-				{
-					name: "--bf16-text-enc",
-					description: "Store text encoder weights in bf16.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fp16-intermediates",
-					description: "Experimental: Use fp16 for intermediate tensors between nodes instead of fp32.",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Optimizations",
-			items: [
-				{
-					name: "--force-channels-last",
-					description: "Force channels last format when inferencing the models.",
-					type: "CheckBox"
-				},
-				{
-					name: "--directml",
-					description: "Use torch-directml.",
-					type: "Input"
-				},
-				{
-					name: "--enable-triton-backend",
-					description: "ComfyUI will enable the use of Triton backend in comfy-kitchen. Is disabled at launch by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-triton-backend",
-					description: "Force-disable the comfy-kitchen Triton backend, overriding the automatic ROCm/AMD default and --enable-triton-backend.",
-					type: "CheckBox"
-				},
-				{
-					name: "--preview-method",
-					description: "Default preview method for sampler nodes.",
-					type: "DropDown",
-					values: [
-						"none",
-						"auto",
-						"latent2rgb",
-						"taesd"
-					],
-					defaultValue: "auto"
-				},
-				{
-					name: "--preview-size",
-					description: "Sets the maximum preview size for sampler nodes.",
-					type: "Input",
-					defaultValue: 512
-				},
-				{
-					name: "--cache-classic",
-					description: "Use the old style (aggressive) caching.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-lru",
-					description: "Use LRU caching with a maximum of N node results cached. May use more RAM/VRAM.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--cache-none",
-					description: "Reduced RAM/VRAM usage at the expense of executing every node for each run.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cache-ram",
-					description: "Use RAM pressure caching with the specified headroom thresholds. This is the default caching mode. The first value sets the active-cache threshold; the optional second value sets the inactive-cache/pin threshold. Defaults when no values are provided: active 10% of system RAM (min 2GB, max 10GB), inactive 100% of system RAM (max 96GB).",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--use-split-cross-attention",
-					description: "Use the split cross attention optimization. Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-quad-cross-attention",
-					description: "Use the sub-quadratic cross attention optimization . Ignored when xformers is used.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-pytorch-cross-attention",
-					description: "Use the new pytorch 2.0 cross attention function.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-sage-attention",
-					description: "Use sage attention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-flash-attention",
-					description: "Use FlashAttention.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-xformers",
-					description: "Disable xformers.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-upcast-attention",
-					description: "Force enable attention upcasting, please report if it fixes black images.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-upcast-attention",
-					description: "Disable all upcasting of attention. Should be unnecessary except for debugging.",
-					type: "CheckBox"
-				},
-				{
-					name: "--force-non-blocking",
-					description: "Force ComfyUI to use non-blocking operations for all applicable tensors. This may improve performance on some non-Nvidia systems but can cause issues with some workflows.",
-					type: "CheckBox"
-				},
-				{
-					name: "--fast",
-					description: "Enable some untested and potentially quality deteriorating optimizations. This is used to test new features so using it might crash your comfyui. --fast with no arguments enables everything. You can pass a list specific optimizations if you only want to enable specific ones. Current valid optimizations: {}",
-					type: "DropDown",
-					values: [
-						"",
-						"fp16_accumulation",
-						"fp8_matrix_mult",
-						"cublas_ops",
-						"autotune"
-					],
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Memory Management",
-			items: [
-				{
-					name: "--gpu-only",
-					description: "Store and run everything (text encoders/CLIP models, etc... on the GPU).",
-					type: "CheckBox"
-				},
-				{
-					name: "--highvram",
-					description: "By default models will be unloaded to CPU memory after being used. This option keeps them in GPU memory.",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Doesn't do anything if dynamic vram is enabled. If dynamic vram isn't being used this option makes the text encoders run on the CPU.",
-					type: "CheckBox"
-				},
-				{
-					name: "--novram",
-					description: "When lowvram isn't enough.",
-					type: "CheckBox"
-				},
-				{
-					name: "--cpu",
-					description: "To use the CPU for everything (slow).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-dynamic-vram",
-					description: "Enable dynamic VRAM on systems where it's not enabled by default.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-dynamic-vram",
-					description: "Disable dynamic VRAM and use estimate based model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--vram-headroom",
-					description: "Set the amount of vram in GB for DynamicVRAM to maintain as extra headroom above default. ComfyUI will try and keep this much VRAM completely free and unused, even counting VRAM from other apps.",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--fast-disk",
-					description: "Prefer disk-backed dynamic loading and offload over unpinned RAM. Can be faster for users with fast NVME disks.",
-					type: "CheckBox"
-				},
-				{
-					name: "--high-ram",
-					description: "Can improve performance slightly on high RAM or on systems where pagefile use is preferred over model loading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--reserve-vram",
-					description: "Set the amount of vram in GB you want to reserve for use by your OS/other software. By default some amount is reserved depending on your OS.",
-					type: "Input"
-				},
-				{
-					name: "--async-offload",
-					description: "Use async weight offloading. An optional argument controls the amount of offload streams. Default is 2. Enabled by default on Nvidia.",
-					type: "Input"
-				},
-				{
-					name: "--disable-async-offload",
-					description: "Disable async weight offloading.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-smart-memory",
-					description: "Force ComfyUI to agressively offload to regular ram instead of keeping models in vram when it can.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-pinned-memory",
-					description: "Disable pinned memory use.",
-					type: "CheckBox"
-				},
-				{
-					name: "--database-url",
-					description: "Specify the database URL, e.g. for an in-memory database you can use 'sqlite:///:memory:'.",
-					type: "Input",
-					defaultValue: ""
-				}
-			]
-		},
-		{
-			section: "Miscellaneous",
-			items: [
-				{
-					name: "--enable-manager",
-					description: "Enable the ComfyUI-Manager feature.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-manager-ui",
-					description: "Disables only the ComfyUI-Manager UI and endpoints. Scheduled installations and similar background tasks will still operate.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-manager-legacy-ui",
-					description: "Enables the legacy UI of ComfyUI-Manager. Implies --enable-manager.",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-assets",
-					description: "Enable the assets system (API routes, database synchronization, and background scanning).",
-					type: "CheckBox"
-				},
-				{
-					name: "--enable-asset-hashing",
-					description: "Compute blake3 content hashes when scanning assets. Hashing enables future asset-portability features (deduplication, cross-machine model resolution) but adds startup cost and per-output cost on large models directories. Off by default; enable to opt in.",
-					type: "CheckBox"
-				},
-				{
-					name: "--feature-flag",
-					description: "Set a server feature flag. Use KEY=VALUE to set an explicit value, or bare KEY to set it to true. Can be specified multiple times. Boolean values (true/false) and numbers are auto-converted.",
-					type: "Input"
-				},
-				{
-					name: "--list-feature-flags",
-					description: "Print the registry of known CLI-settable feature flags as JSON and exit.",
-					type: "CheckBox"
-				},
-				{
-					name: "--debug-hang",
-					description: "Enable stack trace dumps on Ctrl-C for debugging hangs.",
-					type: "CheckBox"
-				},
-				{
-					name: "--front-end-version",
-					description: "Specifies the version of the frontend to be used. (default: comfyanonymous/ComfyUI@latest)",
-					type: "Input",
-					defaultValue: "comfyanonymous/ComfyUI@latest"
-				},
-				{
-					name: "--default-hashing-function",
-					description: "Allows you to choose the hash function to use for duplicate filename / contents comparison. Default is sha256.",
-					type: "DropDown",
-					defaultValue: "sha256",
-					values: [
-						"md5",
-						"sha1",
-						"sha256",
-						"sha512"
-					]
-				},
-				{
-					name: "--deterministic",
-					description: "Make pytorch use slower deterministic algorithms when it can. Note that this might not make images deterministic in all cases.",
-					type: "CheckBox"
-				},
-				{
-					name: "--mmap-torch-files",
-					description: "Use mmap when loading ckpt/pt files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-mmap",
-					description: "Don't use mmap when loading safetensors.",
-					type: "CheckBox"
-				},
-				{
-					name: "--dont-print-server",
-					description: "Don't print server output.",
-					type: "CheckBox"
-				},
-				{
-					name: "--quick-test-for-ci",
-					description: "Quick test for CI.",
-					type: "CheckBox"
-				},
-				{
-					name: "--windows-standalone-build",
-					description: "Windows standalone build: Enable convenient things that most people using the standalone windows build will probably enjoy (like auto opening the page on startup).",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-metadata",
-					description: "Disable saving prompt metadata in files.",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-all-custom-nodes",
-					description: "Disable loading all custom nodes.",
-					type: "CheckBox"
-				},
-				{
-					name: "--whitelist-custom-nodes",
-					description: "Specify custom node folders to load even when --disable-all-custom-nodes is enabled.",
-					type: "Input",
-					defaultValue: "[]"
-				},
-				{
-					name: "--multi-user",
-					description: "Enables per-user storage.",
-					type: "CheckBox"
-				},
-				{
-					name: "--verbose",
-					description: "Set the logging level",
-					type: "DropDown",
-					defaultValue: "INFO",
-					values: [
-						"DEBUG",
-						"INFO",
-						"WARNING",
-						"ERROR",
-						"CRITICAL"
-					]
-				},
-				{
-					name: "--log-stdout",
-					description: "Send normal process output to stdout instead of stderr (default).",
-					type: "CheckBox"
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/image/InvokeAi/utils/constants.ts
-const Invoke_Command_CreateVenv = "uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed .venv";
-const Invoke_Command_ActivateVenv = isWin ? ".venv\\Scripts\\activate" : "source .venv/bin/activate";
-const Invoke_Command_InstallPip = `${getPythonCommandByOs().python} -m ensurepip --upgrade`;
-const Invoke_Command_InstallUV = isWin ? "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"" : "wget -qO- https://astral.sh/uv/install.sh | sh";
-const getTorchBackendForVersion = (version) => {
-	const [major, minor] = version.split(".").map(Number);
-	if (major >= 6) return {
-		cuda: "cu128",
-		rocm: "rocm7.1"
-	};
-	if (major === 5 && minor >= 12) return {
-		cuda: "cu128",
-		rocm: "rocm6.3"
-	};
-	if (major === 5 && minor >= 10 && minor <= 11) return {
-		cuda: "cu126",
-		rocm: "rocm6.2.4"
-	};
-	if (major === 5 && minor >= 0 && minor <= 9) return {
-		cuda: "cu124",
-		rocm: "rocm6.1"
-	};
-	if (major === 4) return {
-		cuda: "cu124",
-		rocm: "rocm5.2"
-	};
-	return {
-		cuda: "cu128",
-		rocm: "rocm7.1"
-	};
-};
-const Invoke_PyPI = {
-	cuda: "Windows or Linux with an Nvidia GPU",
-	rocm: "Linux with an AMD GPU",
-	cpu: "No GPU"
-};
-const Invoke_PackageSpec = {
-	invokeai: "invokeai: Nvidia 30xx series GPU or newer, or do not have an Nvidia GPU",
-	invokeaiXformers: "invokeai[xformers]:  Nvidia 20xx series GPU or older"
-};
-const INVOKEAI_INSTALL_TIME_KEY = "install-time-invokeai";
-const INVOKEAI_INSTALL_DIR_KEY = "install-dir-invokeai";
-const INVOKEAI_UPDATE_TIME_KEY = "update-time-invokeai";
-const INVOKEAI_UPDATE_AVAILABLE_KEY = "update-version-invokeai";
-const invokeGetInputFields = async (ipc) => {
-	const releases = await ipc.invoke("invoke_latest_versions");
-	return [
-		{
-			label: "Installation Directory",
-			id: "install_dir",
-			type: "directory",
-			isRequired: true
-		},
-		{
-			label: "InvokeAI Version",
-			id: "invoke_version",
-			type: "select",
-			selectOptions: releases,
-			defaultValue: releases[0],
-			isRequired: true
-		},
-		{
-			label: "Package Specifier",
-			id: "package_spec",
-			type: "select",
-			selectOptions: [Invoke_PackageSpec.invokeai, Invoke_PackageSpec.invokeaiXformers],
-			defaultValue: Invoke_PackageSpec.invokeai,
-			isRequired: true
-		},
-		{
-			label: "Torch Backend",
-			id: "torch_backend",
-			type: "select",
-			selectOptions: [
-				Invoke_PyPI.cuda,
-				Invoke_PyPI.rocm,
-				Invoke_PyPI.cpu,
-				"Others"
-			],
-			defaultValue: Invoke_PyPI.cuda,
-			isRequired: true
-		}
-	];
-};
-const invokeGetInputResults = (items) => {
-	let installDirResult = "";
-	let packageSpecResult = "";
-	let torchBackendResult = "";
-	let version = "";
-	let torchBackendChoice = "";
-	items.forEach((item) => {
-		if (item.id === "install_dir") installDirResult = item.result;
-		else if (item.id === "invoke_version") version = item.result;
-		else if (item.id === "package_spec") switch (item.result) {
-			case Invoke_PackageSpec.invokeaiXformers:
-				packageSpecResult = "invokeai[xformers]";
-				break;
-			case Invoke_PackageSpec.invokeai:
-			default: packageSpecResult = "invokeai";
-		}
-		else if (item.id === "torch_backend") torchBackendChoice = item.result;
-	});
-	console.log("the invoke version is", version);
-	if (torchBackendChoice) {
-		const backends = getTorchBackendForVersion(version);
-		switch (torchBackendChoice) {
-			case Invoke_PyPI.rocm:
-				torchBackendResult = backends.rocm;
-				break;
-			case Invoke_PyPI.cuda:
-				torchBackendResult = backends.cuda;
-				break;
-			case Invoke_PyPI.cpu:
-				torchBackendResult = "cpu";
-				break;
-			default:
-			case "Others": torchBackendResult = "";
-		}
-	}
-	console.log("the torchBackendResult is", torchBackendResult);
-	return {
-		installDirResult,
-		version,
-		packageSpecResult,
-		torchBackendResult
-	};
-};
-const invokeGetInstallCommand = (items) => {
-	const { version, torchBackendResult, packageSpecResult } = invokeGetInputResults(items);
-	return `uv pip install ${packageSpecResult}==${version} --python 3.12 --python-preference only-managed${torchBackendResult ? ` --torch-backend=${torchBackendResult}` : ""} --force-reinstall`;
-};
-//#endregion
-//#region module/src/containers/image/InvokeAi/RendererMethods.ts
-function parseArgsToString$12(args) {
-	let result = "schema_version: 4.0.2\n\n";
-	const argResult = args.map((arg) => {
-		return `${arg.name}: ${arg.value}`;
-	}).join("\n");
-	result += argResult;
-	return result;
-}
-function parseStringToArgs$12(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("schema_version") || line.startsWith("#") || isEmpty(line.trim())) return;
-		const [name, value] = line.split(`: `);
-		argResult.push({
-			name,
-			value
-		});
-	});
-	return argResult;
-}
-function startInstall$12(stepper) {
-	stepper.initialSteps([
-		"InvokeAI",
-		"UV",
-		"Config",
-		"Install",
-		"Finish"
-	]);
-	stepper.starterStep().then(({ targetDirectory, chosen }) => {
-		if (chosen === "install") stepper.nextStep().then(() => {
-			stepper.progressBar(true, "Detecting UV installation...");
-			stepper.ipc.invoke("is_uv_installed").then((isUvInstalled) => {
-				if (!isUvInstalled) stepper.executeTerminalCommands(Invoke_Command_InstallUV).then(() => {
-					stepper.showFinalStep("success", "UV Package Manager Installation Complete.", "Restart LynxHub and run the installer again to continue installation.");
-				});
-				else stepper.nextStep().then(() => {
-					stepper.progressBar(true, "Fetching the latest InvokeAI versions...");
-					invokeGetInputFields(stepper.ipc).then((fields) => {
-						stepper.collectUserInput(fields).then((result) => {
-							const { installDirResult } = invokeGetInputResults(result);
-							const installCommand = invokeGetInstallCommand(result);
-							stepper.nextStep().then(() => {
-								stepper.executeTerminalCommands([
-									Invoke_Command_CreateVenv,
-									Invoke_Command_ActivateVenv,
-									Invoke_Command_InstallPip,
-									installCommand
-								], installDirResult).then(() => {
-									stepper.setInstalled(installDirResult);
-									const currentDate = /* @__PURE__ */ new Date();
-									stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
-									stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, installDirResult);
-									stepper.showFinalStep("success", "InvokeAI Installation Complete.", "Your InvokeAI environment is ready. Enjoy!");
-								});
-							});
-						});
-					});
-				});
-			});
-		});
-		else stepper.ipc.invoke("validate_install_dir", targetDirectory).then((isValid) => {
-			if (isValid === true) {
-				stepper.setInstalled(targetDirectory);
-				const currentDate = /* @__PURE__ */ new Date();
-				stepper.storage.set(INVOKEAI_INSTALL_TIME_KEY, currentDate.toLocaleString());
-				stepper.storage.set(INVOKEAI_INSTALL_DIR_KEY, targetDirectory);
-				stepper.showFinalStep("success", "InvokeAI Environment Found.", "Location validated successfully.");
-			} else {
-				const description = typeof isValid === "string" ? isValid : "Could not find InvokeAI installation in the selected directory.";
-				stepper.showFinalStep("error", "Invalid Environment!", description);
-			}
-		});
-	});
-}
-function startUpdate$2(stepper, dir) {
-	if (!dir) return;
-	const pythonPath = getVenvPythonPath(isWin ? `${dir}\\.venv` : `${dir}/.venv`);
-	stepper.initialSteps(["Updating", "Done"]);
-	stepper.executeTerminalCommands(`${isWin ? "&" : "."} "${pythonPath}" -m pip install --upgrade "invokeai"`, dir).then(() => {
-		const currentDate = /* @__PURE__ */ new Date();
-		stepper.storage.set(INVOKEAI_UPDATE_TIME_KEY, currentDate);
-		stepper.setUpdated();
-		stepper.showFinalStep("success", "InvokeAI Updated Successfully!", `InvokeAI has been updated to the latest version. You can now enjoy the new features and improvements.`);
-	});
-}
-async function cardInfo$12(api, callback) {
-	const dir = api.installationFolder;
-	callback.setOpenFolders(dir ? [dir] : void 0);
-	const descManager = new DescriptionManager([{
-		title: "Installation Data",
-		items: [
-			{
-				label: "Install Date",
-				result: "loading"
-			},
-			{
-				label: "Update Date",
-				result: "loading"
-			},
-			{
-				label: "Current Version",
-				result: "loading"
-			},
-			{
-				label: "Latest Version",
-				result: "loading"
-			}
-		]
-	}], callback);
-	api.storage.get(INVOKEAI_INSTALL_TIME_KEY).then((result) => {
-		descManager.updateItem(0, 0, result);
-	});
-	api.storage.get(INVOKEAI_UPDATE_TIME_KEY).then((result) => {
-		descManager.updateItem(0, 1, result);
-	});
-	api.ipc.invoke("invoke_current_version").then((result) => {
-		descManager.updateItem(0, 2, result);
-	});
-	api.storage.get(INVOKEAI_UPDATE_AVAILABLE_KEY).then((result) => {
-		descManager.updateItem(0, 3, result);
-	});
-}
-const INVOKE_RM = {
-	catchAddress: catchAddress$5,
-	cardInfo: cardInfo$12,
-	parseArgsToString: parseArgsToString$12,
-	parseStringToArgs: parseStringToArgs$12,
-	manager: {
-		startInstall: startInstall$12,
-		updater: {
-			updateType: "stepper",
-			startUpdate: startUpdate$2
-		}
-	}
-};
-//#endregion
-//#region module/src/containers/image/SdAmdgpu/Arguments.ts
-const lshqqytigerArguments = cloneDeep(automatic1111Arguments);
-const newSection = {
-	section: "AmdGPU",
-	items: [
-		{
-			description: "Skip installation of onnxruntime; ONNX and Olive will be unavailable",
-			name: "--skip-ort",
-			type: "CheckBox"
-		},
-		{
-			description: "use torch built with cpu",
-			name: "--use-cpu-torch",
-			type: "CheckBox"
-		},
-		{
-			description: "use DirectML device as torch device",
-			name: "--use-directml",
-			type: "CheckBox"
-		},
-		{
-			description: "use ZLUDA device as torch device",
-			name: "--use-zluda",
-			type: "CheckBox"
-		},
-		{
-			description: "override torch version",
-			name: "--override-torch",
-			type: "Input"
-		}
-	]
-};
-const commandLineArgsIndex = lshqqytigerArguments.findIndex((arg) => arg.category === "Command Line Arguments");
-if (commandLineArgsIndex !== -1 && lshqqytigerArguments[commandLineArgsIndex].sections) lshqqytigerArguments[commandLineArgsIndex].sections.unshift(newSection);
-//#endregion
-//#region module/src/containers/image/SdAmdgpu/RendererMethods.ts
-const SdAMD_URL = "https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu";
-function startInstall$11(stepper) {
-	GitInstaller("Stable Diffusion AMDGPU", SdAMD_URL, stepper, [isWin ? "webui-user.bat" : "webui.sh"]);
-}
-async function cardInfo$11(api, callback) {
-	return CardInfo(SdAMD_URL, "/extensions", api, callback);
-}
-function getTypeByCategoryName(category) {
-	switch (category) {
-		case "Command Line Arguments": return "cl";
-		case "Environment":
-		case "Environment Variables": return "env";
-		default: return;
-	}
-}
-function getCategoryType$2(name) {
-	if (!name) return void 0;
-	for (const argument of lshqqytigerArguments) if ("sections" in argument) {
-		for (const section of argument.sections) if (section.items.some((item) => item.name === name)) {
-			if (section.section === "Variables") return "envVar";
-			return getTypeByCategoryName(argument.category);
-		}
-	} else if (argument.items.some((item) => item.name === name)) return getTypeByCategoryName(argument.category);
-}
-function parseArgsToString$11(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let clResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) clResult += result.commandArg + " ";
-		} else {
-			const cat = getCategoryType$2(arg.name);
-			if (cat !== "cl") {
-				const eWinResult = `set ${arg.name}=${arg.value}\n`;
-				const eResult = cat === "env" ? `export ${arg.name}="${arg.value}"\n` : `${arg.name}="${arg.value}"\n`;
-				if (arg.name !== "COMMANDLINE_ARGS") result += isWin ? eWinResult : eResult;
-			} else if (cat === "cl") {
-				const argType = getArgumentType(arg.name, lshqqytigerArguments);
-				if (argType === "CheckBox") clResult += `${arg.name} `;
-				else if (argType === "File" || argType === "Directory") clResult += isWin ? `${arg.name} "${arg.value}" ` : `${arg.name} ${arg.value} `;
-				else clResult += `${arg.name} ${arg.value} `;
-			}
-		}
-	});
-	if (lines) result += lines + "\n";
-	if (!isEmpty(clResult)) result += isWin ? `set COMMANDLINE_ARGS=${clResult}\n` : `export COMMANDLINE_ARGS=${clResult}\n`;
-	result += isWin ? `\ncall webui.bat` : ``;
-	return result;
-}
-function checkLinuxArgLine$1(line) {
-	if (isWin && line.startsWith("set ")) return "set";
-	if (line.startsWith("export ")) return "export";
-	for (const arg of lshqqytigerArguments) if (arg.category === "Environment") {
-		if (arg.sections[0].items.find((item) => item.name === line.split("=")[0])) return "var";
-		else return;
-	}
-}
-function parseStringToArgs$11(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (line.startsWith("#")) return;
-		else if (line.startsWith(`${isWin ? "set" : "export"} COMMANDLINE_ARGS=`)) {
-			argResult.push({
-				name: "COMMANDLINE_ARGS",
-				value: ""
-			});
-			const clArgs = line.split("=")[1];
-			if (!clArgs) return;
-			clArgs.split("--").filter(Boolean).map((arg) => {
-				const [id, ...value] = arg.trim().split(" ");
-				return {
-					name: `--${id}`,
-					value: value.join(" ").replace(/"/g, "")
-				};
-			}).forEach((value) => {
-				if (isValidArg(value.name, lshqqytigerArguments)) {
-					if (getArgumentType(value.name, lshqqytigerArguments) === "CheckBox") argResult.push({
-						name: value.name,
-						value: ""
-					});
-					else argResult.push({
-						name: value.name,
-						value: value.value
-					});
-				}
-			});
-		} else {
-			const lineType = checkLinuxArgLine$1(line);
-			if (lineType === "export" || lineType === "set") {
-				let [name, value] = line.replace(`${lineType} `, "").split("=");
-				name = removeEscapes(name.trim());
-				value = removeEscapes(value.trim());
-				if (isValidArg(name, lshqqytigerArguments)) argResult.push({
-					name,
-					value
-				});
-			} else if (checkLinuxArgLine$1(line) === "var") {
-				let [name, value] = line.split("=");
-				name = removeEscapes(name.trim());
-				value = removeEscapes(value.trim());
-				if (isValidArg(name, lshqqytigerArguments)) argResult.push({
-					name,
-					value
-				});
-			}
-		}
-	});
-	return argResult;
-}
-const SD_AMD_RM = {
-	catchAddress: catchAddress$5,
-	fetchExtensionList: fetchExtensionList$2,
-	parseArgsToString: parseArgsToString$11,
-	parseStringToArgs: parseStringToArgs$11,
-	cardInfo: cardInfo$11,
-	manager: {
-		startInstall: startInstall$11,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/containers/image/SdNext/Arguments.ts
-const vladmandicArguments = [{
-	category: "Environment Variables",
-	items: [{
-		description: "Sets a custom path for Python executable.",
-		name: "PYTHON",
-		type: "File"
-	}, {
-		description: "Specifies the path for the virtual environment. Default is venv. Special value - runs the script without creating virtual environment.",
-		name: "VENV_DIR",
-		type: "Directory"
-	}]
-}, {
-	category: "Command Line Arguments",
-	sections: [
-		{
-			section: "Configuration",
-			items: [
-				{
-					name: "--config",
-					description: "Use specific server configuration file, default: config.json",
-					type: "File"
-				},
-				{
-					name: "--ui-config",
-					description: "Use specific UI configuration file, default: ui-config.json",
-					type: "File"
-				},
-				{
-					name: "--medvram",
-					description: "Split model stages and keep only active part in VRAM",
-					type: "CheckBox"
-				},
-				{
-					name: "--lowvram",
-					description: "Split model components and keep only active part in VRAM",
-					type: "CheckBox"
-				},
-				{
-					name: "--freeze",
-					description: "Disable editing settings",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Paths",
-			items: [
-				{
-					name: "--ckpt",
-					description: "Path to model checkpoint to load immediately",
-					type: "File"
-				},
-				{
-					name: "--data-dir",
-					description: "Base path where all user data is stored",
-					type: "Directory"
-				},
-				{
-					name: "--models-dir",
-					description: "Base path where all models are stored",
-					type: "Directory"
-				},
-				{
-					name: "--allowed-paths",
-					description: "Add additional paths to paths allowed for web access",
-					type: "Input"
-				}
-			]
-		},
-		{
-			section: "Diagnostics",
-			items: [
-				{
-					name: "--no-hashing",
-					description: "Disable hashing of checkpoints",
-					type: "CheckBox"
-				},
-				{
-					name: "--no-metadata",
-					description: "Disable reading of metadata from models",
-					type: "CheckBox"
-				},
-				{
-					name: "--disable-queue",
-					description: "Disable queues",
-					type: "CheckBox"
-				},
-				{
-					name: "--device-id",
-					description: "Select the default CUDA device to use",
-					type: "Input"
-				}
-			]
-		},
-		{
-			section: "HTTP",
-			items: [
-				{
-					name: "--server-name",
-					description: "Sets hostname of server",
-					type: "Input"
-				},
-				{
-					name: "--tls-keyfile",
-					description: "Enable TLS and specify key file",
-					type: "File"
-				},
-				{
-					name: "--tls-certfile",
-					description: "Enable TLS and specify cert file",
-					type: "File"
-				},
-				{
-					name: "--tls-selfsign",
-					description: "Enable TLS with self-signed certificates",
-					type: "CheckBox"
-				},
-				{
-					name: "--cors-origins",
-					description: "Allowed CORS origins as comma-separated list",
-					type: "Input"
-				},
-				{
-					name: "--cors-regex",
-					description: "Allowed CORS origins as regular expression",
-					type: "Input"
-				},
-				{
-					name: "--subpath",
-					description: "Customize the URL subpath for usage with reverse proxy",
-					type: "Input"
-				},
-				{
-					name: "--autolaunch",
-					description: "Open the UI URL in the system's default browser upon launch",
-					type: "CheckBox"
-				},
-				{
-					name: "--auth",
-					description: "Set access authentication like \"user:pwd,user:pwd\"",
-					type: "Input"
-				},
-				{
-					name: "--auth-file",
-					description: "Set access authentication using file",
-					type: "File"
-				},
-				{
-					name: "--api-only",
-					description: "Run in API only mode without starting UI",
-					type: "CheckBox"
-				},
-				{
-					name: "--share",
-					description: "Enable UI accessible through Gradio site",
-					type: "CheckBox"
-				},
-				{
-					name: "--insecure",
-					description: "Enable extensions tab regardless of other options",
-					type: "CheckBox"
-				},
-				{
-					name: "--listen",
-					description: "Launch web server using public IP address",
-					type: "CheckBox"
-				},
-				{
-					name: "--port",
-					description: "Launch web server with given server port",
-					type: "Input",
-					defaultValue: 7860
-				}
-			]
-		},
-		{
-			section: "Setup",
-			items: [
-				{
-					name: "--reset",
-					description: "Reset main repository to latest version",
-					type: "CheckBox"
-				},
-				{
-					name: "--upgrade",
-					description: "Upgrade main repository to latest version",
-					type: "CheckBox"
-				},
-				{
-					name: "--requirements",
-					description: "Force re-check of requirements",
-					type: "CheckBox"
-				},
-				{
-					name: "--reinstall",
-					description: "Force reinstallation of all requirements",
-					type: "CheckBox"
-				},
-				{
-					name: "--uv",
-					description: "Use uv instead of pip to install the packages",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Startup",
-			items: [
-				{
-					name: "--quick",
-					description: "Bypass version checks",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-requirements",
-					description: "Skips checking and installing requirements",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-extensions",
-					description: "Skips running individual extension installers",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-git",
-					description: "Skips running all GIT operations",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-torch",
-					description: "Skips running Torch checks",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-all",
-					description: "Skips running all checks",
-					type: "CheckBox"
-				},
-				{
-					name: "--skip-env",
-					description: "Skips setting of env variables during startup",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Compute Engine",
-			items: [
-				{
-					name: "--use-directml",
-					description: "Use DirectML if no compatible GPU is detected",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-openvino",
-					description: "Use Intel OpenVINO backend",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-ipex",
-					description: "Force use Intel OneAPI XPU backend",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-cuda",
-					description: "Force use nVidia CUDA backend",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-rocm",
-					description: "Force use AMD ROCm backend",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-zluda",
-					description: "Force use ZLUDA, AMD GPUs only",
-					type: "CheckBox"
-				},
-				{
-					name: "--use-xformers",
-					description: "Force use xFormers cross-optimization",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Diagnostics",
-			items: [
-				{
-					name: "--safe",
-					description: "Run in safe mode with no user extensions",
-					type: "CheckBox"
-				},
-				{
-					name: "--experimental",
-					description: "Allow unsupported versions of libraries",
-					type: "CheckBox"
-				},
-				{
-					name: "--test",
-					description: "Run test only and exit",
-					type: "CheckBox"
-				},
-				{
-					name: "--version",
-					description: "Print version information",
-					type: "CheckBox"
-				},
-				{
-					name: "--ignore",
-					description: "Ignore any errors and attempt to continue",
-					type: "CheckBox"
-				}
-			]
-		},
-		{
-			section: "Logging",
-			items: [
-				{
-					name: "--log",
-					description: "Set log file",
-					type: "File"
-				},
-				{
-					name: "--debug",
-					description: "Run installer with debug logging",
-					type: "CheckBox"
-				},
-				{
-					name: "--profile",
-					description: "Run profiler",
-					type: "CheckBox"
-				},
-				{
-					name: "--monitor",
-					description: "Monitor load and log in specific periods",
-					type: "Input",
-					defaultValue: 0
-				},
-				{
-					name: "--docs",
-					description: "Mount API docs",
-					type: "CheckBox"
-				},
-				{
-					name: "--api-log",
-					description: "Enable logging of all API requests",
-					type: "CheckBox"
-				}
-			]
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/image/SdNext/RendererMethods.ts
-const shellCommand$4 = isWin ? "call webui.bat" : "bash ./webui.sh";
-const URL$4 = "https://github.com/vladmandic/sdnext";
-function parseArgsToString$10(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let argResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else {
-			const argType = getArgumentType(arg.name, vladmandicArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	result += isEmpty(argResult) ? shellCommand$4 : `${shellCommand$4} ${argResult}`;
-	return result;
-}
-function parseStringToArgs$10(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (!line.startsWith(shellCommand$4)) return;
-		const clArgs = line.split(`${shellCommand$4} `)[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, vladmandicArguments)) {
-				if (getArgumentType(value.name, vladmandicArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-function startInstall$10(stepper) {
-	GitInstaller("SD Next", URL$4, stepper, [isWin ? "webui.bat" : "webui.sh"]);
-}
-async function cardInfo$10(api, callback) {
-	return CardInfo(URL$4, "/extensions", api, callback);
-}
-const SD_NEXT_RM = {
-	catchAddress: catchAddress$5,
-	fetchExtensionList: fetchExtensionList$2,
-	parseArgsToString: parseArgsToString$10,
-	parseStringToArgs: parseStringToArgs$10,
-	cardInfo: cardInfo$10,
-	manager: {
-		startInstall: startInstall$10,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/containers/image/SwarmUi/Arguments.ts
-const mcMonkeyArguments = [{
-	category: "Command Line Arguments",
-	items: [
-		{
-			name: "--data_dir",
-			description: "Override the default data directory.",
-			type: "Directory",
-			defaultValue: "Data"
-		},
-		{
-			name: "--settings_file",
-			description: "If your settings file is anywhere other than the default, you must specify as a command line arg.",
-			type: "File",
-			defaultValue: "Data/Settings.fds"
-		},
-		{
-			name: "--backends_file",
-			description: "If your backends file is anywhere other than the default, you must specify as a command line arg.",
-			type: "File",
-			defaultValue: "Data/Backends.fds"
-		},
-		{
-			name: "--environment",
-			description: "Can be `development` or `production` to set what ASP.NET Web Environment to use. `Development` gives detailed debug logs and errors, while `Production` is optimized for normal usage.",
-			type: "DropDown",
-			defaultValue: "Production",
-			values: ["development", "production"]
-		},
-		{
-			name: "--host",
-			description: "Can be used to override the 'Network.Host' server setting.",
-			type: "Input",
-			defaultValue: "localhost"
-		},
-		{
-			name: "--port",
-			description: "Can be used to override the 'Network.Port' server setting.",
-			type: "Input",
-			defaultValue: "7801"
-		},
-		{
-			name: "--asp_loglevel",
-			description: "Sets the minimum log level for ASP.NET web logger, as any of: `Trace`, `Debug`, `Information`, `Warning`, `Error`, `Critical`, `None`. Note 'information' here spams debug output.",
-			type: "DropDown",
-			defaultValue: "warning",
-			values: [
-				"Trace",
-				"Debug",
-				"Information",
-				"Warning",
-				"Error",
-				"Critical",
-				"None"
-			]
-		},
-		{
-			name: "--loglevel",
-			description: "Minimum SwarmUI log level, as any of: `Debug`, `Info`, `Init`, `Warning`, `Error`, `None`. 'Info' here is the normal usage data.",
-			type: "DropDown",
-			defaultValue: "Info",
-			values: [
-				"Debug",
-				"Info",
-				"Init",
-				"Warning",
-				"Error",
-				"None"
-			]
-		},
-		{
-			name: "--user_id",
-			description: "Set the local user's default UserID (for running in single-user mode, not useful in shared mode).",
-			type: "Input",
-			defaultValue: "local"
-		},
-		{
-			name: "--lock_settings",
-			description: "If enabled, blocks in-UI editing of server settings by admins. Settings cannot be modified in this mode without editing the settings file and restarting the server.",
-			type: "CheckBox"
-		},
-		{
-			name: "--ngrok-path",
-			description: "If specified, will be used as the path to an `ngrok` executable, and will automatically load and configure ngrok when launching, to share your UI instance on a publicly accessible URL.",
-			type: "File"
-		},
-		{
-			name: "--cloudflared-path",
-			description: "If specified, will be used as the path to an `cloudflared` executable, and will automatically load and configure TryCloudflare when launching, to share your UI instance on a publicly accessible URL.",
-			type: "File"
-		},
-		{
-			name: "--proxy-region",
-			description: "If specified, sets the proxy (ngrok/cloudflared) region. If unspecified, defaults to closest.",
-			type: "Input"
-		},
-		{
-			name: "--proxy-added-args",
-			description: "If specified, adds additional args to the proxy launch. Use a `.` as the first symbol (parser hackaround). For example, `--proxy-added-args \".--my-arg --arg -argy arg\"`",
-			type: "Input"
-		},
-		{
-			name: "--ngrok-basic-auth",
-			description: "If specified, sets an ngrok basic-auth requirement to access.",
-			type: "Input"
-		},
-		{
-			name: "--launch_mode",
-			description: "Can be used to override the 'LaunchMode' server setting.",
-			type: "Input",
-			defaultValue: "none"
-		},
-		{
-			name: "--require_control_within",
-			description: "If specified, give a number of minutes within which a remote API server must send a `AdminTakeControl` API request, or presume the launch is bad. This is useful for auto-managed instances.",
-			type: "Input"
-		},
-		{
-			name: "--no_persist",
-			description: "If enabled, tells most systems in Swarm to avoid saving data (eg session handler will not save session data). Useful for instances with overlapping data storage especially.",
-			type: "CheckBox"
-		},
-		{
-			name: "--help",
-			description: "Displays an in-CLI shortlist of CLI args and some usage hints.",
-			type: "CheckBox"
-		}
-	]
-}];
-//#endregion
-//#region module/src/containers/image/SwarmUi/RendererMethods.ts
-const shellCommand$3 = isWin ? "call launch-windows.bat" : "bash ./launch-linux.sh";
-const URL$3 = "https://github.com/mcmonkeyprojects/SwarmUI";
-function parseArgsToString$9(args) {
-	let result = isWin ? "@echo off\n\n" : "#!/bin/bash\n\n";
-	let lines = "";
-	let argResult = "";
-	args.forEach((arg) => {
-		if (arg.custom) {
-			const result = parseCustomArg(arg);
-			if (!result) return;
-			if (result.line) lines += result.line + "\n";
-			if (result.commandArg) argResult += result.commandArg + " ";
-		} else {
-			const argType = getArgumentType(arg.name, mcMonkeyArguments);
-			if (argType === "CheckBox") argResult += `${arg.name} `;
-			else if (argType === "File" || argType === "Directory") argResult += `${arg.name} "${arg.value}" `;
-			else argResult += `${arg.name} ${arg.value} `;
-		}
-	});
-	if (lines) result += lines + "\n";
-	result += isEmpty(argResult) ? shellCommand$3 : `${shellCommand$3} ${argResult}`;
-	return result;
-}
-function parseStringToArgs$9(args) {
-	const argResult = [];
-	args.split("\n").forEach((line) => {
-		if (!line.startsWith(shellCommand$3)) return;
-		const clArgs = line.split(`${shellCommand$3} `)[1];
-		if (!clArgs) return;
-		clArgs.split("--").filter(Boolean).map((arg) => {
-			const [id, ...value] = arg.trim().split(" ");
-			return {
-				name: `--${id}`,
-				value: value.join(" ").replace(/"/g, "")
-			};
-		}).forEach((value) => {
-			if (isValidArg(value.name, mcMonkeyArguments)) {
-				if (getArgumentType(value.name, mcMonkeyArguments) === "CheckBox") argResult.push({
-					name: value.name,
-					value: ""
-				});
-				else argResult.push({
-					name: value.name,
-					value: value.value
-				});
-			}
-		});
-	});
-	return argResult;
-}
-async function fetchExtensionList$1() {
-	return [
-		{
-			url: "https://github.com/Quaggles/SwarmUI-FaceTools",
-			title: "SwarmUI-FaceTools",
-			description: "A SwarmUI extension that adds parameters for ReActor and FaceRestoreCF nodes to the the generate tab.",
-			stars: 8
-		},
-		{
-			url: "https://github.com/mcmonkey4eva/SwarmComfyDeployBackendExt",
-			title: "Swarm ComfyDeploy Backend Extension",
-			description: "An extension for SwarmUI to use ComfyDeploy as a backend.",
-			stars: 1
-		},
-		{
-			url: "https://github.com/kalebbroo/SwarmUI-MagicPromptExtension",
-			title: "SwarmUI MagicPrompt Extension",
-			description: "The MagicPrompt Extension provides a simple and intuitive way directly in SwarmUI to generate text prompts for Stable Diffusion images. This uses your local Ollama LLMs.",
-			stars: 7
-		},
-		{
-			url: "https://github.com/Quaggles/SwarmUI-FaceTools",
-			title: "SwarmUI-FaceTools",
-			description: "A SwarmUI extension that adds parameters for ReActor and FaceRestoreCF nodes to the the generate tab.",
-			stars: 8
-		}
-	];
-}
-function startInstall$9(stepper) {
-	GitInstaller("SwarmUI", URL$3, stepper, [isWin ? "launch-windows.bat" : "launch-linux.sh"]);
-}
-async function cardInfo$9(api, callback) {
-	return CardInfo(URL$3, "/src/Extensions", api, callback);
-}
-const SWARM_RM = {
-	catchAddress: catchAddress$5,
-	fetchExtensionList: fetchExtensionList$1,
-	parseArgsToString: parseArgsToString$9,
-	parseStringToArgs: parseStringToArgs$9,
-	cardInfo: cardInfo$9,
-	manager: {
-		startInstall: startInstall$9,
-		updater: { updateType: "git" }
-	}
-};
-//#endregion
-//#region module/src/containers/text/LlamaCpp/utils/github.ts
-const LLAMA_CPP_RELEASES_URL = "https://api.github.com/repos/ggml-org/llama.cpp/releases";
-const LLAMA_CPP_INSTALL_TIME_KEY = "install-time-llamaCpp";
-const LLAMA_CPP_INSTALL_DIR_KEY = "install-dir-llamaCpp";
-const LLAMA_CPP_UPDATE_TIME_KEY = "update-time-llamaCpp";
-const LLAMA_CPP_PLATFORM_KEY = "platform-llamaCpp";
-const LLAMA_PLATFORM_OPTIONS = [
-	{
-		label: "Windows x64 (CUDA 12)",
-		key: "win-cuda12-x64",
-		pattern: /^(?!.*cudart).*bin-win-cuda-12.*-x64\.zip$/i
-	},
-	{
-		label: "Windows x64 (CUDA 13)",
-		key: "win-cuda13-x64",
-		pattern: /^(?!.*cudart).*bin-win-cuda-13.*-x64\.zip$/i
-	},
-	{
-		label: "Windows arm64 (CUDA 13) (preview)",
-		key: "win-cuda13-arm64",
-		pattern: /^(?!.*cudart).*bin-win-cuda-13.*-arm64\.zip$/i
-	},
-	{
-		label: "Windows x64 (CPU)",
-		key: "win-cpu-x64",
-		pattern: /^(?!.*cudart).*bin-win-cpu-x64\.zip$/i
-	},
-	{
-		label: "Windows arm64 (CPU)",
-		key: "win-cpu-arm64",
-		pattern: /^(?!.*cudart).*bin-win-cpu-arm64\.zip$/i
-	},
-	{
-		label: "Windows arm64 (OpenCL Adreno)",
-		key: "win-opencl-adreno-arm64",
-		pattern: /^(?!.*cudart).*bin-win-opencl-adreno-arm64\.zip$/i
-	},
-	{
-		label: "Windows x64 (Vulkan)",
-		key: "win-vulkan-x64",
-		pattern: /^(?!.*cudart).*bin-win-vulkan-x64\.zip$/i
-	},
-	{
-		label: "Windows x64 (OpenVINO)",
-		key: "win-openvino-x64",
-		pattern: /^(?!.*cudart).*bin-win-openvino.*-x64\.zip$/i
-	},
-	{
-		label: "Windows x64 (SYCL)",
-		key: "win-sycl-x64",
-		pattern: /^(?!.*cudart).*bin-win-sycl-x64\.zip$/i
-	},
-	{
-		label: "Windows x64 (ROCm)",
-		key: "win-rocm-x64",
-		pattern: /^(?!.*cudart).*bin-win-rocm.*-x64\.zip$/i
-	},
-	{
-		label: "macOS Apple Silicon (arm64)",
-		key: "macos-arm64",
-		pattern: /bin-macos-arm64\.tar\.gz$/i
-	},
-	{
-		label: "macOS Intel (x64)",
-		key: "macos-x64",
-		pattern: /bin-macos-x64\.tar\.gz$/i
-	},
-	{
-		label: "iOS XCFramework",
-		key: "ios-xcframework",
-		pattern: /xcframework\.zip$/i
-	},
-	{
-		label: "Ubuntu x64 (CPU)",
-		key: "ubuntu-cpu-x64",
-		pattern: /bin-ubuntu-x64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu arm64 (CPU)",
-		key: "ubuntu-cpu-arm64",
-		pattern: /bin-ubuntu-arm64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu s390x (CPU)",
-		key: "ubuntu-cpu-s390x",
-		pattern: /bin-ubuntu-s390x\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu x64 (Vulkan)",
-		key: "ubuntu-vulkan-x64",
-		pattern: /bin-ubuntu-vulkan-x64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu arm64 (Vulkan)",
-		key: "ubuntu-vulkan-arm64",
-		pattern: /bin-ubuntu-vulkan-arm64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu x64 (ROCm)",
-		key: "ubuntu-rocm-x64",
-		pattern: /bin-ubuntu-rocm.*-x64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu x64 (OpenVINO)",
-		key: "ubuntu-openvino-x64",
-		pattern: /bin-ubuntu-openvino.*-x64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu x64 (SYCL FP32)",
-		key: "ubuntu-sycl-fp32-x64",
-		pattern: /bin-ubuntu-sycl-fp32-x64\.tar\.gz$/i
-	},
-	{
-		label: "Ubuntu x64 (SYCL FP16)",
-		key: "ubuntu-sycl-fp16-x64",
-		pattern: /bin-ubuntu-sycl-fp16-x64\.tar\.gz$/i
-	},
-	{
-		label: "Android arm64 (CPU)",
-		key: "android-arm64",
-		pattern: /bin-android-arm64\.tar\.gz$/i
-	}
-];
-function detectDefaultPlatformKey() {
-	if (isWin) return "win-cuda12-x64";
-	if (isMac) return "macos-arm64";
-	if (isLinux) return "ubuntu-cpu-x64";
-	return "win-cpu-x64";
-}
-async function fetchLlamaCppReleases() {
-	try {
-		const response = await fetch(LLAMA_CPP_RELEASES_URL, { headers: {
-			"User-Agent": "LynxHub-Desktop",
-			Accept: "application/vnd.github.v3+json"
-		} });
-		if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
-		return (await response.json()).filter((r) => !r.draft && Boolean(r.assets?.some((a) => a.name.endsWith(".zip") || a.name.endsWith(".tar.gz"))));
-	} catch (error) {
-		console.error("Failed to fetch llama.cpp releases from GitHub:", error);
-		return [];
-	}
-}
-function findAssetUrlForPlatform(assets, platformKey) {
-	const option = LLAMA_PLATFORM_OPTIONS.find((opt) => opt.key === platformKey);
-	if (!option) return assets.find((a) => !a.name.startsWith("cudart-") && (a.name.endsWith(".zip") || a.name.endsWith(".tar.gz")))?.browser_download_url;
-	const matchedAsset = assets.find((a) => option.pattern.test(a.name));
-	if (matchedAsset) return matchedAsset.browser_download_url;
-	return assets.find((a) => {
-		if (a.name.startsWith("cudart-")) return false;
-		if (platformKey.startsWith("win-") && a.name.includes("win")) return true;
-		if (platformKey.startsWith("ubuntu-") && a.name.includes("ubuntu")) return true;
-		if (platformKey.startsWith("macos-") && a.name.includes("macos")) return true;
-		return false;
-	})?.browser_download_url || assets[0]?.browser_download_url;
-}
-function findCudartAssetUrlForPlatform(assets, platformKey) {
-	if (platformKey === "win-cuda12-x64") return assets.find((a) => /cudart-.*bin-win-cuda-12.*-x64\.zip$/i.test(a.name))?.browser_download_url;
-	if (platformKey === "win-cuda13-x64") return assets.find((a) => /cudart-.*bin-win-cuda-13.*-x64\.zip$/i.test(a.name))?.browser_download_url;
-	if (platformKey === "win-cuda13-arm64") return assets.find((a) => /cudart-.*bin-win-cuda-13.*-arm64\.zip$/i.test(a.name))?.browser_download_url;
-}
-async function getLatestLlamaCppTag() {
-	return (await fetchLlamaCppReleases())[0]?.tag_name || "unknown";
-}
-//#endregion
 //#region module/src/containers/text/OpenWebUi/RendererMethods.ts
 const INSTALL_TIME_KEY$1 = "install-time-openwebui";
 const UPDATE_TIME_KEY$1 = "update-time-openwebui";
@@ -18173,7 +20139,7 @@ const OPEN_WEBUI_RM = {
 };
 //#endregion
 //#region module/node_modules/js-yaml/dist/js-yaml.mjs
-/*! js-yaml 5.4.1 https://github.com/nodeca/js-yaml @license MIT */
+/*! js-yaml 5.4.3 https://github.com/nodeca/js-yaml @license MIT */
 /**
 * Returned by a scalar resolver when the source does not match its tag.
 *
@@ -20194,7 +22160,7 @@ function readBlockScalar(state, parentIndent, props) {
 				state.position = linePosition + column;
 				throwError(state, "tab characters must not be used in indentation");
 			}
-			if (column < maxLeadingIndent) {
+			if (column >= parentIndent && column < maxLeadingIndent) {
 				state.position = linePosition + column;
 				throwError(state, "bad indentation of a mapping entry");
 			}
@@ -20404,13 +22370,16 @@ function readBlockMapping(state, nodeIndent, flowIndent, props) {
 					ch = state.input.charCodeAt(++state.position);
 					if (!isWsOrEolOrEnd(ch)) throwError(state, "a whitespace character is expected after the key-value separator within a block mapping");
 					if (!mappingOpened) {
-						restoreState(state, beforeKey);
-						addMappingEvent(state, beforeKey.position, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, COLLECTION_STYLE.BLOCK);
+						state.events.splice(beforeKey.eventsLength, 0, {
+							type: EVENT_ID.MAPPING,
+							start: beforeKey.position,
+							anchorStart: props.anchorStart,
+							anchorEnd: props.anchorEnd,
+							tagStart: props.tagStart,
+							tagEnd: props.tagEnd,
+							style: COLLECTION_STYLE.BLOCK
+						});
 						mappingOpened = true;
-						parseNode(state, flowIndent, CONTEXT_FLOW_OUT, false, true);
-						ch = state.input.charCodeAt(state.position);
-						while (isWhiteSpace(ch)) ch = state.input.charCodeAt(++state.position);
-						state.position++;
 					}
 					detected = true;
 					atExplicitKey = false;
@@ -20903,6 +22872,7 @@ function doubleQuoteWhitespaceOnly(layout) {
 function applyForceQuotesOption(layout) {
 	if (!layout.presenterOptions.forceQuotes) return;
 	if (layout.isKey || layout.style !== SCALAR_STYLE.PLAIN) return;
+	if (layout.node.tag !== layout.presenterOptions.schema.defaultScalarTag.tagName) return;
 	layout.style = layout.node.value.includes("\n") ? SCALAR_STYLE.DOUBLE_QUOTED : _preferredQuotedStyle(layout);
 }
 function tryLongOrMultilineAsBlock(layout) {
@@ -21492,7 +23462,9 @@ const sillyArguments = [{
 		{
 			name: "--port",
 			description: "Sets the port under which SillyTavern will run. If not provided falls back to yaml config 'port'.",
-			type: "Input"
+			type: "Number",
+			numberMin: 1,
+			numberMax: 65535
 		},
 		{
 			name: "--listen",
@@ -21567,7 +23539,9 @@ const sillyArguments = [{
 		{
 			name: "--browserLaunchPort",
 			description: "Overrides the port for browser launch",
-			type: "Input"
+			type: "Number",
+			numberMin: 1,
+			numberMax: 65535
 		},
 		{
 			name: "--browserLaunchAvoidLocalhost",
@@ -21607,7 +23581,9 @@ const sillyArguments = [{
 		{
 			name: "--heartbeatInterval",
 			description: "Interval in seconds to write a heartbeat file. 0 to disable.",
-			type: "Input"
+			type: "Number",
+			defaultValue: 0,
+			numberMin: 0
 		}
 	]
 }, {
@@ -21674,14 +23650,17 @@ const sillyArguments = [{
 				{
 					name: "port",
 					description: "Server listening port",
-					type: "Input",
-					defaultValue: 8e3
+					type: "Number",
+					defaultValue: 8e3,
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "heartbeatInterval",
 					description: "Interval in seconds to write a heartbeat file for Docker healthchecks. Set to 0 to disable",
-					type: "Input",
-					defaultValue: 0
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				},
 				{
 					name: "enableKeepAlive",
@@ -21982,7 +23961,7 @@ const sillyArguments = [{
 				{
 					name: "sessionTimeout",
 					description: "User session timeout in seconds",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				},
 				{
@@ -22028,26 +24007,30 @@ const sillyArguments = [{
 				{
 					name: "rateLimiting.accountsLoginMaxAttempts",
 					description: "Maximum account login attempts before temporary lockout (0 to disable)",
-					type: "Input",
-					defaultValue: 5
+					type: "Number",
+					defaultValue: 5,
+					numberMin: 0
 				},
 				{
 					name: "rateLimiting.accountsRecoverMaxAttempts",
 					description: "Maximum account recovery attempts before temporary lockout (0 to disable)",
-					type: "Input",
-					defaultValue: 5
+					type: "Number",
+					defaultValue: 5,
+					numberMin: 0
 				},
 				{
 					name: "rateLimiting.basicAuthMaxAttempts",
 					description: "Maximum basic auth attempts before temporary lockout (0 to disable)",
-					type: "Input",
-					defaultValue: 5
+					type: "Number",
+					defaultValue: 5,
+					numberMin: 0
 				},
 				{
 					name: "rateLimiting.accountsResetMaxAttempts",
 					description: "Maximum account reset attempts before temporary lockout (0 to disable)",
-					type: "Input",
-					defaultValue: 5
+					type: "Number",
+					defaultValue: 5,
+					numberMin: 0
 				}
 			]
 		},
@@ -22111,7 +24094,7 @@ const sillyArguments = [{
 				{
 					name: "browserLaunch.port",
 					description: "Override the port for browser launch",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				},
 				{
@@ -22164,8 +24147,9 @@ const sillyArguments = [{
 				{
 					name: "performance.requestCompression.timeout",
 					description: "Timeout for request compression in milliseconds",
-					type: "Input",
-					defaultValue: 4e3
+					type: "Number",
+					defaultValue: 4e3,
+					numberMin: 0
 				}
 			]
 		},
@@ -22195,8 +24179,10 @@ const sillyArguments = [{
 				{
 					name: "thumbnails.quality",
 					description: "JPEG thumbnail quality",
-					type: "Input",
-					defaultValue: 95
+					type: "Number",
+					defaultValue: 95,
+					numberMin: 1,
+					numberMax: 100
 				},
 				{
 					name: "thumbnails.format",
@@ -22249,19 +24235,21 @@ const sillyArguments = [{
 				{
 					name: "backups.common.numberOfBackups",
 					description: "Number of backups to keep",
-					type: "Input",
-					defaultValue: 50
+					type: "Number",
+					defaultValue: 50,
+					numberMin: 0
 				},
 				{
 					name: "backups.chat.throttleInterval",
 					description: "Backup throttle interval (ms)",
-					type: "Input",
-					defaultValue: 1e4
+					type: "Number",
+					defaultValue: 1e4,
+					numberMin: 0
 				},
 				{
 					name: "backups.chat.maxTotalBackups",
 					description: "Maximum total chat backups to keep",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				}
 			]
@@ -22377,13 +24365,13 @@ const sillyArguments = [{
 				{
 					name: "ollama.keepAlive",
 					description: "Model keep-alive duration (seconds)",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				},
 				{
 					name: "ollama.batchSize",
 					description: "Controls the \"num_batch\" (batch size) parameter of the generation request",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				},
 				{
@@ -22395,7 +24383,7 @@ const sillyArguments = [{
 				{
 					name: "claude.cachingAtDepth",
 					description: "Enable message history caching",
-					type: "Input",
+					type: "Number",
 					defaultValue: -1
 				},
 				{
@@ -22717,8 +24705,9 @@ const oobaboogaArguments = [{
 				{
 					name: "--idle-timeout",
 					description: "Unload model after this many minutes of inactivity. It will be automatically reloaded when you try to use it again.",
-					type: "Input",
-					defaultValue: "0"
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				}
 			]
 		},
@@ -22793,8 +24782,9 @@ const oobaboogaArguments = [{
 			items: [{
 				name: "--ctx-size",
 				description: "Context size in tokens. 0 = auto for llama.cpp (requires gpu-layers=-1), 8192 for other loaders.",
-				type: "Input",
-				defaultValue: "0"
+				type: "Number",
+				defaultValue: 0,
+				numberMin: 0
 			}, {
 				name: "--cache-type",
 				description: "KV cache type; valid options: llama.cpp - fp16, q8_0, q4_0; ExLlamaV3 - fp16, q2 to q8 (can specify k_bits and v_bits separately, e.g. q4_q8).",
@@ -22813,14 +24803,16 @@ const oobaboogaArguments = [{
 				{
 					name: "--draft-max",
 					description: "Number of tokens to draft for speculative decoding.",
-					type: "Input",
-					defaultValue: "3"
+					type: "Number",
+					defaultValue: 3,
+					numberMin: 1
 				},
 				{
 					name: "--gpu-layers-draft",
 					description: "Number of layers to offload to the GPU for the draft model.",
-					type: "Input",
-					defaultValue: "256"
+					type: "Number",
+					defaultValue: 256,
+					numberMin: 0
 				},
 				{
 					name: "--device-draft",
@@ -22830,8 +24822,9 @@ const oobaboogaArguments = [{
 				{
 					name: "--ctx-size-draft",
 					description: "Size of the prompt context for the draft model. If 0, uses the same as the main model.",
-					type: "Input",
-					defaultValue: "0"
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				},
 				{
 					name: "--spec-type",
@@ -22850,20 +24843,23 @@ const oobaboogaArguments = [{
 				{
 					name: "--spec-ngram-size-n",
 					description: "N-gram lookup size for ngram speculative decoding.",
-					type: "Input",
-					defaultValue: "24"
+					type: "Number",
+					defaultValue: 24,
+					numberMin: 1
 				},
 				{
 					name: "--spec-ngram-size-m",
 					description: "Draft n-gram size for ngram speculative decoding.",
-					type: "Input",
-					defaultValue: "48"
+					type: "Number",
+					defaultValue: 48,
+					numberMin: 1
 				},
 				{
 					name: "--spec-ngram-min-hits",
 					description: "Minimum n-gram hits for ngram-map speculative decoding.",
-					type: "Input",
-					defaultValue: "1"
+					type: "Number",
+					defaultValue: 1,
+					numberMin: 1
 				}
 			]
 		},
@@ -22873,8 +24869,8 @@ const oobaboogaArguments = [{
 				{
 					name: "--gpu-layers",
 					description: "Number of layers to offload to the GPU. -1 = auto.",
-					type: "Input",
-					defaultValue: "-1"
+					type: "Number",
+					defaultValue: -1
 				},
 				{
 					name: "--cpu-moe",
@@ -22926,26 +24922,30 @@ const oobaboogaArguments = [{
 				{
 					name: "--batch-size",
 					description: "Maximum number of prompt tokens to batch together when calling llama-server (application level batch size).",
-					type: "Input",
-					defaultValue: "1024"
+					type: "Number",
+					defaultValue: 1024,
+					numberMin: 1
 				},
 				{
 					name: "--ubatch-size",
 					description: "Maximum number of prompt tokens to batch together when calling llama-server (device level physical batch size).",
-					type: "Input",
-					defaultValue: "1024"
+					type: "Number",
+					defaultValue: 1024,
+					numberMin: 1
 				},
 				{
 					name: "--threads",
 					description: "Number of threads to use.",
-					type: "Input",
-					defaultValue: "0"
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				},
 				{
 					name: "--threads-batch",
 					description: "Number of threads to use for batches/prompt processing.",
-					type: "Input",
-					defaultValue: "0"
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				},
 				{
 					name: "--numa",
@@ -22955,8 +24955,9 @@ const oobaboogaArguments = [{
 				{
 					name: "--parallel",
 					description: "Number of parallel request slots. The context size is divided equally among slots.",
-					type: "Input",
-					defaultValue: "1"
+					type: "Number",
+					defaultValue: 1,
+					numberMin: 1
 				},
 				{
 					name: "--fit-target",
@@ -22987,7 +24988,8 @@ const oobaboogaArguments = [{
 				{
 					name: "--cpu-memory",
 					description: "Maximum CPU memory in GiB. Use this for CPU offloading.",
-					type: "Input"
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "--disk",
@@ -23114,7 +25116,9 @@ const oobaboogaArguments = [{
 				{
 					name: "--listen-port",
 					description: "The listening port that the server will use.",
-					type: "Input"
+					type: "Number",
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "--listen-host",
@@ -23189,8 +25193,10 @@ const oobaboogaArguments = [{
 				{
 					name: "--api-port",
 					description: "The listening port for the API.",
-					type: "Input",
-					defaultValue: "5000"
+					type: "Number",
+					defaultValue: 5e3,
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "--api-key",
@@ -23225,168 +25231,241 @@ const oobaboogaArguments = [{
 				{
 					name: "--temperature",
 					description: "Temperature sampling default override.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--dynatemp-low",
 					description: "Dynamic temperature low bound.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--dynatemp-high",
 					description: "Dynamic temperature high bound.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--dynatemp-exponent",
 					description: "Dynamic temperature exponent.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--smoothing-factor",
 					description: "Smoothing factor for samplers.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--smoothing-curve",
 					description: "Smoothing curve for samplers.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--top-p",
 					description: "Top P sampling cutoff.",
-					type: "Input",
-					defaultValue: "0.95"
+					type: "Number",
+					defaultValue: .95,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--top-k",
 					description: "Top K sampling cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: 1,
+					numberMin: 0
 				},
 				{
 					name: "--min-p",
 					description: "Min P sampling cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--top-n-sigma",
 					description: "Top N Sigma cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--typical-p",
 					description: "Typical P sampling cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--xtc-threshold",
 					description: "XTC threshold.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--xtc-probability",
 					description: "XTC probability.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--epsilon-cutoff",
 					description: "Epsilon cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--eta-cutoff",
 					description: "Eta cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--tfs",
 					description: "TFS sampling value.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--top-a",
 					description: "Top A sampling cutoff.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
 				},
 				{
 					name: "--adaptive-target",
 					description: "Adaptive target value.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--adaptive-decay",
 					description: "Adaptive decay value.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--dry-multiplier",
 					description: "DRY multiplier.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--dry-allowed-length",
 					description: "DRY allowed length.",
-					type: "Input"
+					type: "Number",
+					numberStep: 1,
+					numberMin: 0
 				},
 				{
 					name: "--dry-base",
 					description: "DRY base.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--repetition-penalty",
 					description: "Repetition penalty.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--frequency-penalty",
 					description: "Frequency penalty.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--presence-penalty",
 					description: "Presence penalty.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--encoder-repetition-penalty",
 					description: "Encoder repetition penalty.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--no-repeat-ngram-size",
 					description: "No repeat ngram size.",
-					type: "Input"
+					type: "Number",
+					numberStep: 1,
+					numberMin: 0
 				},
 				{
 					name: "--repetition-penalty-range",
 					description: "Repetition penalty range.",
-					type: "Input"
+					type: "Number",
+					numberStep: 1,
+					numberMin: 0
 				},
 				{
 					name: "--penalty-alpha",
 					description: "Penalty alpha.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--guidance-scale",
 					description: "Guidance scale.",
-					type: "Input"
+					type: "Number",
+					numberStep: .1,
+					numberMin: 0
 				},
 				{
 					name: "--mirostat-mode",
 					description: "Mirostat mode.",
-					type: "Input"
+					type: "Number",
+					numberStep: 1,
+					numberMin: 0,
+					numberMax: 2
 				},
 				{
 					name: "--mirostat-tau",
 					description: "Mirostat tau.",
-					type: "Input"
+					type: "Number",
+					numberStep: .1,
+					numberMin: 0
 				},
 				{
 					name: "--mirostat-eta",
 					description: "Mirostat eta.",
-					type: "Input"
+					type: "Number",
+					numberStep: .01,
+					numberMin: 0
 				},
 				{
 					name: "--do-sample",
@@ -23883,10 +25962,24 @@ const TG_RM = {
 const aiToolkitArguments = [{
 	category: "Environment Variables",
 	sections: [{
-		section: "Security",
+		section: "Network",
+		items: [{
+			name: "PORT",
+			description: "Custom port for the Next.js web interface (default: 8675).",
+			type: "Number",
+			defaultValue: 8675,
+			numberMin: 1,
+			numberMax: 65535
+		}]
+	}, {
+		section: "Security & Access",
 		items: [{
 			name: "AI_TOOLKIT_AUTH",
 			description: "Set an authentication token to secure the UI. This token will be required to access the web interface. Highly recommended when hosting on cloud providers or any network that is not secure.",
+			type: "Input"
+		}, {
+			name: "HF_TOKEN",
+			description: "Hugging Face user access token for downloading gated models and datasets.",
 			type: "Input"
 		}]
 	}]
@@ -23904,9 +25997,12 @@ function parseArgsToString$5(args) {
 			if (!result) return;
 			if (result.line) lines += result.line + "\n";
 			if (result.commandArg) argResult += result.commandArg + " ";
-		} else if (getArgumentType(arg.name, aiToolkitArguments) === "Input" && arg.value) {
-			if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
-			else lines += `export ${arg.name}="${arg.value}"\n`;
+		} else {
+			const argType = getArgumentType(arg.name, aiToolkitArguments);
+			if ((argType === "Input" || argType === "Number") && arg.value !== void 0 && arg.value !== "") {
+				if (isWin) lines += `set ${arg.name}=${arg.value}\n`;
+				else lines += `export ${arg.name}="${arg.value}"\n`;
+			}
 		}
 	});
 	if (!isEmpty(lines)) result += lines + "\n";
@@ -24014,8 +26110,10 @@ const loraManagerArguments = [{
 		}, {
 			name: "--port",
 			description: "Set the listen port (default: 8188)",
-			type: "Input",
-			defaultValue: 8188
+			type: "Number",
+			defaultValue: 8188,
+			numberMin: 1,
+			numberMax: 65535
 		}]
 	}]
 }];
@@ -24155,9 +26253,11 @@ const bmaltaisArguments = [{
 		},
 		{
 			name: "--server_port",
-			description: "Define the port to run the server listener on.",
-			type: "Input",
-			defaultValue: "0"
+			description: "Port to run the server listener on (0 for default Gradio port 7860).",
+			type: "Number",
+			defaultValue: 0,
+			numberMin: 0,
+			numberMax: 65535
 		},
 		{
 			name: "--inbrowser",
@@ -24221,19 +26321,41 @@ const bmaltaisArguments = [{
 		{
 			name: "TF_ENABLE_ONEDNN_OPTS",
 			description: "Enable or disable TensorFlow C++ oneDNN optimizations (default: 0).",
-			type: "Input",
+			type: "DropDown",
+			values: ["0", "1"],
 			defaultValue: "0"
 		},
 		{
 			name: "TF_CPP_MIN_LOG_LEVEL",
 			description: "Set TensorFlow C++ logging level (0=all, 1=no INFO, 2=no WARNING, 3=no ERROR).",
-			type: "Input",
+			type: "DropDown",
+			values: [
+				{
+					value: "0",
+					description: "0 (All logs)"
+				},
+				{
+					value: "1",
+					description: "1 (Filter INFO)"
+				},
+				{
+					value: "2",
+					description: "2 (Filter WARNING)"
+				},
+				{
+					value: "3",
+					description: "3 (Filter ERROR)"
+				}
+			],
 			defaultValue: "2"
 		},
 		{
 			name: "TENSORBOARD_PORT",
 			description: "Specify custom port for TensorBoard server instance.",
-			type: "Input"
+			type: "Number",
+			defaultValue: 6006,
+			numberMin: 1,
+			numberMax: 65535
 		},
 		{
 			name: "TENSORBOARD_HOST",
@@ -24247,8 +26369,15 @@ const bmaltaisArguments = [{
 		},
 		{
 			name: "LOG_LEVEL",
-			description: "Logging level for setup and environment validation (e.g. INFO, DEBUG, WARNING).",
-			type: "Input"
+			description: "Logging level for setup and environment validation.",
+			type: "DropDown",
+			values: [
+				"DEBUG",
+				"INFO",
+				"WARNING",
+				"ERROR"
+			],
+			defaultValue: "INFO"
 		}
 	]
 }];
@@ -24337,7 +26466,9 @@ const llamaFactoryArguments = [{
 				name: "--port",
 				description: "The port for the LLaMA Board web UI (default 7860).",
 				defaultValue: 7860,
-				type: "Number"
+				type: "Number",
+				numberMin: 1,
+				numberMax: 65535
 			},
 			{
 				name: "--share",
@@ -24400,6 +26531,14 @@ const llamaFactoryArguments = [{
 					description: "Set the host address for the Gradio web UI server (e.g., 127.0.0.1 or 0.0.0.0).",
 					defaultValue: "",
 					type: "Input"
+				},
+				{
+					name: "GRADIO_SERVER_PORT",
+					description: "Set the port number for the Gradio server (default 7860).",
+					defaultValue: 7860,
+					type: "Number",
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "GRADIO_SHARE",
@@ -24669,44 +26808,58 @@ const smartGalleryArguments = [{
 				},
 				{
 					name: "SERVER_PORT",
-					type: "Input",
+					type: "Number",
 					description: "Port for SmartGallery server",
-					defaultValue: "8189"
+					defaultValue: 8189,
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "THUMBNAIL_WIDTH",
-					type: "Input",
+					type: "Number",
 					description: "Width (in pixels) of generated thumbnails (default: 300)",
-					defaultValue: "300"
+					defaultValue: 300,
+					numberMin: 50,
+					numberMax: 2048
 				},
 				{
 					name: "WEBP_ANIMATED_FPS",
-					type: "Input",
+					type: "Number",
 					description: "Assumed frame rate for animated WebP files (default: 16.0)",
-					defaultValue: "16.0"
+					defaultValue: 16,
+					numberMin: 1,
+					numberMax: 120,
+					numberStep: .1
 				},
 				{
 					name: "PAGE_SIZE",
-					type: "Input",
+					type: "Number",
 					description: "Max number of files to load per page in gallery grid (default: 100)",
-					defaultValue: "100"
+					defaultValue: 100,
+					numberMin: 10,
+					numberMax: 1e3
 				},
 				{
 					name: "BATCH_SIZE",
-					type: "Input",
+					type: "Number",
 					description: "Number of files to process per database sync batch (default: 500)",
-					defaultValue: "500"
+					defaultValue: 500,
+					numberMin: 10,
+					numberMax: 1e4
 				},
 				{
 					name: "STREAM_THRESHOLD_MB",
-					type: "Input",
+					type: "Number",
 					description: "File size threshold in MB above which videos are transcoded/streamed (default: 20)",
-					defaultValue: "20"
+					defaultValue: 20,
+					numberMin: 0
 				},
 				{
 					name: "MAX_PARALLEL_WORKERS",
-					type: "Input",
-					description: "Max CPU worker threads for indexing/thumbnails (leave empty to use all CPU cores)"
+					type: "Number",
+					description: "Max CPU worker threads for indexing/thumbnails (leave empty to use all CPU cores)",
+					numberMin: 1,
+					numberMax: 128
 				},
 				{
 					name: "GENERATE_WAVEFORMS",
@@ -24774,8 +26927,10 @@ const smartGalleryArguments = [{
 			},
 			{
 				name: "--port",
-				type: "Input",
-				description: "Override server port via command-line option (e.g. 8189)"
+				type: "Number",
+				description: "Override server port via command-line option (e.g. 8189)",
+				numberMin: 1,
+				numberMax: 65535
 			}
 		]
 	}]
@@ -24928,13 +27083,17 @@ const unslothStudioArguments = [{
 				name: "--port",
 				description: "The port the server will listen on.",
 				defaultValue: 8888,
-				type: "Number"
+				type: "Number",
+				numberMin: 1,
+				numberMax: 65535
 			},
 			{
 				name: "--parallel",
 				description: "llama-server parallel decode slots (1..64). Default is 1.",
 				defaultValue: 1,
-				type: "Number"
+				type: "Number",
+				numberMin: 1,
+				numberMax: 64
 			},
 			{
 				name: "--api-only",
@@ -25004,8 +27163,9 @@ const unslothStudioArguments = [{
 			{
 				name: "UNSLOTH_CPU_THREADS",
 				description: "Cap Unsloth's native CPU thread pools on high-core hosts.",
-				defaultValue: "",
-				type: "Input"
+				type: "Number",
+				numberMin: 1,
+				numberMax: 512
 			},
 			{
 				name: "UNSLOTH_LLAMA_CPP_BACKEND",
@@ -25026,8 +27186,8 @@ const unslothStudioArguments = [{
 			{
 				name: "UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT",
 				description: "Set the bootstrap password timeout in seconds (default 3600). Use 0 or negative to disable.",
-				defaultValue: "",
-				type: "Input"
+				defaultValue: 3600,
+				type: "Number"
 			},
 			{
 				name: "UNSLOTH_STUDIO_ENABLE_MCP",
@@ -25272,4 +27432,4 @@ const UNSLOTH_STUDIO_RM = {
 	}
 };
 //#endregion
-export { parseStringToArgs$10 as $, TTS_ID as $n, claudeCodeArguments as $t, SILLYTAVERN_RM as A, COMFYUI_ZLUDA_ID as An, parseArgsToString$17 as At, LLAMA_CPP_UPDATE_TIME_KEY as B, LoLLMS_ID as Bn, hermesAgentArguments as Bt, parseArgsToString$5 as C, ANTIGRAVITY_CLI_ID as Cn, parseStringToArgs$15 as Ct, parseArgsToString$6 as D, CLAUDE_CODE_ID as Dn, parseStringToArgs$16 as Dt, TG_RM as E, CHAT_TTS_ID as En, parseArgsToString$16 as Et, parseArgsToString$8 as F, KOHYA_ID as Fn, parseStringToArgs$18 as Ft, findCudartAssetUrlForPlatform as G, SD_FORGE_AMD_ID as Gn, openArguments as Gt, detectDefaultPlatformKey as H, ONETRAINER_ID as Hn, parseArgsToFiles$2 as Ht, parseStringToArgs$8 as I, LANGFLOW_ID as In, langflowArguments as It, parseArgsToString$9 as J, SD_UIUX_ID as Jn, parseStringToArgs$21 as Jt, getLatestLlamaCppTag as K, SD_FORGE_ID as Kn, Flow_RM as Kt, LLAMA_CPP_INSTALL_DIR_KEY as L, LLAMA_CPP_ID as Ln, HermesAgent_RM as Lt, parseFilesToArgs as M, GeminiCli_ID as Mn, n8nArguments as Mt, sillyArguments as N, HERMES_AGENT_ID as Nn, Langflow_RM as Nt, parseStringToArgs$6 as O, COMFYUI_ID as On, gitmyloArguments as Ot, OPEN_WEBUI_RM as P, INVOKE_ID as Pn, parseArgsToString$18 as Pt, parseArgsToString$10 as Q, TG_ID as Qn, parseFilesToArgs$3 as Qt, LLAMA_CPP_INSTALL_TIME_KEY as R, LLAMA_FACTORY_ID as Rn, parseArgsToFiles$1 as Rt, AITOOLKIT_RM as S, ALLTALK_ID as Sn, parseArgsToString$15 as St, aiToolkitArguments as T, BOLT_DIY_ID as Tn, AG_RM as Tt, fetchLlamaCppReleases as U, OPEN_WEBUI_ID as Un, parseFilesToArgs$2 as Ut, LLAMA_PLATFORM_OPTIONS as V, N8N_ID as Vn, GeminiCli_RM as Vt, findAssetUrlForPlatform as W, SD_AMD_ID as Wn, geminiCliArguments as Wt, mcMonkeyArguments as X, SMARTGALLERY_ID as Xn, ClaudeCode_RM as Xt, parseStringToArgs$9 as Y, SILLYTAVERN_ID as Yn, flowiseArguments as Yt, SD_NEXT_RM as Z, SWARM_ID as Zn, parseArgsToFiles$3 as Zt, bmaltaisArguments as _, parseCustomArg as _n, fetchExtensionList$2 as _t, unslothStudioArguments as a, GitInstaller as an, INVOKE_RM as at, parseStringToArgs$4 as b, AG_ID as bn, automatic1111Arguments as bt, parseStringToArgs$1 as c, isValidArg as cn, INVOKEAI_INSTALL_DIR_KEY as ct, parseArgsToString$2 as d, extractGitUrl as dn, comfyuizludaArguments as dt, AntigravityCli_RM as en, UNSLOTH_STUDIO_ID as er, vladmandicArguments as et, parseStringToArgs$2 as f, getCdCommand as fn, comfyRocmArguments as ft, parseStringToArgs$3 as g, isWin as gn, comfyuiArguments as gt, parseArgsToString$3 as h, isMac as hn, parseStringToArgs$13 as ht, parseStringToArgs as i, CardInfo as in, lshqqytigerArguments as it, parseArgsToFiles as j, FLOWISEAI_ID as jn, parseStringToArgs$17 as jt, oobaboogaArguments as k, COMFYUI_ROCM_ID as kn, N8N_RM as kt, smartGalleryArguments as l, cloneDeep as ln, INVOKEAI_UPDATE_AVAILABLE_KEY as lt, KOHYA_GUI_RM as m, getVenvPythonPath as mn, parseArgsToString$13 as mt, UNSLOTH_STUDIO_RM as n, parseFilesToArgs$4 as nn, parseArgsToString$11 as nt, SMARTGALLERY_RM as o, catchAddress$5 as on, parseArgsToString$12 as ot, llamaFactoryArguments as p, getPythonCommandByOs as pn, COMFYUI_RM as pt, SWARM_RM as q, SD_NEXT_ID as qn, parseArgsToString$21 as qt, parseArgsToString as r, antigravityCliArguments as rn, parseStringToArgs$11 as rt, parseArgsToString$1 as s, getArgumentType as sn, parseStringToArgs$12 as st, TAG_KEY as t, parseArgsToFiles$4 as tn, VOICE_STUDIO_ID as tr, SD_AMD_RM as tt, LLAMA_FACTORY_RM as u, DescriptionManager as un, Invoke_Command_ActivateVenv as ut, LORA_MANAGER_RM as v, removeAnsi as vn, parseArgsToString$14 as vt, parseStringToArgs$5 as w, APPLIO_ID as wn, voiceStudioArguments as wt, loraManagerArguments as x, AITOOLKIT_ID as xn, VOICE_STUDIO_RM as xt, parseArgsToString$4 as y, A1_ID as yn, parseStringToArgs$14 as yt, LLAMA_CPP_PLATFORM_KEY as z, LORA_MANAGER_ID as zn, parseFilesToArgs$1 as zt };
+export { parseArgsToString$10 as $, SD_FORGE_ID as $n, parseArgsToString$22 as $t, SILLYTAVERN_RM as A, APPLIO_ID as An, AudioCppWebui_RM as At, LLAMA_CPP_PLATFORM_KEY as B, HERMES_AGENT_ID as Bn, Langflow_RM as Bt, parseArgsToString$5 as C, parseCustomArg as Cn, parseArgsToString$15 as Ct, parseArgsToString$6 as D, AITOOLKIT_ID as Dn, parseArgsToString$16 as Dt, TG_RM as E, AG_ID as En, AG_RM as Et, parseArgsToString$8 as F, COMFYUI_ID as Fn, audioCppArguments as Ft, findAssetUrlForPlatform as G, LLAMA_FACTORY_ID as Gn, parseArgsToFiles$1 as Gt, LLAMA_PLATFORM_OPTIONS as H, KOHYA_ID as Hn, parseStringToArgs$19 as Ht, parseStringToArgs$8 as I, COMFYUI_ROCM_ID as In, N8N_RM as It, SWARM_RM as J, N8N_ID as Jn, GeminiCli_RM as Jt, findCudartAssetUrlForPlatform as K, LORA_MANAGER_ID as Kn, parseFilesToArgs$1 as Kt, openArguments as L, COMFYUI_ZLUDA_ID as Ln, parseArgsToString$18 as Lt, parseFilesToArgs as M, BOLT_DIY_ID as Mn, parseStringToArgs$17 as Mt, sillyArguments as N, CHAT_TTS_ID as Nn, fetchAudioCppReleases as Nt, parseStringToArgs$6 as O, ALLTALK_ID as On, parseStringToArgs$16 as Ot, OPEN_WEBUI_RM as P, CLAUDE_CODE_ID as Pn, getLatestAudioCppTag as Pt, SD_NEXT_RM as Q, SD_FORGE_AMD_ID as Qn, Flow_RM as Qt, LLAMA_CPP_INSTALL_DIR_KEY as R, FLOWISEAI_ID as Rn, parseStringToArgs$18 as Rt, AITOOLKIT_RM as S, isWin as Sn, VOICE_STUDIO_RM as St, aiToolkitArguments as T, A1_ID as Tn, voiceStudioArguments as Tt, detectDefaultPlatformKey as U, LANGFLOW_ID as Un, langflowArguments as Ut, LLAMA_CPP_UPDATE_TIME_KEY as V, INVOKE_ID as Vn, parseArgsToString$19 as Vt, fetchLlamaCppReleases as W, LLAMA_CPP_ID as Wn, HermesAgent_RM as Wt, parseStringToArgs$9 as X, OPEN_WEBUI_ID as Xn, parseFilesToArgs$2 as Xt, parseArgsToString$9 as Y, ONETRAINER_ID as Yn, parseArgsToFiles$2 as Yt, mcMonkeyArguments as Z, SD_AMD_ID as Zn, geminiCliArguments as Zt, bmaltaisArguments as _, extractGitUrl as _n, comfyuiArguments as _t, unslothStudioArguments as a, claudeCodeArguments as an, TG_ID as ar, lshqqytigerArguments as at, parseStringToArgs$4 as b, getVenvPythonPath as bn, parseStringToArgs$14 as bt, parseStringToArgs$1 as c, parseFilesToArgs$4 as cn, VOICE_STUDIO_ID as cr, parseStringToArgs$12 as ct, parseArgsToString$2 as d, GitInstaller as dn, Invoke_Command_ActivateVenv as dt, parseStringToArgs$22 as en, SD_NEXT_ID as er, parseStringToArgs$10 as et, parseStringToArgs$2 as f, catchAddress$5 as fn, comfyuizludaArguments as ft, parseStringToArgs$3 as g, DescriptionManager as gn, parseStringToArgs$13 as gt, parseArgsToString$3 as h, cloneDeep as hn, parseArgsToString$13 as ht, parseStringToArgs as i, parseFilesToArgs$3 as in, SWARM_ID as ir, parseStringToArgs$11 as it, parseArgsToFiles as j, AUDIO_CPP_WEBUI_ID as jn, parseArgsToString$17 as jt, oobaboogaArguments as k, ANTIGRAVITY_CLI_ID as kn, gitmyloArguments as kt, smartGalleryArguments as l, antigravityCliArguments as ln, INVOKEAI_INSTALL_DIR_KEY as lt, KOHYA_GUI_RM as m, isValidArg as mn, COMFYUI_RM as mt, UNSLOTH_STUDIO_RM as n, ClaudeCode_RM as nn, SILLYTAVERN_ID as nr, SD_AMD_RM as nt, SMARTGALLERY_RM as o, AntigravityCli_RM as on, TTS_ID as or, INVOKE_RM as ot, llamaFactoryArguments as p, getArgumentType as pn, comfyRocmArguments as pt, getLatestLlamaCppTag as q, LoLLMS_ID as qn, hermesAgentArguments as qt, parseArgsToString as r, parseArgsToFiles$3 as rn, SMARTGALLERY_ID as rr, parseArgsToString$11 as rt, parseArgsToString$1 as s, parseArgsToFiles$4 as sn, UNSLOTH_STUDIO_ID as sr, parseArgsToString$12 as st, TAG_KEY as t, flowiseArguments as tn, SD_UIUX_ID as tr, vladmandicArguments as tt, LLAMA_FACTORY_RM as u, CardInfo as un, INVOKEAI_UPDATE_AVAILABLE_KEY as ut, LORA_MANAGER_RM as v, getCdCommand as vn, fetchExtensionList$2 as vt, parseStringToArgs$5 as w, removeAnsi as wn, parseStringToArgs$15 as wt, loraManagerArguments as x, isMac as xn, automatic1111Arguments as xt, parseArgsToString$4 as y, getPythonCommandByOs as yn, parseArgsToString$14 as yt, LLAMA_CPP_INSTALL_TIME_KEY as z, GeminiCli_ID as zn, n8nArguments as zt };

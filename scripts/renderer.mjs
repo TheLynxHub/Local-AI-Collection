@@ -1,4 +1,4 @@
-import { $n as TTS_ID, $t as claudeCodeArguments, A as SILLYTAVERN_RM, An as COMFYUI_ZLUDA_ID, B as LLAMA_CPP_UPDATE_TIME_KEY, Bn as LoLLMS_ID, Bt as hermesAgentArguments, Cn as ANTIGRAVITY_CLI_ID, Dn as CLAUDE_CODE_ID, E as TG_RM, En as CHAT_TTS_ID, Fn as KOHYA_ID, G as findCudartAssetUrlForPlatform, Gn as SD_FORGE_AMD_ID, Gt as openArguments, H as detectDefaultPlatformKey, Hn as ONETRAINER_ID, In as LANGFLOW_ID, It as langflowArguments, Jn as SD_UIUX_ID, Kn as SD_FORGE_ID, Kt as Flow_RM, L as LLAMA_CPP_INSTALL_DIR_KEY, Ln as LLAMA_CPP_ID, Lt as HermesAgent_RM, Mn as GeminiCli_ID, Mt as n8nArguments, N as sillyArguments, Nn as HERMES_AGENT_ID, Nt as Langflow_RM, On as COMFYUI_ID, Ot as gitmyloArguments, P as OPEN_WEBUI_RM, Pn as INVOKE_ID, Qn as TG_ID, R as LLAMA_CPP_INSTALL_TIME_KEY, Rn as LLAMA_FACTORY_ID, S as AITOOLKIT_RM, Sn as ALLTALK_ID, T as aiToolkitArguments, Tn as BOLT_DIY_ID, Tt as AG_RM, Un as OPEN_WEBUI_ID, V as LLAMA_PLATFORM_OPTIONS, Vn as N8N_ID, Vt as GeminiCli_RM, W as findAssetUrlForPlatform, Wn as SD_AMD_ID, Wt as geminiCliArguments, X as mcMonkeyArguments, Xn as SMARTGALLERY_ID, Xt as ClaudeCode_RM, Yn as SILLYTAVERN_ID, Yt as flowiseArguments, Z as SD_NEXT_RM, Zn as SWARM_ID, _ as bmaltaisArguments, _n as parseCustomArg, _t as fetchExtensionList, a as unslothStudioArguments, an as GitInstaller, at as INVOKE_RM, bn as AG_ID, bt as automatic1111Arguments, cn as isValidArg, dt as comfyuizludaArguments, en as AntigravityCli_RM, er as UNSLOTH_STUDIO_ID, et as vladmandicArguments, ft as comfyRocmArguments, gn as isWin, gt as comfyuiArguments, in as CardInfo, it as lshqqytigerArguments, jn as FLOWISEAI_ID, k as oobaboogaArguments, kn as COMFYUI_ROCM_ID, kt as N8N_RM, l as smartGalleryArguments, ln as cloneDeep, m as KOHYA_GUI_RM, n as UNSLOTH_STUDIO_RM, o as SMARTGALLERY_RM, on as catchAddress$3, p as llamaFactoryArguments, pn as getPythonCommandByOs, pt as COMFYUI_RM, q as SWARM_RM, qn as SD_NEXT_ID, rn as antigravityCliArguments, sn as getArgumentType, tr as VOICE_STUDIO_ID, tt as SD_AMD_RM, u as LLAMA_FACTORY_RM, un as DescriptionManager, v as LORA_MANAGER_RM, vt as parseArgsToString$3, wn as APPLIO_ID, wt as voiceStudioArguments, x as loraManagerArguments, xn as AITOOLKIT_ID, xt as VOICE_STUDIO_RM, yn as A1_ID, yt as parseStringToArgs$3, z as LLAMA_CPP_PLATFORM_KEY, zn as LORA_MANAGER_ID } from "./RendererMethods_BWB0EZ.mjs";
+import { $n as SD_FORGE_ID, A as SILLYTAVERN_RM, An as APPLIO_ID, At as AudioCppWebui_RM, B as LLAMA_CPP_PLATFORM_KEY, Bn as HERMES_AGENT_ID, Bt as Langflow_RM, Cn as parseCustomArg, Dn as AITOOLKIT_ID, E as TG_RM, En as AG_ID, Et as AG_RM, Fn as COMFYUI_ID, Ft as audioCppArguments, G as findAssetUrlForPlatform, Gn as LLAMA_FACTORY_ID, H as LLAMA_PLATFORM_OPTIONS, Hn as KOHYA_ID, In as COMFYUI_ROCM_ID, It as N8N_RM, J as SWARM_RM, Jn as N8N_ID, Jt as GeminiCli_RM, K as findCudartAssetUrlForPlatform, Kn as LORA_MANAGER_ID, L as openArguments, Ln as COMFYUI_ZLUDA_ID, Mn as BOLT_DIY_ID, N as sillyArguments, Nn as CHAT_TTS_ID, On as ALLTALK_ID, P as OPEN_WEBUI_RM, Pn as CLAUDE_CODE_ID, Q as SD_NEXT_RM, Qn as SD_FORGE_AMD_ID, Qt as Flow_RM, R as LLAMA_CPP_INSTALL_DIR_KEY, Rn as FLOWISEAI_ID, S as AITOOLKIT_RM, Sn as isWin, St as VOICE_STUDIO_RM, T as aiToolkitArguments, Tn as A1_ID, Tt as voiceStudioArguments, U as detectDefaultPlatformKey, Un as LANGFLOW_ID, Ut as langflowArguments, V as LLAMA_CPP_UPDATE_TIME_KEY, Vn as INVOKE_ID, Wn as LLAMA_CPP_ID, Wt as HermesAgent_RM, Xn as OPEN_WEBUI_ID, Yn as ONETRAINER_ID, Z as mcMonkeyArguments, Zn as SD_AMD_ID, Zt as geminiCliArguments, _ as bmaltaisArguments, _t as comfyuiArguments, a as unslothStudioArguments, an as claudeCodeArguments, ar as TG_ID, at as lshqqytigerArguments, bt as parseStringToArgs$3, cr as VOICE_STUDIO_ID, dn as GitInstaller, er as SD_NEXT_ID, fn as catchAddress$3, ft as comfyuizludaArguments, gn as DescriptionManager, hn as cloneDeep, ir as SWARM_ID, jn as AUDIO_CPP_WEBUI_ID, k as oobaboogaArguments, kn as ANTIGRAVITY_CLI_ID, kt as gitmyloArguments, l as smartGalleryArguments, ln as antigravityCliArguments, m as KOHYA_GUI_RM, mn as isValidArg, mt as COMFYUI_RM, n as UNSLOTH_STUDIO_RM, nn as ClaudeCode_RM, nr as SILLYTAVERN_ID, nt as SD_AMD_RM, o as SMARTGALLERY_RM, on as AntigravityCli_RM, or as TTS_ID, ot as INVOKE_RM, p as llamaFactoryArguments, pn as getArgumentType, pt as comfyRocmArguments, qn as LoLLMS_ID, qt as hermesAgentArguments, rr as SMARTGALLERY_ID, sr as UNSLOTH_STUDIO_ID, tn as flowiseArguments, tr as SD_UIUX_ID, tt as vladmandicArguments, u as LLAMA_FACTORY_RM, un as CardInfo, v as LORA_MANAGER_RM, vt as fetchExtensionList, x as loraManagerArguments, xt as automatic1111Arguments, yn as getPythonCommandByOs, yt as parseArgsToString$3, z as LLAMA_CPP_INSTALL_TIME_KEY, zn as GeminiCli_ID, zt as n8nArguments } from "./RendererMethods_jdxHkj.mjs";
 //#region module/src/containers/agent/index.ts
 const agentsPage = {
 	routePath: "agents_page",
@@ -323,6 +323,19 @@ const audioPage = {
 			arguments: voiceStudioArguments,
 			methods: VOICE_STUDIO_RM,
 			installationType: "git"
+		},
+		{
+			id: AUDIO_CPP_WEBUI_ID,
+			title: "audio.cpp WebUI",
+			description: "A high-performance C++ audio inference framework built on ggml for TTS, voice cloning, ASR, and more with modern local WebUI.",
+			repoUrl: "https://github.com/kigner/audio.cpp-webui",
+			type: "audio",
+			supportCustomArguments: true,
+			arguments: audioCppArguments,
+			methods: AudioCppWebui_RM,
+			installationType: "others",
+			uninstallType: "removeFolder",
+			developer: "kigner"
 		}
 	]
 };
@@ -687,8 +700,10 @@ const invokeArguments = [{
 				{
 					name: "port",
 					description: "Port to bind to.",
-					type: "Input",
-					defaultValue: "9090"
+					type: "Number",
+					defaultValue: 9090,
+					numberMin: 1,
+					numberMax: 65535
 				},
 				{
 					name: "allow_origins",
@@ -913,17 +928,20 @@ const invokeArguments = [{
 				{
 					name: "max_cache_ram_gb",
 					description: "The maximum amount of CPU RAM to use for model caching in GB. If unset, the limit will be configured based on the available RAM. It is recommended to leave this unset.",
-					type: "Input"
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "max_cache_vram_gb",
 					description: "The amount of VRAM to use for model caching in GB. If unset, the limit will be configured based on the available VRAM and device_working_mem_gb. It is recommended to leave this unset.",
-					type: "Input"
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "device_working_mem_gb",
 					description: "The amount of working memory to keep available on the compute device (in GB). Has no effect if running on CPU. If you are experiencing OOM errors, try increasing this value.",
-					type: "Input"
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "log_memory_usage",
@@ -933,8 +951,9 @@ const invokeArguments = [{
 				{
 					name: "model_cache_keep_alive_min",
 					description: "How long to keep models in cache after last use, in minutes. A value of 0 (the default) means models are kept in cache indefinitely. If no model generations occur within the timeout period, the model cache is cleared using the same logic as the \"Clear Model Cache\" button.",
-					type: "Input",
-					defaultValue: "0"
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				},
 				{
 					name: "enable_partial_loading",
@@ -1031,14 +1050,17 @@ const invokeArguments = [{
 				{
 					name: "pil_compress_level",
 					description: "The compress_level setting of PIL.Image.save(), used for PNG encoding. All settings are lossless. 0 = no compression, 1 = fastest (slightly larger file), 9 = slowest (smallest file). 1 is recommended.",
-					type: "Input",
-					defaultValue: "1"
+					type: "Number",
+					defaultValue: 1,
+					numberMin: 0,
+					numberMax: 9
 				},
 				{
 					name: "max_queue_size",
 					description: "Maximum number of items in the session queue.",
-					type: "Input",
-					defaultValue: "10000"
+					type: "Number",
+					defaultValue: 1e4,
+					numberMin: 1
 				},
 				{
 					name: "session_queue_mode",
@@ -1050,7 +1072,8 @@ const invokeArguments = [{
 				{
 					name: "max_queue_history",
 					description: "Keep the last N completed, failed, and canceled queue items on startup. 0 prunes all.",
-					type: "Input"
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "clear_queue_on_startup",
@@ -1070,8 +1093,9 @@ const invokeArguments = [{
 				{
 					name: "node_cache_size",
 					description: "How many cached nodes to keep in memory.",
-					type: "Input",
-					defaultValue: "512"
+					type: "Number",
+					defaultValue: 512,
+					numberMin: 0
 				},
 				{
 					name: "hashing_algorithm",
@@ -1793,7 +1817,21 @@ const llamaCppArguments = [{
 				{
 					name: "--n-cpu-moe",
 					description: "Keep MoE weights of first N layers in CPU (-ncmoe).",
-					type: "Number"
+					type: "Number",
+					numberMin: 0
+				},
+				{
+					name: "--moe-cache-mib",
+					description: "GPU cache size in MiB for the MoE experts kept in the CPU.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
+				},
+				{
+					name: "--n-cpu-ffn",
+					description: "Keep dense FFN weights of first N layers in CPU (-ncffn).",
+					type: "Number",
+					numberMin: 0
 				},
 				{
 					name: "--numa",
@@ -1864,8 +1902,22 @@ const llamaCppArguments = [{
 			items: [
 				{
 					name: "--spec-type",
-					description: "Types of speculative decoding: none, draft-simple, draft-eagle3, draft-mtp, ngram-simple.",
-					type: "Input"
+					description: "Types of speculative decoding: none, draft-simple, draft-eagle3, draft-mtp, draft-dflash, draft-dspark, ngram-simple, ngram-map-k, ngram-map-k4v, ngram-mod, ngram-cache.",
+					type: "DropDown",
+					values: [
+						"none",
+						"draft-simple",
+						"draft-eagle3",
+						"draft-mtp",
+						"draft-dflash",
+						"draft-dspark",
+						"ngram-simple",
+						"ngram-map-k",
+						"ngram-map-k4v",
+						"ngram-mod",
+						"ngram-cache"
+					],
+					defaultValue: "none"
 				},
 				{
 					name: "--model-draft",
@@ -1882,7 +1934,15 @@ const llamaCppArguments = [{
 					name: "--spec-draft-n-max",
 					description: "Number of tokens to draft for speculative decoding. Default: 3.",
 					type: "Number",
-					defaultValue: 3
+					defaultValue: 3,
+					numberMin: 1
+				},
+				{
+					name: "--spec-draft-n-min",
+					description: "Minimum number of draft tokens to use for speculative decoding. Default: 0.",
+					type: "Number",
+					defaultValue: 0,
+					numberMin: 0
 				}
 			]
 		},
@@ -1924,6 +1984,40 @@ const llamaCppArguments = [{
 					numberMax: 1
 				},
 				{
+					name: "--top-n-sigma",
+					description: "Top-N-Sigma sampling threshold (-1 = disabled). Default: -1.0.",
+					type: "Number",
+					defaultValue: -1,
+					numberStep: .1
+				},
+				{
+					name: "--xtc-threshold",
+					description: "XTC threshold (1.0 = disabled). Default: 0.1.",
+					type: "Number",
+					defaultValue: .1,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
+				},
+				{
+					name: "--xtc-probability",
+					description: "XTC probability (0.0 = disabled). Default: 0.0.",
+					type: "Number",
+					defaultValue: 0,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
+				},
+				{
+					name: "--typical-p",
+					description: "Locally typical sampling, parameter p (1.0 = disabled). Default: 1.0.",
+					type: "Number",
+					defaultValue: 1,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: 1
+				},
+				{
 					name: "--repeat-penalty",
 					description: "Penalize repeat sequence of tokens. Default: 1.0.",
 					type: "Number",
@@ -1935,7 +2029,8 @@ const llamaCppArguments = [{
 					name: "--repeat-last-n",
 					description: "Last N tokens to consider for penalizing repeat sequences. Default: 64.",
 					type: "Number",
-					defaultValue: 64
+					defaultValue: 64,
+					numberMin: 0
 				},
 				{
 					name: "--presence-penalty",
@@ -1969,13 +2064,33 @@ const llamaCppArguments = [{
 					name: "--dry-allowed-length",
 					description: "Allowed length for DRY sampling. Default: 2.",
 					type: "Number",
-					defaultValue: 2
+					defaultValue: 2,
+					numberMin: 1
 				},
 				{
 					name: "--dry-penalty-last-n",
 					description: "DRY penalty for the last N tokens. Default: 64.",
 					type: "Number",
-					defaultValue: 64
+					defaultValue: 64,
+					numberMin: 0
+				},
+				{
+					name: "--adaptive-target",
+					description: "Adaptive-P target probability (valid range 0.0 to 1.0; negative = disabled). Default: -1.0.",
+					type: "Number",
+					defaultValue: -1,
+					numberStep: .01,
+					numberMin: -1,
+					numberMax: 1
+				},
+				{
+					name: "--adaptive-decay",
+					description: "Adaptive-P decay rate over time (0.0 to 0.99). Default: 0.9.",
+					type: "Number",
+					defaultValue: .9,
+					numberStep: .01,
+					numberMin: 0,
+					numberMax: .99
 				},
 				{
 					name: "--dynatemp-range",
