@@ -20,12 +20,16 @@ const unslothStudioArguments: ArgumentsData = [
             description: 'The port the server will listen on.',
             defaultValue: 8888,
             type: 'Number',
+            numberMin: 1,
+            numberMax: 65535,
           },
           {
             name: '--parallel',
             description: 'llama-server parallel decode slots (1..64). Default is 1.',
             defaultValue: 1,
             type: 'Number',
+            numberMin: 1,
+            numberMax: 64,
           },
           {
             name: '--api-only',
@@ -100,8 +104,9 @@ const unslothStudioArguments: ArgumentsData = [
           {
             name: 'UNSLOTH_CPU_THREADS',
             description: "Cap Unsloth's native CPU thread pools on high-core hosts.",
-            defaultValue: '',
-            type: 'Input',
+            type: 'Number',
+            numberMin: 1,
+            numberMax: 512,
           },
           {
             name: 'UNSLOTH_LLAMA_CPP_BACKEND',
@@ -123,8 +128,8 @@ const unslothStudioArguments: ArgumentsData = [
           {
             name: 'UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT',
             description: 'Set the bootstrap password timeout in seconds (default 3600). Use 0 or negative to disable.',
-            defaultValue: '',
-            type: 'Input',
+            defaultValue: 3600,
+            type: 'Number',
           },
           {
             name: 'UNSLOTH_STUDIO_ENABLE_MCP',
